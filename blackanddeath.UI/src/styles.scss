@@ -1,1 +1,37 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'app/shared/styles/color-variables' as *;
+@use 'app/shared/styles/variables' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+input,
+button,
+textarea,
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  font-family: inherit;
+}
+
+body {
+  background-color: var(--color-bg);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-base);
+  margin: 0;
+}
+
+.container {
+  max-width: 90rem; // 1440px
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 2rem);
+
+  // TODO: remove debug styles
+  outline: 2px dashed red;
+  min-height: 100vh;
+}

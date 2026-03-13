@@ -1,0 +1,110 @@
+.header {
+  background-color: var(--color-header-bg);
+  border-bottom: 1px solid var(--color-border);
+
+  &__inner {
+    width: 100%;
+    padding: 0 4.375rem; // 70px
+    height: 4rem; // 64px
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--color-text);
+  }
+
+  &__logo {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  &__center {
+    display: flex;
+    justify-content: center;
+    width: 25.875rem; // 414px
+  }
+
+  &__search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    input {
+      width: 100%;
+      background-color: var(--color-input-bg);
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      appearance: none;
+      -webkit-appearance: none;
+      height: 2rem; // 32px
+      padding: 0 2.25rem 0 0.75rem;
+      color: var(--color-text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      outline: none;
+
+      &::placeholder {
+        color: var(--color-text-placeholder);
+      }
+
+      &:focus {
+        border-color: var(--color-border-input-focus);
+      }
+    }
+
+    svg {
+      position: absolute;
+      right: 0.6rem;
+      width: 1rem;
+      height: 1rem;
+      color: var(--color-text-placeholder);
+      pointer-events: none;
+    }
+  }
+
+  &__right {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__user-btn {
+    background: var(--color-input-bg);
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    width: 2.25rem;
+    height: 2.25rem;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--color-text-muted);
+    }
+  }
+}
