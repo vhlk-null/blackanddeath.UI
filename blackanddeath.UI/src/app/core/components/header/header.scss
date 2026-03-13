@@ -4,7 +4,7 @@
 
   &__inner {
     width: 100%;
-    padding: 0 4.375rem; // 70px
+    padding: 0 clamp(1rem, 4.86vw, 4.375rem); // 70px at 1440px
     height: 4rem; // 64px
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -12,6 +12,7 @@
   }
 
   &__left {
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: 1.1875rem; // 19px
@@ -40,12 +41,16 @@
     text-decoration: none;
     white-space: nowrap;
     transform: translateY(2px); // optical offset
+
+    @media (max-width: 56rem) {
+      display: none;
+    }
   }
 
   &__center {
     display: flex;
     justify-content: center;
-    width: 25rem; // 400px
+    width: clamp(12rem, 28vw, 25rem); // 400px at 1440px
   }
 
   &__search {
@@ -111,3 +116,4 @@
     }
   }
 }
+
