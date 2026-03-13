@@ -9,13 +9,12 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 1.5rem;
   }
 
   &__left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.1875rem; // 19px
   }
 
   &__menu-btn {
@@ -25,24 +24,28 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
-    color: var(--color-text);
+    padding: 0;
+    color: var(--color-text-muted);
   }
 
   &__logo {
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: 'Cinzel', serif;
+    font-style: normal;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-md); // 16px
+    line-height: 1.25; // 20px
+    letter-spacing: 0.085em;
+    text-transform: capitalize;
     color: var(--color-text-muted);
     text-decoration: none;
     white-space: nowrap;
+    transform: translateY(2px); // optical offset
   }
 
   &__center {
     display: flex;
     justify-content: center;
-    width: 25.875rem; // 414px
+    width: 25rem; // 400px
   }
 
   &__search {
@@ -91,7 +94,7 @@
 
   &__user-btn {
     background: var(--color-input-bg);
-    border: none;
+    border: 1px solid var(--color-border-input);
     cursor: pointer;
     padding: 0.5rem;
     display: flex;
