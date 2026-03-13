@@ -1,0 +1,41 @@
+// Typography
+$font-family-base: 'Cinzel', serif;
+$font-family-heading: 'Cinzel', serif;
+
+:root {
+  --font-family-base: #{$font-family-base};
+  --font-family-heading: #{$font-family-heading};
+
+  // Font sizes (fluid scale)
+  --font-size-xs:   0.75rem;   // 12px
+  --font-size-sm:   0.875rem;  // 14px
+  --font-size-md:   1rem;      // 16px (base)
+  --font-size-lg:   1.125rem;  // 18px
+  --font-size-xl:   1.25rem;   // 20px
+  --font-size-2xl:  1.5rem;    // 24px
+  --font-size-3xl:  2rem;      // 32px
+
+  // Line heights
+  --line-height-tight:  1.2;
+  --line-height-base:   1.5;
+  --line-height-loose:  1.75;
+
+  // Font weights
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-bold:    700;
+
+  // Border radius
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   16px;
+  --radius-full: 50%;
+
+  // Spacing
+  --spacing-xs:   0.25rem;  // 4px
+  --spacing-sm:   0.5rem;   // 8px
+  --spacing-md:   1rem;     // 16px
+  --spacing-lg:   1.5rem;   // 24px
+  --spacing-xl:   2rem;     // 32px
+  --spacing-2xl:  3rem;     // 48px
+}
