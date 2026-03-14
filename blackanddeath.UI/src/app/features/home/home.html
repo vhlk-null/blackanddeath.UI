@@ -4,7 +4,7 @@
   }
 </app-section>
 
-<app-section sectionTitle="Popular Bands" [tabs]="['This Year', 'All Time']" [columns]="3">
+<app-section sectionTitle="Popular Bands" [tabs]="['This Year', 'All Time']" style="--min-card-width: 22.875rem">
   @for (band of popularBands; track band.id) {
   <app-band-card [bandCard]="band" />
   }
@@ -16,7 +16,7 @@
   }
 </app-section>
 
-<app-section sectionTitle="Metal Videos" [tabs]="['Clips', 'Live', 'Playthroughs']" [columns]="3">
+<app-section sectionTitle="Metal Videos" [tabs]="['Clips', 'Live', 'Playthroughs']" style="--min-card-width: 22.875rem">
   @for (band of popularBands; track band.id) {
   <app-band-card [bandCard]="band" />
   }
