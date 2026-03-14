@@ -17,7 +17,7 @@
 .section-content {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--min-card-width, 16.875rem), 1fr));
-  gap: 1.25rem;
+  gap: 0;
   margin-top: 1.5rem;
 }
 
