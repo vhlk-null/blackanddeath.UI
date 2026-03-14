@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Tabs } from '../tabs/tabs';
 
 @Component({
@@ -11,4 +11,5 @@ export class Section {
   sectionTitle = input.required<string>();
   tabs = input.required<string[]>();
   columns = input<number>(4);
+  tabChange = output<number>();
 }

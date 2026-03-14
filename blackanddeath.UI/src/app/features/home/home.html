@@ -1,29 +1,30 @@
-<app-section sectionTitle="Top Rated" [tabs]="['This Year', 'This Month', 'All Time']">
-  @for (album of topRatedAlbums; track album.id) {
+<app-section sectionTitle="Top Rated" [tabs]="tabs.topRated" (tabChange)="onTopRatedTabChange($event)">
+  @for (album of topRatedThisYear; track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section sectionTitle="Popular Bands" [tabs]="['This Year', 'All Time']" style="--min-card-width: 22.875rem">
-  @for (band of popularBands; track band.id) {
+<app-section sectionTitle="Popular Bands" [tabs]="tabs.popularBands" (tabChange)="onPopularBandsTabChange($event)">
+  @for (band of popularBandsThisYear; track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>
 
-<app-section sectionTitle="Recently Added" [tabs]="['Albums', 'Bands']">
+<app-section sectionTitle="Recently Added" [tabs]="tabs.recentlyAdded" (tabChange)="onRecentlyAddedTabChange($event)">
   @for (album of recentAlbums; track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section sectionTitle="Metal Videos" [tabs]="['Clips', 'Live', 'Playthroughs']" style="--min-card-width: 22.875rem">
-  @for (band of popularBands; track band.id) {
+<app-section sectionTitle="Metal Videos" [tabs]="tabs.metalVideos" (tabChange)="onMetalVideosTabChange($event)">
+  @for (band of videoClips; track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>
 
-<app-section sectionTitle="Upcoming Releases" [tabs]="['Full Length', 'Extended Play', 'Other']">
-  @for (album of topRatedAlbums; track album.id) {
+<app-section sectionTitle="Upcoming Releases" [tabs]="tabs.upcomingReleases"
+  (tabChange)="onUpcomingReleasesTabChange($event)">
+  @for (album of upcomingFullLength; track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>

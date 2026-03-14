@@ -2,7 +2,7 @@
     <h1 class="section-title">{{ sectionTitle() }}</h1>
     <div class="section-body">
         <div class="section-tabs">
-            <app-tabs [tabs]="tabs()"></app-tabs>
+            <app-tabs [tabs]="tabs()" (tabChange)="tabChange.emit($event)"></app-tabs>
         </div>
         <div class="section-content" [style.--columns]="columns()">
             <ng-content></ng-content>
