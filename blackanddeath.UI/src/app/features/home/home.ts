@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { Section } from '../../shared/components/section/section';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
@@ -28,10 +28,21 @@ export class Home {
     upcomingReleases: UPCOMING_RELEASES_TABS,
   };
 
-  private mainAlbumList: Album[] = [];
-  private mainBandList: Band[] = [];
+  readonly tabIndex = {
+    topRated: signal(0),
+    popularBands: signal(0),
+    recentlyAdded: signal(0),
+    metalVideos: signal(0),
+    upcomingReleases: signal(0),
+  };
 
-  // Top Rated
+  mainTopRatedAlbums = computed(() => this.sectionData.topRated[this.tabIndex.topRated()]);
+  mainPopularBands = computed(() => this.sectionData.popularBands[this.tabIndex.popularBands()]);
+  mainRecentAlbums = computed(() => this.sectionData.recentlyAdded[this.tabIndex.recentlyAdded()]);
+  mainRecentVideos = computed(() => this.sectionData.metalVideos[this.tabIndex.metalVideos()]);
+  mainUpcomingReleases = computed(() => this.sectionData.upcomingReleases[this.tabIndex.upcomingReleases()]);
+
+  //#region Data
   topRatedThisYear: Album[] = [
     { id: 1, title: 'De Mysteriis Dom Sathanas', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: '' },
     { id: 2, title: 'Altars of Madness', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Death Metal', coverImage: '' },
@@ -113,25 +124,14 @@ export class Home {
     { id: 28, title: 'Iron Plague', type: 'Compilation', year: 2025, country: 'USA', genre: 'Death Metal', coverImage: '' },
   ];
 
+  //#endregion
 
+  readonly sectionData = {
+    topRated: [this.topRatedThisYear, this.topRatedThisMonth, this.topRatedAllTime],
+    popularBands: [this.popularBandsThisYear, this.popularBandsAllTime],
+    recentlyAdded: [this.recentAlbums],
+    metalVideos: [this.videoClips, this.videoLive, this.videoPlaythroughs],
+    upcomingReleases: [this.upcomingFullLength, this.upcomingEP, this.upcomingOther],
+  };
 
-  onTopRatedTabChange(index: number) {
-    console.log('Top Rated Tab Changed:', index);
-  }
-
-  onPopularBandsTabChange(index: number) {
-    console.log('Popular Bands Tab Changed:', index);
-  }
-
-  onRecentlyAddedTabChange(index: number) {
-    console.log('Recently Added Tab Changed:', index);
-  }
-
-  onMetalVideosTabChange(index: number) {
-    console.log('Metal Videos Tab Changed:', index);
-  }
-
-  onUpcomingReleasesTabChange(index: number) {
-    console.log('Upcoming Releases Tab Changed:', index);
-  }
 }
