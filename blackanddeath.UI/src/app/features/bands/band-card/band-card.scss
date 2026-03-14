@@ -1,0 +1,63 @@
+.band-card {
+  width: 100%;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: 0.75rem; // 12px
+  overflow: hidden;
+  cursor: pointer;
+
+  &__cover {
+    width: 100%;
+    height: 14.375rem; // 230px
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    &-bg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    &-vinyl {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__info {
+    padding: 1rem 1rem 1.25rem;
+    text-align: center;
+  }
+
+  &__name {
+    margin: 0 0 0.375rem;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-regular);
+    font-size: 1.125rem;
+    line-height: 1.375rem;
+    color: var(--color-card-title);
+  }
+
+  &__meta {
+    margin: 0;
+    font-family: var(--font-family-body);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-sm);
+    color: var(--color-card-meta);
+  }
+}

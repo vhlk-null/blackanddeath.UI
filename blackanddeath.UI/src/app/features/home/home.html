@@ -1,20 +1,29 @@
 <app-section sectionTitle="Top Rated" [tabs]="['This Year', 'This Month', 'All Time']">
   @for (album of topRatedAlbums; track album.id) {
-    <app-album-card [albumCard]="album" />
+  <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section sectionTitle="Popular Bands" [tabs]="['This Year', 'All Time']">
+<app-section sectionTitle="Popular Bands" [tabs]="['This Year', 'All Time']" [columns]="3">
+  @for (band of popularBands; track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
 </app-section>
 
 <app-section sectionTitle="Recently Added" [tabs]="['Albums', 'Bands']">
-  @for (album of recentAlbums; track album.title) {
-    <app-album-card [albumCard]="album" />
+  @for (album of recentAlbums; track album.id) {
+  <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section sectionTitle="Metal Videos" [tabs]="['Clips', 'Live', 'Playthroughs']">
+<app-section sectionTitle="Metal Videos" [tabs]="['Clips', 'Live', 'Playthroughs']" [columns]="3">
+  @for (band of popularBands; track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
 </app-section>
 
 <app-section sectionTitle="Upcoming Releases" [tabs]="['Full Length', 'Extended Play', 'Other']">
+  @for (album of topRatedAlbums; track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
 </app-section>

@@ -4,7 +4,7 @@
         <div class="section-tabs">
             <app-tabs [tabs]="tabs()"></app-tabs>
         </div>
-        <div class="section-content">
+        <div class="section-content" [style.--columns]="columns()">
             <ng-content></ng-content>
         </div>
     </div>

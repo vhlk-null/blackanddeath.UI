@@ -4,6 +4,7 @@
 
 .section-body {
   display: inline-block;
+  max-width: 71.25rem; // 1140px
 }
 
 .section-tabs {
@@ -14,8 +15,8 @@
 
 .section-content {
   display: grid;
-  grid-template-columns: repeat(4, 16.875rem); // 4 × 270px = 1080px + 3 × 20px = 1140px
-  gap: 1.25rem; // 20px — 4 cards × 270px + 3 × 20px = 1140px
+  grid-template-columns: repeat(var(--columns, 4), 1fr);
+  gap: 1.25rem;
   margin-top: 1.5rem;
 }
 
