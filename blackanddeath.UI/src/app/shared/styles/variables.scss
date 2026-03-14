@@ -1,10 +1,12 @@
 // Typography
 $font-family-base: 'Cinzel', serif;
 $font-family-heading: 'Cinzel', serif;
+$font-family-body: 'Inter', sans-serif;
 
 :root {
   --font-family-base: #{$font-family-base};
   --font-family-heading: #{$font-family-heading};
+  --font-family-body: #{$font-family-body};
 
   // Font sizes (fluid scale)
   --font-size-xs:   0.75rem;   // 12px

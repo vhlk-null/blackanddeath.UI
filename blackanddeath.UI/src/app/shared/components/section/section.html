@@ -1,6 +1,11 @@
 <div class="section-container">
     <h1 class="section-title">{{ sectionTitle() }}</h1>
-    <div class="section-tabs">
-        <app-tabs [tabs]="tabs()"></app-tabs>
+    <div class="section-body">
+        <div class="section-tabs">
+            <app-tabs [tabs]="tabs()"></app-tabs>
+        </div>
+        <div class="section-content">
+            <ng-content></ng-content>
+        </div>
     </div>
 </div>

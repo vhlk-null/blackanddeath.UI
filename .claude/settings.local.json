@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv cards.ts album-card.ts)",
+      "Bash(mv cards.html album-card.html)",
+      "Bash(mv cards.scss album-card.scss)",
+      "Bash(mv cards.spec.ts album-card.spec.ts)"
+    ]
+  }
+}

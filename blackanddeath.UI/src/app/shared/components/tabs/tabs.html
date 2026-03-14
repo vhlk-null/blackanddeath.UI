@@ -1,7 +1,7 @@
 <ul class="tabs">
-  @for (item of tabs(); track $index) {
+  @for (tab of tabs(); track $index) {
     <li class="tabs__item" [class.tabs__item--active]="activeIndex() === $index" (click)="setActive($index)">
-      {{ item }}
+      {{ tab }}
     </li>
   }
 </ul>

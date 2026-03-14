@@ -29,7 +29,7 @@ body {
   max-width: 90rem; // 1440px
   width: 100%;
   margin: 0 auto;
-  padding: 0 clamp(1rem, 5vw, 2rem);
+  padding: 0 clamp(1rem, 4.86vw, 4.375rem); // 70px at 1440px
 
   // TODO: remove debug styles
   outline: 2px dashed red;
