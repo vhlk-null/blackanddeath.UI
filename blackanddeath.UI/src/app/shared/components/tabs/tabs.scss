@@ -1,0 +1,24 @@
+.tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem;
+
+  &__item {
+    font-family: var(--font-family-base);
+    font-size: 1.5rem; // 24px
+    line-height: 1.333; // 32px
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+
+    &--active {
+      color: var(--color-tab-active);
+      border-bottom-color: var(--color-tab-active);
+    }
+  }
+}

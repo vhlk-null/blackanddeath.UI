@@ -2,6 +2,9 @@ $color-bg-dark: #060708;
 $color-bg-light: #E6E6F2;
 
 :root[data-theme="dark"] {
+    --color-text-heading: #E3EAFF;
+    --color-tab-active: #C8D0FF;
+    --color-separator: #888888;
     --color-text-muted: #B2B2B2;
     --color-bg: #{$color-bg-dark};
     --color-input-bg: #{$color-bg-dark};
@@ -14,6 +17,9 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="light"] {
+    --color-text-heading: #1A1A2E;
+    --color-tab-active: #1A1A2E;
+    --color-separator: rgba(0, 0, 0, 0.2);
     --color-bg: #{$color-bg-light};
     --color-input-bg: #{$color-bg-light};
     --color-header-bg: #F1F1FF;

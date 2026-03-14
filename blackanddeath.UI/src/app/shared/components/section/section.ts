@@ -1,0 +1,13 @@
+import { Component, input } from '@angular/core';
+import { Tabs } from '../tabs/tabs';
+
+@Component({
+  selector: 'app-section',
+  imports: [Tabs],
+  templateUrl: './section.html',
+  styleUrl: './section.scss',
+})
+export class Section {
+  sectionTitle = input.required<string>();
+  tabs = input.required<string[]>();
+}
