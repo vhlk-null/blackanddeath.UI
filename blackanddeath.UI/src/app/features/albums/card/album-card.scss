@@ -1,11 +1,9 @@
 :host {
   display: block;
+  min-width: 0;
   border-right: 1px solid var(--color-card-separator);
 }
 
-:host(:last-child) {
-  border-right: none;
-}
 
 .card {
   width: 100%;
@@ -67,6 +65,9 @@
     font-size: var(--font-size-sm);
     line-height: 1.0625rem; // 17px
     color: var(--color-card-meta);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__genre {
@@ -76,5 +77,8 @@
     font-size: var(--font-size-sm);
     line-height: 1.0625rem; // 17px
     color: var(--color-card-meta);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

@@ -16,8 +16,8 @@
 
 .section-content {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--min-card-width, 16.875rem), 1fr));
-  gap: 0;
+  grid-template-columns: var(--section-grid-columns, repeat(auto-fill, minmax(var(--min-card-width, 16.875rem), 1fr)));
+  gap: 1.5rem 0;
   margin-top: 1.5rem;
 }
 
