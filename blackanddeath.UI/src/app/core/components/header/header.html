@@ -2,7 +2,7 @@
   <div class="header__inner">
 
     <div class="header__left">
-      <button class="header__menu-btn" aria-label="Open menu">
+      <button class="header__menu-btn" (click)="menuOpen.set(true)" aria-label="Open menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14"
           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="0" y1="1" x2="18" y2="1" />
@@ -58,4 +58,24 @@
     </div>
 
   </div>
+
+@if (menuOpen()) {
+  <div class="nav-overlay" (click)="menuOpen.set(false)"></div>
+  <nav class="nav-drawer">
+    <button class="nav-drawer__close" (click)="menuOpen.set(false)" aria-label="Close menu">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <ul class="nav-drawer__links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen.set(false)">Home</a></li>
+      <li><a routerLink="/album-genre" routerLinkActive="active" (click)="menuOpen.set(false)">Albums</a></li>
+      <li><a routerLink="/bands" routerLinkActive="active" (click)="menuOpen.set(false)">Bands</a></li>
+      <li><a routerLink="/genres" routerLinkActive="active" (click)="menuOpen.set(false)">Genres</a></li>
+    </ul>
+  </nav>
+}
+
 </header>
