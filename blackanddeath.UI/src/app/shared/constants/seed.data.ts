@@ -4,10 +4,10 @@ import { Band } from "../models/band";
 export class Seed {
     //#region Data
     topRatedThisYear: Album[] = [
-        { id: 1, title: 'De Mysteriis Dom Sathanas', band: 'Mayhem', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/dmds/300/300?grayscale' },
-        { id: 2, title: 'Altars of Madness', band: 'Morbid Angel', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/altars/300/300?grayscale' },
-        { id: 3, title: 'Transilvanian Hunger', band: 'Darkthrone', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/transilvanian/300/300?grayscale' },
-        { id: 4, title: 'Tomb of the Mutilated', band: 'Cannibal Corpse', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/tomb/300/300?grayscale' },
+        { id: 1, title: 'De Mysteriis Dom Sathanas', band: 'Mayhem', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://f4.bcbits.com/img/a2368920343_16.jpg' },
+        { id: 2, title: 'Altars of Madness', band: 'Morbid Angel', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Death Metal', coverImage: 'https://f4.bcbits.com/img/a3113054050_10.jpg' },
+        { id: 3, title: 'Transilvanian Hunger', band: 'Darkthrone', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://f4.bcbits.com/img/a1670313978_10.jpg' },
+        { id: 4, title: 'Tomb of the Mutilated', band: 'Cannibal Corpse', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Death Metal', coverImage: 'https://www.metal-archives.com/images/1/3/5/7/1357784.png?3754' },
     ];
     topRatedThisMonth: Album[] = [
         { id: 5, title: 'Blessed Are the Sick', band: 'Morbid Angel', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/blessed/300/300?grayscale' },
