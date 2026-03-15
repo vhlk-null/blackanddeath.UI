@@ -24,9 +24,9 @@ export class Seed {
 
     // Popular Bands
     popularBandsThisYear: Band[] = [
-        { id: 1, name: 'Mayhem', country: 'Norway', genre: 'Black Metal', formedYear: 1984, coverImage: 'https://picsum.photos/seed/mayhem/300/300?grayscale' },
-        { id: 2, name: 'Morbid Angel', country: 'USA', genre: 'Death Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/morbidangel/300/300?grayscale' },
-        { id: 3, name: 'Darkthrone', country: 'Norway', genre: 'Black Metal', formedYear: 1986, coverImage: 'https://picsum.photos/seed/darkthrone/300/300?grayscale' },
+        { id: 1, name: 'Mayhem', country: 'Norway', genre: 'Black Metal', formedYear: 1984, coverImage: 'images/bands-logo/photo_1_2026-03-16_00-40-58.jpg' },
+        { id: 2, name: 'Morbid Angel', country: 'USA', genre: 'Death Metal', formedYear: 1983, coverImage: 'images/bands-logo/photo_2_2026-03-16_00-40-58.jpg' },
+        { id: 3, name: 'Darkthrone', country: 'Norway', genre: 'Black Metal', formedYear: 1986, coverImage: 'images/bands-logo/photo_3_2026-03-16_00-40-58.jpg' },
     ];
     popularBandsAllTime: Band[] = [
         { id: 4, name: 'Bathory', country: 'Sweden', genre: 'Black Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/bathory/300/300?grayscale' },
