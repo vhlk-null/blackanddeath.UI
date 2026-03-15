@@ -9,6 +9,16 @@
   background-color: var(--color-card-bg);
   border-radius: 5px;
   cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 32px 4px var(--color-card-hover-glow);
+  }
+
+  &:hover &__image {
+    transform: scale(1.1);
+  }
 
   &__cover {
     width: 100%;
@@ -34,6 +44,7 @@
     aspect-ratio: 1;
     object-fit: cover;
     display: block;
+    transition: transform 0.35s ease;
   }
 
   &__info {
