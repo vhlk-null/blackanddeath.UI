@@ -1,6 +1,14 @@
 app-section:nth-of-type(2),
 app-section:nth-of-type(4) {
-  --min-card-width: 22.875rem;
+  --section-grid-columns: repeat(3, 1fr);
+
+  @media (max-width: 56.25rem) {
+    --section-grid-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 28.125rem) {
+    --section-grid-columns: 1fr;
+  }
 }
 
 app-section:nth-of-type(1),
@@ -48,7 +56,7 @@ app-band-card:last-child {
 }
 
 // 2 cols: restore 3rd, remove every 2nd and last-child
-@media (max-width: 76rem) {
+@media (max-width: 56.25rem) {
   app-band-card:nth-child(3n) {
     border-right: 1px solid var(--color-card-separator);
   }
@@ -60,7 +68,7 @@ app-band-card:last-child {
 }
 
 // 1 col: no borders
-@media (max-width: 50.75rem) {
+@media (max-width: 28.125rem) {
   app-band-card:nth-child(n) {
     border-right: none;
   }
