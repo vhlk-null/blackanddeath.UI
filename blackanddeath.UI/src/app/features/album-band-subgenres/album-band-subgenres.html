@@ -1,6 +1,3 @@
-<app-section [sectionTitle]="''" [tabs]="tabs.albumBand" (tabChange)="tabIndex.set($event)">
-</app-section>
-
 <app-section [sectionTitle]="titles.classicDeath" [tabs]="tabs.subgenre" (tabChange)="classicDeathTabIndex.set($event)">
   @for (album of classicDeathAlbums(); track album.id) {
   <app-album-card [albumCard]="album" />

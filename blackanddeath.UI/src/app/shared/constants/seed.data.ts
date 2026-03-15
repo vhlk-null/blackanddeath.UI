@@ -84,6 +84,30 @@ export class Seed {
         { id: 28, title: 'Iron Plague', band: 'Vastum', type: 'Compilation', year: 2025, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ironplague/300/300?grayscale' },
     ];
 
+    // Classic Black Death
+    classicBlackDeath: Album[] = [
+        { id: 101, title: 'Onward to Golgotha', band: 'Incantation', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3270858501_10.jpg' },
+        { id: 102, title: 'The Rack', band: 'Asphyx', type: 'Full-Length', year: 1991, country: 'Netherlands', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a4039138551_10.jpg' },
+        { id: 103, title: 'Nespithe', band: 'Demilich', type: 'Full-Length', year: 1993, country: 'Finland', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3758872923_10.jpg' },
+        { id: 104, title: 'Dawn of Possession', band: 'Immolation', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a1151529218_10.jpg' },
+    ];
+
+    // Cavernous Black Death
+    cavernousBlackDeath: Album[] = [
+        { id: 201, title: 'Antithesis of Light', band: 'Abysmal Dawn', type: 'Full-Length', year: 2005, country: 'USA', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a0762853604_10.jpg' },
+        { id: 202, title: 'Profound Lore', band: 'Adversarial', type: 'Full-Length', year: 2012, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a1669789762_10.jpg' },
+        { id: 203, title: 'Desolate Endscape', band: 'Necros Christos', type: 'Full-Length', year: 2007, country: 'Germany', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a0522392822_10.jpg' },
+        { id: 204, title: 'Ritual of the Abyss', band: 'Antediluvian', type: 'Full-Length', year: 2011, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a3668756138_10.jpg' },
+    ];
+
+    // Blackened Death
+    blackenedDeath: Album[] = [
+        { id: 301, title: 'Evangelion', band: 'Behemoth', type: 'Full-Length', year: 2009, country: 'Poland', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3979756917_10.jpg' },
+        { id: 302, title: 'Panopticon', band: 'Agalloch', type: 'Full-Length', year: 2012, country: 'USA', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3649907464_10.jpg' },
+        { id: 303, title: 'Necromancy', band: 'Grave Miasma', type: 'Full-Length', year: 2013, country: 'UK', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a2734534319_10.jpg' },
+        { id: 304, title: 'Rites of the Ascension', band: 'Teitanblood', type: 'Full-Length', year: 2014, country: 'Spain', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3191197180_10.jpg' },
+    ];
+
     //#endregion
 
 }

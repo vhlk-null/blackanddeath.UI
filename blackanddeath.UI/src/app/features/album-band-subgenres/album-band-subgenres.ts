@@ -41,14 +41,13 @@ export class AlbumBandSubgenres {
 
   private readonly seed = new Seed();
 
-  private readonly albumSets = [
-    this.seed.topRatedThisYear,
-    this.seed.topRatedThisMonth,
-    this.seed.topRatedAllTime,
-  ];
+  private readonly classicDeathSets = [this.seed.classicBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
+  private readonly warMetalSets = [this.seed.topRatedThisYear, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
+  private readonly cavernousSets = [this.seed.cavernousBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
+  private readonly blackenedDeathSets = [this.seed.blackenedDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
 
-  readonly classicDeathAlbums = computed(() => this.albumSets[this.classicDeathTabIndex()]);
-  readonly warMetalAlbums = computed(() => this.albumSets[this.warMetalTabIndex()]);
-  readonly cavernousBlackDeathAlbums = computed(() => this.albumSets[this.cavernousBlackDeathTabIndex()]);
-  readonly blackenedDeathAlbums = computed(() => this.albumSets[this.blackenedDeathTabIndex()]);
+  readonly classicDeathAlbums = computed(() => this.classicDeathSets[this.classicDeathTabIndex()]);
+  readonly warMetalAlbums = computed(() => this.warMetalSets[this.warMetalTabIndex()]);
+  readonly cavernousBlackDeathAlbums = computed(() => this.cavernousSets[this.cavernousBlackDeathTabIndex()]);
+  readonly blackenedDeathAlbums = computed(() => this.blackenedDeathSets[this.blackenedDeathTabIndex()]);
 }
