@@ -28,8 +28,9 @@
     height: 100%;
 
     &-vinyl {
-      width: 10.6875rem; // 171px
-      height: 10.6875rem; // 171px
+      width: min(171px, 60%);
+      height: min(171px, 60%);
+      flex-shrink: 0;
     }
   }
 

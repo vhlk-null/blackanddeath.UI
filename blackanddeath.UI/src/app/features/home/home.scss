@@ -8,11 +8,11 @@ app-section:nth-of-type(3),
 app-section:nth-of-type(5) {
   --section-grid-columns: repeat(4, 1fr);
 
-  @media (max-width: 74.75rem) {
+  @media (max-width: 56.25rem) {
     --section-grid-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 37.5rem) {
+  @media (max-width: 28.125rem) {
     --section-grid-columns: 1fr;
   }
 }
@@ -24,7 +24,7 @@ app-album-card:last-child {
 }
 
 // 2 cols: restore 4th, remove every 2nd
-@media (max-width: 74.75rem) {
+@media (max-width: 56.25rem) {
   app-album-card:nth-child(4n) {
     border-right: 1px solid var(--color-card-separator);
   }
@@ -35,7 +35,7 @@ app-album-card:last-child {
 }
 
 // 1 col: no borders
-@media (max-width: 37.5rem) {
+@media (max-width: 28.125rem) {
   app-album-card:nth-child(n) {
     border-right: none;
   }
