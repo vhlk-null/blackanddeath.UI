@@ -29,7 +29,7 @@
   }
 
   @media (max-width: 28.125rem) {
-    grid-template-columns: var(--section-grid-columns-sm, 1fr);
+    grid-template-columns: var(--section-grid-columns-sm, repeat(2, 1fr));
   }
 }
 
