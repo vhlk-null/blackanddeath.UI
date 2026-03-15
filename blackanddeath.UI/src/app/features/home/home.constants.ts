@@ -19,7 +19,7 @@ export const SUBGENRE_TABS = ['This Year', 'This Month', 'All Time'];
 export const CLASSIC_BLACK_DEATH_TITLE = 'Classic Black Death';
 export const WAR_METAL_TITLE = 'War Metal';
 export const CAVERNOUS_BLACK_DEATH_TITLE = 'Cavernous Black Death';
-export const BLACKENED_DEATH_TITLE = 'Blackened Death';
+export const BLACKENED_DEATH_TITLE = 'Melodic Black Death';
 
 export const CLASSIC_BLACK_DEATH_TABS = SUBGENRE_TABS;
 export const WAR_METAL_TABS = SUBGENRE_TABS;

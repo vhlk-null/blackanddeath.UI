@@ -7,7 +7,12 @@
       "Bash(mv cards.spec.ts album-card.spec.ts)",
       "WebSearch",
       "WebFetch(domain:en.wikipedia.org)",
-      "WebFetch(domain:unsplash.com)"
+      "WebFetch(domain:unsplash.com)",
+      "Bash(mv \"d:/Projects/blackenddeath.UI/blackanddeath.UI/src/app/features/album-band-subgenres\" \"d:/Projects/blackenddeath.UI/blackanddeath.UI/src/app/features/album-subgenres\")",
+      "Bash(mv album-band-subgenres.html album-subgenres.html)",
+      "Bash(mv album-band-subgenres.scss album-subgenres.scss)",
+      "Bash(mv album-band-subgenres.spec.ts album-subgenres.spec.ts)",
+      "Bash(mv album-band-subgenres.ts album-subgenres.ts)"
     ]
   }
 }

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
-import { AlbumBandSubgenres } from './features/album-band-subgenres/album-band-subgenres';
+import { AlbumSubgenres } from './features/album-subgenres/album-subgenres';
 
 export const routes: Routes = [
     { path: '', component: Home },
-    { path: 'subgenres', component: AlbumBandSubgenres }
+    { path: 'album-genre', component: AlbumSubgenres }
 ];
