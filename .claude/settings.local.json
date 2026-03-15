@@ -4,7 +4,10 @@
       "Bash(mv cards.ts album-card.ts)",
       "Bash(mv cards.html album-card.html)",
       "Bash(mv cards.scss album-card.scss)",
-      "Bash(mv cards.spec.ts album-card.spec.ts)"
+      "Bash(mv cards.spec.ts album-card.spec.ts)",
+      "WebSearch",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:unsplash.com)"
     ]
   }
 }

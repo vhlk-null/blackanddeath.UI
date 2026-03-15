@@ -10,11 +10,9 @@
   cursor: pointer;
 
   &__cover {
+    position: relative;
     width: 100%;
     aspect-ratio: 367 / 233;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
   }
 
@@ -33,6 +31,8 @@
   }
 
   &__image {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
