@@ -3,12 +3,12 @@
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 1.5rem;
+  gap: var(--tabs-gap, 2.5rem);
 
   &__item {
     font-family: var(--font-family-base);
-    font-size: 1.5rem; // 24px
-    line-height: 1.333; // 32px
+    font-size: var(--tab-font-size, 1.5rem); // 24px default
+    line-height: var(--tab-line-height, 1.333);
     font-weight: var(--font-weight-regular);
     color: var(--color-text-muted);
     cursor: pointer;

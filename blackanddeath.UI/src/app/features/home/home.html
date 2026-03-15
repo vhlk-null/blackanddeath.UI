@@ -1,28 +1,28 @@
-<app-section sectionTitle="Top Rated" [tabs]="tabs.topRated" (tabChange)="tabIndex.topRated.set($event)">
+<app-section [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" (tabChange)="tabIndex.topRated.set($event)">
   @for (album of mainTopRatedAlbums(); track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section sectionTitle="Popular Bands" [tabs]="tabs.popularBands" (tabChange)="tabIndex.popularBands.set($event)">
+<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" (tabChange)="tabIndex.popularBands.set($event)">
   @for (band of mainPopularBands(); track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>
 
-<app-section sectionTitle="Recently Added" [tabs]="tabs.recentlyAdded" (tabChange)="tabIndex.recentlyAdded.set($event)">
+<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" (tabChange)="tabIndex.recentlyAdded.set($event)">
   @for (album of mainRecentAlbums(); track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section sectionTitle="Metal Videos" [tabs]="tabs.metalVideos" (tabChange)="tabIndex.metalVideos.set($event)">
+<app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" (tabChange)="tabIndex.metalVideos.set($event)">
   @for (band of mainRecentVideos(); track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>
 
-<app-section sectionTitle="Upcoming Releases" [tabs]="tabs.upcomingReleases" (tabChange)="tabIndex.upcomingReleases.set($event)">
+<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" (tabChange)="tabIndex.upcomingReleases.set($event)">
   @for (album of mainUpcomingReleases(); track album.id) {
   <app-album-card [albumCard]="album" />
   }

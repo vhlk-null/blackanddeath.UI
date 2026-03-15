@@ -1,0 +1,26 @@
+<app-section [sectionTitle]="''" [tabs]="tabs.albumBand" (tabChange)="tabIndex.set($event)">
+</app-section>
+
+<app-section [sectionTitle]="titles.classicDeath" [tabs]="tabs.subgenre" (tabChange)="classicDeathTabIndex.set($event)">
+  @for (album of classicDeathAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.warMetal" [tabs]="tabs.subgenre" (tabChange)="warMetalTabIndex.set($event)">
+  @for (album of warMetalAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.cavernousBlackDeath" [tabs]="tabs.subgenre" (tabChange)="cavernousBlackDeathTabIndex.set($event)">
+  @for (album of cavernousBlackDeathAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.blackenedDeath" [tabs]="tabs.subgenre" (tabChange)="blackenedDeathTabIndex.set($event)">
+  @for (album of blackenedDeathAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>

@@ -2,6 +2,10 @@
   margin-top: var(--section-spacing, 4.125rem); // 66px default
 }
 
+:host(:first-child) .section-container {
+  margin-top: 0;
+}
+
 .section-body {
   display: block;
   max-width: 71.25rem; // 1140px
@@ -27,8 +31,8 @@
   font-family: 'Cinzel', serif;
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  font-size: 2.375rem; // 38px
-  line-height: 1.342; // 51px
+  font-size: var(--section-title-font-size, var(--font-size-4xl));
+  line-height: var(--section-title-line-height, 1.342);
   letter-spacing: 0.085em;
   color: var(--color-text-heading);
 }

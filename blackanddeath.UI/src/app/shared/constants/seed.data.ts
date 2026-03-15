@@ -1,0 +1,89 @@
+import { Album } from "../models/album";
+import { Band } from "../models/band";
+
+export class Seed {
+    //#region Data
+    topRatedThisYear: Album[] = [
+        { id: 1, title: 'De Mysteriis Dom Sathanas', band: 'Mayhem', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/dmds/300/300?grayscale' },
+        { id: 2, title: 'Altars of Madness', band: 'Morbid Angel', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/altars/300/300?grayscale' },
+        { id: 3, title: 'Transilvanian Hunger', band: 'Darkthrone', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/transilvanian/300/300?grayscale' },
+        { id: 4, title: 'Tomb of the Mutilated', band: 'Cannibal Corpse', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/tomb/300/300?grayscale' },
+    ];
+    topRatedThisMonth: Album[] = [
+        { id: 5, title: 'Blessed Are the Sick', band: 'Morbid Angel', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/blessed/300/300?grayscale' },
+        { id: 6, title: 'Covenant', band: 'Morbid Angel', type: 'Full-Length', year: 1993, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/covenant/300/300?grayscale' },
+        { id: 7, title: 'The IVth Crusade', band: 'Bolt Thrower', type: 'Full-Length', year: 1992, country: 'UK', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/crusade/300/300?grayscale' },
+        { id: 8, title: 'In the Nightside Eclipse', band: 'Emperor', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/emperor/300/300?grayscale' },
+    ];
+    topRatedAllTime: Album[] = [
+        { id: 9, title: 'Hvis Lyset Tar Oss', band: 'Burzum', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/hvislyset/300/300?grayscale' },
+        { id: 10, title: 'Onward to Golgotha', band: 'Incantation', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/golgotha/300/300?grayscale' },
+        { id: 11, title: 'Dawn of Possession', band: 'Immolation', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/dawnpossession/300/300?grayscale' },
+        { id: 12, title: 'Under the Sign of the Black Mark', band: 'Bathory', type: 'Full-Length', year: 1987, country: 'Sweden', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/blackmark/300/300?grayscale' },
+    ];
+
+    // Popular Bands
+    popularBandsThisYear: Band[] = [
+        { id: 1, name: 'Mayhem', country: 'Norway', genre: 'Black Metal', formedYear: 1984, coverImage: 'https://picsum.photos/seed/mayhem/300/300?grayscale' },
+        { id: 2, name: 'Morbid Angel', country: 'USA', genre: 'Death Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/morbidangel/300/300?grayscale' },
+        { id: 3, name: 'Darkthrone', country: 'Norway', genre: 'Black Metal', formedYear: 1986, coverImage: 'https://picsum.photos/seed/darkthrone/300/300?grayscale' },
+    ];
+    popularBandsAllTime: Band[] = [
+        { id: 4, name: 'Bathory', country: 'Sweden', genre: 'Black Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/bathory/300/300?grayscale' },
+        { id: 5, name: 'Deicide', country: 'USA', genre: 'Death Metal', formedYear: 1987, coverImage: 'https://picsum.photos/seed/deicide/300/300?grayscale' },
+        { id: 6, name: 'Immortal', country: 'Norway', genre: 'Black Metal', formedYear: 1990, coverImage: 'https://picsum.photos/seed/immortal/300/300?grayscale' },
+    ];
+
+    // Recently Added
+    recentAlbums: Album[] = [
+        { id: 13, title: 'Progenitors of a New Breed', band: 'Malicious', type: 'Full-Length', year: 2024, country: 'Finland', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/progenitors/300/300?grayscale' },
+        { id: 14, title: 'Ritual of the Abyss', band: 'Mortifera', type: 'EP', year: 2024, country: 'Sweden', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ritualabyss/300/300?grayscale' },
+        { id: 15, title: 'Void Ascendancy', band: 'Abigor', type: 'Full-Length', year: 2024, country: 'Germany', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/voidasc/300/300?grayscale' },
+        { id: 16, title: 'Necromantic Hymns', band: 'Nuclearhammer', type: 'Full-Length', year: 2023, country: 'Canada', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/necrohymns/300/300?grayscale' },
+    ];
+    recentBands: Band[] = [
+        { id: 7, name: 'Valdur', country: 'USA', genre: 'Black Death Metal', formedYear: 2005, coverImage: 'https://picsum.photos/seed/valdur/300/300?grayscale' },
+        { id: 8, name: 'Hetroertzen', country: 'Chile', genre: 'Black Metal', formedYear: 2002, coverImage: 'https://picsum.photos/seed/hetroertzen/300/300?grayscale' },
+        { id: 9, name: 'Antaeus', country: 'France', genre: 'Black Metal', formedYear: 1994, coverImage: 'https://picsum.photos/seed/antaeus/300/300?grayscale' },
+    ];
+
+    // Metal Videos
+    videoClips: Band[] = [
+        { id: 10, name: 'Watain', country: 'Sweden', genre: 'Black Metal', formedYear: 1998, coverImage: 'https://picsum.photos/seed/watain/300/300?grayscale' },
+        { id: 11, name: 'Behemoth', country: 'Poland', genre: 'Black Death Metal', formedYear: 1991, coverImage: 'https://picsum.photos/seed/behemoth/300/300?grayscale' },
+        { id: 12, name: 'Mgła', country: 'Poland', genre: 'Black Metal', formedYear: 2000, coverImage: 'https://picsum.photos/seed/mgla/300/300?grayscale' },
+    ];
+    videoLive: Band[] = [
+        { id: 13, name: 'Gorgoroth', country: 'Norway', genre: 'Black Metal', formedYear: 1992, coverImage: 'https://picsum.photos/seed/gorgoroth/300/300?grayscale' },
+        { id: 14, name: 'Cannibal Corpse', country: 'USA', genre: 'Death Metal', formedYear: 1988, coverImage: 'https://picsum.photos/seed/cannibalcorpse/300/300?grayscale' },
+        { id: 15, name: 'Nile', country: 'USA', genre: 'Death Metal', formedYear: 1993, coverImage: 'https://picsum.photos/seed/nile/300/300?grayscale' },
+    ];
+    videoPlaythroughs: Band[] = [
+        { id: 16, name: 'Necrophagist', country: 'Germany', genre: 'Technical Death Metal', formedYear: 1992, coverImage: 'https://picsum.photos/seed/necrophagist/300/300?grayscale' },
+        { id: 17, name: 'Defeated Sanity', country: 'Germany', genre: 'Death Metal', formedYear: 1994, coverImage: 'https://picsum.photos/seed/defeatedsanity/300/300?grayscale' },
+        { id: 18, name: 'Hate Eternal', country: 'USA', genre: 'Death Metal', formedYear: 1997, coverImage: 'https://picsum.photos/seed/hateeternal/300/300?grayscale' },
+    ];
+
+    // Upcoming Releases
+    upcomingFullLength: Album[] = [
+        { id: 17, title: 'Throne of Chaos', band: 'Taake', type: 'Full-Length', year: 2025, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/thronechaos/300/300?grayscale' },
+        { id: 18, title: 'Rites of Oblivion', band: 'Funebrarum', type: 'Full-Length', year: 2025, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ritesoblivion/300/300?grayscale' },
+        { id: 19, title: 'Abyss Eternal', band: 'Sargeist', type: 'Full-Length', year: 2025, country: 'Finland', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/abysseternal/300/300?grayscale' },
+        { id: 20, title: 'Pestilence Reborn', band: 'Grave', type: 'Full-Length', year: 2025, country: 'Sweden', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/pestilence/300/300?grayscale' },
+    ];
+    upcomingEP: Album[] = [
+        { id: 21, title: 'Veil of Darkness', band: 'Katharsis', type: 'EP', year: 2025, country: 'Germany', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/veildark/300/300?grayscale' },
+        { id: 22, title: 'Necrotic Hymns', band: 'Benediction', type: 'EP', year: 2025, country: 'UK', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/necrotichymns/300/300?grayscale' },
+        { id: 23, title: 'Hellfire Doctrine', band: 'Teitanblood', type: 'EP', year: 2025, country: 'USA', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/hellfire/300/300?grayscale' },
+        { id: 24, title: 'Serpent Ritual', band: 'Mgła', type: 'EP', year: 2025, country: 'Poland', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/serpent/300/300?grayscale' },
+    ];
+    upcomingOther: Album[] = [
+        { id: 25, title: 'Chaos Invocation', band: 'Dommedagsnatt', type: 'Single', year: 2025, country: 'Chile', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/chaosinvoc/300/300?grayscale' },
+        { id: 26, title: 'Demonized', band: 'Koldbrann', type: 'Demo', year: 2025, country: 'Norway', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/demonized/300/300?grayscale' },
+        { id: 27, title: 'Wrath Descending', band: 'Glorior Belli', type: 'Split', year: 2025, country: 'France', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/wrath/300/300?grayscale' },
+        { id: 28, title: 'Iron Plague', band: 'Vastum', type: 'Compilation', year: 2025, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ironplague/300/300?grayscale' },
+    ];
+
+    //#endregion
+
+}
