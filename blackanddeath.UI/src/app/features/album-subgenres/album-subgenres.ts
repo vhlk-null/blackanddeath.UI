@@ -12,12 +12,12 @@ import { Section } from '../../shared/components/section/section';
 import { AlbumCard } from '../albums/card/album-card';
 
 @Component({
-  selector: 'app-album-band-subgenres',
+  selector: 'app-album-subgenres',
   imports: [Section, AlbumCard],
-  templateUrl: './album-band-subgenres.html',
-  styleUrl: './album-band-subgenres.scss',
+  templateUrl: './album-subgenres.html',
+  styleUrl: './album-subgenres.scss',
 })
-export class AlbumBandSubgenres {
+export class AlbumSubgenres {
 
   readonly tabs = {
     albumBand: ALBUMS_BANDS,
@@ -42,7 +42,7 @@ export class AlbumBandSubgenres {
   private readonly seed = new Seed();
 
   private readonly classicDeathSets = [this.seed.classicBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
-  private readonly warMetalSets = [this.seed.topRatedThisYear, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
+  private readonly warMetalSets = [this.seed.warMetal, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
   private readonly cavernousSets = [this.seed.cavernousBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
   private readonly blackenedDeathSets = [this.seed.blackenedDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
 

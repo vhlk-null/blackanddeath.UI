@@ -24,9 +24,9 @@ export class Seed {
 
     // Popular Bands
     popularBandsThisYear: Band[] = [
-        { id: 1, name: 'Mayhem', country: 'Norway', genre: 'Black Metal', formedYear: 1984, coverImage: 'https://picsum.photos/seed/mayhem/300/300?grayscale' },
-        { id: 2, name: 'Morbid Angel', country: 'USA', genre: 'Death Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/morbidangel/300/300?grayscale' },
-        { id: 3, name: 'Darkthrone', country: 'Norway', genre: 'Black Metal', formedYear: 1986, coverImage: 'https://picsum.photos/seed/darkthrone/300/300?grayscale' },
+        { id: 1, name: 'Mayhem', country: 'Norway', genre: 'Black Metal', formedYear: 1984, coverImage: 'images/bands-logo/photo_1_2026-03-16_00-40-58.jpg' },
+        { id: 2, name: 'Morbid Angel', country: 'USA', genre: 'Death Metal', formedYear: 1983, coverImage: 'images/bands-logo/photo_2_2026-03-16_00-40-58.jpg' },
+        { id: 3, name: 'Darkthrone', country: 'Norway', genre: 'Black Metal', formedYear: 1986, coverImage: 'images/bands-logo/photo_3_2026-03-16_00-40-58.jpg' },
     ];
     popularBandsAllTime: Band[] = [
         { id: 4, name: 'Bathory', country: 'Sweden', genre: 'Black Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/bathory/300/300?grayscale' },
@@ -90,6 +90,22 @@ export class Seed {
         { id: 102, title: 'The Rack', band: 'Asphyx', type: 'Full-Length', year: 1991, country: 'Netherlands', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a4039138551_10.jpg' },
         { id: 103, title: 'Nespithe', band: 'Demilich', type: 'Full-Length', year: 1993, country: 'Finland', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3758872923_10.jpg' },
         { id: 104, title: 'Dawn of Possession', band: 'Immolation', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a1151529218_10.jpg' },
+        { id: 105, title: 'The Bleeding', band: 'Cannibal Corpse', type: 'Full-Length', year: 1994, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://picsum.photos/seed/bleeding/300/300?grayscale' },
+        { id: 106, title: 'Altars of Madness', band: 'Morbid Angel', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3113054050_10.jpg' },
+        { id: 107, title: 'Slowly We Rot', band: 'Obituary', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://picsum.photos/seed/slowlywerot/300/300?grayscale' },
+        { id: 108, title: 'Left Hand Path', band: 'Entombed', type: 'Full-Length', year: 1990, country: 'Sweden', genre: 'Classic Black Death', coverImage: 'https://picsum.photos/seed/lefthandpath/300/300?grayscale' },
+    ];
+
+    // War Metal
+    warMetal: Album[] = [
+        { id: 151, title: 'Fallen Angel of Doom', band: 'Proclamation', type: 'Full-Length', year: 2000, country: 'Spain', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/fallenangel/300/300?grayscale' },
+        { id: 152, title: 'Goat', band: 'Revenge', type: 'Full-Length', year: 2012, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/goat/300/300?grayscale' },
+        { id: 153, title: 'Reaper', band: 'Conqueror', type: 'Full-Length', year: 1999, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/reaper/300/300?grayscale' },
+        { id: 154, title: 'Blasphemy', band: 'Blasphemy', type: 'Full-Length', year: 1993, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/blasphemy/300/300?grayscale' },
+        { id: 155, title: 'Inri', band: 'Sarcófago', type: 'Full-Length', year: 1987, country: 'Brazil', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/inri/300/300?grayscale' },
+        { id: 156, title: 'Drawing Down the Moon', band: 'Beherit', type: 'Full-Length', year: 1993, country: 'Finland', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/drawingdown/300/300?grayscale' },
+        { id: 157, title: "Forged in Satan's Flames", band: 'Revenge', type: 'Full-Length', year: 2001, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/forgedsatan/300/300?grayscale' },
+        { id: 158, title: 'Havohej', band: 'Havohej', type: 'Full-Length', year: 1993, country: 'USA', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/havohej/300/300?grayscale' },
     ];
 
     // Cavernous Black Death
@@ -98,6 +114,10 @@ export class Seed {
         { id: 202, title: 'Profound Lore', band: 'Adversarial', type: 'Full-Length', year: 2012, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a1669789762_10.jpg' },
         { id: 203, title: 'Desolate Endscape', band: 'Necros Christos', type: 'Full-Length', year: 2007, country: 'Germany', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a0522392822_10.jpg' },
         { id: 204, title: 'Ritual of the Abyss', band: 'Antediluvian', type: 'Full-Length', year: 2011, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a3668756138_10.jpg' },
+        { id: 205, title: 'The Underworld Ascension', band: 'Portal', type: 'Full-Length', year: 2007, country: 'Australia', genre: 'Cavernous Black Death', coverImage: 'https://picsum.photos/seed/portal/300/300?grayscale' },
+        { id: 206, title: 'Vomit Upon the Cross', band: 'Teitanblood', type: 'Full-Length', year: 2009, country: 'Spain', genre: 'Cavernous Black Death', coverImage: 'https://picsum.photos/seed/vomitcross/300/300?grayscale' },
+        { id: 207, title: 'Onward to Golgotha', band: 'Incantation', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a3270858501_10.jpg' },
+        { id: 208, title: 'Profound Blasphemies', band: 'Mitochondrion', type: 'Full-Length', year: 2011, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://picsum.photos/seed/mitochondrion/300/300?grayscale' },
     ];
 
     // Blackened Death
@@ -106,6 +126,10 @@ export class Seed {
         { id: 302, title: 'Panopticon', band: 'Agalloch', type: 'Full-Length', year: 2012, country: 'USA', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3649907464_10.jpg' },
         { id: 303, title: 'Necromancy', band: 'Grave Miasma', type: 'Full-Length', year: 2013, country: 'UK', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a2734534319_10.jpg' },
         { id: 304, title: 'Rites of the Ascension', band: 'Teitanblood', type: 'Full-Length', year: 2014, country: 'Spain', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3191197180_10.jpg' },
+        { id: 305, title: 'The Satanist', band: 'Behemoth', type: 'Full-Length', year: 2014, country: 'Poland', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/satanist/300/300?grayscale' },
+        { id: 306, title: 'De Mysteriis Dom Sathanas', band: 'Mayhem', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a2368920343_16.jpg' },
+        { id: 307, title: 'A Blaze in the Northern Sky', band: 'Darkthrone', type: 'Full-Length', year: 1992, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/darkthroneb/300/300?grayscale' },
+        { id: 308, title: 'Anthems to the Welkin at Dusk', band: 'Emperor', type: 'Full-Length', year: 1997, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/emperorwelkin/300/300?grayscale' },
     ];
 
     //#endregion
