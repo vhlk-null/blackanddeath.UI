@@ -20,9 +20,17 @@
 
 .section-content {
   display: grid;
-  grid-template-columns: var(--section-grid-columns, repeat(auto-fill, minmax(var(--min-card-width, 16.875rem), 1fr)));
-  gap: 1.5rem 0.625rem; // 10px between cards (5px each side)
+  grid-template-columns: var(--section-grid-columns, repeat(4, 1fr));
+  gap: 1.5rem 0.625rem;
   margin-top: 1.5rem;
+
+  @media (max-width: 56.25rem) {
+    grid-template-columns: var(--section-grid-columns-md, repeat(2, 1fr));
+  }
+
+  @media (max-width: 28.125rem) {
+    grid-template-columns: var(--section-grid-columns-sm, 1fr);
+  }
 }
 
 .section-title {

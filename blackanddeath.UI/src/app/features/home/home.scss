@@ -1,27 +1,5 @@
+// Band sections use 3 columns instead of the global default of 4
 app-section:nth-of-type(2),
 app-section:nth-of-type(4) {
   --section-grid-columns: repeat(3, 1fr);
-
-  @media (max-width: 56.25rem) {
-    --section-grid-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 28.125rem) {
-    --section-grid-columns: 1fr;
-  }
 }
-
-app-section:nth-of-type(1),
-app-section:nth-of-type(3),
-app-section:nth-of-type(5) {
-  --section-grid-columns: repeat(4, 1fr);
-
-  @media (max-width: 56.25rem) {
-    --section-grid-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 28.125rem) {
-    --section-grid-columns: 1fr;
-  }
-}
-
