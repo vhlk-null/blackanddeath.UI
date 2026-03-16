@@ -5,8 +5,7 @@
 
 .genre-card {
   display: block;
-  width: 270px;
-  height: 343px;
+  width: 100%;
   background: #17181A;
   border: 1px solid #222222;
   border-radius: 4px;
@@ -24,7 +23,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 270px;
+    aspect-ratio: 1;
     background: #212224;
     border-radius: 4px 4px 0 0;
     overflow: hidden;
@@ -41,8 +40,8 @@
     text-align: center;
     font-family: 'Cinzel', serif;
     font-weight: 400;
-    font-size: 1.5rem;
-    line-height: 2rem;
+    font-size: clamp(0.875rem, 1.8vw, 1.5rem);
+    line-height: 1.333;
     color: #E3EAFF;
     white-space: nowrap;
     overflow: hidden;
