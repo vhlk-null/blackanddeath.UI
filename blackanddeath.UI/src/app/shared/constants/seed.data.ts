@@ -132,6 +132,34 @@ export class Seed {
         { id: 308, title: 'Anthems to the Welkin at Dusk', band: 'Emperor', type: 'Full-Length', year: 1997, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/emperorwelkin/300/300?grayscale' },
     ];
 
+    // Classic Black Death Bands
+    classicBlackDeathBands: Band[] = [
+        { id: 101, name: 'Incantation', country: 'USA', genre: 'Classic Black Death', formedYear: 1989, coverImage: 'https://picsum.photos/seed/incantation/300/300?grayscale' },
+        { id: 102, name: 'Asphyx', country: 'Netherlands', genre: 'Classic Black Death', formedYear: 1987, coverImage: 'https://picsum.photos/seed/asphyx/300/300?grayscale' },
+        { id: 103, name: 'Immolation', country: 'USA', genre: 'Classic Black Death', formedYear: 1986, coverImage: 'https://picsum.photos/seed/immolation/300/300?grayscale' },
+    ];
+
+    // War Metal Bands
+    warMetalBands: Band[] = [
+        { id: 104, name: 'Blasphemy', country: 'Canada', genre: 'War Metal', formedYear: 1984, coverImage: 'https://picsum.photos/seed/blasphemyband/300/300?grayscale' },
+        { id: 105, name: 'Revenge', country: 'Canada', genre: 'War Metal', formedYear: 1999, coverImage: 'https://picsum.photos/seed/revengeband/300/300?grayscale' },
+        { id: 106, name: 'Conqueror', country: 'Canada', genre: 'War Metal', formedYear: 1994, coverImage: 'https://picsum.photos/seed/conquerorband/300/300?grayscale' },
+    ];
+
+    // Cavernous Black Death Bands
+    cavernousBlackDeathBands: Band[] = [
+        { id: 107, name: 'Portal', country: 'Australia', genre: 'Cavernous Black Death', formedYear: 1994, coverImage: 'https://picsum.photos/seed/portalband/300/300?grayscale' },
+        { id: 108, name: 'Antediluvian', country: 'Canada', genre: 'Cavernous Black Death', formedYear: 2008, coverImage: 'https://picsum.photos/seed/antediluvianband/300/300?grayscale' },
+        { id: 109, name: 'Mitochondrion', country: 'Canada', genre: 'Cavernous Black Death', formedYear: 2003, coverImage: 'https://picsum.photos/seed/mitochondrionband/300/300?grayscale' },
+    ];
+
+    // Blackened Death Bands
+    blackenedDeathBands: Band[] = [
+        { id: 110, name: 'Behemoth', country: 'Poland', genre: 'Blackened Death', formedYear: 1991, coverImage: 'https://picsum.photos/seed/behemothband/300/300?grayscale' },
+        { id: 111, name: 'Grave Miasma', country: 'UK', genre: 'Blackened Death', formedYear: 2002, coverImage: 'https://picsum.photos/seed/gravemiasma/300/300?grayscale' },
+        { id: 112, name: 'Teitanblood', country: 'Spain', genre: 'Blackened Death', formedYear: 2003, coverImage: 'https://picsum.photos/seed/teitanbloodband/300/300?grayscale' },
+    ];
+
     //#endregion
 
 }

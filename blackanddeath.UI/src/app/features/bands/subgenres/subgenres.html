@@ -1,0 +1,23 @@
+<app-section [sectionTitle]="titles.classicDeath" [tabs]="tabs.subgenre" (tabChange)="classicDeathTabIndex.set($event)">
+  @for (band of classicDeathBands(); track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.warMetal" [tabs]="tabs.subgenre" (tabChange)="warMetalTabIndex.set($event)">
+  @for (band of warMetalBands(); track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.cavernousBlackDeath" [tabs]="tabs.subgenre" (tabChange)="cavernousBlackDeathTabIndex.set($event)">
+  @for (band of cavernousBlackDeathBands(); track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.blackenedDeath" [tabs]="tabs.subgenre" (tabChange)="blackenedDeathTabIndex.set($event)">
+  @for (band of blackenedDeathBands(); track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>
