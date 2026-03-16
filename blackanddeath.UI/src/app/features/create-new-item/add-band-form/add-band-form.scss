@@ -18,6 +18,10 @@
     max-width: 35rem;
   }
 
+  app-section:first-of-type {
+    padding-top: 5.75rem; // align preview with Band Logo field
+  }
+
   &__heading {
     margin: 0 0 0.375rem;
     font-family: 'Cinzel', serif;

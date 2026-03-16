@@ -18,6 +18,10 @@
     max-width: 35rem;
   }
 
+  app-section:first-of-type {
+    padding-top: 5.75rem; // align preview with Album Cover field
+  }
+
   &__content {
     display: flex;
     flex-direction: column;
