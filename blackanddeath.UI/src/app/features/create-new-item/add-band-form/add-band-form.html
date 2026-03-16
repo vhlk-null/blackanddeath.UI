@@ -1,6 +1,6 @@
 <div class="add-band">
 
-  <app-section style="--section-grid-columns: 1fr">
+  <div class="add-band__preview-wrapper">
     <div class="add-band__preview">
       @if (previewUrl) {
         <img [src]="previewUrl" alt="Band logo preview" class="add-band__preview-img" />
@@ -15,7 +15,7 @@
         </div>
       }
     </div>
-  </app-section>
+  </div>
 
   <app-section sectionTitle="Add Form" class="add-band__form-section">
     <div class="add-band__content">

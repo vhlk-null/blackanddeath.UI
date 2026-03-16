@@ -1,6 +1,6 @@
 <div class="add-album">
 
-  <app-section style="--section-grid-columns: 1fr">
+  <div class="add-album__preview-wrapper">
     <div class="add-album__preview">
       @if (previewUrl) {
         <img [src]="previewUrl" alt="Album cover preview" class="add-album__preview-img" />
@@ -15,7 +15,7 @@
         </div>
       }
     </div>
-  </app-section>
+  </div>
 
   <app-section sectionTitle="Add Form" class="add-album__form-section">
     <div class="add-album__content">
