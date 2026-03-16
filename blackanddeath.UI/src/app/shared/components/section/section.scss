@@ -8,7 +8,7 @@
 
 .section-body {
   display: block;
-  max-width: 71.25rem; // 1140px
+  max-width: var(--section-body-max-width, 71.25rem); // 1140px
   margin: 0 auto;
 }
 
@@ -36,7 +36,7 @@
 
 .section-title {
   margin: 0 auto;
-  max-width: 71.25rem;
+  max-width: var(--section-body-max-width, 71.25rem);
   font-family: 'Cinzel', serif;
   font-style: normal;
   font-weight: var(--font-weight-regular);

@@ -1,0 +1,182 @@
+<div class="add-band">
+
+  <app-section sectionTitle="Add Form" style="--section-grid-columns: 1fr">
+    <p class="add-band__note">Moderation can take 3 to 5 days!</p>
+
+    <form class="add-band__form" (submit)="$event.preventDefault()">
+
+      <div class="add-band__row">
+        <label class="add-band__label">Band logo:</label>
+        <label class="add-band__file-btn">
+          Upload image
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+          <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+        </label>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-name">Band name:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-name" type="text" placeholder="Band name" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-foundation">Foundation:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-country">Country:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-country" type="text" placeholder="Country" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-genre">Genre:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-genre" type="text" placeholder="Genre" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-subgenres">Subgenres:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-label">Label:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-label" type="text" placeholder="Record label" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row add-band__row--textarea">
+        <label class="add-band__label" for="band-styles">Styles:</label>
+        <textarea class="add-band__textarea" id="band-styles" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="add-band__actions">
+        <button class="add-band__btn add-band__btn--cancel" type="button">Cancel</button>
+        <button class="add-band__btn add-band__btn--publish" type="submit">Publish</button>
+      </div>
+
+    </form>
+  </app-section>
+
+  <app-section sectionTitle="Links Band Added" style="--section-grid-columns: 1fr">
+    <p class="add-band__note">Copy URL only</p>
+
+    <div class="add-band__preview">
+      @if (previewUrl) {
+        <img [src]="previewUrl" alt="Band logo preview" class="add-band__preview-img" />
+      } @else {
+        <div class="add-band__preview-empty">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      }
+    </div>
+
+    <form class="add-band__form" (submit)="$event.preventDefault()">
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-facebook">Facebook:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-facebook" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-youtube">Youtube:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-youtube" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-instagram">Instagram:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-instagram" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-twitter">Twitter:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-twitter" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-site">Band site:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-site" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="add-band__actions">
+        <button class="add-band__btn add-band__btn--cancel" type="button">Cancel</button>
+        <button class="add-band__btn add-band__btn--publish" type="submit">Save</button>
+      </div>
+
+    </form>
+  </app-section>
+
+</div>

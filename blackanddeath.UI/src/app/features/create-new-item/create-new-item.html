@@ -1,0 +1,15 @@
+<app-section sectionTitle="Expand the Archive" [tabs]="tabs" (tabChange)="activeTab.set($event)">
+
+    @switch (activeTab()) {
+    @case (0) {
+    <app-add-album-form />
+    }
+    @case (1) {
+    <app-add-band-form />
+    }
+    @case (2) {
+    <!-- Add Metadata form -->
+    }
+    }
+
+</app-section>

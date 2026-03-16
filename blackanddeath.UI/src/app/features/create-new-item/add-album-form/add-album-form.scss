@@ -1,0 +1,211 @@
+.add-album {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+
+  @media (max-width: 56rem) {
+    flex-direction: column;
+  }
+
+  app-section {
+    --section-spacing: 0;
+    --section-body-max-width: none;
+    flex-shrink: 0;
+    width: 35rem; // 560px
+  }
+
+  app-section:first-of-type {
+    height: 46.5625rem; // 745px
+  }
+
+  app-section:last-of-type {
+    height: 29.0625rem; // 465px
+  }
+
+  &__note {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    align-items: center;
+    gap: 0.75rem;
+
+    &--textarea {
+      align-items: flex-start;
+    }
+  }
+
+  &__label {
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  &__file-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--color-border-input-focus);
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+    }
+  }
+
+  &__input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    svg {
+      position: absolute;
+      right: 0.625rem;
+      width: 1rem;
+      height: 1rem;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    height: 2.25rem;
+    padding: 0 2rem 0 0.75rem;
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    &:focus {
+      border-color: var(--color-border-input-focus);
+    }
+
+    &[type='number']::-webkit-inner-spin-button,
+    &[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+
+  &__textarea {
+    width: 100%;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    min-height: 5rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    &:focus {
+      border-color: var(--color-border-input-focus);
+    }
+  }
+
+  // Album cover: 367 x 367
+  &__preview {
+    width: 22.9375rem;
+    height: 22.9375rem;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  &__preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__preview-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-placeholder);
+
+    svg {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  &__btn {
+    height: 2.25rem;
+    padding: 0 1.5rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &--cancel {
+      background: transparent;
+      border: 1px solid var(--color-border-input);
+      color: var(--color-text-muted);
+    }
+
+    &--publish {
+      background: var(--color-text-heading);
+      border: none;
+      color: var(--color-bg);
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.05em;
+    }
+  }
+}
