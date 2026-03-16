@@ -5,10 +5,12 @@
 
 
 .card {
+  display: block;
   width: 100%;
   background-color: var(--color-card-bg);
   border-radius: 5px;
   cursor: pointer;
+  text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   &:hover {

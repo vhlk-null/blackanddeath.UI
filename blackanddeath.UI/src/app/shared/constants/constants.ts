@@ -12,8 +12,7 @@ export const RECENTLY_ADDED_TABS = ['Albums', 'Bands'];
 export const METAL_VIDEOS_TABS = ['Clips', 'Live', 'Playthroughs'];
 export const UPCOMING_RELEASES_TABS = ['Full Length', 'Extended Play', 'Other'];
 
-// Sub genre page
-export const ALBUMS_BANDS = ['Albums', 'Bands'];
+// Album 
 export const SUBGENRE_TABS = ['This Year', 'This Month', 'All Time'];
 
 export const CLASSIC_BLACK_DEATH_TITLE = 'Classic Black Death';
@@ -25,3 +24,9 @@ export const CLASSIC_BLACK_DEATH_TABS = SUBGENRE_TABS;
 export const WAR_METAL_TABS = SUBGENRE_TABS;
 export const CAVERNOUS_BLACK_DEATH_TABS = SUBGENRE_TABS;
 export const BLACKENED_DEATH_TABS = SUBGENRE_TABS;
+
+// Album info
+export const ALBUM_INFORMATION = ['Information', 'Review'];
+export const DISCOGRAPHY_TITLE = 'Discography';
+export const VIDEOS_TITLE = 'Videos';
+export const SIMILAR_ALBUMS_TITLE = 'Similar Albums';

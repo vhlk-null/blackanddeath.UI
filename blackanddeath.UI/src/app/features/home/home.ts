@@ -13,7 +13,7 @@ import {
   RECENTLY_ADDED_TABS,
   METAL_VIDEOS_TABS,
   UPCOMING_RELEASES_TABS,
-} from './home.constants';
+} from '../../shared/constants/constants';
 import { Seed } from '../../shared/constants/seed.data';
 
 @Component({

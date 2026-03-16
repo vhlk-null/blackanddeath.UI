@@ -9,7 +9,7 @@ import { Tabs } from '../tabs/tabs';
 })
 export class Section {
   sectionTitle = input.required<string>();
-  tabs = input.required<string[]>();
+  tabs = input<string[]>();
   columns = input<number>(4);
   tabChange = output<number>();
 }

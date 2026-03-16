@@ -1,4 +1,4 @@
-<div class="card">
+<a class="card" [routerLink]="['/album', albumCard().id]">
     <div class="card__cover">
         @if (albumCard().coverImage) {
         <img class="card__image" [src]="albumCard().coverImage" [alt]="albumCard().title" />
@@ -18,4 +18,4 @@
         <p class="card__meta">{{ albumCard().type }} · {{ albumCard().year }} · {{ albumCard().country }}</p>
         <p class="card__genre">{{ albumCard().genre }}</p>
     </div>
-</div>
+</a>

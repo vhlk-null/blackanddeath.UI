@@ -1,0 +1,72 @@
+<div class="album-info">
+
+  <h1 class="album-info__title">{{ album.title }}</h1>
+
+  <div class="album-info__nav">
+    @for (tab of tabs.info; track tab; let i = $index) {
+    <button class="album-info__nav-tab" [class.active]="infoTabIndex() === i" (click)="infoTabIndex.set(i)">
+      {{ tab }}
+    </button>
+    }
+  </div>
+
+  <div class="album-info__body">
+
+    <div class="album-info__left">
+      <img class="album-info__cover" [src]="album.coverImage" [alt]="album.title" />
+      <div class="album-info__rating">
+        @for (filled of stars; track $index) {
+        <svg class="album-info__star" [class.filled]="filled" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+        </svg>
+        }
+      </div>
+      <table class="album-info__meta">
+        <tr><td class="label">Release:</td><td>{{ album.year }}</td></tr>
+        <tr><td class="label">Country:</td><td>{{ album.country }}</td></tr>
+        <tr><td class="label">Genre:</td><td>{{ album.genre }}</td></tr>
+        <tr><td class="label">Type:</td><td>{{ album.type }}</td></tr>
+        <tr><td class="label">Label:</td><td>{{ album.label }}</td></tr>
+      </table>
+    </div>
+
+    <div class="album-info__right">
+      <div class="album-info__tracklist-header">
+        <div class="album-info__tracklist-tabs">
+          @for (tab of tracklistTabs; track tab; let i = $index) {
+          <button [class.active]="tracklistTabIndex() === i" (click)="tracklistTabIndex.set(i)">{{ tab }}</button>
+          }
+        </div>
+        <span class="album-info__total">{{ totalDuration }} total</span>
+      </div>
+      <ul class="album-info__tracks">
+        @for (track of tracks; track track.number) {
+        <li class="album-info__track">
+          <span class="album-info__track-num">{{ track.number < 10 ? '0' + track.number : track.number }}</span>
+          <span class="album-info__track-title">{{ track.title }}</span>
+          <span class="album-info__track-duration">{{ track.duration }}</span>
+        </li>
+        }
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<app-section [sectionTitle]="titles.discography">
+  @for (album of discographyAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.videos">
+  @for (band of videos; track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.similarAlbums">
+  @for (album of similarAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>

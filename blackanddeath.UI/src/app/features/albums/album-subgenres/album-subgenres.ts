@@ -1,15 +1,8 @@
 import { Component, signal, computed } from '@angular/core';
-import { Seed } from '../../shared/constants/seed.data';
-import {
-  ALBUMS_BANDS,
-  SUBGENRE_TABS,
-  CLASSIC_BLACK_DEATH_TITLE,
-  WAR_METAL_TITLE,
-  CAVERNOUS_BLACK_DEATH_TITLE,
-  BLACKENED_DEATH_TITLE,
-} from '../home/home.constants';
-import { Section } from '../../shared/components/section/section';
-import { AlbumCard } from '../albums/card/album-card';
+import { Section } from '../../../shared/components/section/section';
+import { Seed } from '../../../shared/constants/seed.data';
+import { SUBGENRE_TABS, CLASSIC_BLACK_DEATH_TITLE, WAR_METAL_TITLE, CAVERNOUS_BLACK_DEATH_TITLE, BLACKENED_DEATH_TITLE } from '../../../shared/constants/constants';
+import { AlbumCard } from '../card/album-card';
 
 @Component({
   selector: 'app-album-subgenres',
@@ -20,7 +13,6 @@ import { AlbumCard } from '../albums/card/album-card';
 export class AlbumSubgenres {
 
   readonly tabs = {
-    albumBand: ALBUMS_BANDS,
     subgenre: SUBGENRE_TABS,
   };
 
@@ -32,7 +24,6 @@ export class AlbumSubgenres {
   };
 
   readonly tabIndex = signal(0);
-  readonly pageTitle = computed(() => ALBUMS_BANDS[this.tabIndex()]);
 
   readonly classicDeathTabIndex = signal(0);
   readonly warMetalTabIndex = signal(0);

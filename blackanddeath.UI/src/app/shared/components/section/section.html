@@ -1,9 +1,11 @@
 <div class="section-container">
     <h1 class="section-title">{{ sectionTitle() }}</h1>
     <div class="section-body">
+        @if (tabs()) {
         <div class="section-tabs">
-            <app-tabs [tabs]="tabs()" (tabChange)="tabChange.emit($event)"></app-tabs>
+            <app-tabs [tabs]="tabs()!" (tabChange)="tabChange.emit($event)"></app-tabs>
         </div>
+        }
         <div class="section-content" [style.--columns]="columns()">
             <ng-content></ng-content>
         </div>

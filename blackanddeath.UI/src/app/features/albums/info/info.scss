@@ -1,0 +1,191 @@
+.album-info {
+  max-width: 71.25rem;
+  margin: 0 auto 4.125rem;
+
+  &__title {
+    font-family: 'Cinzel', serif;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-4xl);
+    line-height: 1.2;
+    letter-spacing: 0.085em;
+    color: var(--color-text-heading);
+    margin: 0 0 1.5rem;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid var(--color-separator);
+    margin-bottom: 2rem;
+
+    &-tab {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family-base);
+      font-size: var(--tab-font-size, 1.5rem);
+      line-height: var(--tab-line-height, 1.333);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-muted);
+      padding: 0 0 0.5rem;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+
+      &.active {
+        color: var(--color-tab-active);
+        border-bottom-color: var(--color-tab-active);
+      }
+    }
+  }
+
+  &__body {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  &__left {
+    flex: 0 0 18rem;
+    overflow: hidden;
+  }
+
+  &__cover {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+
+    &:hover {
+      transform: scale(1.06);
+    }
+  }
+
+  &__rating {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0.875rem 0;
+  }
+
+  &__star {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: var(--color-text-muted);
+    stroke-width: 1.5;
+
+    &.filled {
+      fill: #c8a84b;
+      stroke: #c8a84b;
+    }
+  }
+
+  &__meta {
+    width: 100%;
+    border-collapse: collapse;
+
+    tr {
+      border-bottom: 1px solid var(--color-separator);
+    }
+
+    td {
+      padding: 0.5rem 0;
+      font-family: var(--font-family-body);
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      vertical-align: top;
+    }
+
+    td.label {
+      color: var(--color-text-muted);
+      white-space: nowrap;
+      padding-right: 1rem;
+      min-width: 5rem;
+    }
+  }
+
+  &__right {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__tracklist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-separator);
+    margin-bottom: 0;
+  }
+
+  &__tracklist-tabs {
+    display: flex;
+    gap: 1.5rem;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-family-body);
+      font-size: 0.9375rem;
+      color: var(--color-text-muted);
+      padding: 0 0 0.75rem;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s ease, border-color 0.15s ease;
+
+      &.active {
+        color: var(--color-tab-active);
+        border-bottom-color: var(--color-tab-active);
+      }
+    }
+  }
+
+  &__total {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    padding-bottom: 0.75rem;
+  }
+
+  &__tracks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__track {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-separator);
+
+    &-num {
+      font-family: var(--font-family-body);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      min-width: 1.5rem;
+    }
+
+    &-title {
+      flex: 1;
+      font-family: var(--font-family-body);
+      font-size: 1rem;
+      color: var(--color-text);
+    }
+
+    &-duration {
+      font-family: var(--font-family-body);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+  }
+}
+
+// Videos section — always 3 columns in one row
+app-section:nth-of-type(2) {
+  --section-grid-columns: repeat(3, 1fr);
+  --section-grid-columns-md: repeat(3, 1fr);
+  --section-grid-columns-sm: repeat(3, 1fr);
+}
