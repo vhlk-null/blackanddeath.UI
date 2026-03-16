@@ -1,6 +1,24 @@
 <div class="add-band">
 
-  <app-section sectionTitle="Add Form" style="--section-grid-columns: 1fr">
+  <app-section style="--section-grid-columns: 1fr">
+    <div class="add-band__preview">
+      @if (previewUrl) {
+        <img [src]="previewUrl" alt="Band logo preview" class="add-band__preview-img" />
+      } @else {
+        <div class="add-band__preview-empty">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      }
+    </div>
+  </app-section>
+
+  <app-section sectionTitle="Add Form" class="add-band__form-section">
+    <div class="add-band__content">
     <p class="add-band__note">Moderation can take 3 to 5 days!</p>
 
     <form class="add-band__form" (submit)="$event.preventDefault()">
@@ -88,95 +106,49 @@
         <textarea class="add-band__textarea" id="band-styles" placeholder="Type here..."></textarea>
       </div>
 
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-facebook">Facebook:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-facebook" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-youtube">Youtube:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-youtube" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-instagram">Instagram:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-instagram" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-twitter">Twitter:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-twitter" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="add-band__row">
+        <label class="add-band__label" for="band-site">Band site:</label>
+        <div class="add-band__input-wrap">
+          <input class="add-band__input" id="band-site" type="url" placeholder="type here.." />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+
       <div class="add-band__actions">
         <button class="add-band__btn add-band__btn--cancel" type="button">Cancel</button>
         <button class="add-band__btn add-band__btn--publish" type="submit">Publish</button>
       </div>
 
     </form>
-  </app-section>
-
-  <app-section sectionTitle="Links Band Added" style="--section-grid-columns: 1fr">
-    <p class="add-band__note">Copy URL only</p>
-
-    <div class="add-band__preview">
-      @if (previewUrl) {
-        <img [src]="previewUrl" alt="Band logo preview" class="add-band__preview-img" />
-      } @else {
-        <div class="add-band__preview-empty">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <polyline points="21 15 16 10 5 21"/>
-          </svg>
-        </div>
-      }
     </div>
-
-    <form class="add-band__form" (submit)="$event.preventDefault()">
-
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-facebook">Facebook:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-facebook" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-youtube">Youtube:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-youtube" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-instagram">Instagram:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-instagram" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-twitter">Twitter:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-twitter" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-site">Band site:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-site" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="add-band__actions">
-        <button class="add-band__btn add-band__btn--cancel" type="button">Cancel</button>
-        <button class="add-band__btn add-band__btn--publish" type="submit">Save</button>
-      </div>
-
-    </form>
   </app-section>
 
 </div>

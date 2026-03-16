@@ -1,5 +1,7 @@
 <div class="section-container">
+    @if (sectionTitle()) {
     <h1 class="section-title">{{ sectionTitle() }}</h1>
+    }
     <div class="section-body">
         @if (tabs()) {
         <div class="section-tabs">

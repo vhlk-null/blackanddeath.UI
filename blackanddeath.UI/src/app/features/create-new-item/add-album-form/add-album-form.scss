@@ -1,25 +1,27 @@
+:host {
+  display: block;
+  grid-column: 1 / -1;
+}
+
 .add-album {
   display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: flex-start;
   gap: 2rem;
-
-  @media (max-width: 56rem) {
-    flex-direction: column;
-  }
 
   app-section {
     --section-spacing: 0;
     --section-body-max-width: none;
-    flex-shrink: 0;
-    width: 35rem; // 560px
+    flex: 1 1 25rem;
+    max-width: 35rem;
   }
 
-  app-section:first-of-type {
-    height: 46.5625rem; // 745px
-  }
-
-  app-section:last-of-type {
-    height: 29.0625rem; // 465px
+  &__content {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1 / -1;
   }
 
   &__note {

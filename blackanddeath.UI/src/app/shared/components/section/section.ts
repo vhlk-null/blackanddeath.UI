@@ -8,7 +8,7 @@ import { Tabs } from '../tabs/tabs';
   styleUrl: './section.scss',
 })
 export class Section {
-  sectionTitle = input.required<string>();
+  sectionTitle = input<string>('');
   tabs = input<string[]>();
   columns = input<number>(4);
   tabChange = output<number>();
