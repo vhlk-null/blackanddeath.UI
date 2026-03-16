@@ -36,6 +36,7 @@ $color-bg-light: #E6E6F2;
     --color-genre-card-border: #222222;
     --color-genre-card-cover-bg: #212224;
     --color-genre-card-name: #E3EAFF;
+    --color-logo-glow: rgba(200, 208, 255, 0.7);
 }
 
 :root[data-theme="light"] {
@@ -73,6 +74,7 @@ $color-bg-light: #E6E6F2;
     --color-genre-card-border: rgba(0, 0, 0, 0.1);
     --color-genre-card-cover-bg: #D8D8EC;
     --color-genre-card-name: #1A1A2E;
+    --color-logo-glow: rgba(26, 26, 46, 0.6);
 }
 
 @media (prefers-color-scheme: dark) {
