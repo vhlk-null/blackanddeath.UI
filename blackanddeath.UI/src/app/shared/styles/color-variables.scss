@@ -31,6 +31,7 @@ $color-bg-light: #E6E6F2;
     --color-card-meta: #8C8C8C;
     --color-card-separator: #393A3C;
     --color-card-hover-glow: rgba(255, 255, 255, 0.55);
+    --color-star: #F8F9FA;
 }
 
 :root[data-theme="light"] {
@@ -63,6 +64,7 @@ $color-bg-light: #E6E6F2;
     --color-card-meta: #5A5A5A;
     --color-card-separator: rgba(0, 0, 0, 0.2);
     --color-card-hover-glow: rgba(0, 0, 0, 0);
+    --color-star: #1A1A2E;
 }
 
 @media (prefers-color-scheme: dark) {
