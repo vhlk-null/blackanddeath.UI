@@ -4,6 +4,7 @@ import { Subgenres } from './features/albums/subgenres/subgenres';
 import { Info } from './features/albums/info/info';
 import { BandInfo } from './features/bands/info/info';
 import { BandSubgenres } from './features/bands/subgenres/subgenres';
+import { Genres } from './features/genres/genres';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -11,4 +12,5 @@ export const routes: Routes = [
     { path: 'bands/subgenres', component: BandSubgenres },
     { path: 'album/:id', component: Info },
     { path: 'band/:id', component: BandInfo },
+    { path: 'genres', component: Genres }
 ];
