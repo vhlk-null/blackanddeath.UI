@@ -30,3 +30,7 @@ export const ALBUM_INFORMATION = ['Information', 'Review'];
 export const DISCOGRAPHY_TITLE = 'Discography';
 export const VIDEOS_TITLE = 'Videos';
 export const SIMILAR_ALBUMS_TITLE = 'Similar Albums';
+
+// Band info
+export const BAND_INFORMATION = ['Information', 'Biography', 'Review'];
+export const SIMILAR_BANDS_TITLE = 'Similar Bands';

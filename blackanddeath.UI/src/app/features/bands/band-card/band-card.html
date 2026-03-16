@@ -1,4 +1,4 @@
-<div class="band-card">
+<a class="band-card" [routerLink]="['/band', bandCard().id]">
   <div class="band-card__cover">
     @if (bandCard().coverImage) {
       <img class="band-card__image" [src]="bandCard().coverImage" [alt]="bandCard().name" />
@@ -15,4 +15,4 @@
     <h3 class="band-card__name" [title]="bandCard().name">{{ bandCard().name }}</h3>
     <p class="band-card__meta">{{ bandCard().genre }} · {{ bandCard().country }}</p>
   </div>
-</div>
+</a>

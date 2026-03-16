@@ -1,4 +1,4 @@
-.album-info {
+.band-info {
   max-width: 71.25rem;
   margin: 0 auto 4.125rem;
 
@@ -14,7 +14,7 @@
 
   &__nav {
     display: flex;
-    gap: 2rem;
+    gap: var(--tabs-gap, 2.5rem);
     border-bottom: 1px solid var(--color-separator);
     margin-bottom: 2rem;
 
@@ -50,9 +50,13 @@
     overflow: hidden;
   }
 
+  &__cover-wrap {
+    overflow: hidden;
+  }
+
   &__cover {
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: 367 / 233;
     object-fit: cover;
     display: block;
     transition: transform 0.35s ease;
@@ -82,7 +86,7 @@
   }
 
   &__meta {
-    width: 100%;
+    flex: 1;
     border-collapse: collapse;
 
     tr {
@@ -90,9 +94,9 @@
     }
 
     td {
-      padding: 0.5rem 0;
+      padding: 0.75rem 0;
       font-family: var(--font-family-base);
-      font-size: var(--font-size-sm);
+      font-size: 1rem;
       color: var(--color-text);
       vertical-align: top;
     }
@@ -100,91 +104,21 @@
     td.label {
       color: var(--color-text-muted);
       white-space: nowrap;
-      padding-right: 1rem;
-      min-width: 5rem;
-    }
-  }
-
-  &__right {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__tracklist-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--color-separator);
-    margin-bottom: 0;
-  }
-
-  &__tracklist-tabs {
-    display: flex;
-    gap: 1.5rem;
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: var(--font-family-base);
-      font-size: 0.9375rem;
-      color: var(--color-text-muted);
-      padding: 0 0 0.75rem;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: color 0.15s ease, border-color 0.15s ease;
-
-      &.active {
-        color: var(--color-tab-active);
-        border-bottom-color: var(--color-tab-active);
-      }
-    }
-  }
-
-  &__total {
-    font-family: var(--font-family-base);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    padding-bottom: 0.75rem;
-  }
-
-  &__tracks {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  &__track {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--color-separator);
-
-    &-num {
-      font-family: var(--font-family-base);
-      font-size: var(--font-size-sm);
-      color: var(--color-text-muted);
-      min-width: 1.5rem;
-    }
-
-    &-title {
-      flex: 1;
-      font-family: var(--font-family-base);
-      font-size: 1rem;
-      color: var(--color-text);
-    }
-
-    &-duration {
-      font-family: var(--font-family-base);
-      font-size: var(--font-size-sm);
-      color: var(--color-text-muted);
+      padding-right: 2rem;
+      min-width: 7rem;
     }
   }
 }
 
 // Videos section — always 3 columns in one row
 app-section:nth-of-type(2) {
+  --section-grid-columns: repeat(3, 1fr);
+  --section-grid-columns-md: repeat(3, 1fr);
+  --section-grid-columns-sm: repeat(3, 1fr);
+}
+
+// Similar Bands — always 3 columns
+app-section:nth-of-type(3) {
   --section-grid-columns: repeat(3, 1fr);
   --section-grid-columns-md: repeat(3, 1fr);
   --section-grid-columns-sm: repeat(3, 1fr);

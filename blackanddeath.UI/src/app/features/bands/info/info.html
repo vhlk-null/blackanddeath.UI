@@ -1,0 +1,56 @@
+<div class="band-info">
+
+  <h1 class="band-info__title">{{ band.name }}</h1>
+
+  <div class="band-info__nav">
+    @for (tab of tabs.info; track tab; let i = $index) {
+    <button class="band-info__nav-tab" [class.active]="infoTabIndex() === i" (click)="infoTabIndex.set(i)">
+      {{ tab }}
+    </button>
+    }
+  </div>
+
+  <div class="band-info__body">
+
+    <div class="band-info__left">
+      <div class="band-info__cover-wrap">
+        <img class="band-info__cover" [src]="band.coverImage" [alt]="band.name" />
+      </div>
+      <div class="band-info__rating">
+        @for (filled of stars; track $index) {
+        <svg class="band-info__star" [class.filled]="filled" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+        </svg>
+        }
+      </div>
+    </div>
+
+    <table class="band-info__meta">
+      <tr><td class="label">Country:</td><td>{{ band.country }}</td></tr>
+      <tr><td class="label">City:</td><td>{{ band.city }}</td></tr>
+      <tr><td class="label">Status:</td><td>{{ band.status }}</td></tr>
+      <tr><td class="label">Genre:</td><td>{{ band.genre }}</td></tr>
+      <tr><td class="label">Label:</td><td>{{ band.label }}</td></tr>
+      <tr><td class="label">Formed in:</td><td>{{ band.formedIn }}</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<app-section [sectionTitle]="titles.discography">
+  @for (album of discographyAlbums(); track album.id) {
+  <app-album-card [albumCard]="album" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.videos">
+  @for (band of videos; track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>
+
+<app-section [sectionTitle]="titles.similarBands">
+  @for (band of similarBands(); track band.id) {
+  <app-band-card [bandCard]="band" />
+  }
+</app-section>

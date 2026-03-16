@@ -1,9 +1,10 @@
 import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Band } from '../../../shared/models/band';
 
 @Component({
   selector: 'app-band-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './band-card.html',
   styleUrl: './band-card.scss',
 })
