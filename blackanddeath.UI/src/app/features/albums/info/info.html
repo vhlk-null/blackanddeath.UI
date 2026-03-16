@@ -3,11 +3,43 @@
   <h1 class="album-info__title">{{ album.title }}</h1>
 
   <div class="album-info__nav">
-    @for (tab of tabs.info; track tab; let i = $index) {
-    <button class="album-info__nav-tab" [class.active]="infoTabIndex() === i" (click)="infoTabIndex.set(i)">
-      {{ tab }}
-    </button>
-    }
+    <div class="album-info__nav-tabs">
+      @for (tab of tabs.info; track tab; let i = $index) {
+      <button class="album-info__nav-tab" [class.active]="infoTabIndex() === i" (click)="infoTabIndex.set(i)">
+        {{ tab }}
+      </button>
+      }
+    </div>
+    <div class="album-info__actions">
+      <button class="album-info__action-btn" title="Favourite">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="album-info__action-btn" title="Bookmark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="album-info__action-btn" title="Edit">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 4H4C3.44772 4 3 4.44772 3 5V20C3 20.5523 3.44772 21 4 21H19C19.5523 21 20 20.5523 20 19V12" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M18.5 2.5C19.3284 1.67157 20.6716 1.67157 21.5 2.5C22.3284 3.32843 22.3284 4.67157 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="album-info__action-btn" title="Share">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L12 15M12 3L8 7M12 3L16 7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 14V19C4 19.5523 4.44772 20 5 20H19C19.5523 20 20 19.5523 20 19V14" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="album-info__action-btn" title="Copy link">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 13C10.4295 13.5741 10.9774 14.0491 11.6066 14.3929C12.2357 14.7367 12.9315 14.9411 13.6467 14.9923C14.3618 15.0435 15.0796 14.9403 15.7513 14.6897C16.4231 14.4392 17.0331 14.047 17.54 13.54L20.54 10.54C21.4508 9.59695 21.9548 8.33394 21.9434 7.02296C21.932 5.71198 21.4061 4.45791 20.479 3.53087C19.5519 2.60383 18.2979 2.07799 16.9869 2.0666C15.6759 2.0552 14.4129 2.55918 13.47 3.46998L11.75 5.17998" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M14 11C13.5705 10.4259 13.0226 9.95089 12.3934 9.60706C11.7642 9.26323 11.0684 9.05888 10.3533 9.00766C9.63816 8.95645 8.92037 9.05964 8.24861 9.31018C7.57685 9.56073 6.96684 9.95289 6.45996 10.46L3.45996 13.46C2.54917 14.403 2.04519 15.666 2.05659 16.977C2.06798 18.288 2.59382 19.5421 3.52086 20.4691C4.4479 21.3962 5.70197 21.922 7.01295 21.9334C8.32393 21.9448 9.58694 21.4408 10.53 20.53L12.24 18.82" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="album-info__body">
