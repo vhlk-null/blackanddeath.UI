@@ -63,12 +63,13 @@
     svg {
       width: 1.375rem;
       height: 1.375rem;
-      stroke: #B3B4B6;
+      stroke: var(--color-text-muted);
       fill: none;
+      transition: stroke 0.2s ease;
     }
 
     &:hover svg {
-      stroke: var(--color-text);
+      stroke: var(--color-text-heading);
     }
   }
 

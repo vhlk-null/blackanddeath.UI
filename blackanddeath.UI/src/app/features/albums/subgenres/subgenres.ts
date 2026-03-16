@@ -5,12 +5,12 @@ import { SUBGENRE_TABS, CLASSIC_BLACK_DEATH_TITLE, WAR_METAL_TITLE, CAVERNOUS_BL
 import { AlbumCard } from '../card/album-card';
 
 @Component({
-  selector: 'app-album-subgenres',
+  selector: 'app-subgenres',
   imports: [Section, AlbumCard],
-  templateUrl: './album-subgenres.html',
-  styleUrl: './album-subgenres.scss',
+  templateUrl: './subgenres.html',
+  styleUrl: './subgenres.scss',
 })
-export class AlbumSubgenres {
+export class Subgenres {
 
   readonly tabs = {
     subgenre: SUBGENRE_TABS,
