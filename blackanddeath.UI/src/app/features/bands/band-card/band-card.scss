@@ -30,7 +30,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    aspect-ratio: 367 / 233;
+    aspect-ratio: 367 / 231;
 
     &-vinyl {
       width: min(171px, 60%);
@@ -41,7 +41,7 @@
 
   &__image {
     width: 100%;
-    aspect-ratio: 367 / 233;
+    aspect-ratio: 367 / 231;
     object-fit: cover;
     display: block;
     transition: transform 0.35s ease;

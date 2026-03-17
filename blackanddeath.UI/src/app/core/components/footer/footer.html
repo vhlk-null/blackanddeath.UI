@@ -1,0 +1,30 @@
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a routerLink="/" class="footer__logo">Blackened Death Metal</a>
+      <p class="footer__tagline">The heaviest corner of the internet</p>
+    </div>
+
+    <nav class="footer__nav">
+      <span class="footer__nav-title">Explore</span>
+      <ul class="footer__nav-list">
+        <li><a routerLink="/genres" class="footer__nav-link">Genres</a></li>
+        <li><a routerLink="/bands" class="footer__nav-link">Bands</a></li>
+        <li><a routerLink="/albums" class="footer__nav-link">Albums</a></li>
+        <li><a routerLink="/create" class="footer__nav-link">Submit</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer__nav">
+      <span class="footer__nav-title">Community</span>
+      <ul class="footer__nav-list">
+        <li><a routerLink="/about" class="footer__nav-link">About</a></li>
+        <li><a routerLink="/contact" class="footer__nav-link">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="footer__bottom">
+    <span class="footer__copy">&copy; {{ year }} Blackened Death Metal. All rights reserved.</span>
+  </div>
+</footer>
