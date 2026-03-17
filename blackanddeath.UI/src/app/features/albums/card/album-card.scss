@@ -16,6 +16,7 @@
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 32px 4px var(--color-card-hover-glow);
+    background-color: var(--color-card-hover-bg, var(--color-card-bg));
   }
 
   &:hover &__image {

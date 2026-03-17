@@ -76,40 +76,41 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="pink"] {
-    --color-drawer-bg: #E2C8C8;
+    --color-drawer-bg: #FFD7EF;
     --color-drawer-border: rgba(0, 0, 0, 0.08);
-    --color-drawer-link: rgba(44, 26, 26, 0.55);
-    --color-drawer-link-hover-bg: rgba(44, 26, 26, 0.06);
-    --color-drawer-link-hover: rgba(44, 26, 26, 0.9);
-    --color-drawer-link-active-bg: rgba(44, 26, 26, 0.1);
-    --color-drawer-link-active: #2C1A1A;
-    --color-drawer-close: rgba(44, 26, 26, 0.35);
-    --color-drawer-close-hover: rgba(44, 26, 26, 0.8);
+    --color-drawer-link: rgba(60, 20, 40, 0.55);
+    --color-drawer-link-hover-bg: rgba(60, 20, 40, 0.06);
+    --color-drawer-link-hover: rgba(60, 20, 40, 0.9);
+    --color-drawer-link-active-bg: rgba(60, 20, 40, 0.1);
+    --color-drawer-link-active: #3C1428;
+    --color-drawer-close: rgba(60, 20, 40, 0.35);
+    --color-drawer-close-hover: rgba(60, 20, 40, 0.8);
     --color-overlay: rgba(0, 0, 0, 0.3);
-    --color-text-heading: #2C1A1A;
-    --color-tab-active: #7A3030;
-    --color-separator: rgba(139, 58, 58, 0.25);
-    --color-text-muted: #8B5A5A;
-    --color-bg: #EDD8D8;
-    --color-input-bg: #EDD8D8;
-    --color-header-bg: #E2C8C8;
+    --color-text-heading: #3C1428;
+    --color-tab-active: #A0305A;
+    --color-separator: rgba(160, 48, 90, 0.25);
+    --color-text-muted: #9A5070;
+    --color-bg: #FFE2EF;
+    --color-input-bg: #FFE2EF;
+    --color-header-bg: #FFD7EF;
     --color-border: rgba(0, 0, 0, 0.08);
     --color-border-input: rgba(0, 0, 0, 0.15);
     --color-border-input-focus: rgba(0, 0, 0, 0.3);
-    --color-text: rgba(44, 26, 26, 0.75);
-    --color-text-placeholder: rgba(44, 26, 26, 0.3);
-    --color-card-bg: #EDD8D8;
+    --color-text: rgba(60, 20, 40, 0.75);
+    --color-text-placeholder: rgba(60, 20, 40, 0.3);
+    --color-card-bg: #FFE2EF;
+    --color-card-hover-bg: #FFD7EF;
     --color-card-border: rgba(0, 0, 0, 0.1);
-    --color-card-title: #2C1A1A;
-    --color-card-band: #3A2020;
-    --color-card-meta: #8B5A5A;
+    --color-card-title: #3C1428;
+    --color-card-band: #4A1E30;
+    --color-card-meta: #9A5070;
     --color-card-separator: rgba(0, 0, 0, 0.15);
-    --color-card-hover-glow: rgba(0, 0, 0, 0);
-    --color-star: #2C1A1A;
-    --color-genre-card-bg: #E8CECE;
+    --color-card-hover-glow: rgba(255, 100, 160, 0.2);
+    --color-star: #3C1428;
+    --color-genre-card-bg: #FFCCE6;
     --color-genre-card-border: rgba(0, 0, 0, 0.1);
-    --color-genre-card-cover-bg: #D4BBBB;
-    --color-genre-card-name: #2C1A1A;
+    --color-genre-card-cover-bg: #FFB8DA;
+    --color-genre-card-name: #3C1428;
 }
 
 @media (prefers-color-scheme: dark) {
