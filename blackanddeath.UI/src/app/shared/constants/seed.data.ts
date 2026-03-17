@@ -1,25 +1,44 @@
 import { Album } from "../models/album";
+import { AlbumType } from "../models/enums/album-type.enum";
+import { AlbumFormat } from "../models/enums/album-format.enum";
 import { Band } from "../models/band";
+
+function album(id: string, title: string, band: string, type: AlbumType, year: number, country: string, genre: string, coverUrl: string | null): Album {
+    return {
+        id,
+        title,
+        releaseDate: year,
+        coverUrl,
+        type,
+        format: AlbumFormat.Digital,
+        label: null,
+        bands: [{ id: null, name: band }],
+        countries: [{ id: '0', name: country, code: '' }],
+        genres: [{ id: '0', name: genre, isPrimary: true }],
+        streamingLinks: [],
+        tracks: [],
+    };
+}
 
 export class Seed {
     //#region Data
     topRatedThisYear: Album[] = [
-        { id: 1, title: 'De Mysteriis Dom Sathanas', band: 'Mayhem', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://f4.bcbits.com/img/a2368920343_16.jpg' },
-        { id: 2, title: 'Altars of Madness', band: 'Morbid Angel', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Death Metal', coverImage: 'https://f4.bcbits.com/img/a3113054050_10.jpg' },
-        { id: 3, title: 'Transilvanian Hunger', band: 'Darkthrone', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://f4.bcbits.com/img/a1670313978_10.jpg' },
-        { id: 4, title: 'Tomb of the Mutilated', band: 'Cannibal Corpse', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Death Metal', coverImage: 'https://www.metal-archives.com/images/1/3/5/7/1357784.png?3754' },
+        album('1', 'De Mysteriis Dom Sathanas', 'Mayhem', AlbumType.FullLength, 1994, 'Norway', 'Black Metal', 'https://f4.bcbits.com/img/a2368920343_16.jpg'),
+        album('2', 'Altars of Madness', 'Morbid Angel', AlbumType.FullLength, 1989, 'USA', 'Death Metal', 'https://f4.bcbits.com/img/a3113054050_10.jpg'),
+        album('3', 'Transilvanian Hunger', 'Darkthrone', AlbumType.FullLength, 1994, 'Norway', 'Black Metal', 'https://f4.bcbits.com/img/a1670313978_10.jpg'),
+        album('4', 'Tomb of the Mutilated', 'Cannibal Corpse', AlbumType.FullLength, 1992, 'USA', 'Death Metal', 'https://www.metal-archives.com/images/1/3/5/7/1357784.png?3754'),
     ];
     topRatedThisMonth: Album[] = [
-        { id: 5, title: 'Blessed Are the Sick', band: 'Morbid Angel', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/blessed/300/300?grayscale' },
-        { id: 6, title: 'Covenant', band: 'Morbid Angel', type: 'Full-Length', year: 1993, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/covenant/300/300?grayscale' },
-        { id: 7, title: 'The IVth Crusade', band: 'Bolt Thrower', type: 'Full-Length', year: 1992, country: 'UK', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/crusade/300/300?grayscale' },
-        { id: 8, title: 'In the Nightside Eclipse', band: 'Emperor', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/emperor/300/300?grayscale' },
+        album('5', 'Blessed Are the Sick', 'Morbid Angel', AlbumType.FullLength, 1991, 'USA', 'Death Metal', 'https://picsum.photos/seed/blessed/300/300?grayscale'),
+        album('6', 'Covenant', 'Morbid Angel', AlbumType.FullLength, 1993, 'Norway', 'Black Metal', 'https://picsum.photos/seed/covenant/300/300?grayscale'),
+        album('7', 'The IVth Crusade', 'Bolt Thrower', AlbumType.FullLength, 1992, 'UK', 'Death Metal', 'https://picsum.photos/seed/crusade/300/300?grayscale'),
+        album('8', 'In the Nightside Eclipse', 'Emperor', AlbumType.FullLength, 1994, 'Norway', 'Black Metal', 'https://picsum.photos/seed/emperor/300/300?grayscale'),
     ];
     topRatedAllTime: Album[] = [
-        { id: 9, title: 'Hvis Lyset Tar Oss', band: 'Burzum', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/hvislyset/300/300?grayscale' },
-        { id: 10, title: 'Onward to Golgotha', band: 'Incantation', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/golgotha/300/300?grayscale' },
-        { id: 11, title: 'Dawn of Possession', band: 'Immolation', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/dawnpossession/300/300?grayscale' },
-        { id: 12, title: 'Under the Sign of the Black Mark', band: 'Bathory', type: 'Full-Length', year: 1987, country: 'Sweden', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/blackmark/300/300?grayscale' },
+        album('9', 'Hvis Lyset Tar Oss', 'Burzum', AlbumType.FullLength, 1994, 'Norway', 'Black Metal', 'https://picsum.photos/seed/hvislyset/300/300?grayscale'),
+        album('10', 'Onward to Golgotha', 'Incantation', AlbumType.FullLength, 1992, 'USA', 'Death Metal', 'https://picsum.photos/seed/golgotha/300/300?grayscale'),
+        album('11', 'Dawn of Possession', 'Immolation', AlbumType.FullLength, 1991, 'USA', 'Death Metal', 'https://picsum.photos/seed/dawnpossession/300/300?grayscale'),
+        album('12', 'Under the Sign of the Black Mark', 'Bathory', AlbumType.FullLength, 1987, 'Sweden', 'Black Metal', 'https://picsum.photos/seed/blackmark/300/300?grayscale'),
     ];
 
     // Popular Bands
@@ -36,10 +55,10 @@ export class Seed {
 
     // Recently Added
     recentAlbums: Album[] = [
-        { id: 13, title: 'Progenitors of a New Breed', band: 'Malicious', type: 'Full-Length', year: 2024, country: 'Finland', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/progenitors/300/300?grayscale' },
-        { id: 14, title: 'Ritual of the Abyss', band: 'Mortifera', type: 'EP', year: 2024, country: 'Sweden', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ritualabyss/300/300?grayscale' },
-        { id: 15, title: 'Void Ascendancy', band: 'Abigor', type: 'Full-Length', year: 2024, country: 'Germany', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/voidasc/300/300?grayscale' },
-        { id: 16, title: 'Necromantic Hymns', band: 'Nuclearhammer', type: 'Full-Length', year: 2023, country: 'Canada', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/necrohymns/300/300?grayscale' },
+        album('13', 'Progenitors of a New Breed', 'Malicious', AlbumType.FullLength, 2024, 'Finland', 'Black Death Metal', 'https://picsum.photos/seed/progenitors/300/300?grayscale'),
+        album('14', 'Ritual of the Abyss', 'Mortifera', AlbumType.EP, 2024, 'Sweden', 'Death Metal', 'https://picsum.photos/seed/ritualabyss/300/300?grayscale'),
+        album('15', 'Void Ascendancy', 'Abigor', AlbumType.FullLength, 2024, 'Germany', 'Black Metal', 'https://picsum.photos/seed/voidasc/300/300?grayscale'),
+        album('16', 'Necromantic Hymns', 'Nuclearhammer', AlbumType.FullLength, 2023, 'Canada', 'Black Death Metal', 'https://picsum.photos/seed/necrohymns/300/300?grayscale'),
     ];
     recentBands: Band[] = [
         { id: 7, name: 'Valdur', country: 'USA', genre: 'Black Death Metal', formedYear: 2005, coverImage: 'https://picsum.photos/seed/valdur/300/300?grayscale' },
@@ -66,70 +85,70 @@ export class Seed {
 
     // Upcoming Releases
     upcomingFullLength: Album[] = [
-        { id: 17, title: 'Throne of Chaos', band: 'Taake', type: 'Full-Length', year: 2025, country: 'Norway', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/thronechaos/300/300?grayscale' },
-        { id: 18, title: 'Rites of Oblivion', band: 'Funebrarum', type: 'Full-Length', year: 2025, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ritesoblivion/300/300?grayscale' },
-        { id: 19, title: 'Abyss Eternal', band: 'Sargeist', type: 'Full-Length', year: 2025, country: 'Finland', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/abysseternal/300/300?grayscale' },
-        { id: 20, title: 'Pestilence Reborn', band: 'Grave', type: 'Full-Length', year: 2025, country: 'Sweden', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/pestilence/300/300?grayscale' },
+        album('17', 'Throne of Chaos', 'Taake', AlbumType.FullLength, 2025, 'Norway', 'Black Metal', 'https://picsum.photos/seed/thronechaos/300/300?grayscale'),
+        album('18', 'Rites of Oblivion', 'Funebrarum', AlbumType.FullLength, 2025, 'USA', 'Death Metal', 'https://picsum.photos/seed/ritesoblivion/300/300?grayscale'),
+        album('19', 'Abyss Eternal', 'Sargeist', AlbumType.FullLength, 2025, 'Finland', 'Black Death Metal', 'https://picsum.photos/seed/abysseternal/300/300?grayscale'),
+        album('20', 'Pestilence Reborn', 'Grave', AlbumType.FullLength, 2025, 'Sweden', 'Death Metal', 'https://picsum.photos/seed/pestilence/300/300?grayscale'),
     ];
     upcomingEP: Album[] = [
-        { id: 21, title: 'Veil of Darkness', band: 'Katharsis', type: 'EP', year: 2025, country: 'Germany', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/veildark/300/300?grayscale' },
-        { id: 22, title: 'Necrotic Hymns', band: 'Benediction', type: 'EP', year: 2025, country: 'UK', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/necrotichymns/300/300?grayscale' },
-        { id: 23, title: 'Hellfire Doctrine', band: 'Teitanblood', type: 'EP', year: 2025, country: 'USA', genre: 'Black Death Metal', coverImage: 'https://picsum.photos/seed/hellfire/300/300?grayscale' },
-        { id: 24, title: 'Serpent Ritual', band: 'Mgła', type: 'EP', year: 2025, country: 'Poland', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/serpent/300/300?grayscale' },
+        album('21', 'Veil of Darkness', 'Katharsis', AlbumType.EP, 2025, 'Germany', 'Black Metal', 'https://picsum.photos/seed/veildark/300/300?grayscale'),
+        album('22', 'Necrotic Hymns', 'Benediction', AlbumType.EP, 2025, 'UK', 'Death Metal', 'https://picsum.photos/seed/necrotichymns/300/300?grayscale'),
+        album('23', 'Hellfire Doctrine', 'Teitanblood', AlbumType.EP, 2025, 'USA', 'Black Death Metal', 'https://picsum.photos/seed/hellfire/300/300?grayscale'),
+        album('24', 'Serpent Ritual', 'Mgła', AlbumType.EP, 2025, 'Poland', 'Black Metal', 'https://picsum.photos/seed/serpent/300/300?grayscale'),
     ];
     upcomingOther: Album[] = [
-        { id: 25, title: 'Chaos Invocation', band: 'Dommedagsnatt', type: 'Single', year: 2025, country: 'Chile', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/chaosinvoc/300/300?grayscale' },
-        { id: 26, title: 'Demonized', band: 'Koldbrann', type: 'Demo', year: 2025, country: 'Norway', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/demonized/300/300?grayscale' },
-        { id: 27, title: 'Wrath Descending', band: 'Glorior Belli', type: 'Split', year: 2025, country: 'France', genre: 'Black Metal', coverImage: 'https://picsum.photos/seed/wrath/300/300?grayscale' },
-        { id: 28, title: 'Iron Plague', band: 'Vastum', type: 'Compilation', year: 2025, country: 'USA', genre: 'Death Metal', coverImage: 'https://picsum.photos/seed/ironplague/300/300?grayscale' },
+        album('25', 'Chaos Invocation', 'Dommedagsnatt', AlbumType.Single, 2025, 'Chile', 'Black Metal', 'https://picsum.photos/seed/chaosinvoc/300/300?grayscale'),
+        album('26', 'Demonized', 'Koldbrann', AlbumType.Demo, 2025, 'Norway', 'Death Metal', 'https://picsum.photos/seed/demonized/300/300?grayscale'),
+        album('27', 'Wrath Descending', 'Glorior Belli', AlbumType.Split, 2025, 'France', 'Black Metal', 'https://picsum.photos/seed/wrath/300/300?grayscale'),
+        album('28', 'Iron Plague', 'Vastum', AlbumType.Compilation, 2025, 'USA', 'Death Metal', 'https://picsum.photos/seed/ironplague/300/300?grayscale'),
     ];
 
     // Classic Black Death
     classicBlackDeath: Album[] = [
-        { id: 101, title: 'Onward to Golgotha', band: 'Incantation', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3270858501_10.jpg' },
-        { id: 102, title: 'The Rack', band: 'Asphyx', type: 'Full-Length', year: 1991, country: 'Netherlands', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a4039138551_10.jpg' },
-        { id: 103, title: 'Nespithe', band: 'Demilich', type: 'Full-Length', year: 1993, country: 'Finland', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3758872923_10.jpg' },
-        { id: 104, title: 'Dawn of Possession', band: 'Immolation', type: 'Full-Length', year: 1991, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a1151529218_10.jpg' },
-        { id: 105, title: 'The Bleeding', band: 'Cannibal Corpse', type: 'Full-Length', year: 1994, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://picsum.photos/seed/bleeding/300/300?grayscale' },
-        { id: 106, title: 'Altars of Madness', band: 'Morbid Angel', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://f4.bcbits.com/img/a3113054050_10.jpg' },
-        { id: 107, title: 'Slowly We Rot', band: 'Obituary', type: 'Full-Length', year: 1989, country: 'USA', genre: 'Classic Black Death', coverImage: 'https://picsum.photos/seed/slowlywerot/300/300?grayscale' },
-        { id: 108, title: 'Left Hand Path', band: 'Entombed', type: 'Full-Length', year: 1990, country: 'Sweden', genre: 'Classic Black Death', coverImage: 'https://picsum.photos/seed/lefthandpath/300/300?grayscale' },
+        album('101', 'Onward to Golgotha', 'Incantation', AlbumType.FullLength, 1992, 'USA', 'Classic Black Death', 'https://f4.bcbits.com/img/a3270858501_10.jpg'),
+        album('102', 'The Rack', 'Asphyx', AlbumType.FullLength, 1991, 'Netherlands', 'Classic Black Death', 'https://f4.bcbits.com/img/a4039138551_10.jpg'),
+        album('103', 'Nespithe', 'Demilich', AlbumType.FullLength, 1993, 'Finland', 'Classic Black Death', 'https://f4.bcbits.com/img/a3758872923_10.jpg'),
+        album('104', 'Dawn of Possession', 'Immolation', AlbumType.FullLength, 1991, 'USA', 'Classic Black Death', 'https://f4.bcbits.com/img/a1151529218_10.jpg'),
+        album('105', 'The Bleeding', 'Cannibal Corpse', AlbumType.FullLength, 1994, 'USA', 'Classic Black Death', 'https://picsum.photos/seed/bleeding/300/300?grayscale'),
+        album('106', 'Altars of Madness', 'Morbid Angel', AlbumType.FullLength, 1989, 'USA', 'Classic Black Death', 'https://f4.bcbits.com/img/a3113054050_10.jpg'),
+        album('107', 'Slowly We Rot', 'Obituary', AlbumType.FullLength, 1989, 'USA', 'Classic Black Death', 'https://picsum.photos/seed/slowlywerot/300/300?grayscale'),
+        album('108', 'Left Hand Path', 'Entombed', AlbumType.FullLength, 1990, 'Sweden', 'Classic Black Death', 'https://picsum.photos/seed/lefthandpath/300/300?grayscale'),
     ];
 
     // War Metal
     warMetal: Album[] = [
-        { id: 151, title: 'Fallen Angel of Doom', band: 'Proclamation', type: 'Full-Length', year: 2000, country: 'Spain', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/fallenangel/300/300?grayscale' },
-        { id: 152, title: 'Goat', band: 'Revenge', type: 'Full-Length', year: 2012, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/goat/300/300?grayscale' },
-        { id: 153, title: 'Reaper', band: 'Conqueror', type: 'Full-Length', year: 1999, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/reaper/300/300?grayscale' },
-        { id: 154, title: 'Blasphemy', band: 'Blasphemy', type: 'Full-Length', year: 1993, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/blasphemy/300/300?grayscale' },
-        { id: 155, title: 'Inri', band: 'Sarcófago', type: 'Full-Length', year: 1987, country: 'Brazil', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/inri/300/300?grayscale' },
-        { id: 156, title: 'Drawing Down the Moon', band: 'Beherit', type: 'Full-Length', year: 1993, country: 'Finland', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/drawingdown/300/300?grayscale' },
-        { id: 157, title: "Forged in Satan's Flames", band: 'Revenge', type: 'Full-Length', year: 2001, country: 'Canada', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/forgedsatan/300/300?grayscale' },
-        { id: 158, title: 'Havohej', band: 'Havohej', type: 'Full-Length', year: 1993, country: 'USA', genre: 'War Metal', coverImage: 'https://picsum.photos/seed/havohej/300/300?grayscale' },
+        album('151', 'Fallen Angel of Doom', 'Proclamation', AlbumType.FullLength, 2000, 'Spain', 'War Metal', 'https://picsum.photos/seed/fallenangel/300/300?grayscale'),
+        album('152', 'Goat', 'Revenge', AlbumType.FullLength, 2012, 'Canada', 'War Metal', 'https://picsum.photos/seed/goat/300/300?grayscale'),
+        album('153', 'Reaper', 'Conqueror', AlbumType.FullLength, 1999, 'Canada', 'War Metal', 'https://picsum.photos/seed/reaper/300/300?grayscale'),
+        album('154', 'Blasphemy', 'Blasphemy', AlbumType.FullLength, 1993, 'Canada', 'War Metal', 'https://picsum.photos/seed/blasphemy/300/300?grayscale'),
+        album('155', 'Inri', 'Sarcófago', AlbumType.FullLength, 1987, 'Brazil', 'War Metal', 'https://picsum.photos/seed/inri/300/300?grayscale'),
+        album('156', 'Drawing Down the Moon', 'Beherit', AlbumType.FullLength, 1993, 'Finland', 'War Metal', 'https://picsum.photos/seed/drawingdown/300/300?grayscale'),
+        album('157', "Forged in Satan's Flames", 'Revenge', AlbumType.FullLength, 2001, 'Canada', 'War Metal', 'https://picsum.photos/seed/forgedsatan/300/300?grayscale'),
+        album('158', 'Havohej', 'Havohej', AlbumType.FullLength, 1993, 'USA', 'War Metal', 'https://picsum.photos/seed/havohej/300/300?grayscale'),
     ];
 
     // Cavernous Black Death
     cavernousBlackDeath: Album[] = [
-        { id: 201, title: 'Antithesis of Light', band: 'Abysmal Dawn', type: 'Full-Length', year: 2005, country: 'USA', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a0762853604_10.jpg' },
-        { id: 202, title: 'Profound Lore', band: 'Adversarial', type: 'Full-Length', year: 2012, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a1669789762_10.jpg' },
-        { id: 203, title: 'Desolate Endscape', band: 'Necros Christos', type: 'Full-Length', year: 2007, country: 'Germany', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a0522392822_10.jpg' },
-        { id: 204, title: 'Ritual of the Abyss', band: 'Antediluvian', type: 'Full-Length', year: 2011, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a3668756138_10.jpg' },
-        { id: 205, title: 'The Underworld Ascension', band: 'Portal', type: 'Full-Length', year: 2007, country: 'Australia', genre: 'Cavernous Black Death', coverImage: 'https://picsum.photos/seed/portal/300/300?grayscale' },
-        { id: 206, title: 'Vomit Upon the Cross', band: 'Teitanblood', type: 'Full-Length', year: 2009, country: 'Spain', genre: 'Cavernous Black Death', coverImage: 'https://picsum.photos/seed/vomitcross/300/300?grayscale' },
-        { id: 207, title: 'Onward to Golgotha', band: 'Incantation', type: 'Full-Length', year: 1992, country: 'USA', genre: 'Cavernous Black Death', coverImage: 'https://f4.bcbits.com/img/a3270858501_10.jpg' },
-        { id: 208, title: 'Profound Blasphemies', band: 'Mitochondrion', type: 'Full-Length', year: 2011, country: 'Canada', genre: 'Cavernous Black Death', coverImage: 'https://picsum.photos/seed/mitochondrion/300/300?grayscale' },
+        album('201', 'Antithesis of Light', 'Abysmal Dawn', AlbumType.FullLength, 2005, 'USA', 'Cavernous Black Death', 'https://f4.bcbits.com/img/a0762853604_10.jpg'),
+        album('202', 'Profound Lore', 'Adversarial', AlbumType.FullLength, 2012, 'Canada', 'Cavernous Black Death', 'https://f4.bcbits.com/img/a1669789762_10.jpg'),
+        album('203', 'Desolate Endscape', 'Necros Christos', AlbumType.FullLength, 2007, 'Germany', 'Cavernous Black Death', 'https://f4.bcbits.com/img/a0522392822_10.jpg'),
+        album('204', 'Ritual of the Abyss', 'Antediluvian', AlbumType.FullLength, 2011, 'Canada', 'Cavernous Black Death', 'https://f4.bcbits.com/img/a3668756138_10.jpg'),
+        album('205', 'The Underworld Ascension', 'Portal', AlbumType.FullLength, 2007, 'Australia', 'Cavernous Black Death', 'https://picsum.photos/seed/portal/300/300?grayscale'),
+        album('206', 'Vomit Upon the Cross', 'Teitanblood', AlbumType.FullLength, 2009, 'Spain', 'Cavernous Black Death', 'https://picsum.photos/seed/vomitcross/300/300?grayscale'),
+        album('207', 'Onward to Golgotha', 'Incantation', AlbumType.FullLength, 1992, 'USA', 'Cavernous Black Death', 'https://f4.bcbits.com/img/a3270858501_10.jpg'),
+        album('208', 'Profound Blasphemies', 'Mitochondrion', AlbumType.FullLength, 2011, 'Canada', 'Cavernous Black Death', 'https://picsum.photos/seed/mitochondrion/300/300?grayscale'),
     ];
 
     // Blackened Death
     blackenedDeath: Album[] = [
-        { id: 301, title: 'Evangelion', band: 'Behemoth', type: 'Full-Length', year: 2009, country: 'Poland', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3979756917_10.jpg' },
-        { id: 302, title: 'Panopticon', band: 'Agalloch', type: 'Full-Length', year: 2012, country: 'USA', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3649907464_10.jpg' },
-        { id: 303, title: 'Necromancy', band: 'Grave Miasma', type: 'Full-Length', year: 2013, country: 'UK', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a2734534319_10.jpg' },
-        { id: 304, title: 'Rites of the Ascension', band: 'Teitanblood', type: 'Full-Length', year: 2014, country: 'Spain', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a3191197180_10.jpg' },
-        { id: 305, title: 'The Satanist', band: 'Behemoth', type: 'Full-Length', year: 2014, country: 'Poland', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/satanist/300/300?grayscale' },
-        { id: 306, title: 'De Mysteriis Dom Sathanas', band: 'Mayhem', type: 'Full-Length', year: 1994, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://f4.bcbits.com/img/a2368920343_16.jpg' },
-        { id: 307, title: 'A Blaze in the Northern Sky', band: 'Darkthrone', type: 'Full-Length', year: 1992, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/darkthroneb/300/300?grayscale' },
-        { id: 308, title: 'Anthems to the Welkin at Dusk', band: 'Emperor', type: 'Full-Length', year: 1997, country: 'Norway', genre: 'Blackened Death', coverImage: 'https://picsum.photos/seed/emperorwelkin/300/300?grayscale' },
+        album('301', 'Evangelion', 'Behemoth', AlbumType.FullLength, 2009, 'Poland', 'Blackened Death', 'https://f4.bcbits.com/img/a3979756917_10.jpg'),
+        album('302', 'Panopticon', 'Agalloch', AlbumType.FullLength, 2012, 'USA', 'Blackened Death', 'https://f4.bcbits.com/img/a3649907464_10.jpg'),
+        album('303', 'Necromancy', 'Grave Miasma', AlbumType.FullLength, 2013, 'UK', 'Blackened Death', 'https://f4.bcbits.com/img/a2734534319_10.jpg'),
+        album('304', 'Rites of the Ascension', 'Teitanblood', AlbumType.FullLength, 2014, 'Spain', 'Blackened Death', 'https://f4.bcbits.com/img/a3191197180_10.jpg'),
+        album('305', 'The Satanist', 'Behemoth', AlbumType.FullLength, 2014, 'Poland', 'Blackened Death', 'https://picsum.photos/seed/satanist/300/300?grayscale'),
+        album('306', 'De Mysteriis Dom Sathanas', 'Mayhem', AlbumType.FullLength, 1994, 'Norway', 'Blackened Death', 'https://f4.bcbits.com/img/a2368920343_16.jpg'),
+        album('307', 'A Blaze in the Northern Sky', 'Darkthrone', AlbumType.FullLength, 1992, 'Norway', 'Blackened Death', 'https://picsum.photos/seed/darkthroneb/300/300?grayscale'),
+        album('308', 'Anthems to the Welkin at Dusk', 'Emperor', AlbumType.FullLength, 1997, 'Norway', 'Blackened Death', 'https://picsum.photos/seed/emperorwelkin/300/300?grayscale'),
     ];
 
     // Classic Black Death Bands
@@ -161,5 +180,4 @@ export class Seed {
     ];
 
     //#endregion
-
 }

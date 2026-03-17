@@ -1,29 +1,29 @@
-<app-section [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" (tabChange)="tabIndex.topRated.set($event)">
-  @for (album of mainTopRatedAlbums(); track album.id) {
+<app-section [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" (tabChange)="onTopRatedTabChange($event)">
+  @for (album of mainTopRatedAlbums() | slice:0:4; track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" (tabChange)="tabIndex.popularBands.set($event)">
-  @for (band of mainPopularBands(); track band.id) {
+<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" (tabChange)="onPopularBandsTabChange($event)">
+  @for (band of mainPopularBands() | slice:0:3; track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>
 
-<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" (tabChange)="tabIndex.recentlyAdded.set($event)">
-  @for (album of mainRecentAlbums(); track album.id) {
+<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" (tabChange)="onRecentlyAddedTabChange($event)">
+  @for (album of mainRecentAlbums() | slice:0:4; track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
 
-<app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" (tabChange)="tabIndex.metalVideos.set($event)">
-  @for (band of mainRecentVideos(); track band.id) {
+<app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" (tabChange)="onMetalVideosTabChange($event)">
+  @for (band of mainRecentVideos() | slice:0:3; track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>
 
-<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" (tabChange)="tabIndex.upcomingReleases.set($event)">
-  @for (album of mainUpcomingReleases(); track album.id) {
+<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" (tabChange)="onUpcomingReleasesTabChange($event)">
+  @for (album of mainUpcomingReleases() | slice:0:4; track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
