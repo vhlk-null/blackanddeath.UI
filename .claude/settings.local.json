@@ -22,7 +22,10 @@
       "Bash(findstr LISTENING)",
       "Bash(taskkill /PID 34800 /F)",
       "Bash(taskkill /PID 1992 /F)",
-      "Bash(cmd //c \"taskkill /PID 34800 /F && taskkill /PID 1992 /F\")"
+      "Bash(cmd //c \"taskkill /PID 34800 /F && taskkill /PID 1992 /F\")",
+      "Bash(taskkill /F /PID 16368 /PID 24932)",
+      "Bash(taskkill //F //PID 16368)",
+      "Bash(taskkill //F //PID 24932)"
     ]
   }
 }

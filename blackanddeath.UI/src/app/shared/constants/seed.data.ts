@@ -3,6 +3,10 @@ import { AlbumType } from "../models/enums/album-type.enum";
 import { AlbumFormat } from "../models/enums/album-format.enum";
 import { Band } from "../models/band";
 
+function band(id: number, name: string, country: string, genre: string, formedYear: number, logoUrl: string | null): Band {
+    return { id, name, countries: [{ id: '0', name: country, code: '' }], genres: [{ id: '0', name: genre, isPrimary: true }], formedYear, logoUrl };
+}
+
 function album(id: string, title: string, band: string, type: AlbumType, year: number, country: string, genre: string, coverUrl: string | null): Album {
     return {
         id,
@@ -43,14 +47,14 @@ export class Seed {
 
     // Popular Bands
     popularBandsThisYear: Band[] = [
-        { id: 1, name: 'Mayhem', country: 'Norway', genre: 'Black Metal', formedYear: 1984, coverImage: 'images/bands-logo/photo_1_2026-03-16_00-40-58.jpg' },
-        { id: 2, name: 'Morbid Angel', country: 'USA', genre: 'Death Metal', formedYear: 1983, coverImage: 'images/bands-logo/photo_2_2026-03-16_00-40-58.jpg' },
-        { id: 3, name: 'Darkthrone', country: 'Norway', genre: 'Black Metal', formedYear: 1986, coverImage: 'images/bands-logo/photo_3_2026-03-16_00-40-58.jpg' },
+        band(1, 'Mayhem', 'Norway', 'Black Metal', 1984, 'images/bands-logo/photo_1_2026-03-16_00-40-58.jpg'),
+        band(2, 'Morbid Angel', 'USA', 'Death Metal', 1983, 'images/bands-logo/photo_2_2026-03-16_00-40-58.jpg'),
+        band(3, 'Darkthrone', 'Norway', 'Black Metal', 1986, 'images/bands-logo/photo_3_2026-03-16_00-40-58.jpg'),
     ];
     popularBandsAllTime: Band[] = [
-        { id: 4, name: 'Bathory', country: 'Sweden', genre: 'Black Metal', formedYear: 1983, coverImage: 'https://picsum.photos/seed/bathory/300/300?grayscale' },
-        { id: 5, name: 'Deicide', country: 'USA', genre: 'Death Metal', formedYear: 1987, coverImage: 'https://picsum.photos/seed/deicide/300/300?grayscale' },
-        { id: 6, name: 'Immortal', country: 'Norway', genre: 'Black Metal', formedYear: 1990, coverImage: 'https://picsum.photos/seed/immortal/300/300?grayscale' },
+        band(4, 'Bathory', 'Sweden', 'Black Metal', 1983, 'https://picsum.photos/seed/bathory/300/300?grayscale'),
+        band(5, 'Deicide', 'USA', 'Death Metal', 1987, 'https://picsum.photos/seed/deicide/300/300?grayscale'),
+        band(6, 'Immortal', 'Norway', 'Black Metal', 1990, 'https://picsum.photos/seed/immortal/300/300?grayscale'),
     ];
 
     // Recently Added
@@ -61,26 +65,26 @@ export class Seed {
         album('16', 'Necromantic Hymns', 'Nuclearhammer', AlbumType.FullLength, 2023, 'Canada', 'Black Death Metal', 'https://picsum.photos/seed/necrohymns/300/300?grayscale'),
     ];
     recentBands: Band[] = [
-        { id: 7, name: 'Valdur', country: 'USA', genre: 'Black Death Metal', formedYear: 2005, coverImage: 'https://picsum.photos/seed/valdur/300/300?grayscale' },
-        { id: 8, name: 'Hetroertzen', country: 'Chile', genre: 'Black Metal', formedYear: 2002, coverImage: 'https://picsum.photos/seed/hetroertzen/300/300?grayscale' },
-        { id: 9, name: 'Antaeus', country: 'France', genre: 'Black Metal', formedYear: 1994, coverImage: 'https://picsum.photos/seed/antaeus/300/300?grayscale' },
+        band(7, 'Valdur', 'USA', 'Black Death Metal', 2005, 'https://picsum.photos/seed/valdur/300/300?grayscale'),
+        band(8, 'Hetroertzen', 'Chile', 'Black Metal', 2002, 'https://picsum.photos/seed/hetroertzen/300/300?grayscale'),
+        band(9, 'Antaeus', 'France', 'Black Metal', 1994, 'https://picsum.photos/seed/antaeus/300/300?grayscale'),
     ];
 
     // Metal Videos
     videoClips: Band[] = [
-        { id: 10, name: 'Watain', country: 'Sweden', genre: 'Black Metal', formedYear: 1998, coverImage: 'https://picsum.photos/seed/watain/300/300?grayscale' },
-        { id: 11, name: 'Behemoth', country: 'Poland', genre: 'Black Death Metal', formedYear: 1991, coverImage: 'https://picsum.photos/seed/behemoth/300/300?grayscale' },
-        { id: 12, name: 'Mgła', country: 'Poland', genre: 'Black Metal', formedYear: 2000, coverImage: 'https://picsum.photos/seed/mgla/300/300?grayscale' },
+        band(10, 'Watain', 'Sweden', 'Black Metal', 1998, 'https://picsum.photos/seed/watain/300/300?grayscale'),
+        band(11, 'Behemoth', 'Poland', 'Black Death Metal', 1991, 'https://picsum.photos/seed/behemoth/300/300?grayscale'),
+        band(12, 'Mgła', 'Poland', 'Black Metal', 2000, 'https://picsum.photos/seed/mgla/300/300?grayscale'),
     ];
     videoLive: Band[] = [
-        { id: 13, name: 'Gorgoroth', country: 'Norway', genre: 'Black Metal', formedYear: 1992, coverImage: 'https://picsum.photos/seed/gorgoroth/300/300?grayscale' },
-        { id: 14, name: 'Cannibal Corpse', country: 'USA', genre: 'Death Metal', formedYear: 1988, coverImage: 'https://picsum.photos/seed/cannibalcorpse/300/300?grayscale' },
-        { id: 15, name: 'Nile', country: 'USA', genre: 'Death Metal', formedYear: 1993, coverImage: 'https://picsum.photos/seed/nile/300/300?grayscale' },
+        band(13, 'Gorgoroth', 'Norway', 'Black Metal', 1992, 'https://picsum.photos/seed/gorgoroth/300/300?grayscale'),
+        band(14, 'Cannibal Corpse', 'USA', 'Death Metal', 1988, 'https://picsum.photos/seed/cannibalcorpse/300/300?grayscale'),
+        band(15, 'Nile', 'USA', 'Death Metal', 1993, 'https://picsum.photos/seed/nile/300/300?grayscale'),
     ];
     videoPlaythroughs: Band[] = [
-        { id: 16, name: 'Necrophagist', country: 'Germany', genre: 'Technical Death Metal', formedYear: 1992, coverImage: 'https://picsum.photos/seed/necrophagist/300/300?grayscale' },
-        { id: 17, name: 'Defeated Sanity', country: 'Germany', genre: 'Death Metal', formedYear: 1994, coverImage: 'https://picsum.photos/seed/defeatedsanity/300/300?grayscale' },
-        { id: 18, name: 'Hate Eternal', country: 'USA', genre: 'Death Metal', formedYear: 1997, coverImage: 'https://picsum.photos/seed/hateeternal/300/300?grayscale' },
+        band(16, 'Necrophagist', 'Germany', 'Technical Death Metal', 1992, 'https://picsum.photos/seed/necrophagist/300/300?grayscale'),
+        band(17, 'Defeated Sanity', 'Germany', 'Death Metal', 1994, 'https://picsum.photos/seed/defeatedsanity/300/300?grayscale'),
+        band(18, 'Hate Eternal', 'USA', 'Death Metal', 1997, 'https://picsum.photos/seed/hateeternal/300/300?grayscale'),
     ];
 
     // Upcoming Releases
@@ -153,30 +157,30 @@ export class Seed {
 
     // Classic Black Death Bands
     classicBlackDeathBands: Band[] = [
-        { id: 101, name: 'Incantation', country: 'USA', genre: 'Classic Black Death', formedYear: 1989, coverImage: 'https://picsum.photos/seed/incantation/300/300?grayscale' },
-        { id: 102, name: 'Asphyx', country: 'Netherlands', genre: 'Classic Black Death', formedYear: 1987, coverImage: 'https://picsum.photos/seed/asphyx/300/300?grayscale' },
-        { id: 103, name: 'Immolation', country: 'USA', genre: 'Classic Black Death', formedYear: 1986, coverImage: 'https://picsum.photos/seed/immolation/300/300?grayscale' },
+        band(101, 'Incantation', 'USA', 'Classic Black Death', 1989, 'https://picsum.photos/seed/incantation/300/300?grayscale'),
+        band(102, 'Asphyx', 'Netherlands', 'Classic Black Death', 1987, 'https://picsum.photos/seed/asphyx/300/300?grayscale'),
+        band(103, 'Immolation', 'USA', 'Classic Black Death', 1986, 'https://picsum.photos/seed/immolation/300/300?grayscale'),
     ];
 
     // War Metal Bands
     warMetalBands: Band[] = [
-        { id: 104, name: 'Blasphemy', country: 'Canada', genre: 'War Metal', formedYear: 1984, coverImage: 'https://picsum.photos/seed/blasphemyband/300/300?grayscale' },
-        { id: 105, name: 'Revenge', country: 'Canada', genre: 'War Metal', formedYear: 1999, coverImage: 'https://picsum.photos/seed/revengeband/300/300?grayscale' },
-        { id: 106, name: 'Conqueror', country: 'Canada', genre: 'War Metal', formedYear: 1994, coverImage: 'https://picsum.photos/seed/conquerorband/300/300?grayscale' },
+        band(104, 'Blasphemy', 'Canada', 'War Metal', 1984, 'https://picsum.photos/seed/blasphemyband/300/300?grayscale'),
+        band(105, 'Revenge', 'Canada', 'War Metal', 1999, 'https://picsum.photos/seed/revengeband/300/300?grayscale'),
+        band(106, 'Conqueror', 'Canada', 'War Metal', 1994, 'https://picsum.photos/seed/conquerorband/300/300?grayscale'),
     ];
 
     // Cavernous Black Death Bands
     cavernousBlackDeathBands: Band[] = [
-        { id: 107, name: 'Portal', country: 'Australia', genre: 'Cavernous Black Death', formedYear: 1994, coverImage: 'https://picsum.photos/seed/portalband/300/300?grayscale' },
-        { id: 108, name: 'Antediluvian', country: 'Canada', genre: 'Cavernous Black Death', formedYear: 2008, coverImage: 'https://picsum.photos/seed/antediluvianband/300/300?grayscale' },
-        { id: 109, name: 'Mitochondrion', country: 'Canada', genre: 'Cavernous Black Death', formedYear: 2003, coverImage: 'https://picsum.photos/seed/mitochondrionband/300/300?grayscale' },
+        band(107, 'Portal', 'Australia', 'Cavernous Black Death', 1994, 'https://picsum.photos/seed/portalband/300/300?grayscale'),
+        band(108, 'Antediluvian', 'Canada', 'Cavernous Black Death', 2008, 'https://picsum.photos/seed/antediluvianband/300/300?grayscale'),
+        band(109, 'Mitochondrion', 'Canada', 'Cavernous Black Death', 2003, 'https://picsum.photos/seed/mitochondrionband/300/300?grayscale'),
     ];
 
     // Blackened Death Bands
     blackenedDeathBands: Band[] = [
-        { id: 110, name: 'Behemoth', country: 'Poland', genre: 'Blackened Death', formedYear: 1991, coverImage: 'https://picsum.photos/seed/behemothband/300/300?grayscale' },
-        { id: 111, name: 'Grave Miasma', country: 'UK', genre: 'Blackened Death', formedYear: 2002, coverImage: 'https://picsum.photos/seed/gravemiasma/300/300?grayscale' },
-        { id: 112, name: 'Teitanblood', country: 'Spain', genre: 'Blackened Death', formedYear: 2003, coverImage: 'https://picsum.photos/seed/teitanbloodband/300/300?grayscale' },
+        band(110, 'Behemoth', 'Poland', 'Blackened Death', 1991, 'https://picsum.photos/seed/behemothband/300/300?grayscale'),
+        band(111, 'Grave Miasma', 'UK', 'Blackened Death', 2002, 'https://picsum.photos/seed/gravemiasma/300/300?grayscale'),
+        band(112, 'Teitanblood', 'Spain', 'Blackened Death', 2003, 'https://picsum.photos/seed/teitanbloodband/300/300?grayscale'),
     ];
 
     //#endregion

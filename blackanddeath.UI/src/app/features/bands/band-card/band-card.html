@@ -1,7 +1,7 @@
 <a class="band-card" [routerLink]="['/band', bandCard().id]">
   <div class="band-card__cover">
-    @if (bandCard().coverImage) {
-      <img class="band-card__image" [src]="bandCard().coverImage" [alt]="bandCard().name" />
+    @if (bandCard().logoUrl) {
+      <img class="band-card__image" [src]="bandCard().logoUrl" [alt]="bandCard().name" />
     } @else {
       <div class="band-card__placeholder">
         <svg class="band-card__placeholder-vinyl" viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -13,6 +13,6 @@
   </div>
   <div class="band-card__info">
     <h3 class="band-card__name" [title]="bandCard().name">{{ bandCard().name }}</h3>
-    <p class="band-card__meta">{{ bandCard().genre }} · {{ bandCard().country }}</p>
+    <p class="band-card__meta">{{ bandCard().genres[0]?.name }} · {{ bandCard().countries[0]?.name }}</p>
   </div>
 </a>

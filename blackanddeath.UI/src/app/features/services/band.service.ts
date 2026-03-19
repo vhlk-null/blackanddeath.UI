@@ -1,8 +1,17 @@
 import { inject, Injectable } from "@angular/core";
+import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { BandEndpoints } from "../../shared/constants/endpoints";
 import { Band } from "../../shared/models/band";
-import { PaginatedResult } from "../../shared/models/paginated-result";
+
+interface BandsResponse {
+  bands: {
+    pageIndex: number;
+    pageSize: number;
+    count: number;
+    data: Band[];
+  };
+}
 
 @Injectable({ providedIn: 'root' })
 export class BandService {
@@ -10,7 +19,9 @@ export class BandService {
   private http = inject(BaseHttpService);
 
   getAll(params?: Record<string, unknown>) {
-    return this.http.get<PaginatedResult<Band[]>>(BandEndpoints.GET_ALL, params);
+    return this.http.get<BandsResponse>(BandEndpoints.GET_ALL, params).pipe(
+      map(response => response.bands.data)
+    );
   }
 
   getById(id: string) {

@@ -12,17 +12,17 @@ export class AlbumEndpoints {
 }
 
 export class BandEndpoints {
-  public static GET_ALL = `${base}/bands`;
-  public static GET_BY_ID = (id: string) => `${base}/bands/${id}`;
-  public static CREATE = `${base}/bands`;
-  public static UPDATE = (id: string) => `${base}/bands/${id}`;
-  public static DELETE = (id: string) => `${base}/bands/${id}`;
+  public static GET_ALL = `${base}/library/bands`;
+  public static GET_BY_ID = (id: string) => `${base}/library/bands/${id}`;
+  public static CREATE = `${base}/library/bands`;
+  public static UPDATE = (id: string) => `${base}/library/bands/${id}`;
+  public static DELETE = (id: string) => `${base}/library/bands/${id}`;
 }
 
 export class GenreEndpoints {
-  public static GET_ALL = `${base}/genres`;
-  public static GET_BY_ID = (id: string) => `${base}/genres/${id}`;
-  public static CREATE = `${base}/genres`;
-  public static UPDATE = (id: string) => `${base}/genres/${id}`;
-  public static DELETE = (id: string) => `${base}/genres/${id}`;
+  public static GET_ALL = `${base}/library/genres`;
+  public static GET_BY_ID = (id: string) => `${base}/library/genres/${id}`;
+  public static CREATE = `${base}/library/genres`;
+  public static UPDATE = (id: string) => `${base}/library/genres/${id}`;
+  public static DELETE = (id: string) => `${base}/library/genres/${id}`;
 }

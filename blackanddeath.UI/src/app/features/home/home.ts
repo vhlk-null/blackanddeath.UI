@@ -1,5 +1,4 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { SlicePipe } from '@angular/common';
 import { Section } from '../../shared/components/section/section';
 import { AlbumCard } from '../albums/card/album-card';
 import { BandCard } from '../bands/band-card/band-card';
@@ -19,10 +18,11 @@ import {
 } from '../../shared/constants/constants';
 import { Seed } from '../../shared/constants/seed.data';
 import { AlbumService } from '../services/album.servics';
+import { BandService } from '../services/band.service';
 
 @Component({
   selector: 'app-home',
-  imports: [Section, AlbumCard, BandCard, SlicePipe],
+  imports: [Section, AlbumCard, BandCard],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -55,38 +55,53 @@ export class Home implements OnInit {
   };
 
   mainTopRatedAlbums = signal<Album[]>([]);
-  mainPopularBands = signal<Band[]>(this.sectionData.popularBands[0]);
+  mainPopularBands = signal<Band[]>([]);
   mainRecentAlbums = signal<Album[]>(this.sectionData.recentlyAdded[0]);
-  mainRecentVideos = signal<Band[]>(this.sectionData.metalVideos[0]);
+  mainRecentVideos = signal<Band[]>([]);
   mainUpcomingReleases = signal<Album[]>(this.sectionData.upcomingReleases[0]);
 
   private albumService = inject(AlbumService);
+  private bandService = inject(BandService);
+
+  private apiAlbums: Album[] = [];
+  private apiBands: Band[] = [];
 
   ngOnInit(): void {
     this.albumService.getAll().subscribe({
       next: (albums) => {
-        this.mainTopRatedAlbums.set(albums);
+        this.apiAlbums = albums.slice(0, 4);
+        this.mainTopRatedAlbums.set(this.apiAlbums);
+        this.mainRecentAlbums.set(this.apiAlbums);
+        this.mainUpcomingReleases.set(this.apiAlbums);
+      }
+    });
+
+    this.bandService.getAll().subscribe({
+      next: (bands) => {
+        this.apiBands = bands.slice(0, 3);
+        this.mainPopularBands.set(this.apiBands);
+        this.mainRecentVideos.set(this.apiBands);
       }
     });
   }
 
   onTopRatedTabChange(index: number): void {
-    this.mainTopRatedAlbums.set(this.sectionData.topRated[index]);
+    this.mainTopRatedAlbums.set(index === 0 ? this.apiAlbums : this.sectionData.topRated[index]);
   }
 
   onPopularBandsTabChange(index: number): void {
-    this.mainPopularBands.set(this.sectionData.popularBands[index]);
+    this.mainPopularBands.set(index === 0 ? this.apiBands : this.sectionData.popularBands[index]);
   }
 
   onRecentlyAddedTabChange(index: number): void {
-    this.mainRecentAlbums.set(this.sectionData.recentlyAdded[index]);
+    this.mainRecentAlbums.set(index === 0 ? this.apiAlbums : this.sectionData.recentlyAdded[index]);
   }
 
   onMetalVideosTabChange(index: number): void {
-    this.mainRecentVideos.set(this.sectionData.metalVideos[index]);
+    this.mainRecentVideos.set(index === 0 ? this.apiBands : this.sectionData.metalVideos[index]);
   }
 
   onUpcomingReleasesTabChange(index: number): void {
-    this.mainUpcomingReleases.set(this.sectionData.upcomingReleases[index]);
+    this.mainUpcomingReleases.set(index === 0 ? this.apiAlbums : this.sectionData.upcomingReleases[index]);
   }
 }

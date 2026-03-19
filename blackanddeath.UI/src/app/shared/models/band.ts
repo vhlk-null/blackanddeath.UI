@@ -1,8 +1,11 @@
+import { Country } from './country';
+import { Genre } from './genre';
+
 export interface Band {
   id: number;
-  coverImage: string;
+  logoUrl: string | null;
   name: string;
-  country: string;
-  genre: string;
+  countries: Country[];
+  genres: Genre[];
   formedYear: number;
 }
