@@ -2,7 +2,8 @@ import { Country } from './country';
 import { Genre } from './genre';
 
 export interface Band {
-  id: number;
+  id: string;
+  slug: string;
   logoUrl: string | null;
   name: string;
   countries: Country[];

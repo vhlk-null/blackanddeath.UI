@@ -8,6 +8,7 @@ import { ApiTrack } from './track';
 
 export interface Album {
   id: string;
+  slug: string;
   title: string;
   releaseDate: number;
   coverUrl: string | null;

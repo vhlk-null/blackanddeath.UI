@@ -1,4 +1,4 @@
-<a class="band-card" [routerLink]="['/band', bandCard().id]">
+<a class="band-card" [routerLink]="['/bands', bandCard().id, bandCard().slug]">
   <div class="band-card__cover">
     @if (bandCard().logoUrl) {
       <img class="band-card__image" [src]="bandCard().logoUrl" [alt]="bandCard().name" />

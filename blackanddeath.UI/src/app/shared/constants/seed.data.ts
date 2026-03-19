@@ -3,22 +3,27 @@ import { AlbumType } from "../models/enums/album-type.enum";
 import { AlbumFormat } from "../models/enums/album-format.enum";
 import { Band } from "../models/band";
 
+function toSlug(s: string): string {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 function band(id: number, name: string, country: string, genre: string, formedYear: number, logoUrl: string | null): Band {
-    return { id, name, countries: [{ id: '0', name: country, code: '' }], genres: [{ id: '0', name: genre, isPrimary: true }], formedYear, logoUrl };
+    return { id: String(id), slug: toSlug(name), name, countries: [{ id: '0', name: country, code: '' }], genres: [{ id: '0', name: genre, slug: toSlug(genre), isPrimary: true }], formedYear, logoUrl };
 }
 
 function album(id: string, title: string, band: string, type: AlbumType, year: number, country: string, genre: string, coverUrl: string | null): Album {
     return {
         id,
+        slug: toSlug(title),
         title,
         releaseDate: year,
         coverUrl,
         type,
         format: AlbumFormat.Digital,
         label: null,
-        bands: [{ id: null, name: band }],
+        bands: [{ id: null, name: band, slug: toSlug(band) }],
         countries: [{ id: '0', name: country, code: '' }],
-        genres: [{ id: '0', name: genre, isPrimary: true }],
+        genres: [{ id: '0', name: genre, slug: toSlug(genre), isPrimary: true }],
         streamingLinks: [],
         tracks: [],
     };

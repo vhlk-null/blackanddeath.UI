@@ -11,8 +11,8 @@ export const routes: Routes = [
     { path: '', component: Home },
     { path: 'albums/subgenres', component: Subgenres },
     { path: 'bands/subgenres', component: BandSubgenres },
-    { path: 'album/:id', component: Info },
-    { path: 'band/:id', component: BandInfo },
+    { path: 'albums/:id/:slug', component: Info },
+    { path: 'bands/:id/:slug', component: BandInfo },
     { path: 'genres', component: Genres },
     { path: 'create', component: CreateNewItem }
 ];

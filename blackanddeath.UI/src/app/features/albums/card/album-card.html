@@ -1,4 +1,4 @@
-<a class="card" [routerLink]="['/album', albumCard().id]">
+<a class="card" [routerLink]="['/albums', albumCard().id, albumCard().slug]">
     <div class="card__cover">
         <!-- TODO: use albumCard().coverUrl when backend serves real images -->
         @if (false) {
