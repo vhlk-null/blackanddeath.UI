@@ -26,11 +26,15 @@ export class AlbumService {
   }
 
   getById(id: string) {
-    return this.http.get<Album>(AlbumEndpoints.GET_BY_ID(id));
+    return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_ID(id)).pipe(
+      map(response => response.album)
+    );
   }
 
   getByBand(bandId: string, params?: Record<string, unknown>) {
-    return this.http.get<PaginatedResult<Album>>(AlbumEndpoints.GET_BY_BAND(bandId), params);
+    return this.http.get<PaginatedResult<Album>>(AlbumEndpoints.GET_BY_BAND(bandId), params).pipe(
+      map(response => response.data)
+    );
   }
 
   create(payload: Omit<Album, 'id'>) {

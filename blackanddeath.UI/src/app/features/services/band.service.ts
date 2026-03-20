@@ -25,7 +25,9 @@ export class BandService {
   }
 
   getById(id: string) {
-    return this.http.get<Band>(BandEndpoints.GET_BY_ID(id));
+    return this.http.get<{ band: Band }>(BandEndpoints.GET_BY_ID(id)).pipe(
+      map(response => response.band)
+    );
   }
 
   create(payload: Omit<Band, 'id'>) {

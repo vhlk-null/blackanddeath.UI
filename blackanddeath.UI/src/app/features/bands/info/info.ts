@@ -1,8 +1,10 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
 import { BandCard } from '../band-card/band-card';
-import { Seed } from '../../../shared/constants/seed.data';
+import { BandService } from '../../services/band.service';
+import { Band } from '../../../shared/models/band';
 import {
   BAND_INFORMATION,
   DISCOGRAPHY_TITLE,
@@ -16,12 +18,12 @@ import {
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
-export class BandInfo {
+export class BandInfo implements OnInit {
 
-  readonly tabs = {
-    info: BAND_INFORMATION,
-  };
+  private route = inject(ActivatedRoute);
+  private bandService = inject(BandService);
 
+  readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
     discography: DISCOGRAPHY_TITLE,
     videos: VIDEOS_TITLE,
@@ -29,32 +31,15 @@ export class BandInfo {
   };
 
   readonly infoTabIndex = signal(0);
-  readonly tracklistTabIndex = signal(0);
-  readonly discographyTabIndex = signal(0);
-  readonly similarBandsTabIndex = signal(0);
+  readonly bandData = signal<Band | null>(null);
 
-  readonly band = {
-    name: 'Sarcophagum',
-    coverImage: 'images/bands-logo/photo_1_2026-03-16_00-40-58.jpg',
-    country: 'Ireland',
-    city: 'Dublin',
-    status: 'Active',
-    genre: 'Black Death Metal',
-    label: '20 Buck Spin',
-    formedIn: 2015,
-    rating: 8,
-    maxRating: 9,
-  };
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) return;
 
-  readonly stars = Array.from({ length: this.band.maxRating }, (_, i) => i < this.band.rating);
-
-  private readonly seed = new Seed();
-
-  private readonly discographySets = [this.seed.classicBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
-  private readonly similarBandsSets = [this.seed.popularBandsThisYear, this.seed.popularBandsAllTime];
-
-  readonly discographyAlbums = computed(() => this.discographySets[this.discographyTabIndex()].slice(0, 4));
-  readonly similarBands = computed(() => this.similarBandsSets[Math.min(this.similarBandsTabIndex(), 1)].slice(0, 3));
-
-  readonly videos = this.seed.videoClips.slice(0, 3);
+    this.bandService.getById(id).subscribe({
+      next: (band) => this.bandData.set(band),
+      error: (err) => console.error('Failed to load band', err),
+    });
+  }
 }

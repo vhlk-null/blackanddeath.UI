@@ -1,6 +1,6 @@
 <div class="album-info">
 
-  <h1 class="album-info__title">{{ album.title }}</h1>
+  <h1 class="album-info__title">{{ albumData()?.title }}</h1>
 
   <div class="album-info__nav">
     <div class="album-info__nav-tabs">
@@ -45,20 +45,19 @@
   <div class="album-info__body">
 
     <div class="album-info__left">
-      <img class="album-info__cover" [src]="album.coverImage" [alt]="album.title" />
-      <div class="album-info__rating">
-        @for (filled of stars; track $index) {
-        <svg class="album-info__star" [class.filled]="filled" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      <div class="album-info__cover">
+        <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
+          <path d="M85.5 0C132.72 0 171 38.2797 171 85.5C171 132.72 132.72 171 85.5 171C38.2797 171 0 132.72 0 85.5C0 38.2797 38.2797 0 85.5 0ZM119.71 133.576C113.843 137.859 107.126 141.048 99.8604 142.844L103.436 158.445C113.333 156.04 122.441 151.617 130.3 145.637L119.71 133.576ZM133.942 118.561C132.431 120.882 130.755 123.087 128.932 125.158L140.891 135.788C143.416 132.926 145.72 129.865 147.777 126.631L133.942 118.561ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5ZM30.7461 37.2188C28.2207 40.0805 25.9164 43.1419 23.8594 46.376L37.6943 54.4463C39.2056 52.1246 40.8813 49.9199 42.7051 47.8486L30.7461 37.2188ZM68.2012 14.5615C58.3037 16.9667 49.1959 21.3902 41.3369 27.3701L51.9268 39.4307C57.7939 35.1476 64.5108 31.959 71.7764 30.1631L68.2012 14.5615Z" fill="#606162"/>
         </svg>
-        }
       </div>
       <table class="album-info__meta">
-        <tr><td class="label">Release:</td><td>{{ album.year }}</td></tr>
-        <tr><td class="label">Country:</td><td>{{ album.country }}</td></tr>
-        <tr><td class="label">Genre:</td><td>{{ album.genre }}</td></tr>
-        <tr><td class="label">Type:</td><td>{{ album.type }}</td></tr>
-        <tr><td class="label">Label:</td><td>{{ album.label }}</td></tr>
+        <tr><td class="label">Band:</td><td>{{ albumData()?.bands?.[0]?.name }}</td></tr>
+        <tr><td class="label">Release:</td><td>{{ albumData()?.releaseDate }}</td></tr>
+        <tr><td class="label">Country:</td><td>{{ albumData()?.countries?.[0]?.name }}</td></tr>
+        <tr><td class="label">Genre:</td><td>{{ albumData()?.genres?.[0]?.name }}</td></tr>
+        <tr><td class="label">Type:</td><td>{{ typeLabel() }}</td></tr>
+        <tr><td class="label">Label:</td><td>{{ albumData()?.label }}</td></tr>
       </table>
     </div>
 
@@ -69,14 +68,15 @@
           <button [class.active]="tracklistTabIndex() === i" (click)="tracklistTabIndex.set(i)">{{ tab }}</button>
           }
         </div>
-        <span class="album-info__total">{{ totalDuration }} total</span>
       </div>
       <ul class="album-info__tracks">
-        @for (track of tracks; track track.number) {
+        @for (track of albumData()?.tracks; track track.id) {
         <li class="album-info__track">
-          <span class="album-info__track-num">{{ track.number < 10 ? '0' + track.number : track.number }}</span>
+          <span class="album-info__track-num">{{ track.trackNumber < 10 ? '0' + track.trackNumber : track.trackNumber }}</span>
           <span class="album-info__track-title">{{ track.title }}</span>
-          <span class="album-info__track-duration">{{ track.duration }}</span>
+          @if (track.duration) {
+            <span class="album-info__track-duration">{{ track.duration }}</span>
+          }
         </li>
         }
       </ul>
@@ -92,7 +92,7 @@
 </app-section>
 
 <app-section [sectionTitle]="titles.videos">
-  @for (band of videos; track band.id) {
+  @for (band of videos(); track band.id) {
   <app-band-card [bandCard]="band" />
   }
 </app-section>

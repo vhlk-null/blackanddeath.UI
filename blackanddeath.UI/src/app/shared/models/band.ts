@@ -1,12 +1,30 @@
 import { Country } from './country';
 import { Genre } from './genre';
+import { AlbumType } from './enums/album-type.enum';
+import { AlbumFormat } from './enums/album-format.enum';
+
+export interface BandAlbum {
+  id: string;
+  slug: string;
+  title: string;
+  releaseDate: number;
+  coverUrl: string | null;
+  type: AlbumType;
+  format: AlbumFormat;
+}
 
 export interface Band {
   id: string;
   slug: string;
   logoUrl: string | null;
   name: string;
+  bio?: string | null;
+  formedYear: number;
+  disbandedYear?: number | null;
+  status?: string | null;
+  city?: string | null;
+  label?: string | null;
   countries: Country[];
   genres: Genre[];
-  formedYear: number;
+  albums?: BandAlbum[];
 }

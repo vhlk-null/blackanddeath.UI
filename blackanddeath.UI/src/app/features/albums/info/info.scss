@@ -98,8 +98,15 @@
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.35s ease;
+
+    svg {
+      width: 60%;
+      height: 60%;
+    }
 
     &:hover {
       transform: scale(1.06);
