@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://localhost:6051',
+  apiUrl: 'https://yarp-production.up.railway.app',
 };

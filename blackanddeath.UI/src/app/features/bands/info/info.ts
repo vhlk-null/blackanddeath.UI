@@ -14,7 +14,7 @@ import {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, BandCard],
+  imports: [Section, AlbumCard],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
