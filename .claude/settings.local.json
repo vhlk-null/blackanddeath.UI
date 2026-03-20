@@ -12,7 +12,20 @@
       "Bash(mv album-band-subgenres.html album-subgenres.html)",
       "Bash(mv album-band-subgenres.scss album-subgenres.scss)",
       "Bash(mv album-band-subgenres.spec.ts album-subgenres.spec.ts)",
-      "Bash(mv album-band-subgenres.ts album-subgenres.ts)"
+      "Bash(mv album-band-subgenres.ts album-subgenres.ts)",
+      "Bash(npm start:*)",
+      "Bash(npx ng:*)",
+      "Bash(npm install:*)",
+      "Bash(npm list:*)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :4200)",
+      "Bash(findstr LISTENING)",
+      "Bash(taskkill /PID 34800 /F)",
+      "Bash(taskkill /PID 1992 /F)",
+      "Bash(cmd //c \"taskkill /PID 34800 /F && taskkill /PID 1992 /F\")",
+      "Bash(taskkill /F /PID 16368 /PID 24932)",
+      "Bash(taskkill //F //PID 16368)",
+      "Bash(taskkill //F //PID 24932)"
     ]
   }
 }

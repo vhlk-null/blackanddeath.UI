@@ -68,6 +68,20 @@
 
   &__cover-wrap {
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+
+    svg {
+      width: 80%;
+      height: 80%;
+      transition: transform 0.35s ease;
+    }
+
+    &:hover svg {
+      transform: scale(1.06);
+    }
   }
 
   &__cover {

@@ -1,0 +1,44 @@
+import { inject, Injectable } from "@angular/core";
+import { map } from "rxjs";
+import { BaseHttpService } from "./intrefaces/http";
+import { BandEndpoints } from "../../shared/constants/endpoints";
+import { Band } from "../../shared/models/band";
+
+interface BandsResponse {
+  bands: {
+    pageIndex: number;
+    pageSize: number;
+    count: number;
+    data: Band[];
+  };
+}
+
+@Injectable({ providedIn: 'root' })
+export class BandService {
+
+  private http = inject(BaseHttpService);
+
+  getAll(params?: Record<string, unknown>) {
+    return this.http.get<BandsResponse>(BandEndpoints.GET_ALL, params).pipe(
+      map(response => response.bands.data)
+    );
+  }
+
+  getById(id: string) {
+    return this.http.get<{ band: Band }>(BandEndpoints.GET_BY_ID(id)).pipe(
+      map(response => response.band)
+    );
+  }
+
+  create(payload: Omit<Band, 'id'>) {
+    return this.http.post<Band>(BandEndpoints.CREATE, payload);
+  }
+
+  update(id: string, payload: Partial<Omit<Band, 'id'>>) {
+    return this.http.put<Band>(BandEndpoints.UPDATE(id), payload);
+  }
+
+  delete(id: string) {
+    return this.http.delete<void>(BandEndpoints.DELETE(id));
+  }
+}

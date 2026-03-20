@@ -1,0 +1,17 @@
+<div class="slider">
+  <button class="slider__btn" (click)="scroll('prev')" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <div class="slider__track" #track>
+    <ng-content></ng-content>
+  </div>
+
+  <button class="slider__btn" (click)="scroll('next')" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>

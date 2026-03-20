@@ -1,7 +1,9 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { Section } from '../../shared/components/section/section';
 import { AlbumCard } from '../albums/card/album-card';
 import { BandCard } from '../bands/band-card/band-card';
+import { Album } from '../../shared/models/album';
+import { Band } from '../../shared/models/band';
 import {
   TOP_RATED_TITLE,
   POPULAR_BANDS_TITLE,
@@ -15,6 +17,8 @@ import {
   UPCOMING_RELEASES_TABS,
 } from '../../shared/constants/constants';
 import { Seed } from '../../shared/constants/seed.data';
+import { AlbumService } from '../services/album.servics';
+import { BandService } from '../services/band.service';
 
 @Component({
   selector: 'app-home',
@@ -22,8 +26,7 @@ import { Seed } from '../../shared/constants/seed.data';
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
-
+export class Home implements OnInit {
 
   readonly titles = {
     topRated: TOP_RATED_TITLE,
@@ -41,23 +44,9 @@ export class Home {
     upcomingReleases: UPCOMING_RELEASES_TABS,
   };
 
-  readonly tabIndex = {
-    topRated: signal(0),
-    popularBands: signal(0),
-    recentlyAdded: signal(0),
-    metalVideos: signal(0),
-    upcomingReleases: signal(0),
-  };
-
-  mainTopRatedAlbums = computed(() => this.sectionData.topRated[this.tabIndex.topRated()]);
-  mainPopularBands = computed(() => this.sectionData.popularBands[this.tabIndex.popularBands()]);
-  mainRecentAlbums = computed(() => this.sectionData.recentlyAdded[this.tabIndex.recentlyAdded()]);
-  mainRecentVideos = computed(() => this.sectionData.metalVideos[this.tabIndex.metalVideos()]);
-  mainUpcomingReleases = computed(() => this.sectionData.upcomingReleases[this.tabIndex.upcomingReleases()]);
-
   private readonly seed = new Seed();
 
-  readonly sectionData = {
+  private readonly sectionData = {
     topRated: [this.seed.topRatedThisYear, this.seed.topRatedThisMonth, this.seed.topRatedAllTime],
     popularBands: [this.seed.popularBandsThisYear, this.seed.popularBandsAllTime],
     recentlyAdded: [this.seed.recentAlbums],
@@ -65,4 +54,54 @@ export class Home {
     upcomingReleases: [this.seed.upcomingFullLength, this.seed.upcomingEP, this.seed.upcomingOther],
   };
 
+  mainTopRatedAlbums = signal<Album[]>([]);
+  mainPopularBands = signal<Band[]>([]);
+  mainRecentAlbums = signal<Album[]>(this.sectionData.recentlyAdded[0]);
+  mainRecentVideos = signal<Band[]>([]);
+  mainUpcomingReleases = signal<Album[]>(this.sectionData.upcomingReleases[0]);
+
+  private albumService = inject(AlbumService);
+  private bandService = inject(BandService);
+
+  private apiAlbums: Album[] = [];
+  private apiBands: Band[] = [];
+
+  ngOnInit(): void {
+    this.albumService.getAll().subscribe({
+      next: (albums) => {
+        this.apiAlbums = albums.slice(0, 4);
+        this.mainTopRatedAlbums.set(this.apiAlbums);
+        this.mainRecentAlbums.set(this.apiAlbums);
+        this.mainUpcomingReleases.set(this.apiAlbums);
+      }
+    });
+
+    this.bandService.getAll().subscribe({
+      next: (bands) => {
+        this.apiBands = bands.slice(0, 3);
+        this.mainPopularBands.set(this.apiBands);
+        this.mainRecentVideos.set(this.apiBands);
+      }
+    });
+  }
+
+  onTopRatedTabChange(index: number): void {
+    this.mainTopRatedAlbums.set(index === 0 ? this.apiAlbums : this.sectionData.topRated[index]);
+  }
+
+  onPopularBandsTabChange(index: number): void {
+    this.mainPopularBands.set(index === 0 ? this.apiBands : this.sectionData.popularBands[index]);
+  }
+
+  onRecentlyAddedTabChange(index: number): void {
+    this.mainRecentAlbums.set(index === 0 ? this.apiAlbums : this.sectionData.recentlyAdded[index]);
+  }
+
+  onMetalVideosTabChange(index: number): void {
+    this.mainRecentVideos.set(index === 0 ? this.apiBands : this.sectionData.metalVideos[index]);
+  }
+
+  onUpcomingReleasesTabChange(index: number): void {
+    this.mainUpcomingReleases.set(index === 0 ? this.apiAlbums : this.sectionData.upcomingReleases[index]);
+  }
 }
