@@ -2,7 +2,6 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
-import { BandCard } from '../band-card/band-card';
 import { BandService } from '../../services/band.service';
 import { Band } from '../../../shared/models/band';
 import {
@@ -14,7 +13,7 @@ import {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, BandCard],
+  imports: [Section, AlbumCard],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
