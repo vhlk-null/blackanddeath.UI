@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:dev": "ng serve --configuration=development",
+    "start:docker": "ng serve --configuration=docker",
     "start:staging": "ng serve --configuration=staging",
     "start:prod": "ng serve --configuration=production",
     "build": "ng build",

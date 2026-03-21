@@ -6,18 +6,18 @@ export const METAL_VIDEOS_TITLE = 'Metal Videos';
 export const UPCOMING_RELEASES_TITLE = 'Upcoming Releases';
 
 
-export const TOP_RATED_TABS = ['This Year', 'This Month', 'All Time'];
-export const POPULAR_BANDS_TABS = ['This Year', 'All Time'];
+export const TOP_RATED_TABS = ['All Time', 'This Year', 'This Month'];
+export const POPULAR_BANDS_TABS = ['All Time', 'This Year'];
 export const RECENTLY_ADDED_TABS = ['Albums', 'Bands'];
 export const METAL_VIDEOS_TABS = ['Clips', 'Live', 'Playthroughs'];
 export const UPCOMING_RELEASES_TABS = ['Full Length', 'Extended Play', 'Other'];
 
 // Album 
-export const SUBGENRE_TABS = ['This Year', 'This Month', 'All Time'];
+export const SUBGENRE_TABS = ['All Releases', 'Recommended', 'Popular'];
 
-export const CLASSIC_BLACK_DEATH_TITLE = 'Classic Black Death';
-export const WAR_METAL_TITLE = 'War Metal';
-export const CAVERNOUS_BLACK_DEATH_TITLE = 'Cavernous Black Death';
+export const CLASSIC_BLACK_DEATH_TITLE = 'Black Death Metal';
+export const WAR_METAL_TITLE = 'Barbaric Black Death';
+export const CAVERNOUS_BLACK_DEATH_TITLE = 'Abyssal Black Death';
 export const BLACKENED_DEATH_TITLE = 'Melodic Black Death';
 
 export const CLASSIC_BLACK_DEATH_TABS = SUBGENRE_TABS;
@@ -26,11 +26,11 @@ export const CAVERNOUS_BLACK_DEATH_TABS = SUBGENRE_TABS;
 export const BLACKENED_DEATH_TABS = SUBGENRE_TABS;
 
 // Album info
-export const ALBUM_INFORMATION = ['Information', 'Review'];
+export const ALBUM_INFORMATION = ['Songs', 'Review'];
 export const DISCOGRAPHY_TITLE = 'Discography';
 export const VIDEOS_TITLE = 'Videos';
 export const SIMILAR_ALBUMS_TITLE = 'Similar Albums';
 
 // Band info
-export const BAND_INFORMATION = ['Information', 'Biography', 'Review'];
+export const BAND_INFORMATION = ['Members', 'Biography', 'Review'];
 export const SIMILAR_BANDS_TITLE = 'Similar Bands';

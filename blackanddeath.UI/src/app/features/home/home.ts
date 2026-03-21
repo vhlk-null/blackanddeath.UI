@@ -47,8 +47,8 @@ export class Home implements OnInit {
   private readonly seed = new Seed();
 
   private readonly sectionData = {
-    topRated: [this.seed.topRatedThisYear, this.seed.topRatedThisMonth, this.seed.topRatedAllTime],
-    popularBands: [this.seed.popularBandsThisYear, this.seed.popularBandsAllTime],
+    topRated: [this.seed.topRatedAllTime, this.seed.topRatedThisYear, this.seed.topRatedThisMonth],
+    popularBands: [this.seed.popularBandsAllTime, this.seed.popularBandsThisYear],
     recentlyAdded: [this.seed.recentAlbums],
     metalVideos: [this.seed.videoClips, this.seed.videoLive, this.seed.videoPlaythroughs],
     upcomingReleases: [this.seed.upcomingFullLength, this.seed.upcomingEP, this.seed.upcomingOther],

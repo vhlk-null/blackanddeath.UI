@@ -61,6 +61,17 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "docker": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.docker.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -73,6 +84,9 @@
             },
             "development": {
               "buildTarget": "blackanddeath.UI:build:development"
+            },
+            "docker": {
+              "buildTarget": "blackanddeath.UI:build:docker"
             }
           },
           "defaultConfiguration": "development"
