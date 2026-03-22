@@ -1,7 +1,6 @@
 <a class="card" [routerLink]="['/albums', albumCard().id, albumCard().slug]">
     <div class="card__cover">
-        <!-- TODO: use albumCard().coverUrl when backend serves real images -->
-        @if (false) {
+        @if (albumCard().coverUrl) {
         <img class="card__image" [src]="albumCard().coverUrl" [alt]="albumCard().title" />
         } @else {
         <div class="card__placeholder">
