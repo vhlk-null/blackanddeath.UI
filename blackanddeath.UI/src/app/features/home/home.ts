@@ -85,23 +85,23 @@ export class Home implements OnInit {
     });
   }
 
-  onTopRatedTabChange(index: number): void {
-    this.mainTopRatedAlbums.set(index === 0 ? this.apiAlbums : this.sectionData.topRated[index]);
+  onTopRatedTabChange(_index: number): void {
+    this.mainTopRatedAlbums.set(this.apiAlbums);
   }
 
-  onPopularBandsTabChange(index: number): void {
-    this.mainPopularBands.set(index === 0 ? this.apiBands : this.sectionData.popularBands[index]);
+  onPopularBandsTabChange(_index: number): void {
+    this.mainPopularBands.set(this.apiBands);
   }
 
-  onRecentlyAddedTabChange(index: number): void {
-    this.mainRecentAlbums.set(index === 0 ? this.apiAlbums : this.sectionData.recentlyAdded[index]);
+  onRecentlyAddedTabChange(_index: number): void {
+    this.mainRecentAlbums.set(this.apiAlbums);
   }
 
-  onMetalVideosTabChange(index: number): void {
-    this.mainRecentVideos.set(index === 0 ? this.apiBands : this.sectionData.metalVideos[index]);
+  onMetalVideosTabChange(_index: number): void {
+    this.mainRecentVideos.set(this.apiBands);
   }
 
-  onUpcomingReleasesTabChange(index: number): void {
-    this.mainUpcomingReleases.set(index === 0 ? this.apiAlbums : this.sectionData.upcomingReleases[index]);
+  onUpcomingReleasesTabChange(_index: number): void {
+    this.mainUpcomingReleases.set(this.apiAlbums);
   }
 }

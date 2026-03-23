@@ -56,13 +56,13 @@
   }
 
   &__left {
-    flex: 0 0 30.4375rem;
+    flex: 0 0 22.9375rem;
     overflow: hidden;
 
     @media (max-width: 56.25rem) {
       flex: 0 0 auto;
       width: 100%;
-      max-width: 30.4375rem;
+      max-width: 22.9375rem;
     }
   }
 
@@ -82,7 +82,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    aspect-ratio: 487 / 231;
+    aspect-ratio: 367 / 231;
     width: 100%;
 
     svg {
