@@ -129,9 +129,13 @@
       border-color: var(--color-border-input-focus);
     }
 
+    &[type='number'] {
+      appearance: textfield;
+    }
     &[type='number']::-webkit-inner-spin-button,
     &[type='number']::-webkit-outer-spin-button {
       -webkit-appearance: none;
+      margin: 0;
     }
   }
 

@@ -139,9 +139,13 @@
     }
 
     /* hide number spinners */
+    &[type='number'] {
+      appearance: textfield;
+    }
     &[type='number']::-webkit-inner-spin-button,
     &[type='number']::-webkit-outer-spin-button {
       -webkit-appearance: none;
+      margin: 0;
     }
   }
 

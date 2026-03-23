@@ -24,6 +24,7 @@
   &__cover {
     width: 100%;
     overflow: hidden;
+    position: relative;
   }
 
   &__placeholder {
@@ -42,14 +43,13 @@
 
   &__image {
     width: 100%;
-    aspect-ratio: 367 / 231;
-    object-fit: contain;
+    height: auto;
     display: block;
     transition: transform 0.35s ease;
   }
 
   &__info {
-    padding: 1rem 1rem 1.25rem;
+    padding: 1.25rem 1rem 1.25rem;
     text-align: center;
   }
 
