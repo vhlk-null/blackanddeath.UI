@@ -14,10 +14,10 @@ export interface Album {
   coverUrl: string | null;
   type: AlbumType;
   format: AlbumFormat;
-  label: string | null;
-  bands: BandSummary[];
-  countries: Country[];
-  streamingLinks: StreamingLink[];
-  tracks: ApiTrack[];
-  genres: Genre[];
+  label?: string | null;
+  bands?: BandSummary[];
+  countries?: Country[];
+  streamingLinks?: StreamingLink[];
+  tracks?: ApiTrack[];
+  genres?: Genre[];
 }

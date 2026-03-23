@@ -43,7 +43,7 @@
   &__image {
     width: 100%;
     aspect-ratio: 367 / 231;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: transform 0.35s ease;
   }

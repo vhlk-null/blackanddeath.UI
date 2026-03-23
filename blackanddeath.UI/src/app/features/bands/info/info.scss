@@ -56,7 +56,7 @@
   }
 
   &__left {
-    flex: 0 0 26rem;
+    flex: 0 0 30.4375rem;
     overflow: hidden;
 
     @media (max-width: 56.25rem) {
@@ -66,12 +66,24 @@
     }
   }
 
+  &__logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+
+    &:hover {
+      transform: scale(1.06);
+    }
+  }
+
   &__cover-wrap {
     overflow: hidden;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    aspect-ratio: 1;
+    aspect-ratio: 487 / 231;
+    width: 100%;
 
     svg {
       width: 80%;

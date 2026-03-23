@@ -31,13 +31,14 @@ export class BandInfo implements OnInit {
 
   readonly infoTabIndex = signal(0);
   readonly bandData = signal<Band | null>(null);
+  readonly loaded = signal(false);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
 
     this.bandService.getById(id).subscribe({
-      next: (band) => this.bandData.set(band),
+      next: (band) => { this.bandData.set(band); this.loaded.set(true); },
       error: (err) => console.error('Failed to load band', err),
     });
   }
