@@ -19,18 +19,10 @@
 }
 
 .section-content {
-  display: grid;
-  grid-template-columns: var(--section-grid-columns, repeat(4, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem 0.625rem;
   margin-top: 1.5rem;
-
-  @media (max-width: 56.25rem) {
-    grid-template-columns: var(--section-grid-columns-md, repeat(2, 1fr));
-  }
-
-  @media (max-width: 28.125rem) {
-    grid-template-columns: var(--section-grid-columns-sm, repeat(2, 1fr));
-  }
 }
 
 

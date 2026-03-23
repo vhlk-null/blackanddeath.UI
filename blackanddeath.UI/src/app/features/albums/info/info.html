@@ -47,7 +47,7 @@
     <div class="album-info__left">
       <div class="album-info__cover">
         @if (albumData()?.coverUrl) {
-          <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" />
         } @else if (loaded()) {
           <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
