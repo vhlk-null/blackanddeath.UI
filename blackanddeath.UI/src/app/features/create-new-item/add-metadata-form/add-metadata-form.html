@@ -3,38 +3,26 @@
   <h2 class="add-metadata__title">Add metadata</h2>
 
   <div class="add-metadata__card">
-    <form class="add-metadata__form" (submit)="$event.preventDefault()">
+    <form class="add-metadata__form" autocomplete="off" (submit)="$event.preventDefault()">
 
       <div class="add-metadata__row">
         <label class="add-metadata__label" for="meta-genre">Add genre:</label>
-        <div class="add-metadata__input-wrap">
-          <input class="add-metadata__input" id="meta-genre" type="text" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-metadata__input" id="meta-genre" type="text" autocomplete="off" placeholder="type here.." />
       </div>
 
       <div class="add-metadata__row">
         <label class="add-metadata__label" for="meta-style">Add style:</label>
-        <div class="add-metadata__input-wrap">
-          <input class="add-metadata__input" id="meta-style" type="text" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-metadata__input" id="meta-style" type="text" autocomplete="off" placeholder="type here.." />
       </div>
 
       <div class="add-metadata__row">
         <label class="add-metadata__label" for="meta-label">Add label:</label>
-        <div class="add-metadata__input-wrap">
-          <input class="add-metadata__input" id="meta-label" type="text" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-metadata__input" id="meta-label" type="text" autocomplete="off" placeholder="type here.." />
       </div>
 
       <div class="add-metadata__row">
         <label class="add-metadata__label" for="meta-country">Add country:</label>
-        <div class="add-metadata__input-wrap">
-          <input class="add-metadata__input" id="meta-country" type="text" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-metadata__input" id="meta-country" type="text" autocomplete="off" placeholder="type here.." />
       </div>
 
       <div class="add-metadata__actions">

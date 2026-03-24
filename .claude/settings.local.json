@@ -25,7 +25,14 @@
       "Bash(cmd //c \"taskkill /PID 34800 /F && taskkill /PID 1992 /F\")",
       "Bash(taskkill /F /PID 16368 /PID 24932)",
       "Bash(taskkill //F //PID 16368)",
-      "Bash(taskkill //F //PID 24932)"
+      "Bash(taskkill //F //PID 24932)",
+      "Bash(cmd /c \"netstat -ano | findstr :4200\")",
+      "Bash(cmd /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :4200''\\) do taskkill /PID %a /F\")",
+      "Bash(cmd /c \"netstat -ano | findstr LISTENING | findstr :4200\")",
+      "Bash(cmd /c \"npx kill-port 4200\")",
+      "Bash(cmd /c \"taskkill /F /IM node.exe\")",
+      "Bash(cmd /c \"taskkill /F /IM node.exe 2>&1\")",
+      "Bash(cmd /c \"tasklist | findstr node\")"
     ]
   }
 }

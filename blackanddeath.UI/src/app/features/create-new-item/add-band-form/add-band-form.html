@@ -27,78 +27,38 @@
         <label class="add-band__label">Band logo:</label>
         <label class="add-band__file-btn">
           Upload image
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
           <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
         </label>
       </div>
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-name">Band name:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-name" type="text" placeholder="Band name" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        <input class="add-band__input" id="band-name" type="text" placeholder="Band name" autocomplete="off" />
       </div>
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-foundation">Foundation:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099" />
       </div>
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-country">Country:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-country" type="text" placeholder="Country" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        <input class="add-band__input" id="band-country" type="text" placeholder="Country" autocomplete="off" />
       </div>
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-genre">Genre:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-genre" type="text" placeholder="Genre" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        <input class="add-band__input" id="band-genre" type="text" placeholder="Genre" autocomplete="off" />
       </div>
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-subgenres">Subgenres:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" autocomplete="off" />
       </div>
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-label">Label:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-label" type="text" placeholder="Record label" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </div>
+        <input class="add-band__input" id="band-label" type="text" placeholder="Record label" autocomplete="off" />
       </div>
 
       <div class="add-band__row add-band__row--textarea">
@@ -108,38 +68,23 @@
 
       <div class="add-band__row">
         <label class="add-band__label" for="band-facebook">Facebook:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-facebook" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-band__input" id="band-facebook" type="url" placeholder="type here.." />
       </div>
       <div class="add-band__row">
         <label class="add-band__label" for="band-youtube">Youtube:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-youtube" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-band__input" id="band-youtube" type="url" placeholder="type here.." />
       </div>
       <div class="add-band__row">
         <label class="add-band__label" for="band-instagram">Instagram:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-instagram" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-band__input" id="band-instagram" type="url" placeholder="type here.." />
       </div>
       <div class="add-band__row">
         <label class="add-band__label" for="band-twitter">Twitter:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-twitter" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-band__input" id="band-twitter" type="url" placeholder="type here.." />
       </div>
       <div class="add-band__row">
         <label class="add-band__label" for="band-site">Band site:</label>
-        <div class="add-band__input-wrap">
-          <input class="add-band__input" id="band-site" type="url" placeholder="type here.." />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <input class="add-band__input" id="band-site" type="url" placeholder="type here.." />
       </div>
 
       <div class="add-band__actions">
