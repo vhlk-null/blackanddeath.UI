@@ -1,9 +1,9 @@
 :host {
   display: block;
   min-width: 0;
-  width: 270px;
+  width: calc(25% - 0.47rem);
 
-  @media (max-width: 75rem) {
+  @media (max-width: 60rem) {
     width: calc(50% - 0.3125rem);
   }
 }
