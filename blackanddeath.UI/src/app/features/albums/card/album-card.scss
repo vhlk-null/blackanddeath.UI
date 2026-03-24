@@ -3,7 +3,7 @@
   min-width: 0;
   width: calc(25% - 0.47rem);
 
-  @media (max-width: 60rem) {
+  @media (max-width: 40rem) {
     width: calc(50% - 0.3125rem);
   }
 }
