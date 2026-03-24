@@ -1,8 +1,9 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Section } from '../../../shared/components/section/section';
-import { Seed } from '../../../shared/constants/seed.data';
 import { SUBGENRE_TABS, CLASSIC_BLACK_DEATH_TITLE, WAR_METAL_TITLE, CAVERNOUS_BLACK_DEATH_TITLE, BLACKENED_DEATH_TITLE } from '../../../shared/constants/constants';
 import { AlbumCard } from '../card/album-card';
+import { AlbumService } from '../../services/album.servics';
+import { Album } from '../../../shared/models/album';
 
 @Component({
   selector: 'app-subgenres',
@@ -10,11 +11,11 @@ import { AlbumCard } from '../card/album-card';
   templateUrl: './subgenres.html',
   styleUrl: './subgenres.scss',
 })
-export class Subgenres {
+export class Subgenres implements OnInit {
 
-  readonly tabs = {
-    subgenre: SUBGENRE_TABS,
-  };
+  private albumService = inject(AlbumService);
+
+  readonly tabs = { subgenre: SUBGENRE_TABS };
 
   readonly titles = {
     classicDeath: CLASSIC_BLACK_DEATH_TITLE,
@@ -23,22 +24,32 @@ export class Subgenres {
     blackenedDeath: BLACKENED_DEATH_TITLE,
   };
 
-  readonly tabIndex = signal(0);
+  readonly classicDeathAlbums = signal<Album[]>([]);
+  readonly warMetalAlbums = signal<Album[]>([]);
+  readonly cavernousBlackDeathAlbums = signal<Album[]>([]);
+  readonly blackenedDeathAlbums = signal<Album[]>([]);
 
-  readonly classicDeathTabIndex = signal(0);
-  readonly warMetalTabIndex = signal(0);
-  readonly cavernousBlackDeathTabIndex = signal(0);
-  readonly blackenedDeathTabIndex = signal(0);
+  private allAlbums: Album[] = [];
 
-  private readonly seed = new Seed();
+  private slice(section: number, tab: number): Album[] {
+    const start = (section * 3 + tab) * 4;
+    return this.allAlbums.slice(start, start + 4);
+  }
 
-  private readonly classicDeathSets = [this.seed.classicBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
-  private readonly warMetalSets = [this.seed.warMetal, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
-  private readonly cavernousSets = [this.seed.cavernousBlackDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
-  private readonly blackenedDeathSets = [this.seed.blackenedDeath, this.seed.topRatedThisMonth, this.seed.topRatedAllTime];
+  ngOnInit(): void {
+    this.albumService.getAll().subscribe({
+      next: (albums) => {
+        this.allAlbums = albums;
+        this.classicDeathAlbums.set(this.slice(0, 0));
+        this.warMetalAlbums.set(this.slice(1, 0));
+        this.cavernousBlackDeathAlbums.set(this.slice(2, 0));
+        this.blackenedDeathAlbums.set(this.slice(3, 0));
+      }
+    });
+  }
 
-  readonly classicDeathAlbums = computed(() => this.classicDeathSets[this.classicDeathTabIndex()].slice(0, 4));
-  readonly warMetalAlbums = computed(() => this.warMetalSets[this.warMetalTabIndex()].slice(0, 4));
-  readonly cavernousBlackDeathAlbums = computed(() => this.cavernousSets[this.cavernousBlackDeathTabIndex()].slice(0, 4));
-  readonly blackenedDeathAlbums = computed(() => this.blackenedDeathSets[this.blackenedDeathTabIndex()].slice(0, 4));
+  onClassicDeathTabChange(i: number): void { this.classicDeathAlbums.set(this.slice(0, i)); }
+  onWarMetalTabChange(i: number): void { this.warMetalAlbums.set(this.slice(1, i)); }
+  onCavernousTabChange(i: number): void { this.cavernousBlackDeathAlbums.set(this.slice(2, i)); }
+  onBlackenedDeathTabChange(i: number): void { this.blackenedDeathAlbums.set(this.slice(3, i)); }
 }

@@ -1,8 +1,9 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { Section } from '../../../shared/components/section/section';
-import { Seed } from '../../../shared/constants/seed.data';
 import { SUBGENRE_TABS, CLASSIC_BLACK_DEATH_TITLE, WAR_METAL_TITLE, CAVERNOUS_BLACK_DEATH_TITLE, BLACKENED_DEATH_TITLE } from '../../../shared/constants/constants';
 import { BandCard } from '../band-card/band-card';
+import { BandService } from '../../services/band.service';
+import { Band } from '../../../shared/models/band';
 
 @Component({
   selector: 'app-band-subgenres',
@@ -10,11 +11,11 @@ import { BandCard } from '../band-card/band-card';
   templateUrl: './subgenres.html',
   styleUrl: './subgenres.scss',
 })
-export class BandSubgenres {
+export class BandSubgenres implements OnInit {
 
-  readonly tabs = {
-    subgenre: SUBGENRE_TABS,
-  };
+  private bandService = inject(BandService);
+
+  readonly tabs = { subgenre: SUBGENRE_TABS };
 
   readonly titles = {
     classicDeath: CLASSIC_BLACK_DEATH_TITLE,
@@ -23,15 +24,32 @@ export class BandSubgenres {
     blackenedDeath: BLACKENED_DEATH_TITLE,
   };
 
-  readonly classicDeathTabIndex = signal(0);
-  readonly warMetalTabIndex = signal(0);
-  readonly cavernousBlackDeathTabIndex = signal(0);
-  readonly blackenedDeathTabIndex = signal(0);
+  readonly classicDeathBands = signal<Band[]>([]);
+  readonly warMetalBands = signal<Band[]>([]);
+  readonly cavernousBlackDeathBands = signal<Band[]>([]);
+  readonly blackenedDeathBands = signal<Band[]>([]);
 
-  private readonly seed = new Seed();
+  private allBands: Band[] = [];
 
-  readonly classicDeathBands = computed(() => this.seed.classicBlackDeathBands);
-  readonly warMetalBands = computed(() => this.seed.warMetalBands);
-  readonly cavernousBlackDeathBands = computed(() => this.seed.cavernousBlackDeathBands);
-  readonly blackenedDeathBands = computed(() => this.seed.blackenedDeathBands);
+  private slice(section: number, tab: number): Band[] {
+    const start = (section * 2 + tab) * 3;
+    return this.allBands.slice(start, start + 3);
+  }
+
+  ngOnInit(): void {
+    this.bandService.getAll().subscribe({
+      next: (bands) => {
+        this.allBands = bands;
+        this.classicDeathBands.set(this.slice(0, 0));
+        this.warMetalBands.set(this.slice(1, 0));
+        this.cavernousBlackDeathBands.set(this.slice(2, 0));
+        this.blackenedDeathBands.set(this.slice(3, 0));
+      }
+    });
+  }
+
+  onClassicDeathTabChange(i: number): void { this.classicDeathBands.set(this.slice(0, i)); }
+  onWarMetalTabChange(i: number): void { this.warMetalBands.set(this.slice(1, i)); }
+  onCavernousTabChange(i: number): void { this.cavernousBlackDeathBands.set(this.slice(2, i)); }
+  onBlackenedDeathTabChange(i: number): void { this.blackenedDeathBands.set(this.slice(3, i)); }
 }

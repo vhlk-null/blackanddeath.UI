@@ -63,45 +63,55 @@ export class Home implements OnInit {
   private albumService = inject(AlbumService);
   private bandService = inject(BandService);
 
-  private apiAlbums: Album[] = [];
-  private apiBands: Band[] = [];
+  private allAlbums: Album[] = [];
+  private allBands: Band[] = [];
+
+  private albumsSlice(section: number, tab: number): Album[] {
+    const start = (section * 3 + tab) * 4;
+    return this.allAlbums.slice(start, start + 4);
+  }
+
+  private bandsSlice(section: number, tab: number): Band[] {
+    const start = (section * 2 + tab) * 3;
+    return this.allBands.slice(start, start + 3);
+  }
 
   ngOnInit(): void {
     this.albumService.getAll().subscribe({
       next: (albums) => {
-        this.apiAlbums = albums.slice(0, 4);
-        this.mainTopRatedAlbums.set(this.apiAlbums);
-        this.mainRecentAlbums.set(this.apiAlbums);
-        this.mainUpcomingReleases.set(this.apiAlbums);
+        this.allAlbums = albums;
+        this.mainTopRatedAlbums.set(this.albumsSlice(0, 0));
+        this.mainRecentAlbums.set(this.albumsSlice(1, 0));
+        this.mainUpcomingReleases.set(this.albumsSlice(2, 0));
       }
     });
 
     this.bandService.getAll().subscribe({
       next: (bands) => {
-        this.apiBands = bands.slice(0, 3);
-        this.mainPopularBands.set(this.apiBands);
-        this.mainRecentVideos.set(this.apiBands);
+        this.allBands = bands;
+        this.mainPopularBands.set(this.bandsSlice(0, 0));
+        this.mainRecentVideos.set(this.bandsSlice(1, 0));
       }
     });
   }
 
-  onTopRatedTabChange(_index: number): void {
-    this.mainTopRatedAlbums.set(this.apiAlbums);
+  onTopRatedTabChange(index: number): void {
+    this.mainTopRatedAlbums.set(this.albumsSlice(0, index));
   }
 
-  onPopularBandsTabChange(_index: number): void {
-    this.mainPopularBands.set(this.apiBands);
+  onPopularBandsTabChange(index: number): void {
+    this.mainPopularBands.set(this.bandsSlice(0, index));
   }
 
-  onRecentlyAddedTabChange(_index: number): void {
-    this.mainRecentAlbums.set(this.apiAlbums);
+  onRecentlyAddedTabChange(index: number): void {
+    this.mainRecentAlbums.set(this.albumsSlice(1, index));
   }
 
-  onMetalVideosTabChange(_index: number): void {
-    this.mainRecentVideos.set(this.apiBands);
+  onMetalVideosTabChange(index: number): void {
+    this.mainRecentVideos.set(this.bandsSlice(1, index));
   }
 
-  onUpcomingReleasesTabChange(_index: number): void {
-    this.mainUpcomingReleases.set(this.apiAlbums);
+  onUpcomingReleasesTabChange(index: number): void {
+    this.mainUpcomingReleases.set(this.albumsSlice(2, index));
   }
 }
