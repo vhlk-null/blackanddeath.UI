@@ -1,9 +1,9 @@
 :host {
   display: block;
   min-width: 0;
-  width: 367px;
+  width: calc(33.333% - 0.8125rem);
 
-  @media (max-width: 75rem) {
+  @media (max-width: 40rem) {
     width: calc(50% - 0.3125rem);
   }
 }
@@ -28,11 +28,11 @@
 
   &__cover {
     width: 100%;
-    aspect-ratio: 367 / 231;
+    aspect-ratio: 367 / 207;
     overflow: hidden;
     position: relative;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
   }
 
@@ -59,7 +59,7 @@
   }
 
   &__info {
-    padding: 1.25rem 1rem 1.25rem;
+    padding: 0.375rem 1rem 0.875rem;
     text-align: center;
   }
 
