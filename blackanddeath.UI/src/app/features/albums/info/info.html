@@ -1,6 +1,7 @@
 <div class="album-info">
 
   <h1 class="album-info__title">{{ albumData()?.title }}</h1>
+  <p class="album-info__band-subtitle">{{ albumData()?.bands?.[0]?.name }}</p>
 
   <div class="album-info__nav">
     <div class="album-info__nav-tabs">
@@ -56,15 +57,18 @@
           </svg>
         }
       </div>
-      <div class="album-info__rating">
+      <div class="album-info__rating" (mouseleave)="hoverRating.set(0)">
         @for (star of [1,2,3,4,5,6,7,8]; track star) {
-          <svg class="album-info__star" [class.empty]="star === 8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg class="album-info__star"
+            [class.empty]="star > (hoverRating() || selectedRating())"
+            (mouseenter)="hoverRating.set(star)"
+            (click)="selectedRating.set(star)"
+            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
           </svg>
         }
       </div>
-      <table class="album-info__meta">
-        <tr><td class="label">Band:</td><td>{{ albumData()?.bands?.[0]?.name }}</td></tr>
+      <table class="album-info__meta">        
         <tr><td class="label">Release:</td><td>{{ albumData()?.releaseDate }}</td></tr>
         <tr><td class="label">Country:</td><td>{{ albumData()?.countries?.[0]?.name }}</td></tr>
         <tr><td class="label">Genre:</td><td>{{ albumData()?.genres?.[0]?.name }}</td></tr>

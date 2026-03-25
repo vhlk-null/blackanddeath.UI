@@ -1,0 +1,22 @@
+.star-rating {
+  display: flex;
+  justify-content: space-between;
+
+  &__star {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: var(--color-star);
+    stroke: var(--color-star);
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: fill 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+
+    &.empty {
+      fill: none;
+    }
+  }
+}

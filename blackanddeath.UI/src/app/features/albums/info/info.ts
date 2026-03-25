@@ -48,6 +48,8 @@ export class Info implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly tracklistTabIndex = signal(0);
   readonly loaded = signal(false);
+  readonly hoverRating = signal(0);
+  readonly selectedRating = signal(0);
 
   readonly tracklistTabs = ['Tracklist', 'Spotify', 'Amazon'];
 

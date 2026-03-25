@@ -9,6 +9,15 @@
     line-height: 1.2;
     letter-spacing: 0.085em;
     color: var(--color-text-heading);
+    margin: 0 0 0.25rem;
+  }
+
+  &__band-subtitle {
+    font-family: 'Cinzel', serif;
+    font-weight: var(--font-weight-regular);
+    font-size: 1.25rem;
+    letter-spacing: 0.085em;
+    color: var(--color-text-muted);
     margin: 0 0 1.5rem;
   }
 
@@ -119,7 +128,7 @@
     display: flex;
     justify-content: space-between;
     padding: 0 1.5rem;
-    margin: 0.5rem 0;
+    margin: 0.5rem 0 1.5rem;
   }
 
   &__star {
@@ -128,6 +137,12 @@
     fill: var(--color-star);
     stroke: var(--color-star);
     stroke-width: 1.5;
+    cursor: pointer;
+    transition: fill 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+      transform: scale(1.2);
+    }
 
     &.empty {
       fill: none;

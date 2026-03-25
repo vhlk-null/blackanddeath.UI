@@ -32,6 +32,8 @@ export class BandInfo implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly bandData = signal<Band | null>(null);
   readonly loaded = signal(false);
+  readonly hoverRating = signal(0);
+  readonly selectedRating = signal(0);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
