@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
 import { BandCard } from '../../bands/band-card/band-card';
+import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { AlbumService } from '../../services/album.servics';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
@@ -16,7 +17,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, BandCard],
+  imports: [Section, AlbumCard, BandCard, StarRating],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -48,9 +49,6 @@ export class Info implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly tracklistTabIndex = signal(0);
   readonly loaded = signal(false);
-  readonly hoverRating = signal(0);
-  readonly selectedRating = signal(0);
-
   readonly tracklistTabs = ['Tracklist', 'Spotify', 'Amazon'];
 
   readonly albumData = signal<Album | null>(null);

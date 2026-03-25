@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
+import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { BandService } from '../../services/band.service';
 import { Band } from '../../../shared/models/band';
 import {
@@ -13,7 +14,7 @@ import {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard],
+  imports: [Section, AlbumCard, StarRating],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -32,9 +33,6 @@ export class BandInfo implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly bandData = signal<Band | null>(null);
   readonly loaded = signal(false);
-  readonly hoverRating = signal(0);
-  readonly selectedRating = signal(0);
-
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;

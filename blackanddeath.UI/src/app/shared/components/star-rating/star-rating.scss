@@ -1,6 +1,11 @@
+:host {
+  display: block;
+}
+
 .star-rating {
   display: flex;
-  justify-content: space-between;
+  gap: 0.75rem;
+  justify-content: var(--star-justify, center);
 
   &__star {
     width: 1.25rem;

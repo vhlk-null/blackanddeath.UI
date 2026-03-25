@@ -2,11 +2,12 @@ import { Component, input, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-star-rating',
+  standalone: true,
   templateUrl: './star-rating.html',
   styleUrl: './star-rating.scss',
 })
 export class StarRating {
-  readonly count = input<number>(8);
+  readonly count = input<number>(10);
   readonly rating = input<number>(0);
   readonly ratingChange = output<number>();
 
