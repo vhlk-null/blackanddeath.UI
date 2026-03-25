@@ -56,7 +56,8 @@
 
     <div class="band-info__left">
       @if (bandData()?.logoUrl) {
-        <img class="band-info__logo" [src]="bandData()!.logoUrl" [alt]="bandData()?.name" />
+        <img class="band-info__logo" [src]="bandData()!.logoUrl" [alt]="bandData()?.name"
+          style="cursor: pointer" (click)="lightboxSrc.set(bandData()!.logoUrl!)" />
       } @else if (loaded()) {
         <svg class="band-info__placeholder" viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="85.5" cy="85.5" r="14.5" fill="#606162" />
@@ -102,7 +103,12 @@
     </table>
 
   </div>
+
 </div>
+
+@if (lightboxSrc()) {
+  <app-image-lightbox [src]="lightboxSrc()!" (close)="lightboxSrc.set(null)" />
+}
 
 <app-section [sectionTitle]="titles.discography">
   @for (album of (bandData()?.albums ?? []).slice(0, 4); track album.id) {

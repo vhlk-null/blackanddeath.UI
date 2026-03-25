@@ -56,7 +56,7 @@
   <div class="album-info__body">
 
     <div class="album-info__left">
-      <div class="album-info__cover">
+      <div class="album-info__cover" [style.cursor]="albumData()?.coverUrl ? 'pointer' : 'default'" (click)="albumData()?.coverUrl && lightboxSrc.set(albumData()!.coverUrl!)">
         @if (albumData()?.coverUrl) {
         <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" />
         } @else if (loaded()) {
@@ -117,6 +117,9 @@
     </div>
 
   </div>
+@if (lightboxSrc()) {
+  <app-image-lightbox [src]="lightboxSrc()!" (close)="lightboxSrc.set(null)" />
+}
 </div>
 
 <app-section [sectionTitle]="titles.discography">

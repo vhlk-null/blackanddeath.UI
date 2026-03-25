@@ -4,6 +4,7 @@ import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
 import { BandCard } from '../../bands/band-card/band-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
+import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
 import { AlbumService } from '../../services/album.servics';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
@@ -17,7 +18,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, BandCard, StarRating],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -25,6 +26,8 @@ export class Info implements OnInit {
 
   private route = inject(ActivatedRoute);
   private albumService = inject(AlbumService);
+
+  readonly lightboxSrc = signal<string | null>(null);
 
   readonly tabs = {
     info: ALBUM_INFORMATION,

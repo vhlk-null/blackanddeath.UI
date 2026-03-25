@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
+import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
 import { BandService } from '../../services/band.service';
 import { Band } from '../../../shared/models/band';
 import {
@@ -14,7 +15,7 @@ import {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, StarRating],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -30,6 +31,7 @@ export class BandInfo implements OnInit {
     similarBands: SIMILAR_BANDS_TITLE,
   };
 
+  readonly lightboxSrc = signal<string | null>(null);
   readonly infoTabIndex = signal(0);
   readonly bandData = signal<Band | null>(null);
   readonly loaded = signal(false);
