@@ -4,6 +4,7 @@ import { forkJoin } from 'rxjs';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { LabelService } from '../../services/label.service';
+import { TagService } from '../../services/tag.service';
 
 interface MetadataItem {
   id: string;
@@ -35,22 +36,13 @@ export class AddMetadataForm implements OnInit {
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private labelService = inject(LabelService);
+  private tagService = inject(TagService);
 
   readonly sections = signal<MetadataSection[]>([
     makeSection('Genres', []),
     makeSection('Countries', []),
     makeSection('Labels', []),
-    makeSection('Tags', [
-      { id: 'raw', name: 'Raw' },
-      { id: 'dsbm', name: 'DSBM' },
-      { id: 'atmospheric', name: 'Atmospheric' },
-      { id: 'melodic', name: 'Melodic' },
-      { id: 'progressive', name: 'Progressive' },
-      { id: 'technical', name: 'Technical' },
-      { id: 'brutal', name: 'Brutal' },
-      { id: 'depressive', name: 'Depressive' },
-      { id: 'occult', name: 'Occult' },
-    ]),
+    makeSection('Tags', []),
   ]);
 
   readonly hasChanges = computed(() =>
@@ -65,8 +57,9 @@ export class AddMetadataForm implements OnInit {
       genres: this.genreService.getAll(),
       countries: this.countryService.getAll(),
       labels: this.labelService.getAll(),
+      tags: this.tagService.getAll(),
     }).subscribe({
-      next: ({ genres, countries, labels }) => {
+      next: ({ genres, countries, labels, tags }) => {
         this.sections.update(sections => sections.map(s => {
           if (s.title === 'Genres') {
             const items = genres.map(g => ({ id: g.id, name: g.name }));
@@ -78,6 +71,10 @@ export class AddMetadataForm implements OnInit {
           }
           if (s.title === 'Labels') {
             const items = labels.map(l => ({ id: l.id, name: l.name }));
+            return { ...s, items: [...items], originalItems: [...items] };
+          }
+          if (s.title === 'Tags') {
+            const items = tags.map(t => ({ id: t.id, name: t.name }));
             return { ...s, items: [...items], originalItems: [...items] };
           }
           return s;
