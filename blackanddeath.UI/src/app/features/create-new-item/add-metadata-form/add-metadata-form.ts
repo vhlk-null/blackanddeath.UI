@@ -149,7 +149,34 @@ export class AddMetadataForm implements OnInit {
   }
 
   onSubmit(formData: NgForm) {
-    this.toast.success('Metadata added successfully');
-    console.log(formData.form.value);
+    const { genre, tag, label, country } = formData.form.value;
+
+    const requests: Record<string, Observable<{ id: string }>> = {};
+    const names: Record<string, string> = {};
+
+    if (genre?.trim())   { requests['Genres']    = this.genreService.create({ name: genre.trim(), parentGenreId: null }); names['Genres']    = genre.trim(); }
+    if (tag?.trim())     { requests['Tags']       = this.tagService.create({ name: tag.trim() });                         names['Tags']       = tag.trim(); }
+    if (label?.trim())   { requests['Labels']     = this.labelService.create({ name: label.trim() });                     names['Labels']     = label.trim(); }
+    if (country?.trim()) { requests['Countries']  = this.countryService.create({ name: country.trim(), code: '' });       names['Countries']  = country.trim(); }
+
+    if (!Object.keys(requests).length) {
+      this.toast.warning('Fill in at least one field');
+      return;
+    }
+
+    forkJoin(requests).subscribe({
+      next: (created: Record<string, { id: string }>) => {
+        this.sections.update(sections => sections.map(s => {
+          const result = created[s.title];
+          if (!result) return s;
+          const newItem = { id: result.id, name: names[s.title] };
+          const items = [...s.items, newItem];
+          return { ...s, items, originalItems: [...items] };
+        }));
+        formData.resetForm();
+        this.toast.success('Metadata added successfully');
+      },
+      error: () => this.toast.error('Failed to add metadata'),
+    });
   }
 }
