@@ -26,3 +26,19 @@ export class GenreEndpoints {
   public static UPDATE = (id: string) => `${base}/library/genres/${id}`;
   public static DELETE = (id: string) => `${base}/library/genres/${id}`;
 }
+
+export class CountryEndpoints {
+  public static GET_ALL = `${base}/library/countries`;
+  public static GET_BY_ID = (id: string) => `${base}/library/countries/${id}`;
+  public static CREATE = `${base}/library/countries`;
+  public static UPDATE = (id: string) => `${base}/library/countries/${id}`;
+  public static DELETE = (id: string) => `${base}/library/countries/${id}`;
+}
+
+export class LabelEndpoints {
+  public static GET_ALL = `${base}/library/labels`;
+  public static GET_BY_ID = (id: string) => `${base}/library/labels/${id}`;
+  public static CREATE = `${base}/library/labels`;
+  public static UPDATE = (id: string) => `${base}/library/labels/${id}`;
+  public static DELETE = (id: string) => `${base}/library/labels/${id}`;
+}

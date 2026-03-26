@@ -201,6 +201,29 @@
     }
   }
 
+  &__changes-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-lg);
+    background: var(--color-input-bg);
+    animation: fadeIn 0.2s ease;
+  }
+
+  &__changes-label {
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  &__changes-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
   &__btn {
     height: 2.25rem;
     padding: 0 1.5rem;

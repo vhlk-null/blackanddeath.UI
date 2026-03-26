@@ -8,7 +8,7 @@ function toSlug(s: string): string {
 }
 
 function band(id: number, name: string, country: string, genre: string, formedYear: number, logoUrl: string | null): Band {
-    return { id: String(id), slug: toSlug(name), name, countries: [{ id: '0', name: country, code: '' }], genres: [{ id: '0', name: genre, slug: toSlug(genre), isPrimary: true }], formedYear, logoUrl };
+    return { id: String(id), slug: toSlug(name), name, countries: [{ id: '0', name: country, code: '' }], genres: [{ id: '0', name: genre, parentGenreId: null }], formedYear, logoUrl };
 }
 
 function album(id: string, title: string, band: string, type: AlbumType, year: number, country: string, genre: string, coverUrl: string | null): Album {
@@ -23,7 +23,7 @@ function album(id: string, title: string, band: string, type: AlbumType, year: n
         label: null,
         bands: [{ id: null, name: band, slug: toSlug(band) }],
         countries: [{ id: '0', name: country, code: '' }],
-        genres: [{ id: '0', name: genre, slug: toSlug(genre), isPrimary: true }],
+        genres: [{ id: '0', name: genre, parentGenreId: null }],
         streamingLinks: [],
         tracks: [],
     };

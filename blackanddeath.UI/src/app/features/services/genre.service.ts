@@ -1,16 +1,18 @@
 import { inject, Injectable } from "@angular/core";
+import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { GenreEndpoints } from "../../shared/constants/endpoints";
 import { Genre } from "../../shared/models/genre";
-import { PaginatedResult } from "../../shared/models/paginated-result";
 
 @Injectable({ providedIn: 'root' })
 export class GenreService {
 
   private http = inject(BaseHttpService);
 
-  getAll(params?: Record<string, unknown>) {
-    return this.http.get<PaginatedResult<Genre[]>>(GenreEndpoints.GET_ALL, params);
+  getAll() {
+    return this.http.get<{ genres: Genre[] }>(GenreEndpoints.GET_ALL).pipe(
+      map(response => response.genres)
+    );
   }
 
   getById(id: string) {

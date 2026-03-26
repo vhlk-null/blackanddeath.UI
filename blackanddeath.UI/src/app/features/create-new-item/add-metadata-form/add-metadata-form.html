@@ -3,78 +3,90 @@
   <h2 class="add-metadata__title">Add metadata</h2>
 
   <div class="add-metadata__layout">
-  <div class="add-metadata__card">
-    <form class="add-metadata__form" autocomplete="off" (ngSubmit)="onSubmit(form)" #form="ngForm">
 
-      <div class="add-metadata__row">
-        <label class="add-metadata__label" for="meta-genre">Add genre:</label>
-        <input class="add-metadata__input" id="meta-genre" type="text" autocomplete="off" placeholder="type here.." name="genre" ngModel />
-      </div>
+    <div class="add-metadata__card">
+      <form class="add-metadata__form" autocomplete="off" (ngSubmit)="onSubmit(form)" #form="ngForm">
 
-      <div class="add-metadata__row">
-        <label class="add-metadata__label" for="meta-style">Add tag:</label>
-        <input class="add-metadata__input" id="meta-style" type="text" autocomplete="off" placeholder="type here.." name="tag" ngModel />
-      </div>
+        <div class="add-metadata__row">
+          <label class="add-metadata__label" for="meta-genre">Add genre:</label>
+          <input class="add-metadata__input" id="meta-genre" type="text" autocomplete="off" placeholder="type here.." name="genre" ngModel />
+        </div>
 
-      <div class="add-metadata__row">
-        <label class="add-metadata__label" for="meta-label">Add label:</label>
-        <input class="add-metadata__input" id="meta-label" type="text" autocomplete="off" placeholder="type here.." name="label" ngModel />
-      </div>
+        <div class="add-metadata__row">
+          <label class="add-metadata__label" for="meta-style">Add tag:</label>
+          <input class="add-metadata__input" id="meta-style" type="text" autocomplete="off" placeholder="type here.." name="tag" ngModel />
+        </div>
 
-      <div class="add-metadata__row">
-        <label class="add-metadata__label" for="meta-country">Add country:</label>
-        <input class="add-metadata__input" id="meta-country" type="text" autocomplete="off" placeholder="type here.." name="country" ngModel />
-      </div>
+        <div class="add-metadata__row">
+          <label class="add-metadata__label" for="meta-label">Add label:</label>
+          <input class="add-metadata__input" id="meta-label" type="text" autocomplete="off" placeholder="type here.." name="label" ngModel />
+        </div>
 
-      <div class="add-metadata__actions">
-        <button class="add-metadata__btn add-metadata__btn--cancel" type="button">Cancel</button>
-        <button class="add-metadata__btn add-metadata__btn--apply" type="submit">Apply</button>
-      </div>
+        <div class="add-metadata__row">
+          <label class="add-metadata__label" for="meta-country">Add country:</label>
+          <input class="add-metadata__input" id="meta-country" type="text" autocomplete="off" placeholder="type here.." name="country" ngModel />
+        </div>
 
-    </form>
-  </div>
+        <div class="add-metadata__actions">
+          <button class="add-metadata__btn add-metadata__btn--cancel" type="button">Cancel</button>
+          <button class="add-metadata__btn add-metadata__btn--apply" type="submit">Apply</button>
+        </div>
 
-  <div class="add-metadata__sections">
+      </form>
+    </div>
 
-    @for (section of sections(); track section.title; let i = $index) {
-      <div class="add-metadata__section" [class.expanded]="section.expanded">
+    <div class="add-metadata__sections">
 
-        <button class="add-metadata__section-header" type="button" (click)="toggle(i)">
-          <span class="add-metadata__section-title">
-            {{ section.title }}
-            <span class="add-metadata__section-count">({{ section.items.length }})</span>
-          </span>
-          <svg class="add-metadata__section-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 9L12 15L18 9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+      @for (section of sections(); track section.title; let i = $index) {
+        <div class="add-metadata__section" [class.expanded]="section.expanded">
 
-        @if (section.expanded) {
-          <div class="add-metadata__section-body">
-            <div class="add-metadata__chips">
-              @for (item of visibleItems(section); track item) {
-                <span class="add-metadata__chip">
-                  {{ item }}
-                  <button class="add-metadata__chip-remove" type="button" (click)="removeItem(i, item)" title="Remove">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18 6L6 18M6 6L18 18" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                  </button>
-                </span>
+          <button class="add-metadata__section-header" type="button" (click)="toggle(i)">
+            <span class="add-metadata__section-title">
+              {{ section.title }}
+              <span class="add-metadata__section-count">({{ section.items.length }})</span>
+            </span>
+            <svg class="add-metadata__section-chevron" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          @if (section.expanded) {
+            <div class="add-metadata__section-body">
+              <div class="add-metadata__chips">
+                @for (item of visibleItems(section); track item.id) {
+                  <span class="add-metadata__chip">
+                    {{ item.name }}
+                    <button class="add-metadata__chip-remove" type="button" (click)="removeItem(i, item.id)" title="Remove">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    </button>
+                  </span>
+                }
+              </div>
+              @if (section.items.length > previewCount) {
+                <button class="add-metadata__show-all" type="button" (click)="toggleShowAll(i)">
+                  {{ section.showAll ? 'Collapse' : 'Show all (' + section.items.length + ')' }}
+                </button>
               }
             </div>
-            @if (section.items.length > previewCount) {
-              <button class="add-metadata__show-all" type="button" (click)="toggleShowAll(i)">
-                {{ section.showAll ? 'Collapse' : 'Show all (' + section.items.length + ')' }}
-              </button>
-            }
+          }
+
+        </div>
+      }
+
+      @if (hasChanges()) {
+        <div class="add-metadata__changes-bar">
+          <span class="add-metadata__changes-label">You have unsaved changes</span>
+          <div class="add-metadata__changes-actions">
+            <button class="add-metadata__btn add-metadata__btn--cancel" type="button" (click)="discardChanges()">Discard</button>
+            <button class="add-metadata__btn add-metadata__btn--apply" type="button" (click)="saveChanges()">Save changes</button>
           </div>
-        }
+        </div>
+      }
 
-      </div>
-    }
+    </div>
+
   </div>
-
-  </div><!-- /.add-metadata__layout -->
 
 </div>
