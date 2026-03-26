@@ -17,6 +17,7 @@
     display: flex;
     gap: 2rem;
     align-items: flex-start;
+    flex-wrap: wrap;
   }
 
   &__card {
@@ -82,7 +83,7 @@
     flex-direction: column;
     gap: 0.5rem;
     flex: 1;
-    min-width: 0;
+    min-width: 20rem;
   }
 
   &__section {

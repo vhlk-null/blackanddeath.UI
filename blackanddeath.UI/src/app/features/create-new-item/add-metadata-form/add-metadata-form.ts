@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { ToastService } from '../../../shared/services/toast.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
@@ -116,10 +116,36 @@ export class AddMetadataForm implements OnInit {
   }
 
   saveChanges(): void {
-    this.sections.update(sections =>
-      sections.map(s => ({ ...s, originalItems: [...s.items] }))
-    );
-    this.toast.success('Changes saved successfully');
+    const deleteRequests: Record<string, (id: string) => any> = {
+      'Genres':   (id) => this.genreService.delete(id),
+      'Countries':(id) => this.countryService.delete(id),
+      'Labels':   (id) => this.labelService.delete(id),
+      'Tags':     (id) => this.tagService.delete(id),
+    };
+
+    const calls: Observable<void>[] = [];
+
+    for (const section of this.sections()) {
+      const removedIds = section.originalItems
+        .filter(orig => !section.items.some(item => item.id === orig.id))
+        .map(orig => orig.id);
+
+      for (const id of removedIds) {
+        calls.push(deleteRequests[section.title](id));
+      }
+    }
+
+    if (!calls.length) return;
+
+    forkJoin(calls).subscribe({
+      next: () => {
+        this.sections.update(sections =>
+          sections.map(s => ({ ...s, originalItems: [...s.items] }))
+        );
+        this.toast.success('Changes saved successfully');
+      },
+      error: () => this.toast.error('Failed to save changes'),
+    });
   }
 
   onSubmit(formData: NgForm) {
