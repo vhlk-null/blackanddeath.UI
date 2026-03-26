@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { ToastService } from '../../../shared/services/toast.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { LabelService } from '../../services/label.service';
@@ -33,6 +34,7 @@ export class AddMetadataForm implements OnInit {
 
   readonly previewCount = 12;
 
+  private toast = inject(ToastService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private labelService = inject(LabelService);
@@ -110,15 +112,18 @@ export class AddMetadataForm implements OnInit {
     this.sections.update(sections =>
       sections.map(s => ({ ...s, items: [...s.originalItems] }))
     );
+    this.toast.info('Changes discarded');
   }
 
   saveChanges(): void {
     this.sections.update(sections =>
       sections.map(s => ({ ...s, originalItems: [...s.items] }))
     );
+    this.toast.success('Changes saved successfully');
   }
 
   onSubmit(formData: NgForm) {
-    console.log(formData.form.value.genre);
+    this.toast.success('Metadata added successfully');
+    console.log(formData.form.value);
   }
 }
