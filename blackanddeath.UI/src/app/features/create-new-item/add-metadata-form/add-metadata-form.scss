@@ -162,6 +162,27 @@
     &:hover .add-metadata__chip-remove {
       opacity: 1;
     }
+
+    &.editing {
+      border-color: var(--color-border-input-focus);
+      padding: 0.125rem 0.5rem;
+    }
+  }
+
+  &__chip-text {
+    cursor: default;
+    user-select: none;
+  }
+
+  &__chip-input {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: var(--font-family-body);
+    font-size: 0.8125rem;
+    color: var(--color-text);
+    min-width: 2ch;
+    padding: 0;
   }
 
   &__chip-remove {

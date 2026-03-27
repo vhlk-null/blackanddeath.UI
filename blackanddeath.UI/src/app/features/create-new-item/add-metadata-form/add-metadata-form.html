@@ -54,13 +54,26 @@
             <div class="add-metadata__section-body">
               <div class="add-metadata__chips">
                 @for (item of visibleItems(section); track item.id) {
-                  <span class="add-metadata__chip">
-                    {{ item.name }}
-                    <button class="add-metadata__chip-remove" type="button" (click)="removeItem(i, item.id)" title="Remove">
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 6L6 18M6 6L18 18" stroke-width="1.5" stroke-linecap="round"/>
-                      </svg>
-                    </button>
+                  <span class="add-metadata__chip" [class.editing]="editingId() === item.id">
+                    @if (editingId() === item.id) {
+                      <input
+                        class="add-metadata__chip-input"
+                        [value]="editingValue()"
+                        [style.width.ch]="editingValue().length + 1"
+                        (input)="editingValue.set($any($event.target).value)"
+                        (keydown.enter)="confirmEdit(i, item)"
+                        (keydown.escape)="cancelEdit()"
+                        (blur)="confirmEdit(i, item)"
+                        autofocus
+                      />
+                    } @else {
+                      <span class="add-metadata__chip-text" (dblclick)="startEdit(item)">{{ item.name }}</span>
+                      <button class="add-metadata__chip-remove" type="button" (click)="removeItem(i, item.id)" title="Remove">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18 6L6 18M6 6L18 18" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                      </button>
+                    }
                   </span>
                 }
               </div>

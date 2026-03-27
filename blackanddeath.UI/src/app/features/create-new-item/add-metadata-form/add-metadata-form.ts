@@ -34,6 +34,9 @@ export class AddMetadataForm implements OnInit {
 
   readonly previewCount = 12;
 
+  readonly editingId = signal<string | null>(null);
+  readonly editingValue = signal('');
+
   private toast = inject(ToastService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
@@ -50,7 +53,10 @@ export class AddMetadataForm implements OnInit {
   readonly hasChanges = computed(() =>
     this.sections().some(s =>
       s.items.length !== s.originalItems.length ||
-      s.items.some((item, i) => item.id !== s.originalItems[i]?.id)
+      s.items.some((item, i) => {
+        const orig = s.originalItems[i];
+        return !orig || item.id !== orig.id || item.name !== orig.name;
+      })
     )
   );
 
@@ -102,6 +108,31 @@ export class AddMetadataForm implements OnInit {
     return section.showAll ? section.items : section.items.slice(0, this.previewCount);
   }
 
+  startEdit(item: MetadataItem): void {
+    this.editingId.set(item.id);
+    this.editingValue.set(item.name);
+  }
+
+  cancelEdit(): void {
+    this.editingId.set(null);
+    this.editingValue.set('');
+  }
+
+  confirmEdit(sectionIndex: number, item: MetadataItem): void {
+    const newName = this.editingValue().trim();
+    if (!newName || newName === item.name) {
+      this.cancelEdit();
+      return;
+    }
+
+    this.sections.update(sections => sections.map((s, i) => {
+      if (i !== sectionIndex) return s;
+      const items = s.items.map(x => x.id === item.id ? { ...x, name: newName } : x);
+      return { ...s, items };
+    }));
+    this.cancelEdit();
+  }
+
   removeItem(sectionIndex: number, itemId: string): void {
     this.sections.update(sections =>
       sections.map((s, i) => i === sectionIndex ? { ...s, items: s.items.filter(x => x.id !== itemId) } : s)
@@ -116,22 +147,25 @@ export class AddMetadataForm implements OnInit {
   }
 
   saveChanges(): void {
-    const deleteRequests: Record<string, (id: string) => any> = {
-      'Genres': (id) => this.genreService.delete(id),
-      'Countries': (id) => this.countryService.delete(id),
-      'Labels': (id) => this.labelService.delete(id),
-      'Tags': (id) => this.tagService.delete(id),
+    const services: Record<string, { delete: (id: string) => Observable<any>; update: (id: string, name: string) => Observable<any> }> = {
+      'Genres':    { delete: (id) => this.genreService.delete(id),    update: (id, name) => this.genreService.update(id, { name }) },
+      'Countries': { delete: (id) => this.countryService.delete(id),  update: (id, name) => this.countryService.update(id, { name }) },
+      'Labels':    { delete: (id) => this.labelService.delete(id),    update: (id, name) => this.labelService.update(id, { name }) },
+      'Tags':      { delete: (id) => this.tagService.delete(id),      update: (id, name) => this.tagService.update(id, { name }) },
     };
 
-    const calls: Observable<void>[] = [];
+    const calls: Observable<any>[] = [];
 
     for (const section of this.sections()) {
-      const removedIds = section.originalItems
-        .filter(orig => !section.items.some(item => item.id === orig.id))
-        .map(orig => orig.id);
+      const svc = services[section.title];
 
-      for (const id of removedIds) {
-        calls.push(deleteRequests[section.title](id));
+      for (const orig of section.originalItems) {
+        const current = section.items.find(x => x.id === orig.id);
+        if (!current) {
+          calls.push(svc.delete(orig.id));
+        } else if (current.name !== orig.name) {
+          calls.push(svc.update(orig.id, current.name));
+        }
       }
     }
 
