@@ -117,10 +117,10 @@ export class AddMetadataForm implements OnInit {
 
   saveChanges(): void {
     const deleteRequests: Record<string, (id: string) => any> = {
-      'Genres':   (id) => this.genreService.delete(id),
-      'Countries':(id) => this.countryService.delete(id),
-      'Labels':   (id) => this.labelService.delete(id),
-      'Tags':     (id) => this.tagService.delete(id),
+      'Genres': (id) => this.genreService.delete(id),
+      'Countries': (id) => this.countryService.delete(id),
+      'Labels': (id) => this.labelService.delete(id),
+      'Tags': (id) => this.tagService.delete(id),
     };
 
     const calls: Observable<void>[] = [];
@@ -154,10 +154,10 @@ export class AddMetadataForm implements OnInit {
     const requests: Record<string, Observable<{ id: string }>> = {};
     const names: Record<string, string> = {};
 
-    if (genre?.trim())   { requests['Genres']    = this.genreService.create({ name: genre.trim(), parentGenreId: null }); names['Genres']    = genre.trim(); }
-    if (tag?.trim())     { requests['Tags']       = this.tagService.create({ name: tag.trim() });                         names['Tags']       = tag.trim(); }
-    if (label?.trim())   { requests['Labels']     = this.labelService.create({ name: label.trim() });                     names['Labels']     = label.trim(); }
-    if (country?.trim()) { requests['Countries']  = this.countryService.create({ name: country.trim(), code: '' });       names['Countries']  = country.trim(); }
+    if (genre?.trim()) { requests['Genres'] = this.genreService.create({ name: genre.trim(), parentGenreId: null }); names['Genres'] = genre.trim(); }
+    if (tag?.trim()) { requests['Tags'] = this.tagService.create({ name: tag.trim() }); names['Tags'] = tag.trim(); }
+    if (label?.trim()) { requests['Labels'] = this.labelService.create({ name: label.trim() }); names['Labels'] = label.trim(); }
+    if (country?.trim()) { requests['Countries'] = this.countryService.create({ name: country.trim(), code: '' }); names['Countries'] = country.trim(); }
 
     if (!Object.keys(requests).length) {
       this.toast.warning('Fill in at least one field');
