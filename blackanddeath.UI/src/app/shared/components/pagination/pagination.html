@@ -1,0 +1,27 @@
+<div class="pagination">
+  <button class="pagination__btn pagination__btn--arrow"
+    [disabled]="currentPage() === 1"
+    (click)="goTo(currentPage() - 1)">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 18L9 12L15 6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  @for (page of pages(); track $index) {
+    @if (page === '...') {
+      <span class="pagination__dots">…</span>
+    } @else {
+      <button class="pagination__btn" [class.active]="page === currentPage()" (click)="goTo(+page)">
+        {{ page }}
+      </button>
+    }
+  }
+
+  <button class="pagination__btn pagination__btn--arrow"
+    [disabled]="currentPage() === totalPages()"
+    (click)="goTo(currentPage() + 1)">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 18L15 12L9 6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</div>

@@ -24,6 +24,12 @@ export class BandService {
     );
   }
 
+  getAllPaginated(params?: Record<string, unknown>) {
+    return this.http.get<BandsResponse>(BandEndpoints.GET_ALL, params).pipe(
+      map(response => response.bands)
+    );
+  }
+
   getById(id: string) {
     return this.http.get<{ band: Band }>(BandEndpoints.GET_BY_ID(id)).pipe(
       map(response => response.band)

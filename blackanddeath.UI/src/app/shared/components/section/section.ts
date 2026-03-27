@@ -10,6 +10,7 @@ import { Tabs } from '../tabs/tabs';
 export class Section {
   sectionTitle = input<string>('');
   tabs = input<string[]>();
+  initialTab = input<number>(0);
   columns = input<number>(4);
   tabChange = output<number>();
 }

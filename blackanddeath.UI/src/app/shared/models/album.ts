@@ -5,6 +5,7 @@ import { Country } from './country';
 import { Genre } from './genre';
 import { StreamingLink } from './streaming-link';
 import { ApiTrack } from './track';
+import { Label } from './label';
 
 export interface Album {
   id: string;
@@ -14,7 +15,7 @@ export interface Album {
   coverUrl: string | null;
   type: AlbumType;
   format: AlbumFormat;
-  label?: string | null;
+  label?: Label | null;
   bands?: BandSummary[];
   countries?: Country[];
   streamingLinks?: StreamingLink[];

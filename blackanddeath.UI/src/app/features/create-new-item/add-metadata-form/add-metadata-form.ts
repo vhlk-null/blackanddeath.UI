@@ -148,10 +148,10 @@ export class AddMetadataForm implements OnInit {
 
   saveChanges(): void {
     const services: Record<string, { delete: (id: string) => Observable<any>; update: (id: string, name: string) => Observable<any> }> = {
-      'Genres':    { delete: (id) => this.genreService.delete(id),    update: (id, name) => this.genreService.update(id, { name }) },
-      'Countries': { delete: (id) => this.countryService.delete(id),  update: (id, name) => this.countryService.update(id, { name }) },
-      'Labels':    { delete: (id) => this.labelService.delete(id),    update: (id, name) => this.labelService.update(id, { name }) },
-      'Tags':      { delete: (id) => this.tagService.delete(id),      update: (id, name) => this.tagService.update(id, { name }) },
+      'Genres': { delete: (id) => this.genreService.delete(id), update: (id, name) => this.genreService.update(id, { name }) },
+      'Countries': { delete: (id) => this.countryService.delete(id), update: (id, name) => this.countryService.update(id, { name }) },
+      'Labels': { delete: (id) => this.labelService.delete(id), update: (id, name) => this.labelService.update(id, { name }) },
+      'Tags': { delete: (id) => this.tagService.delete(id), update: (id, name) => this.tagService.update(id, { name }) },
     };
 
     const calls: Observable<any>[] = [];
@@ -183,6 +183,9 @@ export class AddMetadataForm implements OnInit {
   }
 
   onSubmit(formData: NgForm) {
+
+    if (formData.form.invalid) return;
+
     const { genre, tag, label, country } = formData.form.value;
 
     const requests: Record<string, Observable<{ id: string }>> = {};

@@ -1,0 +1,14 @@
+<app-section sectionTitle="Albums" [tabs]="tabs" [initialTab]="activeTab()" (tabChange)="onTabChange($event)">
+  @for (album of albums(); track album.id) {
+    <app-album-card [albumCard]="album" />
+  }
+</app-section>
+
+@if (total() > pageSize) {
+  <app-pagination
+    [total]="total()"
+    [pageSize]="pageSize"
+    [currentPage]="currentPage()"
+    (pageChange)="onPageChange($event)"
+  />
+}

@@ -5,7 +5,7 @@
     <div class="section-body">
         @if (tabs()) {
         <div class="section-tabs">
-            <app-tabs [tabs]="tabs()!" (tabChange)="tabChange.emit($event)"></app-tabs>
+            <app-tabs [tabs]="tabs()!" [initialIndex]="initialTab()" (tabChange)="tabChange.emit($event)"></app-tabs>
         </div>
         }
         <div class="section-content" [style.--columns]="columns()">

@@ -25,6 +25,12 @@ export class AlbumService {
     );
   }
 
+  getAllPaginated(params?: Record<string, unknown>) {
+    return this.http.get<AlbumsResponse>(AlbumEndpoints.GET_ALL, params).pipe(
+      map(response => response.albums)
+    );
+  }
+
   getById(id: string) {
     return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_ID(id)).pipe(
       map(response => response.album)

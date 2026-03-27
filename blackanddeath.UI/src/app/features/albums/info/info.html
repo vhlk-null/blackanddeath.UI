@@ -77,7 +77,9 @@
         </tr>
         <tr>
           <td class="label">Country:</td>
-          <td>{{ albumData()?.countries?.[0]?.name }}</td>
+           @for (country of albumData()?.countries; track $index) {
+            <td>{{ country?.name }}</td>
+           }          
         </tr>
         <tr>
           <td class="label">Genre:</td>
@@ -89,7 +91,7 @@
         </tr>
         <tr>
           <td class="label">Label:</td>
-          <td>{{ albumData()?.label }}</td>
+          <td>{{ albumData()?.label?.name }}</td>
         </tr>
       </table>
     </div>

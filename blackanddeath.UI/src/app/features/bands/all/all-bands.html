@@ -1,0 +1,14 @@
+<app-section sectionTitle="Bands" [tabs]="tabs" [columns]="3" [initialTab]="activeTab()" (tabChange)="onTabChange($event)">
+  @for (band of bands(); track band.id) {
+    <app-band-card [bandCard]="band" />
+  }
+</app-section>
+
+@if (total() > pageSize) {
+  <app-pagination
+    [total]="total()"
+    [pageSize]="pageSize"
+    [currentPage]="currentPage()"
+    (pageChange)="onPageChange($event)"
+  />
+}

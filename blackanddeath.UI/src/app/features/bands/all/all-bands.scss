@@ -1,0 +1,25 @@
+.all-bands {
+  padding: 2rem 0 4rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    color: var(--color-text-heading);
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+}
