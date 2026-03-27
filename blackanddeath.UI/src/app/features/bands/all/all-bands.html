@@ -1,14 +1,32 @@
-<app-section sectionTitle="Bands" [tabs]="tabs" [columns]="3" [initialTab]="activeTab()" (tabChange)="onTabChange($event)">
-  @for (band of bands(); track band.id) {
-    <app-band-card [bandCard]="band" />
-  }
-</app-section>
+<div class="all-bands">
 
-@if (total() > pageSize) {
-  <app-pagination
-    [total]="total()"
-    [pageSize]="pageSize"
-    [currentPage]="currentPage()"
-    (pageChange)="onPageChange($event)"
-  />
-}
+  <div class="all-bands__header">
+    <h1 class="all-bands__title">Bands</h1>
+    <div class="all-bands__filter">
+      <label class="all-bands__filter-label" for="bands-sort">Sort by</label>
+      <select class="all-bands__filter-select" id="bands-sort"
+        [value]="activeTab()"
+        (change)="onTabChange(+$any($event.target).value)">
+        @for (tab of tabs; track $index) {
+          <option [value]="$index">{{ tab }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="all-bands__grid">
+    @for (band of bands(); track band.id) {
+      <app-band-card [bandCard]="band" />
+    }
+  </div>
+
+  @if (total() > pageSize) {
+    <app-pagination
+      [total]="total()"
+      [pageSize]="pageSize"
+      [currentPage]="currentPage()"
+      (pageChange)="onPageChange($event)"
+    />
+  }
+
+</div>

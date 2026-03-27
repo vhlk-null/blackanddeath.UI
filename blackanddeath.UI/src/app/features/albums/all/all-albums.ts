@@ -4,7 +4,6 @@ import { AlbumService } from '../../services/album.servics';
 import { Album } from '../../../shared/models/album';
 import { AlbumCard } from '../card/album-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
-import { Section } from '../../../shared/components/section/section';
 
 const TABS = ['Latest', 'This Year', 'Popular'];
 const PAGE_SIZE = 20;
@@ -14,7 +13,7 @@ const PAGE_SIZE = 20;
   selector: 'app-all-albums',
   templateUrl: './all-albums.html',
   styleUrl: './all-albums.scss',
-  imports: [AlbumCard, Pagination, Section],
+  imports: [AlbumCard, Pagination],
 })
 export class AllAlbums implements OnInit {
   private albumService = inject(AlbumService);
@@ -31,7 +30,7 @@ export class AllAlbums implements OnInit {
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParams;
-    this.activeTab.set(Number(params['tab']) || 0);
+    this.activeTab.set(Number(params['sort']) || 0);
     this.currentPage.set(Number(params['page']) || 1);
     this.load();
   }
@@ -53,7 +52,7 @@ export class AllAlbums implements OnInit {
   private updateUrl(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { tab: this.activeTab(), page: this.currentPage() },
+      queryParams: { sort: this.activeTab(), page: this.currentPage() },
       queryParamsHandling: 'merge',
     });
   }
