@@ -1,0 +1,43 @@
+<div class="multi-select" [class.multi-select--open]="isOpen()">
+  <div class="multi-select__control" (click)="inputRef.focus()">
+
+    @for (item of selected(); track item.id) {
+      <span class="multi-select__chip">
+        <span class="multi-select__chip-text">{{ item.name }}</span>
+        <button class="multi-select__chip-remove" type="button" (click)="remove(item, $event)" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </button>
+      </span>
+    }
+
+    <input
+      #inputRef
+      class="multi-select__input"
+      type="text"
+      autocomplete="off"
+      [placeholder]="selected().length === 0 ? placeholder() : ''"
+      [value]="query()"
+      (input)="query.set($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    />
+
+  </div>
+
+  @if (isOpen() && (filtered().length > 0 || canCreate())) {
+    <ul class="multi-select__dropdown">
+      @for (option of filtered(); track option.id) {
+        <li class="multi-select__option" (mousedown)="select(option)">
+          {{ option.name }}
+        </li>
+      }
+      @if (canCreate()) {
+        <li class="multi-select__option multi-select__option--create" (mousedown)="requestCreate()">
+          Add "{{ query().trim() }}"
+        </li>
+      }
+    </ul>
+  }
+</div>

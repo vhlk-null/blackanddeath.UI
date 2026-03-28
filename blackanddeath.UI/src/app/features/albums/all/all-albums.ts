@@ -5,7 +5,8 @@ import { Album } from '../../../shared/models/album';
 import { AlbumCard } from '../card/album-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 
-const TABS = ['Latest', 'This Year', 'Popular'];
+const SORT_OPTIONS = ['Newest', 'Oldest', 'ReleaseDate', 'Title'] as const;
+type SortOption = typeof SORT_OPTIONS[number];
 const PAGE_SIZE = 20;
 
 
@@ -20,23 +21,24 @@ export class AllAlbums implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  readonly tabs = TABS;
+  readonly sortOptions = SORT_OPTIONS;
   readonly pageSize = PAGE_SIZE;
 
   readonly albums = signal<Album[]>([]);
   readonly total = signal(0);
   readonly currentPage = signal(1);
-  readonly activeTab = signal(0);
+  readonly activeSort = signal<SortOption>('Newest');
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParams;
-    this.activeTab.set(Number(params['sort']) || 0);
+    const sort = params['sort'] as SortOption;
+    this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');
     this.currentPage.set(Number(params['page']) || 1);
     this.load();
   }
 
-  onTabChange(index: number): void {
-    this.activeTab.set(index);
+  onSortChange(sort: string): void {
+    this.activeSort.set(sort as SortOption);
     this.currentPage.set(1);
     this.updateUrl();
     this.load();
@@ -52,15 +54,16 @@ export class AllAlbums implements OnInit {
   private updateUrl(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { sort: this.activeTab(), page: this.currentPage() },
+      queryParams: { sort: this.activeSort(), page: this.currentPage() },
       queryParamsHandling: 'merge',
     });
   }
 
   private load(): void {
     this.albumService.getAllPaginated({
-      page: this.currentPage(),
+      pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
+      sortBy: this.activeSort(),
     }).subscribe({
       next: (result) => {
         this.albums.set(result.data);

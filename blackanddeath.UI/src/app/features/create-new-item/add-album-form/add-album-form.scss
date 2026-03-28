@@ -55,7 +55,8 @@
     align-items: center;
     gap: 0.75rem;
 
-    &--textarea {
+    &--textarea,
+    &--multiselect {
       align-items: flex-start;
     }
   }
@@ -105,6 +106,31 @@
       height: 1rem;
       color: var(--color-text-muted);
       pointer-events: none;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__error {
+    font-family: var(--font-family-body);
+    font-size: 0.75rem;
+    color: var(--color-error, #e05c5c);
+  }
+
+  &__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.625rem center;
+    cursor: pointer;
+
+    option {
+      background: var(--color-input-bg);
+      color: var(--color-text);
     }
   }
 
@@ -224,6 +250,11 @@
       color: var(--color-bg);
       font-family: 'Cinzel', serif;
       letter-spacing: 0.05em;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 }

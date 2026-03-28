@@ -117,6 +117,18 @@
     }
   }
 
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__error {
+    font-family: var(--font-family-body);
+    font-size: 0.75rem;
+    color: var(--color-error, #e05c5c);
+  }
+
   &__input {
     width: 100%;
     background: var(--color-input-bg);
@@ -233,6 +245,11 @@
       color: var(--color-bg);
       font-family: 'Cinzel', serif;
       letter-spacing: 0.05em;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
   }
 }

@@ -3,6 +3,22 @@ import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { BandEndpoints } from "../../shared/constants/endpoints";
 import { Band } from "../../shared/models/band";
+import { BandSummary } from "../../shared/models/band-summary";
+
+export interface CreateBandDto {
+  name: string;
+  formedYear: number;
+  country: string;
+  genre: string;
+  subgenres: string;
+  label: string;
+  bio: string;
+  facebook: string;
+  youtube: string;
+  instagram: string;
+  twitter: string;
+  website: string;
+}
 
 interface BandsResponse {
   bands: {
@@ -24,6 +40,12 @@ export class BandService {
     );
   }
 
+  getSummaries() {
+    return this.http.get<{ bands: BandSummary[] }>(BandEndpoints.GET_SUMMARIES).pipe(
+      map(response => response.bands)
+    );
+  }
+
   getAllPaginated(params?: Record<string, unknown>) {
     return this.http.get<BandsResponse>(BandEndpoints.GET_ALL, params).pipe(
       map(response => response.bands)
@@ -36,8 +58,13 @@ export class BandService {
     );
   }
 
-  create(payload: Omit<Band, 'id'>) {
-    return this.http.post<Band>(BandEndpoints.CREATE, payload);
+  create(dto: CreateBandDto, logo?: File | null) {
+    const form = new FormData();
+    form.append('Band', JSON.stringify(dto));
+    if (logo) {
+      form.append('LogoImage', logo, logo.name);
+    }
+    return this.http.post<Band>(BandEndpoints.CREATE, form);
   }
 
   update(id: string, payload: Partial<Omit<Band, 'id'>>) {

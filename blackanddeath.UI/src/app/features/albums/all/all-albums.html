@@ -5,10 +5,10 @@
     <div class="all-albums__filter">
       <label class="all-albums__filter-label" for="albums-sort">Sort by</label>
       <select class="all-albums__filter-select" id="albums-sort"
-        [value]="activeTab()"
-        (change)="onTabChange(+$any($event.target).value)">
-        @for (tab of tabs; track $index) {
-          <option [value]="$index">{{ tab }}</option>
+        [value]="activeSort()"
+        (change)="onSortChange($any($event.target).value)">
+        @for (option of sortOptions; track option) {
+          <option [value]="option">{{ option }}</option>
         }
       </select>
     </div>

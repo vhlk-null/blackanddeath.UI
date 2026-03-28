@@ -3,97 +3,213 @@
   <div class="add-album__preview-wrapper">
     <div class="add-album__preview">
       @if (previewUrl) {
-        <img [src]="previewUrl" alt="Album cover preview" class="add-album__preview-img" />
+      <img [src]="previewUrl" alt="Album cover preview" class="add-album__preview-img" />
       } @else {
-        <div class="add-album__preview-empty">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <polyline points="21 15 16 10 5 21"/>
-          </svg>
-        </div>
+      <div class="add-album__preview-empty">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+      </div>
       }
     </div>
   </div>
 
   <app-section sectionTitle="Add Form" class="add-album__form-section">
     <div class="add-album__content">
-    <p class="add-album__note">Moderation can take 3 to 5 days!</p>
+      <p class="add-album__note">Moderation can take 3 to 5 days!</p>
 
-    <form class="add-album__form" (submit)="$event.preventDefault()">
+      <form class="add-album__form" (ngSubmit)="onSubmit()" [formGroup]="albumForm" (keydown.enter)="onFormEnter($event)">
 
-      <div class="add-album__row">
-        <label class="add-album__label">Album cover:</label>
-        <label class="add-album__file-btn">
-          Upload image
-          <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
-        </label>
-      </div>
+        <div class="add-album__row add-album__row--multiselect">
+          <label class="add-album__label">Album cover:</label>
+          <div class="add-album__field">
+            <label class="add-album__file-btn">
+              {{ coverFile ? coverFile.name : 'Upload image' }}
+              <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+            </label>
+            @if (coverError) {
+              <span class="add-album__error">Cover image is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-name">Album name:</label>
-        <input class="add-album__input" id="album-name" type="text" placeholder="Album name" autocomplete="off" />
-      </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-name">Album name:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-name" type="text" placeholder="Album name" autocomplete="off"
+              formControlName="albumName" />
+            @if (albumForm.get('albumName')?.invalid && albumForm.get('albumName')?.touched) {
+              <span class="add-album__error">Album name is required (min 2 chars)</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-band">Band name:</label>
-        <input class="add-album__input" id="album-band" type="text" placeholder="Band name" autocomplete="off" />
-      </div>
+        <div class="add-album__row add-album__row--multiselect">
+          <label class="add-album__label">Band:</label>
+          <div class="add-album__field">
+            <app-multi-select
+              formControlName="albumBands"
+              [options]="bandOptions()"
+              placeholder="Search bands..."
+            />
+            @if (albumForm.get('albumBands')?.invalid && albumForm.get('albumBands')?.touched) {
+              <span class="add-album__error">At least one band is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-year">Year:</label>
-        <input class="add-album__input" id="album-year" type="number" placeholder="Year" min="1900" max="2099" />
-      </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-year">Year:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-year" type="number" placeholder="Year" min="1900" max="2099"
+              formControlName="albumYear" />
+            @if (albumForm.get('albumYear')?.invalid && albumForm.get('albumYear')?.touched) {
+              <span class="add-album__error">Enter a valid year (1900–2099)</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-country">Country:</label>
-        <input class="add-album__input" id="album-country" type="text" placeholder="Country" autocomplete="off" />
-      </div>
+        <div class="add-album__row add-album__row--multiselect">
+          <label class="add-album__label">Country:</label>
+          <div class="add-album__field">
+            <app-multi-select
+              formControlName="albumCountries"
+              [options]="countryOptions()"
+              placeholder="Search countries..."
+            />
+            @if (albumForm.get('albumCountries')?.invalid && albumForm.get('albumCountries')?.touched) {
+              <span class="add-album__error">At least one country is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-genre">Genre:</label>
-        <input class="add-album__input" id="album-genre" type="text" placeholder="Genre" autocomplete="off" />
-      </div>
+        <div class="add-album__row add-album__row--multiselect">
+          <label class="add-album__label">Genre:</label>
+          <div class="add-album__field">
+            <app-multi-select
+              formControlName="albumGenres"
+              [options]="genreOptions()"
+              placeholder="Search genres..."
+            />
+            @if (albumForm.get('albumGenres')?.invalid && albumForm.get('albumGenres')?.touched) {
+              <span class="add-album__error">At least one genre is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-label">Label:</label>
-        <input class="add-album__input" id="album-label" type="text" placeholder="Record label" autocomplete="off" />
-      </div>
+        <div class="add-album__row add-album__row--multiselect">
+          <label class="add-album__label">Label:</label>
+          <div class="add-album__field">
+            <app-multi-select
+              formControlName="albumLabels"
+              [options]="labelOptions()"
+              [allowCreate]="true"
+              placeholder="Search or add label..."
+              (create)="onCreateLabel($event)"
+            />
+            @if (albumForm.get('albumLabels')?.invalid && albumForm.get('albumLabels')?.touched) {
+              <span class="add-album__error">At least one label is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-type">Type:</label>
-        <input class="add-album__input" id="album-type" type="text" placeholder="Full-length, EP..." autocomplete="off" />
-      </div>
+        <div class="add-album__row add-album__row--multiselect">
+          <label class="add-album__label">Tags:</label>
+          <app-multi-select
+            formControlName="albumTags"
+            [options]="tagOptions()"
+            placeholder="Search tags..."
+          />
+        </div>
 
-      <div class="add-album__row add-album__row--textarea">
-        <label class="add-album__label" for="album-styles">Styles:</label>
-        <textarea class="add-album__textarea" id="album-styles" placeholder="Type here..."></textarea>
-      </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-type">Type:</label>
+          <select class="add-album__input add-album__select" id="album-type" formControlName="albumType">
+            @for (type of albumTypeOptions; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
 
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-spotify">Spotify:</label>
-        <input class="add-album__input" id="album-spotify" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-apple">Apple Music:</label>
-        <input class="add-album__input" id="album-apple" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-youtube">Youtube:</label>
-        <input class="add-album__input" id="album-youtube" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-album__row">
-        <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
-        <input class="add-album__input" id="album-bandcamp" type="url" placeholder="type here.." />
-      </div>
+        <div class="add-album__row add-album__row--textarea">
+          <label class="add-album__label" for="album-styles">Styles:</label>
+          <div class="add-album__field">
+            <textarea class="add-album__textarea" id="album-styles" placeholder="Type here..."
+              formControlName="albumStyles"></textarea>
+            @if (albumForm.get('albumStyles')?.invalid && albumForm.get('albumStyles')?.touched) {
+              <span class="add-album__error">Styles is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-album__actions">
-        <button class="add-album__btn add-album__btn--cancel" type="button">Cancel</button>
-        <button class="add-album__btn add-album__btn--publish" type="submit">Publish</button>
-      </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-spotify">Spotify:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-spotify" type="url" placeholder="https://..."
+              formControlName="spotify" />
+            @if (albumForm.get('spotify')?.touched) {
+              @if (albumForm.get('spotify')?.hasError('required')) {
+                <span class="add-album__error">Spotify link is required</span>
+              } @else if (albumForm.get('spotify')?.hasError('pattern')) {
+                <span class="add-album__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-apple">Apple Music:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-apple" type="url" placeholder="https://..."
+              formControlName="appleMusic" />
+            @if (albumForm.get('appleMusic')?.touched) {
+              @if (albumForm.get('appleMusic')?.hasError('required')) {
+                <span class="add-album__error">Apple Music link is required</span>
+              } @else if (albumForm.get('appleMusic')?.hasError('pattern')) {
+                <span class="add-album__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-youtube">Youtube:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-youtube" type="url" placeholder="https://..."
+              formControlName="youtube" />
+            @if (albumForm.get('youtube')?.touched) {
+              @if (albumForm.get('youtube')?.hasError('required')) {
+                <span class="add-album__error">YouTube link is required</span>
+              } @else if (albumForm.get('youtube')?.hasError('pattern')) {
+                <span class="add-album__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-bandcamp" type="url" placeholder="https://..."
+              formControlName="bandcamp" />
+            @if (albumForm.get('bandcamp')?.touched) {
+              @if (albumForm.get('bandcamp')?.hasError('required')) {
+                <span class="add-album__error">Bandcamp link is required</span>
+              } @else if (albumForm.get('bandcamp')?.hasError('pattern')) {
+                <span class="add-album__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
 
-    </form>
+        <div class="add-album__actions">
+          <button class="add-album__btn add-album__btn--cancel" type="button" (click)="onCancel()">Cancel</button>
+          <button class="add-album__btn add-album__btn--publish" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Publishing...' : 'Publish' }}
+          </button>
+        </div>
+
+      </form>
     </div>
   </app-section>
 

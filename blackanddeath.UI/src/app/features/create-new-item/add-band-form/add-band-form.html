@@ -19,80 +19,178 @@
 
   <app-section sectionTitle="Add Form" class="add-band__form-section">
     <div class="add-band__content">
-    <p class="add-band__note">Moderation can take 3 to 5 days!</p>
+      <p class="add-band__note">Moderation can take 3 to 5 days!</p>
 
-    <form class="add-band__form" (submit)="$event.preventDefault()">
+      <form class="add-band__form" (ngSubmit)="onSubmit()" [formGroup]="bandForm">
 
-      <div class="add-band__row">
-        <label class="add-band__label">Band logo:</label>
-        <label class="add-band__file-btn">
-          Upload image
-          <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
-        </label>
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label">Band logo:</label>
+          <label class="add-band__file-btn">
+            Upload image
+            <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+          </label>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-name">Band name:</label>
-        <input class="add-band__input" id="band-name" type="text" placeholder="Band name" autocomplete="off" />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-name">Band name:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-name" type="text" placeholder="Band name" autocomplete="off"
+              formControlName="bandName" />
+            @if (bandForm.get('bandName')?.invalid && bandForm.get('bandName')?.touched) {
+              <span class="add-band__error">Band name is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-foundation">Foundation:</label>
-        <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099" />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-foundation">Foundation:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099"
+              formControlName="formedYear" />
+            @if (bandForm.get('formedYear')?.invalid && bandForm.get('formedYear')?.touched) {
+              <span class="add-band__error">Enter a valid year (1900–2099)</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-country">Country:</label>
-        <input class="add-band__input" id="band-country" type="text" placeholder="Country" autocomplete="off" />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-country">Country:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-country" type="text" placeholder="Country" autocomplete="off"
+              formControlName="country" />
+            @if (bandForm.get('country')?.invalid && bandForm.get('country')?.touched) {
+              <span class="add-band__error">Country is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-genre">Genre:</label>
-        <input class="add-band__input" id="band-genre" type="text" placeholder="Genre" autocomplete="off" />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-genre">Genre:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-genre" type="text" placeholder="Genre" autocomplete="off"
+              formControlName="genre" />
+            @if (bandForm.get('genre')?.invalid && bandForm.get('genre')?.touched) {
+              <span class="add-band__error">Genre is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-subgenres">Subgenres:</label>
-        <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" autocomplete="off" />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-subgenres">Subgenres:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" autocomplete="off"
+              formControlName="subgenres" />
+            @if (bandForm.get('subgenres')?.invalid && bandForm.get('subgenres')?.touched) {
+              <span class="add-band__error">Subgenres is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-label">Label:</label>
-        <input class="add-band__input" id="band-label" type="text" placeholder="Record label" autocomplete="off" />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-label">Label:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-label" type="text" placeholder="Record label" autocomplete="off"
+              formControlName="label" />
+            @if (bandForm.get('label')?.invalid && bandForm.get('label')?.touched) {
+              <span class="add-band__error">Label is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row add-band__row--textarea">
-        <label class="add-band__label" for="band-styles">Styles:</label>
-        <textarea class="add-band__textarea" id="band-styles" placeholder="Type here..."></textarea>
-      </div>
+        <div class="add-band__row add-band__row--textarea">
+          <label class="add-band__label" for="band-styles">Styles:</label>
+          <div class="add-band__field">
+            <textarea class="add-band__textarea" id="band-styles" placeholder="Type here..."
+              formControlName="styles"></textarea>
+            @if (bandForm.get('styles')?.invalid && bandForm.get('styles')?.touched) {
+              <span class="add-band__error">Styles is required</span>
+            }
+          </div>
+        </div>
 
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-facebook">Facebook:</label>
-        <input class="add-band__input" id="band-facebook" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-youtube">Youtube:</label>
-        <input class="add-band__input" id="band-youtube" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-instagram">Instagram:</label>
-        <input class="add-band__input" id="band-instagram" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-twitter">Twitter:</label>
-        <input class="add-band__input" id="band-twitter" type="url" placeholder="type here.." />
-      </div>
-      <div class="add-band__row">
-        <label class="add-band__label" for="band-site">Band site:</label>
-        <input class="add-band__input" id="band-site" type="url" placeholder="type here.." />
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-facebook">Facebook:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-facebook" type="url" placeholder="https://..."
+              formControlName="facebook" />
+            @if (bandForm.get('facebook')?.touched) {
+              @if (bandForm.get('facebook')?.hasError('required')) {
+                <span class="add-band__error">Facebook link is required</span>
+              } @else if (bandForm.get('facebook')?.hasError('pattern')) {
+                <span class="add-band__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
 
-      <div class="add-band__actions">
-        <button class="add-band__btn add-band__btn--cancel" type="button">Cancel</button>
-        <button class="add-band__btn add-band__btn--publish" type="submit">Publish</button>
-      </div>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-youtube">Youtube:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-youtube" type="url" placeholder="https://..."
+              formControlName="youtube" />
+            @if (bandForm.get('youtube')?.touched) {
+              @if (bandForm.get('youtube')?.hasError('required')) {
+                <span class="add-band__error">YouTube link is required</span>
+              } @else if (bandForm.get('youtube')?.hasError('pattern')) {
+                <span class="add-band__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
 
-    </form>
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-instagram">Instagram:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-instagram" type="url" placeholder="https://..."
+              formControlName="instagram" />
+            @if (bandForm.get('instagram')?.touched) {
+              @if (bandForm.get('instagram')?.hasError('required')) {
+                <span class="add-band__error">Instagram link is required</span>
+              } @else if (bandForm.get('instagram')?.hasError('pattern')) {
+                <span class="add-band__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-twitter">Twitter:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-twitter" type="url" placeholder="https://..."
+              formControlName="twitter" />
+            @if (bandForm.get('twitter')?.touched) {
+              @if (bandForm.get('twitter')?.hasError('required')) {
+                <span class="add-band__error">Twitter link is required</span>
+              } @else if (bandForm.get('twitter')?.hasError('pattern')) {
+                <span class="add-band__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="add-band__row">
+          <label class="add-band__label" for="band-site">Band site:</label>
+          <div class="add-band__field">
+            <input class="add-band__input" id="band-site" type="url" placeholder="https://..."
+              formControlName="website" />
+            @if (bandForm.get('website')?.touched) {
+              @if (bandForm.get('website')?.hasError('required')) {
+                <span class="add-band__error">Website is required</span>
+              } @else if (bandForm.get('website')?.hasError('pattern')) {
+                <span class="add-band__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="add-band__actions">
+          <button class="add-band__btn add-band__btn--cancel" type="button" (click)="onCancel()">Cancel</button>
+          <button class="add-band__btn add-band__btn--publish" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Publishing...' : 'Publish' }}
+          </button>
+        </div>
+
+      </form>
     </div>
   </app-section>
 

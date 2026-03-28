@@ -3,7 +3,23 @@ import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { AlbumEndpoints } from "../../shared/constants/endpoints";
 import { Album } from "../../shared/models/album";
+import { AlbumType } from "../../shared/models/enums/album-type.enum";
+import { AlbumFormat } from "../../shared/models/enums/album-format.enum";
+import { StreamingLink } from "../../shared/models/streaming-link";
 import { PaginatedResult } from "../../shared/models/paginated-result";
+
+export interface CreateAlbumDto {
+  title: string;
+  releaseDate: number;
+  type: AlbumType;
+  format: AlbumFormat;
+  bandIds?: string[];
+  countryIds?: string[];
+  genreIds?: string[];
+  labelIds?: string[];
+  tagIds?: string[];
+  streamingLinks?: StreamingLink[];
+}
 
 interface AlbumsResponse {
   albums: {
@@ -25,7 +41,7 @@ export class AlbumService {
     );
   }
 
-  getAllPaginated(params?: Record<string, unknown>) {
+  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string }) {
     return this.http.get<AlbumsResponse>(AlbumEndpoints.GET_ALL, params).pipe(
       map(response => response.albums)
     );
@@ -43,8 +59,13 @@ export class AlbumService {
     );
   }
 
-  create(payload: Omit<Album, 'id'>) {
-    return this.http.post<Album>(AlbumEndpoints.CREATE, payload);
+  create(dto: CreateAlbumDto, cover?: File | null) {
+    const form = new FormData();
+    form.append('Album', JSON.stringify(dto));
+    if (cover) {
+      form.append('CoverImage', cover, cover.name);
+    }
+    return this.http.post<Album>(AlbumEndpoints.CREATE, form);
   }
 
   update(id: string, payload: Partial<Omit<Album, 'id'>>) {

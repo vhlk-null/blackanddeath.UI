@@ -13,6 +13,7 @@ export class AlbumEndpoints {
 
 export class BandEndpoints {
   public static GET_ALL = `${base}/library/bands`;
+  public static GET_SUMMARIES = `${base}/library/bands/summaries`;
   public static GET_BY_ID = (id: string) => `${base}/library/bands/${id}`;
   public static CREATE = `${base}/library/bands`;
   public static UPDATE = (id: string) => `${base}/library/bands/${id}`;
