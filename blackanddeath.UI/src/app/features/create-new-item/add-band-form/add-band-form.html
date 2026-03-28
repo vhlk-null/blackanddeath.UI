@@ -23,12 +23,17 @@
 
       <form class="add-band__form" (ngSubmit)="onSubmit()" [formGroup]="bandForm" (keydown.enter)="onFormEnter($event)">
 
-        <div class="add-band__row">
+        <div class="add-band__row add-band__row--multiselect">
           <label class="add-band__label">Band logo:</label>
-          <label class="add-band__file-btn">
-            {{ logoFile ? logoFile.name : 'Upload image' }}
-            <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
-          </label>
+          <div class="add-band__field">
+            <label class="add-band__file-btn">
+              {{ logoFile ? logoFile.name : 'Upload image' }}
+              <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+            </label>
+            @if (logoError) {
+              <span class="add-band__error">Logo is required</span>
+            }
+          </div>
         </div>
 
         <div class="add-band__row">
@@ -67,43 +72,32 @@
           </div>
         </div>
 
-        <div class="add-band__row add-band__row--multiselect">
-          <label class="add-band__label">Genre:</label>
-          <div class="add-band__field">
-            <app-multi-select
-              formControlName="bandGenres"
-              [options]="genreOptions()"
-              placeholder="Search genres..."
-            />
-            @if (bandForm.get('bandGenres')?.invalid && bandForm.get('bandGenres')?.touched) {
-              <span class="add-band__error">At least one genre is required</span>
-            }
-          </div>
-        </div>
-
         <div class="add-band__row">
-          <label class="add-band__label" for="band-subgenres">Subgenres:</label>
+          <label class="add-band__label" for="band-genre">Genre:</label>
           <div class="add-band__field">
-            <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" autocomplete="off"
-              formControlName="subgenres" />
+            <select class="add-band__input add-band__select" id="band-genre" formControlName="bandGenre">
+              <option value="">Select genre...</option>
+              @for (genre of genreOptions(); track genre.id) {
+                <option [value]="genre.id">{{ genre.name }}</option>
+              }
+            </select>
+            @if (bandForm.get('bandGenre')?.invalid && bandForm.get('bandGenre')?.touched) {
+              <span class="add-band__error">Genre is required</span>
+            }
           </div>
         </div>
 
         <div class="add-band__row add-band__row--multiselect">
-          <label class="add-band__label">Label:</label>
+          <label class="add-band__label">Subgenres:</label>
           <div class="add-band__field">
             <app-multi-select
-              formControlName="bandLabels"
-              [options]="labelOptions()"
-              [allowCreate]="true"
-              placeholder="Search or add label..."
-              (create)="onCreateLabel($event)"
+              formControlName="subgenreIds"
+              [options]="genreOptions()"
+              placeholder="Search subgenres..."
             />
-            @if (bandForm.get('bandLabels')?.invalid && bandForm.get('bandLabels')?.touched) {
-              <span class="add-band__error">At least one label is required</span>
-            }
           </div>
         </div>
+
 
         <div class="add-band__row add-band__row--textarea">
           <label class="add-band__label" for="band-styles">Styles:</label>

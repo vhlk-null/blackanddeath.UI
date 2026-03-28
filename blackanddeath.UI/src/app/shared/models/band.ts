@@ -24,7 +24,8 @@ export interface Band {
   status?: string | null;
   city?: string | null;
   label?: string | null;
-  countries: Country[];
-  genres: Genre[];
+  countries?: Country[];
+  parentGenre?: Genre | null;
+  subgenres?: Genre[];
   albums?: BandAlbum[];
 }

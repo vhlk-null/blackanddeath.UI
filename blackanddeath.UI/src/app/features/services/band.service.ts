@@ -9,9 +9,8 @@ export interface CreateBandDto {
   name: string;
   formedYear: number;
   countryIds: string[];
-  genreIds: string[];
-  labelIds: string[];
-  subgenres?: string;
+  genreId: string;
+  subgenreIds?: string[];
   bio: string;
   facebook?: string;
   youtube?: string;

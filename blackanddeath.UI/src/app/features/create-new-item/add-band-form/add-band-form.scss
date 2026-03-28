@@ -161,6 +161,11 @@
     }
   }
 
+  &__select {
+    appearance: none;
+    cursor: pointer;
+  }
+
   &__textarea {
     width: 100%;
     background: var(--color-input-bg);

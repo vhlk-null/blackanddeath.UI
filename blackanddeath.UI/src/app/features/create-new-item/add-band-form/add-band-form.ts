@@ -6,7 +6,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
-import { LabelService } from '../../services/label.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
 import { Band } from '../../../shared/models/band';
@@ -21,7 +20,6 @@ export class AddBandForm implements OnInit {
   private bandService = inject(BandService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
-  private labelService = inject(LabelService);
   private toastService = inject(ToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -33,11 +31,11 @@ export class AddBandForm implements OnInit {
 
   previewUrl: string | null = null;
   logoFile: File | null = null;
+  logoError = false;
   submitting = false;
 
   readonly genreOptions = signal<SelectOption[]>([]);
   readonly countryOptions = signal<SelectOption[]>([]);
-  readonly labelOptions = signal<SelectOption[]>([]);
 
   bandForm = new FormGroup({
     bandName: new FormControl('Test Band', {
@@ -51,15 +49,11 @@ export class AddBandForm implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    bandGenres: new FormControl<string[]>([], {
+    bandGenre: new FormControl<string>('', {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    bandLabels: new FormControl<string[]>([], {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    subgenres: new FormControl('Raw, Atmospheric', {
+    subgenreIds: new FormControl<string[]>([], {
       nonNullable: true,
     }),
     styles: new FormControl('Primitive and cold black metal with raw production', {
@@ -98,13 +92,11 @@ export class AddBandForm implements OnInit {
     forkJoin({
       genres: this.genreService.getAll(),
       countries: this.countryService.getAll(),
-      labels: this.labelService.getAll(),
       band: id ? this.bandService.getById(id) : of(null),
     }).subscribe({
-      next: ({ genres, countries, labels, band }) => {
+      next: ({ genres, countries, band }) => {
         this.genreOptions.set(genres);
         this.countryOptions.set(countries);
-        this.labelOptions.set(labels);
 
         if (band) {
           this.patchForm(band);
@@ -123,7 +115,8 @@ export class AddBandForm implements OnInit {
       bandName: band.name,
       formedYear: band.formedYear,
       bandCountries: band.countries?.map(c => c.id) ?? [],
-      bandGenres: band.genres?.map(g => g.id) ?? [],
+      bandGenre: band.parentGenre?.id ?? '',
+      subgenreIds: band.subgenres?.map(g => g.id) ?? [],
       styles: band.bio ?? '',
     });
   }
@@ -132,6 +125,7 @@ export class AddBandForm implements OnInit {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.logoFile = file;
+      this.logoError = false;
       this.previewUrl = URL.createObjectURL(file);
     }
   }
@@ -142,20 +136,10 @@ export class AddBandForm implements OnInit {
     }
   }
 
-  onCreateLabel(name: string): void {
-    this.labelService.create({ name }).subscribe({
-      next: (result) => {
-        const newOption = { id: result.id, name };
-        this.labelOptions.update(opts => [...opts, newOption]);
-        const current = this.bandForm.get('bandLabels')!.value as string[];
-        this.bandForm.patchValue({ bandLabels: [...current, result.id] });
-      },
-      error: () => this.toastService.error(`Failed to create label "${name}".`),
-    });
-  }
-
   onSubmit(): void {
-    if (this.bandForm.invalid) {
+    this.logoError = !this.logoFile && !this.existingLogoUrl;
+
+    if (this.bandForm.invalid || this.logoError) {
       this.bandForm.markAllAsTouched();
       return;
     }
@@ -166,9 +150,8 @@ export class AddBandForm implements OnInit {
       name: v.bandName,
       formedYear: v.formedYear!,
       countryIds: v.bandCountries,
-      genreIds: v.bandGenres,
-      labelIds: v.bandLabels,
-      subgenres: v.subgenres,
+      genreId: v.bandGenre,
+      subgenreIds: v.subgenreIds,
       bio: v.styles,
       facebook: v.facebook,
       youtube: v.youtube,
