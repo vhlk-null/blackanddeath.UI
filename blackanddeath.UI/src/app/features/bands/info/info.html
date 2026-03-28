@@ -23,7 +23,7 @@
             stroke-linejoin="round" />
         </svg>
       </button>
-      <button class="band-info__action-btn" title="Edit">
+      <a class="band-info__action-btn" title="Edit" [routerLink]="['/bands', bandData()?.id, 'edit']">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M11 4H4C3.44772 4 3 4.44772 3 5V20C3 20.5523 3.44772 21 4 21H19C19.5523 21 20 20.5523 20 19V12"
             stroke-width="1.5" stroke-linecap="round" />
@@ -31,7 +31,7 @@
             d="M18.5 2.5C19.3284 1.67157 20.6716 1.67157 21.5 2.5C22.3284 3.32843 22.3284 4.67157 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z"
             stroke-width="1.5" stroke-linejoin="round" />
         </svg>
-      </button>
+      </a>
       <button class="band-info__action-btn" title="Share">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 3L12 15M12 3L8 7M12 3L16 7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />

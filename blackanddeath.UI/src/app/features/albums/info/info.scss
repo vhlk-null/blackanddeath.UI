@@ -80,6 +80,10 @@
     &:hover svg {
       stroke: var(--color-text-heading);
     }
+
+    &--danger:hover svg {
+      stroke: #e05252;
+    }
   }
 
   &__body {

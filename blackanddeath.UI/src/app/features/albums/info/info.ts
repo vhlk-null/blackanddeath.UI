@@ -1,11 +1,12 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
 import { BandCard } from '../../bands/band-card/band-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
 import { AlbumService } from '../../services/album.servics';
+import { ToastService } from '../../../shared/services/toast.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
@@ -18,14 +19,16 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
 export class Info implements OnInit {
 
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private albumService = inject(AlbumService);
+  private toastService = inject(ToastService);
 
   readonly lightboxSrc = signal<string | null>(null);
 
@@ -63,6 +66,19 @@ export class Info implements OnInit {
     const type = this.albumData()?.type;
     return type ? (this.typeLabels[type] ?? type) : '';
   });
+
+  onDelete(): void {
+    const id = this.albumData()?.id;
+    if (!id || !confirm('Delete this album?')) return;
+
+    this.albumService.delete(id).subscribe({
+      next: () => {
+        this.toastService.success('Album deleted.');
+        this.router.navigate(['/albums']);
+      },
+      error: () => this.toastService.error('Failed to delete album.'),
+    });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

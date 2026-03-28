@@ -8,16 +8,16 @@ import { BandSummary } from "../../shared/models/band-summary";
 export interface CreateBandDto {
   name: string;
   formedYear: number;
-  country: string;
-  genre: string;
-  subgenres: string;
-  label: string;
+  countryIds: string[];
+  genreIds: string[];
+  labelIds: string[];
+  subgenres?: string;
   bio: string;
-  facebook: string;
-  youtube: string;
-  instagram: string;
-  twitter: string;
-  website: string;
+  facebook?: string;
+  youtube?: string;
+  instagram?: string;
+  twitter?: string;
+  website?: string;
 }
 
 interface BandsResponse {
@@ -46,7 +46,7 @@ export class BandService {
     );
   }
 
-  getAllPaginated(params?: Record<string, unknown>) {
+  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string }) {
     return this.http.get<BandsResponse>(BandEndpoints.GET_ALL, params).pipe(
       map(response => response.bands)
     );
@@ -62,13 +62,13 @@ export class BandService {
     const form = new FormData();
     form.append('Band', JSON.stringify(dto));
     if (logo) {
-      form.append('LogoImage', logo, logo.name);
+      form.append('Logo', logo, logo.name);
     }
     return this.http.post<Band>(BandEndpoints.CREATE, form);
   }
 
-  update(id: string, payload: Partial<Omit<Band, 'id'>>) {
-    return this.http.put<Band>(BandEndpoints.UPDATE(id), payload);
+  update(id: string, dto: CreateBandDto) {
+    return this.http.put<Band>(BandEndpoints.UPDATE, { id, ...dto });
   }
 
   delete(id: string) {

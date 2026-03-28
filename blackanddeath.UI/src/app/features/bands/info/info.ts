@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
@@ -15,7 +15,7 @@ import {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })

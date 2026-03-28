@@ -6,6 +6,7 @@ import { Genre } from './genre';
 import { StreamingLink } from './streaming-link';
 import { ApiTrack } from './track';
 import { Label } from './label';
+import { Tag } from './tag';
 
 export interface Album {
   id: string;
@@ -21,4 +22,5 @@ export interface Album {
   streamingLinks?: StreamingLink[];
   tracks?: ApiTrack[];
   genres?: Genre[];
+  tags?: Tag[];
 }

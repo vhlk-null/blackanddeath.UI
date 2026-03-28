@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlbumService } from '../../services/album.servics';
@@ -14,6 +14,7 @@ import { MultiSelectInput, SelectOption } from '../../../shared/components/multi
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
+import { Album } from '../../../shared/models/album';
 
 @Component({
   selector: 'app-add-album-form',
@@ -30,6 +31,7 @@ export class AddAlbumForm implements OnInit {
   private tagService = inject(TagService);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   readonly albumTypeOptions = Object.values(AlbumType);
 
@@ -38,6 +40,11 @@ export class AddAlbumForm implements OnInit {
   readonly countryOptions = signal<SelectOption[]>([]);
   readonly labelOptions = signal<SelectOption[]>([]);
   readonly tagOptions = signal<SelectOption[]>([]);
+
+  editMode = false;
+  albumId: string | null = null;
+  albumSlug: string | null = null;
+  existingCoverUrl: string | null = null;
 
   previewUrl: string | null = null;
   coverFile: File | null = null;
@@ -98,21 +105,56 @@ export class AddAlbumForm implements OnInit {
   });
 
   ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.editMode = true;
+      this.albumId = id;
+    }
+
     forkJoin({
       bands: this.bandService.getSummaries(),
       genres: this.genreService.getAll(),
       countries: this.countryService.getAll(),
       labels: this.labelService.getAll(),
       tags: this.tagService.getAll(),
+      album: id ? this.albumService.getById(id) : of(null),
     }).subscribe({
-      next: ({ bands, genres, countries, labels, tags }) => {
+      next: ({ bands, genres, countries, labels, tags, album }) => {
         this.bandOptions.set(bands.filter(b => b.id != null).map(b => ({ id: b.id!, name: b.name })));
         this.genreOptions.set(genres);
         this.countryOptions.set(countries);
         this.labelOptions.set(labels);
         this.tagOptions.set(tags);
+
+        if (album) {
+          this.patchForm(album);
+        }
       },
-      error: () => this.toastService.error('Failed to load metadata options.'),
+      error: () => this.toastService.error('Failed to load data.'),
+    });
+  }
+
+  private patchForm(album: Album): void {
+    this.existingCoverUrl = album.coverUrl;
+    this.previewUrl = album.coverUrl;
+    this.albumSlug = album.slug;
+
+    const getLink = (platform: StreamingPlatform) =>
+      album.streamingLinks?.find(l => l.platform === platform)?.embedCode ?? '';
+
+    this.albumForm.patchValue({
+      albumName: album.title,
+      albumBands: album.bands?.map(b => b.id).filter((id): id is string => id != null) ?? [],
+      albumYear: album.releaseDate,
+      albumType: album.type,
+      albumCountries: album.countries?.map(c => c.id) ?? [],
+      albumGenres: album.genres?.map(g => g.id) ?? [],
+      albumLabels: album.label?.id ? [album.label.id] : [],
+      albumTags: album.tags?.map(t => t.id) ?? [],
+      spotify: getLink(StreamingPlatform.Spotify),
+      appleMusic: getLink(StreamingPlatform.AppleMusic),
+      youtube: getLink(StreamingPlatform.YouTube),
+      bandcamp: getLink(StreamingPlatform.Bandcamp),
     });
   }
 
@@ -132,7 +174,7 @@ export class AddAlbumForm implements OnInit {
   }
 
   onSubmit(): void {
-    this.coverError = !this.coverFile;
+    this.coverError = !this.coverFile && !this.existingCoverUrl;
 
     if (this.albumForm.invalid || this.coverError) {
       this.albumForm.markAllAsTouched();
@@ -147,9 +189,7 @@ export class AddAlbumForm implements OnInit {
     if (v.youtube) streamingLinks.push({ platform: StreamingPlatform.YouTube, embedCode: v.youtube });
     if (v.bandcamp) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp });
 
-    this.submitting = true;
-
-    this.albumService.create({
+    const dto = {
       title: v.albumName,
       releaseDate: v.albumYear!,
       type: v.albumType,
@@ -160,16 +200,29 @@ export class AddAlbumForm implements OnInit {
       labelIds: v.albumLabels,
       tagIds: v.albumTags,
       streamingLinks,
-    }, this.coverFile).subscribe({
-      next: () => {
-        this.toastService.success('Album published successfully!');
-        this.albumForm.reset({ albumType: AlbumType.FullLength });
-        this.previewUrl = null;
-        this.coverFile = null;
+    };
+
+    this.submitting = true;
+
+    const request$ = this.editMode
+      ? this.albumService.update(this.albumId!, dto)
+      : this.albumService.create(dto, this.coverFile);
+
+    request$.subscribe({
+      next: (_album) => {
+        if (this.editMode) {
+          this.toastService.success('Album updated successfully!');
+          this.router.navigate(['/albums', this.albumId, this.albumSlug]);
+        } else {
+          this.toastService.success('Album published successfully!');
+          this.albumForm.reset({ albumType: AlbumType.FullLength });
+          this.previewUrl = null;
+          this.coverFile = null;
+        }
         this.submitting = false;
       },
       error: () => {
-        this.toastService.error('Failed to publish album. Please try again.');
+        this.toastService.error(this.editMode ? 'Failed to update album.' : 'Failed to publish album.');
         this.submitting = false;
       },
     });
@@ -188,6 +241,10 @@ export class AddAlbumForm implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/']);
+    if (this.editMode && this.albumId) {
+      this.router.navigate(['/albums', this.albumId]);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 }

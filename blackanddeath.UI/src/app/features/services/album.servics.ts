@@ -68,8 +68,8 @@ export class AlbumService {
     return this.http.post<Album>(AlbumEndpoints.CREATE, form);
   }
 
-  update(id: string, payload: Partial<Omit<Album, 'id'>>) {
-    return this.http.put<Album>(AlbumEndpoints.UPDATE(id), payload);
+  update(id: string, dto: CreateAlbumDto) {
+    return this.http.put<Album>(AlbumEndpoints.UPDATE, { id, ...dto });
   }
 
   delete(id: string) {

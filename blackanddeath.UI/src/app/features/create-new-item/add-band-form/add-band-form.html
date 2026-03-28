@@ -21,12 +21,12 @@
     <div class="add-band__content">
       <p class="add-band__note">Moderation can take 3 to 5 days!</p>
 
-      <form class="add-band__form" (ngSubmit)="onSubmit()" [formGroup]="bandForm">
+      <form class="add-band__form" (ngSubmit)="onSubmit()" [formGroup]="bandForm" (keydown.enter)="onFormEnter($event)">
 
         <div class="add-band__row">
           <label class="add-band__label">Band logo:</label>
           <label class="add-band__file-btn">
-            Upload image
+            {{ logoFile ? logoFile.name : 'Upload image' }}
             <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
           </label>
         </div>
@@ -53,24 +53,30 @@
           </div>
         </div>
 
-        <div class="add-band__row">
-          <label class="add-band__label" for="band-country">Country:</label>
+        <div class="add-band__row add-band__row--multiselect">
+          <label class="add-band__label">Country:</label>
           <div class="add-band__field">
-            <input class="add-band__input" id="band-country" type="text" placeholder="Country" autocomplete="off"
-              formControlName="country" />
-            @if (bandForm.get('country')?.invalid && bandForm.get('country')?.touched) {
-              <span class="add-band__error">Country is required</span>
+            <app-multi-select
+              formControlName="bandCountries"
+              [options]="countryOptions()"
+              placeholder="Search countries..."
+            />
+            @if (bandForm.get('bandCountries')?.invalid && bandForm.get('bandCountries')?.touched) {
+              <span class="add-band__error">At least one country is required</span>
             }
           </div>
         </div>
 
-        <div class="add-band__row">
-          <label class="add-band__label" for="band-genre">Genre:</label>
+        <div class="add-band__row add-band__row--multiselect">
+          <label class="add-band__label">Genre:</label>
           <div class="add-band__field">
-            <input class="add-band__input" id="band-genre" type="text" placeholder="Genre" autocomplete="off"
-              formControlName="genre" />
-            @if (bandForm.get('genre')?.invalid && bandForm.get('genre')?.touched) {
-              <span class="add-band__error">Genre is required</span>
+            <app-multi-select
+              formControlName="bandGenres"
+              [options]="genreOptions()"
+              placeholder="Search genres..."
+            />
+            @if (bandForm.get('bandGenres')?.invalid && bandForm.get('bandGenres')?.touched) {
+              <span class="add-band__error">At least one genre is required</span>
             }
           </div>
         </div>
@@ -80,19 +86,21 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-subgenres" type="text" placeholder="Subgenres" autocomplete="off"
               formControlName="subgenres" />
-            @if (bandForm.get('subgenres')?.invalid && bandForm.get('subgenres')?.touched) {
-              <span class="add-band__error">Subgenres is required</span>
-            }
           </div>
         </div>
 
-        <div class="add-band__row">
-          <label class="add-band__label" for="band-label">Label:</label>
+        <div class="add-band__row add-band__row--multiselect">
+          <label class="add-band__label">Label:</label>
           <div class="add-band__field">
-            <input class="add-band__input" id="band-label" type="text" placeholder="Record label" autocomplete="off"
-              formControlName="label" />
-            @if (bandForm.get('label')?.invalid && bandForm.get('label')?.touched) {
-              <span class="add-band__error">Label is required</span>
+            <app-multi-select
+              formControlName="bandLabels"
+              [options]="labelOptions()"
+              [allowCreate]="true"
+              placeholder="Search or add label..."
+              (create)="onCreateLabel($event)"
+            />
+            @if (bandForm.get('bandLabels')?.invalid && bandForm.get('bandLabels')?.touched) {
+              <span class="add-band__error">At least one label is required</span>
             }
           </div>
         </div>
