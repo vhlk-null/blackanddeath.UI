@@ -132,7 +132,7 @@
 </div>
 
 <app-section [sectionTitle]="titles.discography">
-  @for (album of discographyAlbums(); track album.id) {
+  @for (album of discographyAlbums().slice(0, 4); track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
