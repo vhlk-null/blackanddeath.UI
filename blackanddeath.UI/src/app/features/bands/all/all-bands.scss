@@ -62,8 +62,8 @@
   }
 
   &__grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem 0.625rem;
   }
 }
