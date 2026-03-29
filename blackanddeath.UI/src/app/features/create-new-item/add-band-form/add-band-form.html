@@ -41,7 +41,7 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-name" type="text" placeholder="Band name" autocomplete="off"
               formControlName="bandName" />
-            @if (bandForm.get('bandName')?.invalid && bandForm.get('bandName')?.touched) {
+            @if (bandName.invalid && bandName.touched) {
               <span class="add-band__error">Band name is required</span>
             }
           </div>
@@ -52,7 +52,7 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099"
               formControlName="formedYear" />
-            @if (bandForm.get('formedYear')?.invalid && bandForm.get('formedYear')?.touched) {
+            @if (formedYear.invalid && formedYear.touched) {
               <span class="add-band__error">Enter a valid year (1900–2099)</span>
             }
           </div>
@@ -66,7 +66,7 @@
               [options]="countryOptions()"
               placeholder="Search countries..."
             />
-            @if (bandForm.get('bandCountries')?.invalid && bandForm.get('bandCountries')?.touched) {
+            @if (bandCountries.invalid && bandCountries.touched) {
               <span class="add-band__error">At least one country is required</span>
             }
           </div>
@@ -81,7 +81,7 @@
                 <option [value]="genre.id">{{ genre.name }}</option>
               }
             </select>
-            @if (bandForm.get('bandGenre')?.invalid && bandForm.get('bandGenre')?.touched) {
+            @if (bandGenre.invalid && bandGenre.touched) {
               <span class="add-band__error">Genre is required</span>
             }
           </div>
@@ -95,19 +95,18 @@
               [options]="subgenreOptions()"
               placeholder="Search subgenres..."
             />
-            @if (bandForm.get('subgenreIds')?.invalid && bandForm.get('subgenreIds')?.touched) {
+            @if (subgenreIds.invalid && subgenreIds.touched) {
               <span class="add-band__error">At least one subgenre is required</span>
             }
           </div>
         </div>
-
 
         <div class="add-band__row add-band__row--textarea">
           <label class="add-band__label" for="band-styles">Styles:</label>
           <div class="add-band__field">
             <textarea class="add-band__textarea" id="band-styles" placeholder="Type here..."
               formControlName="styles"></textarea>
-            @if (bandForm.get('styles')?.invalid && bandForm.get('styles')?.touched) {
+            @if (styles.invalid && styles.touched) {
               <span class="add-band__error">Styles is required</span>
             }
           </div>
@@ -118,10 +117,10 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-facebook" type="url" placeholder="https://..."
               formControlName="facebook" />
-            @if (bandForm.get('facebook')?.touched) {
-              @if (bandForm.get('facebook')?.hasError('required')) {
+            @if (facebook.touched) {
+              @if (facebook.hasError('required')) {
                 <span class="add-band__error">Facebook link is required</span>
-              } @else if (bandForm.get('facebook')?.hasError('pattern')) {
+              } @else if (facebook.hasError('pattern')) {
                 <span class="add-band__error">Enter a valid URL (https://...)</span>
               }
             }
@@ -133,10 +132,10 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-youtube" type="url" placeholder="https://..."
               formControlName="youtube" />
-            @if (bandForm.get('youtube')?.touched) {
-              @if (bandForm.get('youtube')?.hasError('required')) {
+            @if (youtube.touched) {
+              @if (youtube.hasError('required')) {
                 <span class="add-band__error">YouTube link is required</span>
-              } @else if (bandForm.get('youtube')?.hasError('pattern')) {
+              } @else if (youtube.hasError('pattern')) {
                 <span class="add-band__error">Enter a valid URL (https://...)</span>
               }
             }
@@ -148,10 +147,10 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-instagram" type="url" placeholder="https://..."
               formControlName="instagram" />
-            @if (bandForm.get('instagram')?.touched) {
-              @if (bandForm.get('instagram')?.hasError('required')) {
+            @if (instagram.touched) {
+              @if (instagram.hasError('required')) {
                 <span class="add-band__error">Instagram link is required</span>
-              } @else if (bandForm.get('instagram')?.hasError('pattern')) {
+              } @else if (instagram.hasError('pattern')) {
                 <span class="add-band__error">Enter a valid URL (https://...)</span>
               }
             }
@@ -163,10 +162,10 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-twitter" type="url" placeholder="https://..."
               formControlName="twitter" />
-            @if (bandForm.get('twitter')?.touched) {
-              @if (bandForm.get('twitter')?.hasError('required')) {
+            @if (twitter.touched) {
+              @if (twitter.hasError('required')) {
                 <span class="add-band__error">Twitter link is required</span>
-              } @else if (bandForm.get('twitter')?.hasError('pattern')) {
+              } @else if (twitter.hasError('pattern')) {
                 <span class="add-band__error">Enter a valid URL (https://...)</span>
               }
             }
@@ -178,10 +177,10 @@
           <div class="add-band__field">
             <input class="add-band__input" id="band-site" type="url" placeholder="https://..."
               formControlName="website" />
-            @if (bandForm.get('website')?.touched) {
-              @if (bandForm.get('website')?.hasError('required')) {
+            @if (website.touched) {
+              @if (website.hasError('required')) {
                 <span class="add-band__error">Website is required</span>
-              } @else if (bandForm.get('website')?.hasError('pattern')) {
+              } @else if (website.hasError('pattern')) {
                 <span class="add-band__error">Enter a valid URL (https://...)</span>
               }
             }

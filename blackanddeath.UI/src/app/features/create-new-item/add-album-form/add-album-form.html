@@ -41,7 +41,7 @@
           <div class="add-album__field">
             <input class="add-album__input" id="album-name" type="text" placeholder="Album name" autocomplete="off"
               formControlName="albumName" />
-            @if (albumForm.get('albumName')?.invalid && albumForm.get('albumName')?.touched) {
+            @if (albumName.invalid && albumName.touched) {
               <span class="add-album__error">Album name is required (min 2 chars)</span>
             }
           </div>
@@ -63,7 +63,7 @@
           <div class="add-album__field">
             <input class="add-album__input" id="album-year" type="number" placeholder="Year" min="1900" max="2099"
               formControlName="albumYear" />
-            @if (albumForm.get('albumYear')?.invalid && albumForm.get('albumYear')?.touched) {
+            @if (albumYear.invalid && albumYear.touched) {
               <span class="add-album__error">Enter a valid year (1900–2099)</span>
             }
           </div>
@@ -77,7 +77,7 @@
               [options]="countryOptions()"
               placeholder="Search countries..."
             />
-            @if (albumForm.get('albumCountries')?.invalid && albumForm.get('albumCountries')?.touched) {
+            @if (albumCountries.invalid && albumCountries.touched) {
               <span class="add-album__error">At least one country is required</span>
             }
           </div>
@@ -91,7 +91,7 @@
               [options]="genreOptions()"
               placeholder="Search genres..."
             />
-            @if (albumForm.get('albumGenres')?.invalid && albumForm.get('albumGenres')?.touched) {
+            @if (albumGenres.invalid && albumGenres.touched) {
               <span class="add-album__error">At least one genre is required</span>
             }
           </div>
@@ -107,7 +107,7 @@
               placeholder="Search or add label..."
               (create)="onCreateLabel($event)"
             />
-            @if (albumForm.get('albumLabels')?.invalid && albumForm.get('albumLabels')?.touched) {
+            @if (albumLabels.invalid && albumLabels.touched) {
               <span class="add-album__error">At least one label is required</span>
             }
           </div>
@@ -136,7 +136,7 @@
           <div class="add-album__field">
             <textarea class="add-album__textarea" id="album-styles" placeholder="Type here..."
               formControlName="albumStyles"></textarea>
-            @if (albumForm.get('albumStyles')?.invalid && albumForm.get('albumStyles')?.touched) {
+            @if (albumStyles.invalid && albumStyles.touched) {
               <span class="add-album__error">Styles is required</span>
             }
           </div>
@@ -147,52 +147,55 @@
           <div class="add-album__field">
             <input class="add-album__input" id="album-spotify" type="url" placeholder="https://..."
               formControlName="spotify" />
-            @if (albumForm.get('spotify')?.touched) {
-              @if (albumForm.get('spotify')?.hasError('required')) {
+            @if (spotify.touched) {
+              @if (spotify.hasError('required')) {
                 <span class="add-album__error">Spotify link is required</span>
-              } @else if (albumForm.get('spotify')?.hasError('pattern')) {
+              } @else if (spotify.hasError('pattern')) {
                 <span class="add-album__error">Enter a valid URL (https://...)</span>
               }
             }
           </div>
         </div>
+
         <div class="add-album__row">
           <label class="add-album__label" for="album-apple">Apple Music:</label>
           <div class="add-album__field">
             <input class="add-album__input" id="album-apple" type="url" placeholder="https://..."
               formControlName="appleMusic" />
-            @if (albumForm.get('appleMusic')?.touched) {
-              @if (albumForm.get('appleMusic')?.hasError('required')) {
+            @if (appleMusic.touched) {
+              @if (appleMusic.hasError('required')) {
                 <span class="add-album__error">Apple Music link is required</span>
-              } @else if (albumForm.get('appleMusic')?.hasError('pattern')) {
+              } @else if (appleMusic.hasError('pattern')) {
                 <span class="add-album__error">Enter a valid URL (https://...)</span>
               }
             }
           </div>
         </div>
+
         <div class="add-album__row">
           <label class="add-album__label" for="album-youtube">Youtube:</label>
           <div class="add-album__field">
             <input class="add-album__input" id="album-youtube" type="url" placeholder="https://..."
               formControlName="youtube" />
-            @if (albumForm.get('youtube')?.touched) {
-              @if (albumForm.get('youtube')?.hasError('required')) {
+            @if (youtube.touched) {
+              @if (youtube.hasError('required')) {
                 <span class="add-album__error">YouTube link is required</span>
-              } @else if (albumForm.get('youtube')?.hasError('pattern')) {
+              } @else if (youtube.hasError('pattern')) {
                 <span class="add-album__error">Enter a valid URL (https://...)</span>
               }
             }
           </div>
         </div>
+
         <div class="add-album__row">
           <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
           <div class="add-album__field">
             <input class="add-album__input" id="album-bandcamp" type="url" placeholder="https://..."
               formControlName="bandcamp" />
-            @if (albumForm.get('bandcamp')?.touched) {
-              @if (albumForm.get('bandcamp')?.hasError('required')) {
+            @if (bandcamp.touched) {
+              @if (bandcamp.hasError('required')) {
                 <span class="add-album__error">Bandcamp link is required</span>
-              } @else if (albumForm.get('bandcamp')?.hasError('pattern')) {
+              } @else if (bandcamp.hasError('pattern')) {
                 <span class="add-album__error">Enter a valid URL (https://...)</span>
               }
             }

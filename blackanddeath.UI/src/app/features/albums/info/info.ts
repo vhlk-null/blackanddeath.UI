@@ -85,7 +85,17 @@ export class Info implements OnInit {
     if (!id) return;
 
     this.albumService.getById(id).subscribe({
-      next: (album) => { this.albumData.set(album); this.loaded.set(true); },
+      next: (album) => {
+        const urlSlug = this.route.snapshot.paramMap.get('slug');
+        if (album.slug && urlSlug !== album.slug) {
+          this.router.navigate(['/albums', id, album.slug], { replaceUrl: true });
+        }
+        this.albumData.set(album);
+        this.loaded.set(true);
+
+        const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
+        this.discographyAlbums.set(discography);
+      },
       error: (err) => console.error('Failed to load album', err),
     });
   }

@@ -56,7 +56,14 @@ export class BandInfo implements OnInit {
     if (!id) return;
 
     this.bandService.getById(id).subscribe({
-      next: (band) => { this.bandData.set(band); this.loaded.set(true); },
+      next: (band) => {
+        const urlSlug = this.route.snapshot.paramMap.get('slug');
+        if (band.slug && urlSlug !== band.slug) {
+          this.router.navigate(['/bands', id, band.slug], { replaceUrl: true });
+        }
+        this.bandData.set(band);
+        this.loaded.set(true);
+      },
       error: (err) => console.error('Failed to load band', err),
     });
   }

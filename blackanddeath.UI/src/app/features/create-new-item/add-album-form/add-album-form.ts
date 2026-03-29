@@ -157,6 +157,20 @@ export class AddAlbumForm implements OnInit {
     });
   }
 
+  get albumName() { return this.albumForm.get('albumName')!; }
+  get albumBands() { return this.albumForm.get('albumBands')!; }
+  get albumYear() { return this.albumForm.get('albumYear')!; }
+  get albumType() { return this.albumForm.get('albumType')!; }
+  get albumCountries() { return this.albumForm.get('albumCountries')!; }
+  get albumGenres() { return this.albumForm.get('albumGenres')!; }
+  get albumLabels() { return this.albumForm.get('albumLabels')!; }
+  get albumTags() { return this.albumForm.get('albumTags')!; }
+  get albumStyles() { return this.albumForm.get('albumStyles')!; }
+  get spotify() { return this.albumForm.get('spotify')!; }
+  get appleMusic() { return this.albumForm.get('appleMusic')!; }
+  get youtube() { return this.albumForm.get('youtube')!; }
+  get bandcamp() { return this.albumForm.get('bandcamp')!; }
+
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
@@ -208,10 +222,10 @@ export class AddAlbumForm implements OnInit {
       : this.albumService.create(dto, this.coverFile);
 
     request$.subscribe({
-      next: (_album) => {
+      next: (album) => {
         if (this.editMode) {
           this.toastService.success('Album updated successfully!');
-          this.router.navigate(['/albums', this.albumId, this.albumSlug]);
+          this.router.navigate(['/albums', this.albumId, album?.slug ?? this.albumSlug]);
         } else {
           this.toastService.success('Album published successfully!');
           this.albumForm.reset({ albumType: AlbumType.FullLength });

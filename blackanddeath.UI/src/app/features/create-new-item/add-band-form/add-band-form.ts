@@ -142,6 +142,18 @@ export class AddBandForm implements OnInit {
     });
   }
 
+  get bandName() { return this.bandForm.get('bandName')!; }
+  get formedYear() { return this.bandForm.get('formedYear')!; }
+  get bandCountries() { return this.bandForm.get('bandCountries')!; }
+  get bandGenre() { return this.bandForm.get('bandGenre')!; }
+  get subgenreIds() { return this.bandForm.get('subgenreIds')!; }
+  get styles() { return this.bandForm.get('styles')!; }
+  get facebook() { return this.bandForm.get('facebook')!; }
+  get youtube() { return this.bandForm.get('youtube')!; }
+  get instagram() { return this.bandForm.get('instagram')!; }
+  get twitter() { return this.bandForm.get('twitter')!; }
+  get website() { return this.bandForm.get('website')!; }
+
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
@@ -188,10 +200,10 @@ export class AddBandForm implements OnInit {
       : this.bandService.create(dto, this.logoFile);
 
     request$.subscribe({
-      next: () => {
+      next: (band) => {
         if (this.editMode) {
           this.toastService.success('Band updated successfully!');
-          this.router.navigate(['/bands', this.bandId, this.bandSlug]);
+          this.router.navigate(['/bands', this.bandId, band?.slug ?? this.bandSlug]);
         } else {
           this.toastService.success('Band published successfully!');
           this.bandForm.reset();
