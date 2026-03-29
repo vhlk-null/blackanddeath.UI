@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Section } from '../../../shared/components/section/section';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BandService } from '../../services/band.service';
@@ -54,6 +55,7 @@ export class AddBandForm implements OnInit {
       nonNullable: true,
     }),
     subgenreIds: new FormControl<string[]>([], {
+      validators: [Validators.required],
       nonNullable: true,
     }),
     styles: new FormControl('Primitive and cold black metal with raw production', {
@@ -81,6 +83,25 @@ export class AddBandForm implements OnInit {
       nonNullable: true,
     }),
   });
+
+  private readonly selectedGenre = toSignal(
+    this.bandForm.get('bandGenre')!.valueChanges,
+    { initialValue: '' }
+  );
+  readonly subgenreOptions = computed(() =>
+    this.genreOptions().filter(g => g.id !== this.selectedGenre())
+  );
+
+  constructor() {
+    effect(() => {
+      const genreId = this.selectedGenre();
+      if (!genreId) return;
+      const current = this.bandForm.get('subgenreIds')!.value as string[];
+      if (current.includes(genreId)) {
+        this.bandForm.patchValue({ subgenreIds: current.filter(id => id !== genreId) });
+      }
+    });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

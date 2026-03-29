@@ -27,7 +27,7 @@
           <label class="add-album__label">Album cover:</label>
           <div class="add-album__field">
             <label class="add-album__file-btn">
-              {{ coverFile ? coverFile.name : 'Upload image' }}
+              {{ coverFile ? (coverFile.name.length > 24 ? coverFile.name.slice(0, 24) + '…' : coverFile.name) : 'Upload image' }}
               <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
             </label>
             @if (coverError) {
@@ -55,9 +55,6 @@
               [options]="bandOptions()"
               placeholder="Search bands..."
             />
-            @if (albumForm.get('albumBands')?.invalid && albumForm.get('albumBands')?.touched) {
-              <span class="add-album__error">At least one band is required</span>
-            }
           </div>
         </div>
 

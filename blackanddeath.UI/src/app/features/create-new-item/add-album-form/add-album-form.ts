@@ -57,7 +57,6 @@ export class AddAlbumForm implements OnInit {
       nonNullable: true,
     }),
     albumBands: new FormControl<string[]>([], {
-      validators: [Validators.required],
       nonNullable: true,
     }),
     albumYear: new FormControl<number | null>(2024, {

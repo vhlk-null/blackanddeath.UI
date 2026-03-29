@@ -27,7 +27,7 @@
           <label class="add-band__label">Band logo:</label>
           <div class="add-band__field">
             <label class="add-band__file-btn">
-              {{ logoFile ? logoFile.name : 'Upload image' }}
+              {{ logoFile ? (logoFile.name.length > 24 ? logoFile.name.slice(0, 24) + '…' : logoFile.name) : 'Upload image' }}
               <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
             </label>
             @if (logoError) {
@@ -92,9 +92,12 @@
           <div class="add-band__field">
             <app-multi-select
               formControlName="subgenreIds"
-              [options]="genreOptions()"
+              [options]="subgenreOptions()"
               placeholder="Search subgenres..."
             />
+            @if (bandForm.get('subgenreIds')?.invalid && bandForm.get('subgenreIds')?.touched) {
+              <span class="add-band__error">At least one subgenre is required</span>
+            }
           </div>
         </div>
 
