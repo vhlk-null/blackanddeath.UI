@@ -11,7 +11,15 @@
       }
       <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
     </label>
-    <p class="card-editor__name">{{ card().name }}</p>
+    @if (editingName()) {
+      <input class="card-editor__name-input" [(ngModel)]="nameValue"
+        (blur)="editingName.set(false)"
+        (keydown.enter)="editingName.set(false)"
+        (keydown.escape)="nameValue.set(card().name); editingName.set(false)"
+        autofocus />
+    } @else {
+      <p class="card-editor__name" (click)="editingName.set(true)" title="Click to edit">{{ nameValue() }}</p>
+    }
   </div>
 
   <form class="card-editor__form" [formGroup]="form">

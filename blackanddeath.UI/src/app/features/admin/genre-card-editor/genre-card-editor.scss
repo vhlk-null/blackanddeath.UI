@@ -54,7 +54,22 @@
     flex-shrink: 0;
   }
 
+  &__name-input {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--color-border-input-focus);
+    outline: none;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9375rem;
+    color: var(--color-text-heading);
+    font-weight: 400;
+    padding: 0;
+    width: 100%;
+  }
+
   &__name {
+    cursor: text;
     margin: 0;
     font-family: 'Cinzel', serif;
     font-size: 0.9375rem;

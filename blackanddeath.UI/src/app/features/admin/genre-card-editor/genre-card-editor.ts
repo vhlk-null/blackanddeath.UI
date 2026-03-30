@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit, output, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
 import { GenreService } from '../../services/genre.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -15,7 +15,7 @@ export interface GenreCardData {
 
 @Component({
   selector: 'app-genre-card-editor',
-  imports: [ReactiveFormsModule, MultiSelectInput],
+  imports: [ReactiveFormsModule, MultiSelectInput, FormsModule],
   templateUrl: './genre-card-editor.html',
   styleUrl: './genre-card-editor.scss',
 })
@@ -31,6 +31,8 @@ export class GenreCardEditor implements OnInit {
 
   saving = signal(false);
   deleting = signal(false);
+  editingName = signal(false);
+  nameValue = signal('');
   previewUrl = signal<string | null>(null);
   coverFile: File | null = null;
 
@@ -44,6 +46,7 @@ export class GenreCardEditor implements OnInit {
 
   ngOnInit(): void {
     this.previewUrl.set(this.card().coverUrl);
+    this.nameValue.set(this.card().name);
     this.currentGenreIds = this.card().genres?.map(g => g.id) ?? [];
     this.currentTagIds = this.card().tags?.map(t => t.id) ?? [];
     this.form.patchValue({
@@ -80,7 +83,7 @@ export class GenreCardEditor implements OnInit {
     const { genreIds, tagIds } = this.form.getRawValue();
 
     this.genreService.updateCard(cardId, {
-      name: this.card().name,
+      name: this.nameValue(),
       description: this.card().description,
       genreIds,
       tagIds,
