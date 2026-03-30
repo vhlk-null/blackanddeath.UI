@@ -5,11 +5,14 @@ import { AlbumCard } from '../card/album-card';
 import { BandCard } from '../../bands/band-card/band-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
+import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
+import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
+import { toEmbedUrl } from '../../../shared/utils/streaming-embed';
 import {
   ALBUM_INFORMATION,
   DISCOGRAPHY_TITLE,
@@ -19,7 +22,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -55,12 +58,37 @@ export class Info implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly tracklistTabIndex = signal(0);
   readonly loaded = signal(false);
-  readonly tracklistTabs = ['Tracklist', 'Spotify', 'Amazon'];
+  readonly tracklistTabs = ['Tracklist', 'YouTube', 'Spotify', 'Bandcamp'];
 
   readonly albumData = signal<Album | null>(null);
   readonly discographyAlbums = signal<Album[]>([]);
   readonly similarAlbums = signal<Album[]>([]);
   readonly videos = signal<Band[]>([]);
+
+  private getRawLink(platform: StreamingPlatform): string | null {
+    const links = this.albumData()?.streamingLinks ?? [];
+    return links.find(l =>
+      l.platform === platform ||
+      (l.platform as unknown as string) === StreamingPlatform[platform]
+    )?.embedCode ?? null;
+  }
+
+  readonly youtubeEmbed = computed(() => {
+    const url = this.getRawLink(StreamingPlatform.YouTube);
+    return url ? toEmbedUrl(url, 'YouTube') : null;
+  });
+
+  readonly spotifyEmbed = computed(() => {
+    const url = this.getRawLink(StreamingPlatform.Spotify);
+    return url ? toEmbedUrl(url, 'Spotify') : null;
+  });
+
+  readonly bandcampEmbed = computed(() => {
+    const url = this.getRawLink(StreamingPlatform.Bandcamp);
+    if (!url) return null;
+    const embedSrc = toEmbedUrl(url, 'Bandcamp');
+    return { embedSrc, rawUrl: url };
+  });
 
   readonly typeLabel = computed(() => {
     const type = this.albumData()?.type;

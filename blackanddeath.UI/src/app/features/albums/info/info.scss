@@ -266,6 +266,56 @@
       color: var(--color-text-muted);
     }
   }
+
+  &__embed {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; // 16:9
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-md);
+    }
+
+    &--bandcamp {
+      padding-top: 0;
+      height: 472px;
+
+      iframe {
+        position: static;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &--link {
+      padding-top: 0;
+      display: flex;
+      align-items: center;
+      padding: 1rem 0;
+
+      a {
+        font-family: var(--font-family-body);
+        font-size: 0.9375rem;
+        color: var(--color-text);
+        word-break: break-all;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &__no-link {
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    padding: 1rem 0;
+  }
 }
 
 // Videos section — always 3 columns in one row

@@ -187,18 +187,58 @@
           </div>
         </div>
 
-        <div class="add-album__row">
+        <div class="add-album__row add-album__row--textarea">
           <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
           <div class="add-album__field">
-            <input class="add-album__input" id="album-bandcamp" type="url" placeholder="https://..."
-              formControlName="bandcamp" />
-            @if (bandcamp.touched) {
-              @if (bandcamp.hasError('required')) {
-                <span class="add-album__error">Bandcamp link is required</span>
-              } @else if (bandcamp.hasError('pattern')) {
-                <span class="add-album__error">Enter a valid URL (https://...)</span>
-              }
+            <textarea class="add-album__textarea" id="album-bandcamp"
+              placeholder="Paste full &lt;iframe&gt; embed code from Bandcamp"
+              formControlName="bandcamp"></textarea>
+            @if (bandcamp.value && !bandcamp.value.includes('EmbeddedPlayer')) {
+              <span class="add-album__hint">
+                Paste the &lt;iframe&gt; embed code from Bandcamp, not the page URL.
+                Get it via Share → Embed on the Bandcamp album page.
+              </span>
             }
+          </div>
+        </div>
+
+        <div class="add-album__tracklist">
+          <div class="add-album__tracklist-header">
+            <span class="add-album__tracklist-title">Tracklist</span>
+          </div>
+          <div class="add-album__tracklist-body">
+            <div class="add-album__tracklist-col">
+              @for (track of tracks; track track; let i = $index) {
+                <div class="add-album__track-row">
+                  <span class="add-album__track-num">{{ (i + 1).toString().padStart(2, '0') }} Track:</span>
+                  <input
+                    class="add-album__track-input"
+                    type="text"
+                    placeholder="type here.."
+                    [(ngModel)]="tracks[i].title"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+              }
+            </div>
+            <div class="add-album__tracklist-col">
+              @for (track of tracks; track track; let i = $index) {
+                <div class="add-album__track-row">
+                  <span class="add-album__track-num">{{ (i + 1).toString().padStart(2, '0') }} Duration:</span>
+                  <input
+                    class="add-album__track-input add-album__track-input--duration"
+                    type="text"
+                    placeholder="type here.."
+                    [(ngModel)]="tracks[i].duration"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+              }
+            </div>
+          </div>
+          <div class="add-album__tracklist-actions">
+            <button class="add-album__btn add-album__btn--cancel" type="button" (click)="deleteTrack()">Delete track</button>
+            <button class="add-album__btn add-album__btn--cancel" type="button" (click)="addTrack()">Add track</button>
           </div>
         </div>
 

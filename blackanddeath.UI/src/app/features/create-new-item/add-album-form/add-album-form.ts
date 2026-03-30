@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlbumService } from '../../services/album.servics';
 import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
@@ -15,10 +15,11 @@ import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
 import { Album } from '../../../shared/models/album';
+import { toEmbedUrl } from '../../../shared/utils/streaming-embed';
 
 @Component({
   selector: 'app-add-album-form',
-  imports: [Section, ReactiveFormsModule, MultiSelectInput],
+  imports: [Section, ReactiveFormsModule, FormsModule, MultiSelectInput],
   templateUrl: './add-album-form.html',
   styleUrl: './add-album-form.scss',
 })
@@ -50,6 +51,8 @@ export class AddAlbumForm implements OnInit {
   coverFile: File | null = null;
   coverError = false;
   submitting = false;
+
+  tracks: { title: string; duration: string }[] = [{ title: '', duration: '' }];
 
   albumForm = new FormGroup({
     albumName: new FormControl('Test Album', {
@@ -97,8 +100,7 @@ export class AddAlbumForm implements OnInit {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
-    bandcamp: new FormControl('https://testband.bandcamp.com', {
-      validators: [Validators.pattern('https?://.+')],
+    bandcamp: new FormControl('', {
       nonNullable: true,
     }),
   });
@@ -127,6 +129,12 @@ export class AddAlbumForm implements OnInit {
 
         if (album) {
           this.patchForm(album);
+          if (album.tracks && album.tracks.length > 0) {
+            this.tracks = album.tracks
+              .slice()
+              .sort((a, b) => a.trackNumber - b.trackNumber)
+              .map(t => ({ title: t.title, duration: t.duration }));
+          }
         }
       },
       error: () => this.toastService.error('Failed to load data.'),
@@ -139,7 +147,10 @@ export class AddAlbumForm implements OnInit {
     this.albumSlug = album.slug;
 
     const getLink = (platform: StreamingPlatform) =>
-      album.streamingLinks?.find(l => l.platform === platform)?.embedCode ?? '';
+      album.streamingLinks?.find(l =>
+        l.platform === platform ||
+        (l.platform as unknown as string) === StreamingPlatform[platform]
+      )?.embedCode ?? '';
 
     this.albumForm.patchValue({
       albumName: album.title,
@@ -170,6 +181,20 @@ export class AddAlbumForm implements OnInit {
   get appleMusic() { return this.albumForm.get('appleMusic')!; }
   get youtube() { return this.albumForm.get('youtube')!; }
   get bandcamp() { return this.albumForm.get('bandcamp')!; }
+
+  addTrack(): void {
+    this.tracks = [...this.tracks, { title: '', duration: '' }];
+  }
+
+  deleteTrack(): void {
+    if (this.tracks.length > 1) {
+      this.tracks = this.tracks.slice(0, -1);
+    }
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
 
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -202,6 +227,10 @@ export class AddAlbumForm implements OnInit {
     if (v.youtube) streamingLinks.push({ platform: StreamingPlatform.YouTube, embedCode: v.youtube });
     if (v.bandcamp) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp });
 
+    const tracks = this.tracks
+      .map((t, i) => ({ trackNumber: i + 1, title: t.title, duration: t.duration }))
+      .filter(t => t.title.trim());
+
     const dto = {
       title: v.albumName,
       releaseDate: v.albumYear!,
@@ -213,6 +242,7 @@ export class AddAlbumForm implements OnInit {
       labelIds: v.albumLabels,
       tagIds: v.albumTags,
       streamingLinks,
+      tracks,
     };
 
     this.submitting = true;

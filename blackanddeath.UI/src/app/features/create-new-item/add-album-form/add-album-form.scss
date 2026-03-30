@@ -115,6 +115,12 @@
     gap: 0.25rem;
   }
 
+  &__hint {
+    font-family: var(--font-family-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
   &__error {
     font-family: var(--font-family-body);
     font-size: 0.75rem;
@@ -217,6 +223,85 @@
       width: 3rem;
       height: 3rem;
     }
+  }
+
+  &__tracklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  &__tracklist-header {
+    display: flex;
+    align-items: center;
+  }
+
+  &__tracklist-title {
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    color: var(--color-text);
+  }
+
+  &__tracklist-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+  }
+
+  &__tracklist-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__track-row {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__track-num {
+    font-family: var(--font-family-body);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  &__track-input {
+    width: 100%;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    height: 2rem;
+    padding: 0 0.625rem;
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.8125rem;
+    outline: none;
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    &:focus {
+      border-color: var(--color-border-input-focus);
+    }
+
+    &--duration {
+      max-width: 6rem;
+    }
+  }
+
+  &__tracklist-actions {
+    display: flex;
+    gap: 0.5rem;
   }
 
   &__actions {

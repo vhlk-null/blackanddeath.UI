@@ -19,6 +19,7 @@ export interface CreateAlbumDto {
   labelIds?: string[];
   tagIds?: string[];
   streamingLinks?: StreamingLink[];
+  tracks?: { trackNumber: number; title: string; duration: string }[];
 }
 
 interface AlbumsResponse {

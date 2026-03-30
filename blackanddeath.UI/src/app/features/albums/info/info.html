@@ -115,18 +115,59 @@
           }
         </div>
       </div>
-      <ul class="album-info__tracks">
-        @for (track of albumData()?.tracks; track track.id) {
-        <li class="album-info__track">
-          <span class="album-info__track-num">{{ track.trackNumber < 10 ? '0' + track.trackNumber : track.trackNumber
-              }}</span>
-              <span class="album-info__track-title">{{ track.title }}</span>
-              @if (track.duration) {
-              <span class="album-info__track-duration">{{ track.duration }}</span>
-              }
-        </li>
+      @switch (tracklistTabIndex()) {
+        @case (0) {
+          <ul class="album-info__tracks">
+            @for (track of albumData()?.tracks; track track.id) {
+              <li class="album-info__track">
+                <span class="album-info__track-num">{{ track.trackNumber < 10 ? '0' + track.trackNumber : track.trackNumber }}</span>
+                <span class="album-info__track-title">{{ track.title }}</span>
+                @if (track.duration) {
+                  <span class="album-info__track-duration">{{ track.duration }}</span>
+                }
+              </li>
+            }
+          </ul>
         }
-      </ul>
+        @case (1) {
+          @if (youtubeEmbed()) {
+            <div class="album-info__embed">
+              <iframe [src]="youtubeEmbed()! | safeUrl" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            </div>
+          } @else {
+            <p class="album-info__no-link">No YouTube link available.</p>
+          }
+        }
+        @case (2) {
+          @if (spotifyEmbed()) {
+            <div class="album-info__embed">
+              <iframe [src]="spotifyEmbed()! | safeUrl" frameborder="0"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            </div>
+          } @else {
+            <p class="album-info__no-link">No Spotify link available.</p>
+          }
+        }
+        @case (3) {
+          @if (bandcampEmbed(); as bc) {
+            @if (bc.embedSrc) {
+              <div class="album-info__embed album-info__embed--bandcamp">
+                <iframe [src]="bc.embedSrc | safeUrl" seamless frameborder="0"></iframe>
+              </div>
+            } @else {
+              <p class="album-info__no-link">
+                Bandcamp embed not available. Edit the album and paste the
+                <strong>EmbeddedPlayer</strong> iframe code from Bandcamp.
+              </p>
+            }
+          } @else {
+            <p class="album-info__no-link">No Bandcamp link available.</p>
+          }
+        }
+      }
     </div>
 
   </div>
