@@ -40,11 +40,11 @@ export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandc
   if (platform === 'Bandcamp') {
     // User pasted a full <iframe ...> embed code — extract the src
     const iframeSrcMatch = url.match(/src="(https:\/\/bandcamp\.com\/EmbeddedPlayer\/[^"]+)"/);
-    if (iframeSrcMatch) return iframeSrcMatch[1];
-    // User pasted the EmbeddedPlayer src directly
-    if (url.includes('bandcamp.com/EmbeddedPlayer/')) return url;
-    // Public URL — cannot extract numeric album ID, not embeddable
-    return null;
+    const src = iframeSrcMatch ? iframeSrcMatch[1] : url.includes('bandcamp.com/EmbeddedPlayer/') ? url : null;
+    if (!src) return null;
+    // Normalize: replace size=large with size=small (large locks to fixed px width)
+    // Set width to max (700px) so player scales as wide as possible
+    return src.replace(/\/size=large/, '/size=large/width=700');
   }
 
   return null;

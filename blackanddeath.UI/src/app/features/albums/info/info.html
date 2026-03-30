@@ -118,6 +118,7 @@
           }
         </div>
       </div>
+      <div class="album-info__tab-content">
       @switch (tracklistTabIndex()) {
         @case (0) {
           <ul class="album-info__tracks">
@@ -157,7 +158,7 @@
         @case (3) {
           @if (bandcampEmbed(); as bc) {
             @if (bc.embedSrc) {
-              <div class="album-info__embed album-info__embed--bandcamp">
+              <div class="album-info__embed">
                 <iframe [src]="bc.embedSrc | safeUrl" seamless frameborder="0"></iframe>
               </div>
             } @else {
@@ -171,6 +172,7 @@
           }
         }
       }
+      </div>
     </div>
 
   </div>

@@ -98,7 +98,7 @@
   &__body {
     display: flex;
     gap: 2.5rem;
-    align-items: flex-start;
+    align-items: stretch;
 
     @media (max-width: 56.25rem) {
       flex-direction: column;
@@ -193,6 +193,8 @@
   &__right {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   &__tracklist-header {
@@ -278,29 +280,23 @@
     }
   }
 
+  &__tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   &__embed {
-    position: relative;
     width: 100%;
-    padding-top: 56.25%; // 16:9
+    height: 100%;
 
     iframe {
-      position: absolute;
-      inset: 0;
+      display: block;
       width: 100%;
       height: 100%;
       border-radius: var(--radius-md);
     }
 
-    &--bandcamp {
-      padding-top: 0;
-      height: 472px;
-
-      iframe {
-        position: static;
-        width: 100%;
-        height: 100%;
-      }
-    }
 
     &--link {
       padding-top: 0;
