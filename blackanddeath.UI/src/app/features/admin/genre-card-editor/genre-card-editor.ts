@@ -30,6 +30,7 @@ export class GenreCardEditor implements OnInit {
   tagOptions = input<SelectOption[]>([]);
 
   deleted = output<string>();
+  created = output<{ tempId: string; realId: string }>();
 
   saving = signal(false);
   deleting = signal(false);
@@ -69,6 +70,10 @@ export class GenreCardEditor implements OnInit {
 
   onDelete(): void {
     if (!confirm(`Delete "${this.nameValue()}"? This cannot be undone.`)) return;
+    if (this.card().isNew) {
+      this.deleted.emit(this.card().id);
+      return;
+    }
     this.deleting.set(true);
     this.genreService.deleteCard(this.card().id).subscribe({
       next: () => {
@@ -87,27 +92,38 @@ export class GenreCardEditor implements OnInit {
     const { genreIds, tagIds } = this.form.getRawValue();
     const dto = {
       name: this.nameValue(),
-      description: this.card().description,
+      description: this.card().description || this.nameValue(),
       orderNumber: this.orderValue(),
       genreIds,
       tagIds,
       coverImage: this.coverFile,
     };
 
-    const request$ = this.card().isNew
-      ? this.genreService.createCard(dto)
-      : this.genreService.updateCard(this.card().id, dto);
-
-    request$.subscribe({
-      next: () => {
-        this.coverFile = null;
-        this.toastService.success('Saved!');
-        this.saving.set(false);
-      },
-      error: () => {
-        this.toastService.error('Failed to save.');
-        this.saving.set(false);
-      },
-    });
+    if (this.card().isNew) {
+      this.genreService.createCard(dto).subscribe({
+        next: (card) => {
+          this.created.emit({ tempId: this.card().id, realId: card.id });
+          this.coverFile = null;
+          this.toastService.success('Saved!');
+          this.saving.set(false);
+        },
+        error: () => {
+          this.toastService.error('Failed to save.');
+          this.saving.set(false);
+        },
+      });
+    } else {
+      this.genreService.updateCard(this.card().id, dto).subscribe({
+        next: () => {
+          this.coverFile = null;
+          this.toastService.success('Saved!');
+          this.saving.set(false);
+        },
+        error: () => {
+          this.toastService.error('Failed to save.');
+          this.saving.set(false);
+        },
+      });
+    }
   }
 }

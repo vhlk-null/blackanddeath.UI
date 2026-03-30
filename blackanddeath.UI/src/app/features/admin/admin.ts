@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { GenreService } from '../services/genre.service';
 import { GenreCardEditor, GenreCardData } from './genre-card-editor/genre-card-editor';
 import { TagService } from '../services/tag.service';
@@ -9,7 +8,7 @@ import { Tabs } from '../../shared/components/tabs/tabs';
 
 @Component({
   selector: 'app-admin',
-  imports: [GenreCardEditor, FormsModule, AddMetadataForm, Tabs],
+  imports: [GenreCardEditor, AddMetadataForm, Tabs],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
@@ -23,11 +22,6 @@ export class Admin {
   readonly genreCards = signal<GenreCardData[]>([]);
   readonly genreOptions = signal<SelectOption[]>([]);
   readonly tagOptions = signal<SelectOption[]>([]);
-  showCreateForm = false;
-  readonly creating = signal(false);
-  newCardName = '';
-  newCardDescription = '';
-  newCardOrder: number | null = null;
 
   onTabChange(index: number): void {
     this.activeTab.set(index);
@@ -53,22 +47,23 @@ export class Admin {
     this.genreCards.update(cards => cards.filter(c => c.id !== id));
   }
 
+  onCardCreated(event: { tempId: string; realId: string }): void {
+    this.genreCards.update(cards => cards.map(c =>
+      c.id === event.tempId ? { ...c, id: event.realId, isNew: false } : c
+    ));
+  }
+
   onCreate(): void {
-    if (!this.newCardName.trim()) return;
-    const tempCard: GenreCardData = {
-      id: '',
-      name: this.newCardName.trim(),
-      description: this.newCardDescription.trim() || this.newCardName.trim(),
+    const nextOrder = this.genreCards().length + 1;
+    this.genreCards.update(cards => [...cards, {
+      id: `new-${Date.now()}`,
+      name: 'New Card',
+      description: 'New Card',
       coverUrl: null,
-      orderNumber: this.newCardOrder,
+      orderNumber: nextOrder,
       genres: [],
       tags: [],
       isNew: true,
-    };
-    this.genreCards.update(cards => [...cards, tempCard]);
-    this.newCardName = '';
-    this.newCardDescription = '';
-    this.newCardOrder = null;
-    this.showCreateForm = false;
+    }]);
   }
 }

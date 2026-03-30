@@ -18,7 +18,7 @@ export class GenreService {
     dto.genreIds?.forEach(id => form.append('genreIds', id));
     dto.tagIds?.forEach(id => form.append('tagIds', id));
     if (dto.coverImage) form.append('coverImage', dto.coverImage, dto.coverImage.name);
-    return this.http.post<void>(GenreEndpoints.CREATE_CARD, form);
+    return this.http.post<{ id: string; name: string; description: string; coverUrl: string | null; orderNumber?: number | null }>(GenreEndpoints.CREATE_CARD, form);
   }
 
   getCards() {

@@ -13,22 +13,9 @@
       <section class="admin__section">
         <div class="admin__section-header">
           <h2 class="admin__section-title">Add tags and genres to categories</h2>
-          <button class="admin__add-btn" (click)="showCreateForm = !showCreateForm">+ New card</button>
+          <button class="admin__add-btn" (click)="onCreate()">+ New card</button>
         </div>
 
-        @if (showCreateForm) {
-          <div class="admin__create-form">
-            <input class="admin__create-input" type="text" placeholder="Name" [(ngModel)]="newCardName" />
-            <input class="admin__create-input" type="text" placeholder="Description (optional)" [(ngModel)]="newCardDescription" />
-            <input class="admin__create-input" type="number" placeholder="Order #" [(ngModel)]="newCardOrder" style="width: 7rem; flex: none;" />
-            <div class="admin__create-actions">
-              <button class="admin__create-cancel" (click)="showCreateForm = false">Cancel</button>
-              <button class="admin__create-save" (click)="onCreate()" [disabled]="creating() || !newCardName.trim()">
-                {{ creating() ? 'Creating...' : 'Create' }}
-              </button>
-            </div>
-          </div>
-        }
 
         <div class="admin__grid">
           @for (card of genreCards(); track card.id) {
@@ -37,6 +24,7 @@
               [genreOptions]="genreOptions()"
               [tagOptions]="tagOptions()"
               (deleted)="onCardDeleted($event)"
+              (created)="onCardCreated($event)"
             />
           }
         </div>
