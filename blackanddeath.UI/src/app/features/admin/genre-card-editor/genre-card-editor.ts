@@ -9,7 +9,7 @@ export interface GenreCardData {
   name: string;
   description: string;
   coverUrl: string | null;
-  order?: number | null;
+  orderNumber?: number | null;
   genres?: { id: string; name: string }[];
   tags?: { id: string; name: string }[];
 }
@@ -49,7 +49,7 @@ export class GenreCardEditor implements OnInit {
   ngOnInit(): void {
     this.previewUrl.set(this.card().coverUrl);
     this.nameValue.set(this.card().name);
-    this.orderValue.set(this.card().order ?? null);
+    this.orderValue.set(this.card().orderNumber ?? null);
     this.currentGenreIds = this.card().genres?.map(g => g.id) ?? [];
     this.currentTagIds = this.card().tags?.map(t => t.id) ?? [];
     this.form.patchValue({
@@ -88,7 +88,7 @@ export class GenreCardEditor implements OnInit {
     this.genreService.updateCard(cardId, {
       name: this.nameValue(),
       description: this.card().description,
-      order: this.orderValue(),
+      orderNumber: this.orderValue(),
       genreIds,
       tagIds,
       coverImage: this.coverFile,
