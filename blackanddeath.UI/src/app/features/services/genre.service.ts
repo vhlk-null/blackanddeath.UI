@@ -10,8 +10,15 @@ export class GenreService {
 
   private http = inject(BaseHttpService);
 
-  createCard(dto: { name: string; description: string }) {
-    return this.http.post<{ id: string; name: string; description: string; coverUrl: string | null }>(GenreEndpoints.CREATE_CARD, dto);
+  createCard(dto: { name: string; description: string; orderNumber?: number | null; genreIds?: string[]; tagIds?: string[]; coverImage?: File | null }) {
+    const form = new FormData();
+    form.append('name', dto.name);
+    form.append('description', dto.description);
+    if (dto.orderNumber != null) form.append('orderNumber', String(dto.orderNumber));
+    dto.genreIds?.forEach(id => form.append('genreIds', id));
+    dto.tagIds?.forEach(id => form.append('tagIds', id));
+    if (dto.coverImage) form.append('coverImage', dto.coverImage, dto.coverImage.name);
+    return this.http.post<void>(GenreEndpoints.CREATE_CARD, form);
   }
 
   getCards() {

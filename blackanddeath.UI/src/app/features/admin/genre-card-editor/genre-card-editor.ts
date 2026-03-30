@@ -12,6 +12,7 @@ export interface GenreCardData {
   orderNumber?: number | null;
   genres?: { id: string; name: string }[];
   tags?: { id: string; name: string }[];
+  isNew?: boolean;
 }
 
 @Component({
@@ -67,6 +68,7 @@ export class GenreCardEditor implements OnInit {
   }
 
   onDelete(): void {
+    if (!confirm(`Delete "${this.nameValue()}"? This cannot be undone.`)) return;
     this.deleting.set(true);
     this.genreService.deleteCard(this.card().id).subscribe({
       next: () => {
@@ -82,17 +84,21 @@ export class GenreCardEditor implements OnInit {
 
   onSave(): void {
     this.saving.set(true);
-    const cardId = this.card().id;
     const { genreIds, tagIds } = this.form.getRawValue();
-
-    this.genreService.updateCard(cardId, {
+    const dto = {
       name: this.nameValue(),
       description: this.card().description,
       orderNumber: this.orderValue(),
       genreIds,
       tagIds,
       coverImage: this.coverFile,
-    }).subscribe({
+    };
+
+    const request$ = this.card().isNew
+      ? this.genreService.createCard(dto)
+      : this.genreService.updateCard(this.card().id, dto);
+
+    request$.subscribe({
       next: () => {
         this.coverFile = null;
         this.toastService.success('Saved!');
