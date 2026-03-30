@@ -218,7 +218,7 @@ export class AddAlbumForm implements OnInit {
     this.submitting = true;
 
     const request$ = this.editMode
-      ? this.albumService.update(this.albumId!, dto)
+      ? this.albumService.update(this.albumId!, dto, this.coverFile)
       : this.albumService.create(dto, this.coverFile);
 
     request$.subscribe({

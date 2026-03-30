@@ -196,7 +196,7 @@ export class AddBandForm implements OnInit {
     this.submitting = true;
 
     const request$ = this.editMode
-      ? this.bandService.update(this.bandId!, dto)
+      ? this.bandService.update(this.bandId!, dto, this.logoFile)
       : this.bandService.create(dto, this.logoFile);
 
     request$.subscribe({

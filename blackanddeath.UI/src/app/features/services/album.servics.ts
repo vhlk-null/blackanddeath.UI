@@ -61,15 +61,20 @@ export class AlbumService {
 
   create(dto: CreateAlbumDto, cover?: File | null) {
     const form = new FormData();
-    form.append('Album', JSON.stringify(dto));
+    form.append('album', JSON.stringify(dto));
     if (cover) {
-      form.append('CoverImage', cover, cover.name);
+      form.append('coverImage', cover, cover.name);
     }
     return this.http.post<Album>(AlbumEndpoints.CREATE, form);
   }
 
-  update(id: string, dto: CreateAlbumDto) {
-    return this.http.put<Album>(AlbumEndpoints.UPDATE, { id, ...dto });
+  update(id: string, dto: CreateAlbumDto, cover?: File | null) {
+    const form = new FormData();
+    form.append('album', JSON.stringify({ id, ...dto }));
+    if (cover) {
+      form.append('coverImage', cover, cover.name);
+    }
+    return this.http.put<Album>(AlbumEndpoints.UPDATE, form);
   }
 
   delete(id: string) {

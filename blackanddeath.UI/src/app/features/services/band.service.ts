@@ -59,15 +59,20 @@ export class BandService {
 
   create(dto: CreateBandDto, logo?: File | null) {
     const form = new FormData();
-    form.append('Band', JSON.stringify(dto));
+    form.append('band', JSON.stringify(dto));
     if (logo) {
-      form.append('Logo', logo, logo.name);
+      form.append('logoUrl', logo, logo.name);
     }
     return this.http.post<Band>(BandEndpoints.CREATE, form);
   }
 
-  update(id: string, dto: CreateBandDto) {
-    return this.http.put<Band>(BandEndpoints.UPDATE, { id, ...dto });
+  update(id: string, dto: CreateBandDto, logo?: File | null) {
+    const form = new FormData();
+    form.append('band', JSON.stringify({ id, ...dto }));
+    if (logo) {
+      form.append('logoUrl', logo, logo.name);
+    }
+    return this.http.put<Band>(BandEndpoints.UPDATE, form);
   }
 
   delete(id: string) {
