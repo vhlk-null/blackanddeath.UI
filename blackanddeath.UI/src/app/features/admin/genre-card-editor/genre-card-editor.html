@@ -11,15 +11,18 @@
       }
       <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
     </label>
-    @if (editingName()) {
-      <input class="card-editor__name-input" [(ngModel)]="nameValue"
-        (blur)="editingName.set(false)"
-        (keydown.enter)="editingName.set(false)"
-        (keydown.escape)="nameValue.set(card().name); editingName.set(false)"
-        autofocus />
-    } @else {
-      <p class="card-editor__name" (click)="editingName.set(true)" title="Click to edit">{{ nameValue() }}</p>
-    }
+    <div class="card-editor__header-info">
+      @if (editingName()) {
+        <input class="card-editor__name-input" [(ngModel)]="nameValue"
+          (blur)="editingName.set(false)"
+          (keydown.enter)="editingName.set(false)"
+          (keydown.escape)="nameValue.set(card().name); editingName.set(false)"
+          autofocus />
+      } @else {
+        <p class="card-editor__name" (click)="editingName.set(true)" title="Click to edit">{{ nameValue() }}</p>
+      }
+      <input class="card-editor__order-input" type="number" [ngModel]="orderValue()" (ngModelChange)="orderValue.set($event)" placeholder="#" min="1" />
+    </div>
   </div>
 
   <form class="card-editor__form" [formGroup]="form">

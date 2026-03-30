@@ -54,6 +54,35 @@
     flex-shrink: 0;
   }
 
+  &__header-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__order-input {
+    width: 4rem;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--color-border-input);
+    outline: none;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    padding: 0;
+    appearance: textfield;
+
+    &:focus {
+      border-bottom-color: var(--color-border-input-focus);
+    }
+
+    &::placeholder {
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+  }
+
   &__name-input {
     flex: 1;
     background: none;

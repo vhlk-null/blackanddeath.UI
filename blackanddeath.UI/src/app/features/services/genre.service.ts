@@ -35,10 +35,11 @@ export class GenreService {
     return this.http.get<Album[]>(GenreEndpoints.GET_CARD_ALBUMS(id));
   }
 
-  updateCard(cardId: string, dto: { name: string; description: string; genreIds: string[]; tagIds: string[]; coverImage?: File | null }) {
+  updateCard(cardId: string, dto: { name: string; description: string; order?: number | null; genreIds: string[]; tagIds: string[]; coverImage?: File | null }) {
     const form = new FormData();
     form.append('name', dto.name);
     form.append('description', dto.description);
+    if (dto.order != null) form.append('order', String(dto.order));
     dto.genreIds.forEach(id => form.append('genreIds', id));
     dto.tagIds.forEach(id => form.append('tagIds', id));
     if (dto.coverImage) {
