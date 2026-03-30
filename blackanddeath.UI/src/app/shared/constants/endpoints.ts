@@ -22,6 +22,17 @@ export class BandEndpoints {
 
 export class GenreEndpoints {
   public static GET_ALL = `${base}/library/genres`;
+  public static GET_CARDS = `${base}/library/genre-cards`;
+  public static GET_CARDS_DETAILS = `${base}/library/genre-cards-details`;
+  public static CREATE_CARD = `${base}/library/genre-cards`;
+  public static GET_CARD_BY_ID = (id: string) => `${base}/library/genre-cards/${id}`;
+  public static UPDATE_CARD = (id: string) => `${base}/library/genre-cards/${id}`;
+  public static UPDATE_CARD_COVER = (id: string) => `${base}/library/genre-cards/${id}/cover`;
+  public static GET_CARD_ALBUMS = (id: string) => `${base}/library/genre-cards/${id}/albums`;
+  public static ADD_GENRE_TO_CARD = (id: string, genreId: string) => `${base}/library/genre-cards/${id}/genres/${genreId}`;
+  public static REMOVE_GENRE_FROM_CARD = (id: string, genreId: string) => `${base}/library/genre-cards/${id}/genres/${genreId}`;
+  public static ADD_TAG_TO_CARD = (id: string, tagId: string) => `${base}/library/genre-cards/${id}/tags/${tagId}`;
+  public static REMOVE_TAG_FROM_CARD = (id: string, tagId: string) => `${base}/library/genre-cards/${id}/tags/${tagId}`;
   public static GET_BY_ID = (id: string) => `${base}/library/genres/${id}`;
   public static CREATE = `${base}/library/genres`;
   public static UPDATE = (id: string) => `${base}/library/genres/${id}`;

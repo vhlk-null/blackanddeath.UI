@@ -10,6 +10,7 @@ import { Genres } from './features/genres/genres';
 import { CreateNewItem } from './features/create-new-item/create-new-item';
 import { AddAlbumForm } from './features/create-new-item/add-album-form/add-album-form';
 import { AddBandForm } from './features/create-new-item/add-band-form/add-band-form';
+import { Admin } from './features/admin/admin';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -22,5 +23,6 @@ export const routes: Routes = [
     { path: 'bands/:id/edit', component: AddBandForm },
     { path: 'bands/:id/:slug', component: BandInfo },
     { path: 'genres', component: Genres },
-    { path: 'create', component: CreateNewItem }
+    { path: 'create', component: CreateNewItem },
+    { path: 'admin', component: Admin }
 ];

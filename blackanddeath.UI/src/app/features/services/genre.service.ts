@@ -3,11 +3,59 @@ import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { GenreEndpoints } from "../../shared/constants/endpoints";
 import { Genre } from "../../shared/models/genre";
+import { Album } from "../../shared/models/album";
 
 @Injectable({ providedIn: 'root' })
 export class GenreService {
 
   private http = inject(BaseHttpService);
+
+  createCard(dto: { name: string; description: string }) {
+    return this.http.post<{ id: string; name: string; description: string; coverUrl: string | null }>(GenreEndpoints.CREATE_CARD, dto);
+  }
+
+  getCards() {
+    return this.http.get<{ id: string; name: string; description: string; coverUrl: string | null; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }[]>(GenreEndpoints.GET_CARDS);
+  }
+
+    getCardsDetails() {
+    return this.http.get<{ id: string; name: string; description: string; coverUrl: string | null; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }[]>(GenreEndpoints.GET_CARDS_DETAILS);
+  }
+
+
+  getCardById(id: string) {
+    return this.http.get<{ id: string; name: string; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }>(GenreEndpoints.GET_CARD_BY_ID(id));
+  }
+
+  getCardAlbums(id: string) {
+    return this.http.get<Album[]>(GenreEndpoints.GET_CARD_ALBUMS(id));
+  }
+
+  updateCard(cardId: string, dto: { name: string; description: string; coverImage?: File | null }) {
+    const form = new FormData();
+    form.append('name', dto.name);
+    form.append('description', dto.description);
+    if (dto.coverImage) {
+      form.append('coverImage', dto.coverImage, dto.coverImage.name);
+    }
+    return this.http.put<void>(GenreEndpoints.UPDATE_CARD(cardId), form);
+  }
+
+  addGenreToCard(cardId: string, genreId: string) {
+    return this.http.post<void>(GenreEndpoints.ADD_GENRE_TO_CARD(cardId, genreId), {});
+  }
+
+  removeGenreFromCard(cardId: string, genreId: string) {
+    return this.http.delete<void>(GenreEndpoints.REMOVE_GENRE_FROM_CARD(cardId, genreId));
+  }
+
+  addTagToCard(cardId: string, tagId: string) {
+    return this.http.post<void>(GenreEndpoints.ADD_TAG_TO_CARD(cardId, tagId), {});
+  }
+
+  removeTagFromCard(cardId: string, tagId: string) {
+    return this.http.delete<void>(GenreEndpoints.REMOVE_TAG_FROM_CARD(cardId, tagId));
+  }
 
   getAll() {
     return this.http.get<{ genres: Genre[] }>(GenreEndpoints.GET_ALL).pipe(

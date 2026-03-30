@@ -2,9 +2,8 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 export interface Genre {
-  id: number;
+  id: string;
   name: string;
-  slug: string;
 }
 
 @Component({
