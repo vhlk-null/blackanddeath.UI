@@ -6,10 +6,12 @@ import { GenreCardEditor, GenreCardData } from './genre-card-editor/genre-card-e
 import { TagService } from '../services/tag.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { SelectOption } from '../../shared/components/multi-select/multi-select';
+import { AddMetadataForm } from '../create-new-item/add-metadata-form/add-metadata-form';
+import { Section } from '../../shared/components/section/section';
 
 @Component({
   selector: 'app-admin',
-  imports: [GenreCardEditor, FormsModule],
+  imports: [GenreCardEditor, FormsModule, AddMetadataForm, Section],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
@@ -17,6 +19,9 @@ export class Admin implements OnInit {
   private genreService = inject(GenreService);
   private tagService = inject(TagService);
   private toastService = inject(ToastService);
+
+  readonly tabs = ['Add Metadata', 'Genres to Explore'];
+  readonly activeTab = signal(0);
 
   readonly genreCards = signal<GenreCardData[]>([]);
   readonly genreOptions = signal<SelectOption[]>([]);
