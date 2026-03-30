@@ -157,22 +157,7 @@
           </div>
         </div>
 
-        <div class="add-album__row">
-          <label class="add-album__label" for="album-apple">Apple Music:</label>
-          <div class="add-album__field">
-            <input class="add-album__input" id="album-apple" type="url" placeholder="https://..."
-              formControlName="appleMusic" />
-            @if (appleMusic.touched) {
-              @if (appleMusic.hasError('required')) {
-                <span class="add-album__error">Apple Music link is required</span>
-              } @else if (appleMusic.hasError('pattern')) {
-                <span class="add-album__error">Enter a valid URL (https://...)</span>
-              }
-            }
-          </div>
-        </div>
-
-        <div class="add-album__row">
+<div class="add-album__row">
           <label class="add-album__label" for="album-youtube">Youtube:</label>
           <div class="add-album__field">
             <input class="add-album__input" id="album-youtube" type="url" placeholder="https://..."

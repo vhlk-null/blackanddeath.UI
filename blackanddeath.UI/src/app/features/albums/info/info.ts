@@ -90,6 +90,25 @@ export class Info implements OnInit {
     return { embedSrc, rawUrl: url };
   });
 
+  readonly totalDuration = computed(() => {
+    const tracks = this.albumData()?.tracks ?? [];
+    if (!tracks.length) return null;
+    let totalSeconds = 0;
+    for (const t of tracks) {
+      if (!t.duration) continue;
+      const parts = t.duration.split(':').map(Number);
+      if (parts.length === 2) totalSeconds += parts[0] * 60 + parts[1];
+      else if (parts.length === 3) totalSeconds += parts[0] * 3600 + parts[1] * 60 + parts[2];
+    }
+    if (!totalSeconds) return null;
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    const mm = String(m).padStart(2, '0');
+    const ss = String(s).padStart(2, '0');
+    return h > 0 ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
+  });
+
   readonly typeLabel = computed(() => {
     const type = this.albumData()?.type;
     return type ? (this.typeLabels[type] ?? type) : '';

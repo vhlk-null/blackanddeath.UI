@@ -203,9 +203,20 @@
     margin-bottom: 0;
   }
 
+  &__total-duration {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    margin-left: auto;
+    padding-bottom: 0.75rem;
+  }
+
   &__tracklist-tabs {
     display: flex;
+    align-items: center;
     gap: 1.5rem;
+    width: 100%;
 
     button {
       background: none;
