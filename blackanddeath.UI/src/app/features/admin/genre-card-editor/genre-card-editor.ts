@@ -60,10 +60,13 @@ export class GenreCardEditor implements OnInit {
   onSave(): void {
     this.saving.set(true);
     const cardId = this.card().id;
+    const { genreIds, tagIds } = this.form.getRawValue();
 
     this.genreService.updateCard(cardId, {
       name: this.card().name,
       description: this.card().description,
+      genreIds,
+      tagIds,
       coverImage: this.coverFile,
     }).subscribe({
       next: () => {

@@ -1,4 +1,9 @@
-<app-section sectionTitle="Admin Panel" [tabs]="tabs" (tabChange)="activeTab.set($event)">
+<div class="admin">
+  <h1 class="admin__title">Admin Panel</h1>
+
+  <div class="admin__tabs">
+    <app-tabs [tabs]="tabs" (tabChange)="onTabChange($event)" />
+  </div>
 
   @switch (activeTab()) {
     @case (0) {
@@ -36,5 +41,4 @@
       </section>
     }
   }
-
-</app-section>
+</div>
