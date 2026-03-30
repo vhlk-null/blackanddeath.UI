@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 export interface Genre {
   id: string;
   name: string;
+  coverUrl: string | null;
 }
 
 @Component({

@@ -18,7 +18,7 @@ export class GenreService {
     return this.http.get<{ id: string; name: string; description: string; coverUrl: string | null; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }[]>(GenreEndpoints.GET_CARDS);
   }
 
-    getCardsDetails() {
+  getCardsDetails() {
     return this.http.get<{ id: string; name: string; description: string; coverUrl: string | null; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }[]>(GenreEndpoints.GET_CARDS_DETAILS);
   }
 
