@@ -27,6 +27,7 @@ export class GenreEndpoints {
   public static CREATE_CARD = `${base}/library/genre-cards`;
   public static GET_CARD_BY_ID = (id: string) => `${base}/library/genre-cards/${id}`;
   public static UPDATE_CARD = (id: string) => `${base}/library/genre-cards/${id}`;
+  public static DELETE_CARD = (id: string) => `${base}/library/genre-cards/${id}`;
   public static UPDATE_CARD_COVER = (id: string) => `${base}/library/genre-cards/${id}/cover`;
   public static GET_CARD_ALBUMS = (id: string) => `${base}/library/genre-cards/${id}/albums`;
   public static ADD_GENRE_TO_CARD = (id: string, genreId: string) => `${base}/library/genre-cards/${id}/genres/${genreId}`;

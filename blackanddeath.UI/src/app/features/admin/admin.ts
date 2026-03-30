@@ -50,6 +50,10 @@ export class Admin {
     }
   }
 
+  onCardDeleted(id: string): void {
+    this.genreCards.update(cards => cards.filter(c => c.id !== id));
+  }
+
   onCreate(): void {
     if (!this.newCardName.trim()) return;
     this.creating = true;

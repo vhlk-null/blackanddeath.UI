@@ -35,6 +35,7 @@
               [card]="card"
               [genreOptions]="genreOptions()"
               [tagOptions]="tagOptions()"
+              (deleted)="onCardDeleted($event)"
             />
           }
         </div>

@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
 import { GenreService } from '../../services/genre.service';
@@ -27,7 +27,10 @@ export class GenreCardEditor implements OnInit {
   genreOptions = input<SelectOption[]>([]);
   tagOptions = input<SelectOption[]>([]);
 
+  deleted = output<string>();
+
   saving = signal(false);
+  deleting = signal(false);
   previewUrl = signal<string | null>(null);
   coverFile: File | null = null;
 
@@ -55,6 +58,20 @@ export class GenreCardEditor implements OnInit {
       this.coverFile = file;
       this.previewUrl.set(URL.createObjectURL(file));
     }
+  }
+
+  onDelete(): void {
+    this.deleting.set(true);
+    this.genreService.deleteCard(this.card().id).subscribe({
+      next: () => {
+        this.deleted.emit(this.card().id);
+        this.toastService.success('Deleted!');
+      },
+      error: () => {
+        this.toastService.error('Failed to delete.');
+        this.deleting.set(false);
+      },
+    });
   }
 
   onSave(): void {

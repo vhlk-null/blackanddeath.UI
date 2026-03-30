@@ -23,6 +23,10 @@ export class GenreService {
   }
 
 
+  deleteCard(cardId: string) {
+    return this.http.delete<void>(GenreEndpoints.DELETE_CARD(cardId));
+  }
+
   getCardById(id: string) {
     return this.http.get<{ id: string; name: string; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }>(GenreEndpoints.GET_CARD_BY_ID(id));
   }
