@@ -44,7 +44,7 @@ export class MultiSelectInput implements ControlValueAccessor {
     const selectedIds = new Set(this.selected().map(s => s.id));
     return this.options()
       .filter(o => !selectedIds.has(o.id) && (!q || o.name.toLowerCase().includes(q)))
-      .slice(0, 10);
+;
   });
 
   readonly canCreate = computed(() => {
