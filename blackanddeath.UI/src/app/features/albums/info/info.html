@@ -84,21 +84,23 @@
       <table class="album-info__meta">
         <tr>
           <td class="label">Release:</td>
-          <td>{{ albumData()?.releaseDate }}</td>
+          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ year: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a></td>
         </tr>
         <tr>
           <td class="label">Country:</td>
-           @for (country of albumData()?.countries; track $index) {
-            <td>{{ country?.name }}</td>
-           }          
+          <td>
+            @for (country of albumData()?.countries; track $index; let last = $last) {
+              <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ countryId: country.id }">{{ country.name }}</a>@if (!last) {, }
+            }
+          </td>
         </tr>
         <tr>
           <td class="label">Genre:</td>
-          <td>{{ albumData()?.genres?.[0]?.name }}</td>
+          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ genreId: albumData()?.genres?.[0]?.id }">{{ albumData()?.genres?.[0]?.name }}</a></td>
         </tr>
         <tr>
           <td class="label">Type:</td>
-          <td>{{ typeLabel() }}</td>
+          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ type: albumData()?.type }">{{ typeLabel() }}</a></td>
         </tr>
         <tr>
           <td class="label">Label:</td>

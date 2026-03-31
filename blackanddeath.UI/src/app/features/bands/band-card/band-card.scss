@@ -72,6 +72,15 @@
     text-overflow: ellipsis;
   }
 
+  &__meta-link {
+    cursor: pointer;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
   &__meta {
     margin: 0;
     font-family: var(--font-family-body);

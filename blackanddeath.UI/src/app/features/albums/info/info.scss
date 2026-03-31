@@ -162,6 +162,16 @@
     }
   }
 
+  &__meta-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--color-text-heading);
+    }
+  }
+
   &__meta {
     border-collapse: collapse;
 

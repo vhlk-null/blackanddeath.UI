@@ -28,33 +28,47 @@ export class AllAlbums implements OnInit {
   readonly total = signal(0);
   readonly currentPage = signal(1);
   readonly activeSort = signal<SortOption>('Newest');
+  readonly activeGenreId = signal<string | null>(null);
+  readonly activeCountryId = signal<string | null>(null);
+  readonly activeType = signal<string | null>(null);
+  readonly activeYear = signal<string | null>(null);
 
   ngOnInit(): void {
-    const params = this.route.snapshot.queryParams;
-    const sort = params['sort'] as SortOption;
-    this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');
-    this.currentPage.set(Number(params['page']) || 1);
-    this.load();
+    this.route.queryParams.subscribe(params => {
+      const sort = params['sort'] as SortOption;
+      this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');
+      this.currentPage.set(Number(params['page']) || 1);
+      this.activeGenreId.set(params['genreId'] ?? null);
+      this.activeCountryId.set(params['countryId'] ?? null);
+      this.activeType.set(params['type'] ?? null);
+      this.activeYear.set(params['year'] ?? null);
+      this.load();
+    });
   }
 
   onSortChange(sort: string): void {
     this.activeSort.set(sort as SortOption);
     this.currentPage.set(1);
     this.updateUrl();
-    this.load();
   }
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
     this.updateUrl();
-    this.load();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   private updateUrl(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { sort: this.activeSort(), page: this.currentPage() },
+      queryParams: {
+        sort: this.activeSort(),
+        page: this.currentPage(),
+        genreId: this.activeGenreId() ?? undefined,
+        countryId: this.activeCountryId() ?? undefined,
+        type: this.activeType() ?? undefined,
+        year: this.activeYear() ?? undefined,
+      },
       queryParamsHandling: 'merge',
     });
   }
@@ -64,6 +78,10 @@ export class AllAlbums implements OnInit {
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
       sortBy: this.activeSort(),
+      genreId: this.activeGenreId() ?? undefined,
+      countryId: this.activeCountryId() ?? undefined,
+      type: this.activeType() ?? undefined,
+      year: this.activeYear() ?? undefined,
     }).subscribe({
       next: (result) => {
         this.albums.set(result.data);

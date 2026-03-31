@@ -79,26 +79,33 @@
     <table class="band-info__meta">
       <tr>
         <td class="label">Country:</td>
-        <td>{{ bandData()?.countries?.map(c => c.name)?.join(', ') }}</td>
+        <td>
+          @for (country of bandData()?.countries; track $index; let last = $last) {
+            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ countryId: country.id }">{{ country.name }}</a>@if (!last) {, }
+          }
+        </td>
       </tr>
       @if (bandData()?.status) {
       <tr>
         <td class="label">Status:</td>
-        <td>{{ bandData()?.status }}</td>
+        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ status: bandData()?.status }">{{ bandData()?.status }}</a></td>
       </tr>
       }
       <tr>
         <td class="label">Genre:</td>
-        <td>{{ bandData()?.parentGenre?.name }}</td>
+        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreId: bandData()?.parentGenre?.id }">{{ bandData()?.parentGenre?.name }}</a></td>
       </tr>
-
       <tr>
         <td class="label">Subgenres:</td>
-        <td>{{ bandData()?.subgenres?.map(g => g.name)?.join(', ') }}</td>
+        <td>
+          @for (sub of bandData()?.subgenres; track $index; let last = $last) {
+            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreId: sub.id }">{{ sub.name }}</a>@if (!last) {, }
+          }
+        </td>
       </tr>
       <tr>
         <td class="label">Formed in:</td>
-        <td>{{ bandData()?.formedYear }}</td>
+        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ formedYear: bandData()?.formedYear }">{{ bandData()?.formedYear }}</a></td>
       </tr>
     </table>
 
