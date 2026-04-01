@@ -7,7 +7,8 @@ export class AlbumEndpoints {
   public static GET_BY_ID = (id: string) => `${base}/library/albums/${id}`;
   public static GET_BY_BAND = (bandId: string) => `${base}/library/albums/band/${bandId}`;
   public static CREATE = `${base}/library/albums`;
-  public static UPDATE = `${base}/library/albums`;
+  public static UPDATE = (id: string) => `${base}/library/albums/${id}`;
+  public static UPDATE_COVER = (id: string) => `${base}/library/albums/${id}/cover`;
   public static DELETE = (id: string) => `${base}/library/albums/${id}`;
 }
 
@@ -16,7 +17,8 @@ export class BandEndpoints {
   public static GET_SUMMARIES = `${base}/library/bands/summaries`;
   public static GET_BY_ID = (id: string) => `${base}/library/bands/${id}`;
   public static CREATE = `${base}/library/bands`;
-  public static UPDATE = `${base}/library/bands`;
+  public static UPDATE = (id: string) => `${base}/library/bands/${id}`;
+  public static UPDATE_LOGO = (id: string) => `${base}/library/bands/${id}/logo`;
   public static DELETE = (id: string) => `${base}/library/bands/${id}`;
 }
 

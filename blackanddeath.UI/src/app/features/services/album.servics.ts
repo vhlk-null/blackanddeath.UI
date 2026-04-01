@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { map } from "rxjs";
+import { map, switchMap } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { AlbumEndpoints } from "../../shared/constants/endpoints";
 import { Album } from "../../shared/models/album";
@@ -22,14 +22,6 @@ export interface CreateAlbumDto {
   tracks?: { trackNumber: number; title: string; duration: string }[];
 }
 
-interface AlbumsResponse {
-  albums: {
-    pageIndex: number;
-    pageSize: number;
-    count: number;
-    data: Album[];
-  };
-}
 
 @Injectable({ providedIn: 'root' })
 export class AlbumService {
@@ -37,13 +29,13 @@ export class AlbumService {
   private http = inject(BaseHttpService);
 
   getAll(params?: Record<string, unknown>) {
-    return this.http.get<AlbumsResponse>(AlbumEndpoints.GET_ALL, params).pipe(
+    return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_ALL, params).pipe(
       map(response => response.albums.data)
     );
   }
 
   getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string; genreId?: string; countryId?: string; type?: string; year?: string }) {
-    return this.http.get<AlbumsResponse>(AlbumEndpoints.GET_ALL, params).pipe(
+    return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_ALL, params).pipe(
       map(response => response.albums)
     );
   }
@@ -55,8 +47,8 @@ export class AlbumService {
   }
 
   getByBand(bandId: string, params?: Record<string, unknown>) {
-    return this.http.get<PaginatedResult<Album>>(AlbumEndpoints.GET_BY_BAND(bandId), params).pipe(
-      map(response => response.data)
+    return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_BY_BAND(bandId), params).pipe(
+      map(response => response.albums.data)
     );
   }
 
@@ -70,12 +62,17 @@ export class AlbumService {
   }
 
   update(id: string, dto: CreateAlbumDto, cover?: File | null) {
-    const form = new FormData();
-    form.append('album', JSON.stringify({ id, ...dto }));
+    const update$ = this.http.put<Album>(AlbumEndpoints.UPDATE(id), dto);
     if (cover) {
+      const form = new FormData();
       form.append('coverImage', cover, cover.name);
+      return update$.pipe(
+        switchMap(album =>
+          this.http.put<void>(AlbumEndpoints.UPDATE_COVER(id), form).pipe(map(() => album))
+        )
+      );
     }
-    return this.http.put<Album>(AlbumEndpoints.UPDATE, form);
+    return update$;
   }
 
   delete(id: string) {
