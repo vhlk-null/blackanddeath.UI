@@ -93,13 +93,9 @@
       }
       <tr>
         <td class="label">Genre:</td>
-        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreId: bandData()?.parentGenre?.id }">{{ bandData()?.parentGenre?.name }}</a></td>
-      </tr>
-      <tr>
-        <td class="label">Subgenres:</td>
         <td>
-          @for (sub of bandData()?.subgenres; track $index; let last = $last) {
-            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreId: sub.id }">{{ sub.name }}</a>@if (!last) {, }
+          @for (genre of bandData()?.genres; track $index; let last = $last) {
+            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreId: genre.id }">{{ genre.name }}</a>@if (!last) {, }
           }
         </td>
       </tr>

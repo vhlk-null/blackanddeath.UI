@@ -66,10 +66,13 @@ export class BandService {
   }
 
   update(id: string, dto: CreateBandDto, logo?: File | null) {
-    const update$ = this.http.put<Band>(BandEndpoints.UPDATE(id), dto);
+    const form = new FormData();
+    form.append('band', JSON.stringify(dto));
     if (logo) {
-      const form = new FormData();
       form.append('logoUrl', logo, logo.name);
+    }
+    const update$ = this.http.put<Band>(BandEndpoints.UPDATE(id), form);
+    if (logo) {
       return update$.pipe(
         switchMap(band =>
           this.http.put<void>(BandEndpoints.UPDATE_LOGO(id), form).pipe(map(() => band))

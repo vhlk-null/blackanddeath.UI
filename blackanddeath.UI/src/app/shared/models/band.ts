@@ -3,6 +3,13 @@ import { Genre } from './genre';
 import { AlbumType } from './enums/album-type.enum';
 import { AlbumFormat } from './enums/album-format.enum';
 
+export interface BandGenre {
+  id: string;
+  name: string;
+  slug: string;
+  isPrimary: boolean;
+}
+
 export interface BandAlbum {
   id: string;
   slug: string;
@@ -25,6 +32,7 @@ export interface Band {
   city?: string | null;
   label?: string | null;
   countries?: Country[];
+  genres?: BandGenre[];
   primaryGenre?: Genre | null;
   parentGenre?: Genre | null;
   subgenres?: Genre[];
