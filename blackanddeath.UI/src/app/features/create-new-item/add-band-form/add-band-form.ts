@@ -92,10 +92,12 @@ export class AddBandForm implements OnInit {
       band: id ? this.bandService.getById(id) : of(null),
     }).subscribe({
       next: ({ genres, countries, band }) => {
-        this.genreOptions.set(genres);
+        this.genreOptions.set(genres);        
+        
         this.countryOptions.set(countries);
 
         if (band) {
+          console.log(band?.genres);
           this.patchForm(band);
         }
       },
@@ -112,10 +114,7 @@ export class AddBandForm implements OnInit {
       bandName: band.name,
       formedYear: band.formedYear,
       bandCountries: band.countries?.map(c => c.id) ?? [],
-      bandGenres: [
-        ...(band.primaryGenre ? [band.primaryGenre.id] : band.parentGenre ? [band.parentGenre.id] : []),
-        ...(band.subgenres?.map(g => g.id) ?? []),
-      ],
+      bandGenres: band.genres?.map(g => g.id) ?? [],
       styles: band.bio ?? '',
     });
   }
