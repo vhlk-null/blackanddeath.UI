@@ -123,6 +123,12 @@
     gap: 0.25rem;
   }
 
+  &__hint {
+    font-family: var(--font-family-body);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
   &__error {
     font-family: var(--font-family-body);
     font-size: 0.75rem;

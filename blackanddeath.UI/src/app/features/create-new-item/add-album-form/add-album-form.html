@@ -91,6 +91,7 @@
               [options]="genreOptions()"
               placeholder="Search genres..."
             />
+            <span class="add-album__hint">First selected genre will be the primary genre</span>
             @if (albumGenres.invalid && albumGenres.touched) {
               <span class="add-album__error">At least one genre is required</span>
             }

@@ -1,7 +1,6 @@
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Section } from '../../../shared/components/section/section';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BandService } from '../../services/band.service';
@@ -50,11 +49,7 @@ export class AddBandForm implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    bandGenre: new FormControl<string>('', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    subgenreIds: new FormControl<string[]>([], {
+    bandGenres: new FormControl<string[]>([], {
       validators: [Validators.required],
       nonNullable: true,
     }),
@@ -83,25 +78,6 @@ export class AddBandForm implements OnInit {
       nonNullable: true,
     }),
   });
-
-  private readonly selectedGenre = toSignal(
-    this.bandForm.get('bandGenre')!.valueChanges,
-    { initialValue: '' }
-  );
-  readonly subgenreOptions = computed(() =>
-    this.genreOptions().filter(g => g.id !== this.selectedGenre())
-  );
-
-  constructor() {
-    effect(() => {
-      const genreId = this.selectedGenre();
-      if (!genreId) return;
-      const current = this.bandForm.get('subgenreIds')!.value as string[];
-      if (current.includes(genreId)) {
-        this.bandForm.patchValue({ subgenreIds: current.filter(id => id !== genreId) });
-      }
-    });
-  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -136,8 +112,10 @@ export class AddBandForm implements OnInit {
       bandName: band.name,
       formedYear: band.formedYear,
       bandCountries: band.countries?.map(c => c.id) ?? [],
-      bandGenre: band.parentGenre?.id ?? '',
-      subgenreIds: band.subgenres?.map(g => g.id) ?? [],
+      bandGenres: [
+        ...(band.primaryGenre ? [band.primaryGenre.id] : band.parentGenre ? [band.parentGenre.id] : []),
+        ...(band.subgenres?.map(g => g.id) ?? []),
+      ],
       styles: band.bio ?? '',
     });
   }
@@ -145,8 +123,7 @@ export class AddBandForm implements OnInit {
   get bandName() { return this.bandForm.get('bandName')!; }
   get formedYear() { return this.bandForm.get('formedYear')!; }
   get bandCountries() { return this.bandForm.get('bandCountries')!; }
-  get bandGenre() { return this.bandForm.get('bandGenre')!; }
-  get subgenreIds() { return this.bandForm.get('subgenreIds')!; }
+  get bandGenres() { return this.bandForm.get('bandGenres')!; }
   get styles() { return this.bandForm.get('styles')!; }
   get facebook() { return this.bandForm.get('facebook')!; }
   get youtube() { return this.bandForm.get('youtube')!; }
@@ -183,8 +160,7 @@ export class AddBandForm implements OnInit {
       name: v.bandName,
       formedYear: v.formedYear!,
       countryIds: v.bandCountries,
-      genreId: v.bandGenre,
-      subgenreIds: v.subgenreIds,
+      genreIds: v.bandGenres,
       bio: v.styles,
       facebook: v.facebook,
       youtube: v.youtube,

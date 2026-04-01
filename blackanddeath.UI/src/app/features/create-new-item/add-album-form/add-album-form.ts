@@ -154,7 +154,10 @@ export class AddAlbumForm implements OnInit {
       albumYear: album.releaseDate,
       albumType: album.type,
       albumCountries: album.countries?.map(c => c.id) ?? [],
-      albumGenres: album.genres?.map(g => g.id) ?? [],
+      albumGenres: [
+        ...(album.primaryGenre ? [album.primaryGenre.id] : []),
+        ...(album.genres?.filter(g => g.id !== album.primaryGenre?.id).map(g => g.id) ?? []),
+      ],
       albumLabels: album.label?.id ? [album.label.id] : [],
       albumTags: album.tags?.map(t => t.id) ?? [],
       spotify: getLink(StreamingPlatform.Spotify),

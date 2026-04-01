@@ -72,31 +72,17 @@
           </div>
         </div>
 
-        <div class="add-band__row">
-          <label class="add-band__label" for="band-genre">Genre:</label>
-          <div class="add-band__field">
-            <select class="add-band__input add-band__select" id="band-genre" formControlName="bandGenre">
-              <option value="">Select genre...</option>
-              @for (genre of genreOptions(); track genre.id) {
-                <option [value]="genre.id">{{ genre.name }}</option>
-              }
-            </select>
-            @if (bandGenre.invalid && bandGenre.touched) {
-              <span class="add-band__error">Genre is required</span>
-            }
-          </div>
-        </div>
-
         <div class="add-band__row add-band__row--multiselect">
-          <label class="add-band__label">Subgenres:</label>
+          <label class="add-band__label">Genres:</label>
           <div class="add-band__field">
             <app-multi-select
-              formControlName="subgenreIds"
-              [options]="subgenreOptions()"
-              placeholder="Search subgenres..."
+              formControlName="bandGenres"
+              [options]="genreOptions()"
+              placeholder="Search genres..."
             />
-            @if (subgenreIds.invalid && subgenreIds.touched) {
-              <span class="add-band__error">At least one subgenre is required</span>
+            <span class="add-band__hint">First selected genre will be the primary genre</span>
+            @if (bandGenres.invalid && bandGenres.touched) {
+              <span class="add-band__error">At least one genre is required</span>
             }
           </div>
         </div>
