@@ -21,6 +21,7 @@ export interface Album {
   countries?: Country[];
   streamingLinks?: StreamingLink[];
   tracks?: ApiTrack[];
+  primaryGenre?: Genre | null;
   genres?: Genre[];
   tags?: Tag[];
 }

@@ -15,10 +15,11 @@
     <h3 class="band-card__name" [title]="bandCard().name">{{ bandCard().name }}</h3>
     <p class="band-card__meta">
       <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-        [routerLink]="['/bands']" [queryParams]="{ genreId: bandCard().parentGenre?.id }">{{ bandCard().parentGenre?.name }}</span>
+        [routerLink]="['/bands']" [queryParams]="{ genreId: (bandCard().primaryGenre ?? bandCard().parentGenre)?.id }">{{ (bandCard().primaryGenre ?? bandCard().parentGenre)?.name }}</span>
       ·
       <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
         [routerLink]="['/bands']" [queryParams]="{ countryId: bandCard().countries?.[0]?.id }">{{ bandCard().countries?.[0]?.name }}</span>
+      · {{ bandCard().formedYear }}
     </p>
   </div>
 </a>
