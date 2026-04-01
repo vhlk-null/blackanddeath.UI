@@ -3,7 +3,7 @@
   <h1 class="album-info__title">{{ albumData()?.title }}</h1>
   <p class="album-info__band-subtitle">
     @for (band of albumData()?.bands ?? []; track band.id; let last = $last) {
-      <a [routerLink]="['/bands', band.id, band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) {, }
+    <a [routerLink]="['/bands', band.id, band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) {, }
     }
   </p>
 
@@ -67,7 +67,8 @@
   <div class="album-info__body">
 
     <div class="album-info__left">
-      <div class="album-info__cover" [style.cursor]="albumData()?.coverUrl ? 'pointer' : 'default'" (click)="albumData()?.coverUrl && lightboxSrc.set(albumData()!.coverUrl!)">
+      <div class="album-info__cover" [style.cursor]="albumData()?.coverUrl ? 'pointer' : 'default'"
+        (click)="albumData()?.coverUrl && lightboxSrc.set(albumData()!.coverUrl!)">
         @if (albumData()?.coverUrl) {
         <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" />
         } @else if (loaded()) {
@@ -84,29 +85,38 @@
       <table class="album-info__meta">
         <tr>
           <td class="label">Release:</td>
-          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ year: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a></td>
+          <td><a class="album-info__meta-link" [routerLink]="['/albums']"
+              [queryParams]="{ year: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a></td>
         </tr>
         <tr>
           <td class="label">Country:</td>
           <td>
             @for (country of albumData()?.countries; track $index; let last = $last) {
-              <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ countryId: country.id }">{{ country.name }}</a>@if (!last) {, }
+            <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ countryId: country.id }">{{
+              country.name }}</a>@if (!last) {, }
             }
           </td>
         </tr>
         <tr>
           <td class="label">Genre:</td>
-          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ genreId: albumData()?.genres?.[0]?.id }">{{ albumData()?.genres?.[0]?.name }}</a></td>
+          <td>
+            @for (genre of albumData()?.genres; track $index; let last = $last) {
+            <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ genreId: genre.id }">{{
+              genre.name }}</a>@if (!last) {, }
+            }
+          </td>
         </tr>
         <tr>
           <td class="label">Type:</td>
-          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ type: albumData()?.type }">{{ typeLabel() }}</a></td>
+          <td><a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ type: albumData()?.type }">{{
+              typeLabel() }}</a></td>
         </tr>
         <tr>
           <td class="label">Label:</td>
           <td>
             @if (albumData()?.label) {
-              <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ labelId: albumData()!.label!.id }">{{ albumData()!.label!.name }}</a>
+            <a class="album-info__meta-link" [routerLink]="['/albums']"
+              [queryParams]="{ labelId: albumData()!.label!.id }">{{ albumData()!.label!.name }}</a>
             }
           </td>
         </tr>
@@ -120,71 +130,71 @@
           <button [class.active]="tracklistTabIndex() === i" (click)="tracklistTabIndex.set(i)">{{ tab }}</button>
           }
           @if (totalDuration()) {
-            <span class="album-info__total-duration">{{ totalDuration() }} total</span>
+          <span class="album-info__total-duration">{{ totalDuration() }} total</span>
           }
         </div>
       </div>
       <div class="album-info__tab-content">
-      @switch (tracklistTabIndex()) {
+        @switch (tracklistTabIndex()) {
         @case (0) {
-          <ul class="album-info__tracks">
-            @for (track of albumData()?.tracks; track track.id) {
-              <li class="album-info__track">
-                <span class="album-info__track-num">{{ track.trackNumber < 10 ? '0' + track.trackNumber : track.trackNumber }}</span>
+        <ul class="album-info__tracks">
+          @for (track of albumData()?.tracks; track track.id) {
+          <li class="album-info__track">
+            <span class="album-info__track-num">{{ track.trackNumber < 10 ? '0' + track.trackNumber : track.trackNumber
+                }}</span>
                 <span class="album-info__track-title">{{ track.title }}</span>
                 @if (track.duration) {
-                  <span class="album-info__track-duration">{{ track.duration }}</span>
+                <span class="album-info__track-duration">{{ track.duration }}</span>
                 }
-              </li>
-            }
-          </ul>
+          </li>
+          }
+        </ul>
         }
         @case (1) {
-          @if (youtubeEmbed()) {
-            <div class="album-info__embed">
-              <iframe [src]="youtubeEmbed()! | safeUrl" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-            </div>
-          } @else {
-            <p class="album-info__no-link">No YouTube link available.</p>
-          }
+        @if (youtubeEmbed()) {
+        <div class="album-info__embed">
+          <iframe [src]="youtubeEmbed()! | safeUrl" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        } @else {
+        <p class="album-info__no-link">No YouTube link available.</p>
+        }
         }
         @case (2) {
-          @if (spotifyEmbed()) {
-            <div class="album-info__embed">
-              <iframe [src]="spotifyEmbed()! | safeUrl" frameborder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"></iframe>
-            </div>
-          } @else {
-            <p class="album-info__no-link">No Spotify link available.</p>
-          }
+        @if (spotifyEmbed()) {
+        <div class="album-info__embed">
+          <iframe [src]="spotifyEmbed()! | safeUrl" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+        } @else {
+        <p class="album-info__no-link">No Spotify link available.</p>
+        }
         }
         @case (3) {
-          @if (bandcampEmbed(); as bc) {
-            @if (bc.embedSrc) {
-              <div class="album-info__embed">
-                <iframe [src]="bc.embedSrc | safeUrl" seamless frameborder="0"></iframe>
-              </div>
-            } @else {
-              <p class="album-info__no-link">
-                Bandcamp embed not available. Edit the album and paste the
-                <strong>EmbeddedPlayer</strong> iframe code from Bandcamp.
-              </p>
-            }
-          } @else {
-            <p class="album-info__no-link">No Bandcamp link available.</p>
-          }
+        @if (bandcampEmbed(); as bc) {
+        @if (bc.embedSrc) {
+        <div class="album-info__embed">
+          <iframe [src]="bc.embedSrc | safeUrl" seamless frameborder="0"></iframe>
+        </div>
+        } @else {
+        <p class="album-info__no-link">
+          Bandcamp embed not available. Edit the album and paste the
+          <strong>EmbeddedPlayer</strong> iframe code from Bandcamp.
+        </p>
         }
-      }
+        } @else {
+        <p class="album-info__no-link">No Bandcamp link available.</p>
+        }
+        }
+        }
       </div>
     </div>
 
   </div>
-@if (lightboxSrc()) {
+  @if (lightboxSrc()) {
   <app-image-lightbox [src]="lightboxSrc()!" (close)="lightboxSrc.set(null)" />
-}
+  }
 </div>
 
 <app-section [sectionTitle]="titles.discography">
