@@ -75,6 +75,7 @@
   }
 
   &__band {
+    display: block;
     margin: 0 0 1rem; // 16px gap after band name
     font-family: 'Inter', var(--font-family-body);
     font-weight: 400;
@@ -84,6 +85,13 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--color-text);
+    }
   }
 
   &__meta-link {

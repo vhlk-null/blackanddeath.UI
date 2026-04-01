@@ -14,7 +14,9 @@
     </div>
     <div class="card__info">
         <h3 class="card__title" [title]="albumCard().title">{{ albumCard().title }}</h3>
-        <p class="card__band" [title]="albumCard().bands?.[0]?.name ?? ''">{{ albumCard().bands?.[0]?.name }}</p>
+        <a class="card__band" [title]="albumCard().bands?.[0]?.name ?? ''"
+          (click)="$event.preventDefault(); $event.stopPropagation()"
+          [routerLink]="['/bands', albumCard().bands?.[0]?.id, albumCard().bands?.[0]?.slug]">{{ albumCard().bands?.[0]?.name }}</a>
         <p class="card__meta">
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
             [routerLink]="['/albums']" [queryParams]="{ type: albumCard().type }">{{ typeLabel() }}</span>
