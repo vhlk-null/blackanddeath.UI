@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { map, switchMap } from "rxjs";
+import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { BandEndpoints } from "../../shared/constants/endpoints";
 import { Band } from "../../shared/models/band";
@@ -59,27 +59,15 @@ export class BandService {
   create(dto: CreateBandDto, logo?: File | null) {
     const form = new FormData();
     form.append('band', JSON.stringify(dto));
-    if (logo) {
-      form.append('logoUrl', logo, logo.name);
-    }
+    if (logo) form.append('logoUrl', logo, logo.name);
     return this.http.post<Band>(BandEndpoints.CREATE, form);
   }
 
   update(id: string, dto: CreateBandDto, logo?: File | null) {
     const form = new FormData();
     form.append('band', JSON.stringify(dto));
-    if (logo) {
-      form.append('logoUrl', logo, logo.name);
-    }
-    const update$ = this.http.put<Band>(BandEndpoints.UPDATE(id), form);
-    if (logo) {
-      return update$.pipe(
-        switchMap(band =>
-          this.http.put<void>(BandEndpoints.UPDATE_LOGO(id), form).pipe(map(() => band))
-        )
-      );
-    }
-    return update$;
+    if (logo) form.append('logoUrl', logo, logo.name);
+    return this.http.put<Band>(BandEndpoints.UPDATE(id), form);
   }
 
   delete(id: string) {

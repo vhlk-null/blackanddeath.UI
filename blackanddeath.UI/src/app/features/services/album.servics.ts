@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { map, switchMap } from "rxjs";
+import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
 import { AlbumEndpoints } from "../../shared/constants/endpoints";
 import { Album } from "../../shared/models/album";
@@ -55,26 +55,15 @@ export class AlbumService {
   create(dto: CreateAlbumDto, cover?: File | null) {
     const form = new FormData();
     form.append('album', JSON.stringify(dto));
-    if (cover) {
-      form.append('coverImage', cover, cover.name);
-    }
+    if (cover) form.append('coverImage', cover, cover.name);
     return this.http.post<Album>(AlbumEndpoints.CREATE, form);
   }
 
   update(id: string, dto: CreateAlbumDto, cover?: File | null) {
     const form = new FormData();
     form.append('album', JSON.stringify(dto));
-    const update$ = this.http.put<Album>(AlbumEndpoints.UPDATE(id), form);
-    if (cover) {
-      const form = new FormData();
-      form.append('coverImage', cover, cover.name);
-      return update$.pipe(
-        switchMap(album =>
-          this.http.put<void>(AlbumEndpoints.UPDATE_COVER(id), form).pipe(map(() => album))
-        )
-      );
-    }
-    return update$;
+    if (cover) form.append('coverImage', cover, cover.name);
+    return this.http.put<Album>(AlbumEndpoints.UPDATE(id), form);
   }
 
   delete(id: string) {
