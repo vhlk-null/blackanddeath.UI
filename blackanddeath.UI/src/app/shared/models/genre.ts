@@ -1,5 +1,7 @@
 export interface Genre {
   id: string;
   name: string;
-  parentGenreId: string | null;
+  slug?: string;
+  parentGenreId?: string | null;
+  isPrimary?: boolean;
 }
