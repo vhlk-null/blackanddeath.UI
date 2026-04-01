@@ -104,7 +104,11 @@
         </tr>
         <tr>
           <td class="label">Label:</td>
-          <td>{{ albumData()?.label?.name }}</td>
+          <td>
+            @if (albumData()?.label) {
+              <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ labelId: albumData()!.label!.id }">{{ albumData()!.label!.name }}</a>
+            }
+          </td>
         </tr>
       </table>
     </div>

@@ -32,6 +32,7 @@ export class AllAlbums implements OnInit {
   readonly activeCountryId = signal<string | null>(null);
   readonly activeType = signal<string | null>(null);
   readonly activeYear = signal<string | null>(null);
+  readonly activeLabelId = signal<string | null>(null);
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -42,6 +43,7 @@ export class AllAlbums implements OnInit {
       this.activeCountryId.set(params['countryId'] ?? null);
       this.activeType.set(params['type'] ?? null);
       this.activeYear.set(params['year'] ?? null);
+      this.activeLabelId.set(params['labelId'] ?? null);
       this.load();
     });
   }
@@ -68,6 +70,7 @@ export class AllAlbums implements OnInit {
         countryId: this.activeCountryId() ?? undefined,
         type: this.activeType() ?? undefined,
         year: this.activeYear() ?? undefined,
+        labelId: this.activeLabelId() ?? undefined,
       },
       queryParamsHandling: 'merge',
     });
@@ -82,6 +85,7 @@ export class AllAlbums implements OnInit {
       countryId: this.activeCountryId() ?? undefined,
       type: this.activeType() ?? undefined,
       year: this.activeYear() ?? undefined,
+      labelId: this.activeLabelId() ?? undefined,
     }).subscribe({
       next: (result) => {
         this.albums.set(result.data);
