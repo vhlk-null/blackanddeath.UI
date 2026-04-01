@@ -50,7 +50,7 @@ export class AddAlbumForm implements OnInit {
   previewUrl: string | null = null;
   coverFile: File | null = null;
   coverError = false;
-  submitting = false;
+  readonly submitting = signal(false);
 
   tracks: { title: string; duration: string }[] = [{ title: '', duration: '' }];
 
@@ -238,7 +238,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
       tracks,
     };
 
-    this.submitting = true;
+    this.submitting.set(true);
 
     const request$ = this.editMode
       ? this.albumService.update(this.albumId!, dto, this.coverFile)
@@ -255,11 +255,11 @@ get youtube() { return this.albumForm.get('youtube')!; }
           this.previewUrl = null;
           this.coverFile = null;
         }
-        this.submitting = false;
+        this.submitting.set(false);
       },
       error: () => {
         this.toastService.error(this.editMode ? 'Failed to update album.' : 'Failed to publish album.');
-        this.submitting = false;
+        this.submitting.set(false);
       },
     });
   }

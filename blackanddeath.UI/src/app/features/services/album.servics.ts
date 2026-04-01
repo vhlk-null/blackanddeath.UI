@@ -62,7 +62,9 @@ export class AlbumService {
   }
 
   update(id: string, dto: CreateAlbumDto, cover?: File | null) {
-    const update$ = this.http.put<Album>(AlbumEndpoints.UPDATE(id), dto);
+    const form = new FormData();
+    form.append('album', JSON.stringify(dto));
+    const update$ = this.http.put<Album>(AlbumEndpoints.UPDATE(id), form);
     if (cover) {
       const form = new FormData();
       form.append('coverImage', cover, cover.name);

@@ -229,8 +229,8 @@
 
         <div class="add-album__actions">
           <button class="add-album__btn add-album__btn--cancel" type="button" (click)="onCancel()">Cancel</button>
-          <button class="add-album__btn add-album__btn--publish" type="submit" [disabled]="submitting">
-            {{ submitting ? 'Publishing...' : 'Publish' }}
+          <button class="add-album__btn add-album__btn--publish" type="submit" [disabled]="submitting()">
+            {{ submitting() ? 'Publishing...' : 'Publish' }}
           </button>
         </div>
 
