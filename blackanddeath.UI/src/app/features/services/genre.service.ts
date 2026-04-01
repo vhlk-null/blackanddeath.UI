@@ -4,6 +4,7 @@ import { BaseHttpService } from "./intrefaces/http";
 import { GenreEndpoints } from "../../shared/constants/endpoints";
 import { Genre } from "../../shared/models/genre";
 import { Album } from "../../shared/models/album";
+import { PaginatedResult } from "../../shared/models/paginated-result";
 
 @Injectable({ providedIn: 'root' })
 export class GenreService {
@@ -38,8 +39,8 @@ export class GenreService {
     return this.http.get<{ id: string; name: string; genres: { id: string; name: string }[]; tags: { id: string; name: string }[] }>(GenreEndpoints.GET_CARD_BY_ID(id));
   }
 
-  getCardAlbums(id: string) {
-    return this.http.get<Album[]>(GenreEndpoints.GET_CARD_ALBUMS(id));
+  getCardAlbums(id: string, params?: { pageIndex: number; pageSize: number }) {
+    return this.http.get<PaginatedResult<Album>>(GenreEndpoints.GET_CARD_ALBUMS(id), params);
   }
 
   updateCard(cardId: string, dto: { name: string; description: string; orderNumber?: number | null; genreIds: string[]; tagIds: string[]; coverImage?: File | null }) {

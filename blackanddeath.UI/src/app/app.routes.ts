@@ -7,6 +7,7 @@ import { BandInfo } from './features/bands/info/info';
 import { BandSubgenres } from './features/bands/subgenres/subgenres';
 import { AllBands } from './features/bands/all/all-bands';
 import { Genres } from './features/genres/genres';
+import { GenreDetail } from './features/genres/genre-detail/genre-detail';
 import { CreateNewItem } from './features/create-new-item/create-new-item';
 import { AddAlbumForm } from './features/create-new-item/add-album-form/add-album-form';
 import { AddBandForm } from './features/create-new-item/add-band-form/add-band-form';
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: 'bands/:id/edit', component: AddBandForm },
     { path: 'bands/:id/:slug', component: BandInfo },
     { path: 'genres', component: Genres },
+    { path: 'genres/:id', component: GenreDetail },
     { path: 'create', component: CreateNewItem },
     { path: 'admin', component: Admin }
 ];
