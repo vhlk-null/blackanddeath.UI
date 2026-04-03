@@ -64,9 +64,9 @@
             <select class="add-band__input" id="band-status" formControlName="status">
               <option value="Active">Active</option>
               <option value="Disbanded">Disbanded</option>
-              <option value="On hold">On hold</option>
+              <option value="OnHold">On hold</option>
               <option value="Unknown">Unknown</option>
-              <option value="Changed name">Changed name</option>
+              <option value="ChangedName">Changed name</option>
             </select>
             @if (status.invalid && status.touched) {
               <span class="add-band__error">Status is required</span>

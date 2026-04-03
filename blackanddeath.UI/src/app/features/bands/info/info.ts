@@ -34,6 +34,14 @@ export class BandInfo implements OnInit {
     similarBands: SIMILAR_BANDS_TITLE,
   };
 
+  readonly statusLabels: Record<string, string> = {
+    Active: 'Active',
+    Disbanded: 'Disbanded',
+    OnHold: 'On hold',
+    Unknown: 'Unknown',
+    ChangedName: 'Changed name',
+  };
+
   readonly lightboxSrc = signal<string | null>(null);
   readonly infoTabIndex = signal(0);
   readonly bandData = signal<Band | null>(null);
