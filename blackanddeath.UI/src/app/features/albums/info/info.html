@@ -126,7 +126,7 @@
     <div class="album-info__right">
       <div class="album-info__tracklist-header">
         <div class="album-info__tracklist-tabs">
-          @for (tab of tracklistTabs; track tab; let i = $index) {
+          @for (tab of tracklistTabs(); track tab; let i = $index) {
           <button [class.active]="tracklistTabIndex() === i" (click)="tracklistTabIndex.set(i)">{{ tab }}</button>
           }
           @if (totalDuration()) {
@@ -135,8 +135,8 @@
         </div>
       </div>
       <div class="album-info__tab-content">
-        @switch (tracklistTabIndex()) {
-        @case (0) {
+        @switch (tracklistTabs()[tracklistTabIndex()]) {
+        @case ('Tracklist') {
         <ul class="album-info__tracks">
           @for (track of albumData()?.tracks; track track.id) {
           <li class="album-info__track">
@@ -150,28 +150,20 @@
           }
         </ul>
         }
-        @case (1) {
-        @if (youtubeEmbed()) {
+        @case ('YouTube') {
         <div class="album-info__embed">
           <iframe [src]="youtubeEmbed()! | safeUrl" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen></iframe>
         </div>
-        } @else {
-        <p class="album-info__no-link">No YouTube link available.</p>
         }
-        }
-        @case (2) {
-        @if (spotifyEmbed()) {
+        @case ('Spotify') {
         <div class="album-info__embed">
           <iframe [src]="spotifyEmbed()! | safeUrl" frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
-        } @else {
-        <p class="album-info__no-link">No Spotify link available.</p>
         }
-        }
-        @case (3) {
+        @case ('Bandcamp') {
         @if (bandcampEmbed(); as bc) {
         @if (bc.embedSrc) {
         <div class="album-info__embed">
@@ -183,8 +175,6 @@
           <strong>EmbeddedPlayer</strong> iframe code from Bandcamp.
         </p>
         }
-        } @else {
-        <p class="album-info__no-link">No Bandcamp link available.</p>
         }
         }
         }

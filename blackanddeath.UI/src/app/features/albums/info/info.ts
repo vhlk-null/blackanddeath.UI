@@ -58,7 +58,13 @@ export class Info implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly tracklistTabIndex = signal(0);
   readonly loaded = signal(false);
-  readonly tracklistTabs = ['Tracklist', 'YouTube', 'Spotify', 'Bandcamp'];
+  readonly tracklistTabs = computed(() => {
+    const tabs = ['Tracklist'];
+    if (this.youtubeEmbed()) tabs.push('YouTube');
+    if (this.spotifyEmbed()) tabs.push('Spotify');
+    if (this.bandcampEmbed()) tabs.push('Bandcamp');
+    return tabs;
+  });
 
   readonly albumData = signal<Album | null>(null);
   readonly discographyAlbums = signal<Album[]>([]);
