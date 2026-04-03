@@ -53,6 +53,10 @@ export class AddBandForm implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
+    status: new FormControl('Active', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
     styles: new FormControl('Primitive and cold black metal with raw production', {
       validators: [Validators.required],
       nonNullable: true,
@@ -115,6 +119,7 @@ export class AddBandForm implements OnInit {
       formedYear: band.formedYear,
       bandCountries: band.countries?.map(c => c.id) ?? [],
       bandGenres: band.genres?.map(g => g.id) ?? [],
+      status: band.status ?? 'Unknown',
       styles: band.bio ?? '',
     });
   }
@@ -123,6 +128,7 @@ export class AddBandForm implements OnInit {
   get formedYear() { return this.bandForm.get('formedYear')!; }
   get bandCountries() { return this.bandForm.get('bandCountries')!; }
   get bandGenres() { return this.bandForm.get('bandGenres')!; }
+  get status() { return this.bandForm.get('status')!; }
   get styles() { return this.bandForm.get('styles')!; }
   get facebook() { return this.bandForm.get('facebook')!; }
   get youtube() { return this.bandForm.get('youtube')!; }
@@ -160,6 +166,7 @@ export class AddBandForm implements OnInit {
       formedYear: v.formedYear!,
       countryIds: v.bandCountries,
       genreIds: v.bandGenres,
+      status: v.status,
       bio: v.styles,
       facebook: v.facebook,
       youtube: v.youtube,
