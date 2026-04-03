@@ -22,18 +22,18 @@
     animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 
     &:nth-child(1) {
-      border-top-color: #b91c1c;
+      border-top-color: #7c3aed;
       animation-delay: -0.3s;
     }
 
     &:nth-child(2) {
-      border-top-color: #991b1b;
+      border-top-color: #6366f1;
       animation-delay: -0.15s;
       inset: 6px;
     }
 
     &:nth-child(3) {
-      border-top-color: #7f1d1d;
+      border-top-color: #4f46e5;
       inset: 12px;
     }
   }
