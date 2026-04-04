@@ -154,6 +154,20 @@
     }
   }
 
+  &__status {
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.15s;
+
+    &[data-status='Active'] { color: #6b8adb; }
+    &[data-status='Disbanded'] { color: #d46a6a; }
+    &[data-status='OnHold'] { color: #c9a84c; }
+    &[data-status='ChangedName'] { color: #9b8ec4; }
+    &[data-status='Unknown'] { color: var(--color-text-muted); }
+
+    &:hover { opacity: 0.75; }
+  }
+
   &__meta {
     align-self: start;
     border-collapse: collapse;

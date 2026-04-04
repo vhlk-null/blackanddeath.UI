@@ -88,7 +88,7 @@
       @if (bandData()?.status) {
       <tr>
         <td class="label">Status:</td>
-        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ status: bandData()?.status }">{{ statusLabels[bandData()!.status!] || bandData()?.status }}</a></td>
+        <td><a class="band-info__status" [attr.data-status]="bandData()?.status" [routerLink]="['/bands']" [queryParams]="{ status: bandData()?.status }">{{ statusLabels[bandData()!.status!] || bandData()?.status }}</a></td>
       </tr>
       }
       <tr>
