@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, output, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { GenreService } from '../../../features/services/genre.service';
 import { CountryService } from '../../../features/services/country.service';
@@ -19,7 +19,7 @@ type FilterTab = 'albums' | 'bands';
   templateUrl: './search-filter-panel.html',
   styleUrl: './search-filter-panel.scss',
 })
-export class SearchFilterPanel implements OnInit {
+export class SearchFilterPanel implements OnInit, OnDestroy {
   private router = inject(Router);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
@@ -82,11 +82,16 @@ export class SearchFilterPanel implements OnInit {
   readonly bandTags = signal('');
 
   ngOnInit(): void {
+    document.body.style.overflow = 'hidden';
     this.genreService.getAll().subscribe(g => this.genres.set(g));
     this.countryService.getAll().subscribe(c => this.countries.set(c));
     this.labelService.getAll().subscribe(l => this.labels.set(l));
     this.bandService.getNames().subscribe(b => this.bandNames.set(b));
     this.albumService.getNames().subscribe(a => this.albumNames.set(a));
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = '';
   }
 
   selectBand(band: NameEntry): void {
