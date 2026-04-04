@@ -6,6 +6,8 @@ import { MultiSelectInput, SelectOption } from '../../../shared/components/multi
 import { BandService } from '../../services/band.service';
 import { CountryService } from '../../services/country.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { VideoBandService } from '../../services/video-band.service';
+import { VideoType } from '../../../shared/models/enums/video-type.enum';
 import { forkJoin } from 'rxjs';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 
@@ -18,13 +20,14 @@ import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 export class AddVideoForm implements OnInit {
   private bandService = inject(BandService);
   private countryService = inject(CountryService);
+  private videoBandService = inject(VideoBandService);
   private toastService = inject(ToastService);
   private router = inject(Router);
 
   readonly bandOptions = signal<SelectOption[]>([]);
   readonly countryOptions = signal<SelectOption[]>([]);
 
-  readonly videoTypeOptions = ['Clip', 'Live', 'Playthrough', 'Lyric Video', 'Other'];
+  readonly videoTypeOptions = Object.values(VideoType);
 
   submitting = false;
 
@@ -102,9 +105,27 @@ export class AddVideoForm implements OnInit {
 
     this.submitting = true;
 
-    // TODO: implement when backend is ready
-    this.toastService.success('Video form ready — backend not yet connected.');
-    this.submitting = false;
+    const v = this.videoForm.getRawValue();
+    const bandId = v.bandId[0];
+    const dto = {
+      name: v.videoName,
+      year: v.yearVideo!,
+      countryId: v.countryId.length ? v.countryId[0] : null,
+      videoType: v.videoType as VideoType,
+      youtubeLink: v.youtube,
+      info: v.info || null,
+    };
+
+    this.videoBandService.create(bandId, dto).subscribe({
+      next: () => {
+        this.toastService.success('Video published successfully!');
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.toastService.error('Failed to publish video.');
+        this.submitting = false;
+      },
+    });
   }
 
   onCancel(): void {

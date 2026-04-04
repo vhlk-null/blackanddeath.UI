@@ -24,6 +24,13 @@ export class BandEndpoints {
   public static DELETE = (id: string) => `${base}/library/bands/${id}`;
 }
 
+export class VideoBandEndpoints {
+  public static GET_BY_BAND = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
+  public static CREATE = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
+  public static UPDATE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
+  public static DELETE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
+}
+
 export class GenreEndpoints {
   public static GET_ALL = `${base}/library/genres`;
   public static GET_CARDS = `${base}/library/genre-cards`;
