@@ -16,8 +16,8 @@ import { toEmbedUrl } from '../../../shared/utils/streaming-embed';
 import {
   ALBUM_INFORMATION,
   DISCOGRAPHY_TITLE,
-  VIDEOS_TITLE,
   SIMILAR_ALBUMS_TITLE,
+  SIMILAR_BANDS_TITLE,
 } from '../../../shared/constants/constants';
 
 @Component({
@@ -41,8 +41,8 @@ export class Info implements OnInit {
 
   readonly titles = {
     discography: DISCOGRAPHY_TITLE,
-    videos: VIDEOS_TITLE,
     similarAlbums: SIMILAR_ALBUMS_TITLE,
+    similarBands: SIMILAR_BANDS_TITLE,
   };
 
   readonly typeLabels: Record<AlbumType, string> = {
@@ -69,7 +69,7 @@ export class Info implements OnInit {
   readonly albumData = signal<Album | null>(null);
   readonly discographyAlbums = signal<Album[]>([]);
   readonly similarAlbums = signal<Album[]>([]);
-  readonly videos = signal<Band[]>([]);
+  readonly similarBands = signal<Band[]>([]);
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
@@ -148,6 +148,8 @@ export class Info implements OnInit {
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
         this.discographyAlbums.set(discography);
+        this.similarAlbums.set(album.similarAlbums ?? []);
+        this.similarBands.set((album.similarBands ?? []) as any);
       },
       error: (err) => console.error('Failed to load album', err),
     });

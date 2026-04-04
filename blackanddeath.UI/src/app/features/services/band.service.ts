@@ -10,7 +10,6 @@ export interface CreateBandDto {
   formedYear: number;
   countryIds: string[];
   genreIds: string[];
-  bio: string;
   facebook?: string;
   youtube?: string;
   instagram?: string;

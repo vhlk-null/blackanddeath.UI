@@ -28,8 +28,10 @@
   }
 </app-section>
 
+@if (mainUpcomingReleases().length) {
 <app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" (tabChange)="onUpcomingReleasesTabChange($event)">
   @for (album of mainUpcomingReleases(); track album.id) {
     <app-album-card [albumCard]="album" />
   }
 </app-section>
+}

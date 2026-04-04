@@ -37,4 +37,6 @@ export interface Band {
   parentGenre?: Genre | null;
   subgenres?: Genre[];
   albums?: BandAlbum[];
+  similarAlbums?: BandAlbum[];
+  similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
 }

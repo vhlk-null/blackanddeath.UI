@@ -7,16 +7,18 @@ import { ImageLightbox } from '../../../shared/components/image-lightbox/image-l
 import { BandService } from '../../services/band.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { Band } from '../../../shared/models/band';
+import { BandCard } from '../band-card/band-card';
+import { Album } from '../../../shared/models/album';
 import {
   BAND_INFORMATION,
   DISCOGRAPHY_TITLE,
-  VIDEOS_TITLE,
+  SIMILAR_ALBUMS_TITLE,
   SIMILAR_BANDS_TITLE,
 } from '../../../shared/constants/constants';
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -30,7 +32,7 @@ export class BandInfo implements OnInit {
   readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
     discography: DISCOGRAPHY_TITLE,
-    videos: VIDEOS_TITLE,
+    similarAlbums: SIMILAR_ALBUMS_TITLE,
     similarBands: SIMILAR_BANDS_TITLE,
   };
 
@@ -45,6 +47,8 @@ export class BandInfo implements OnInit {
   readonly lightboxSrc = signal<string | null>(null);
   readonly infoTabIndex = signal(0);
   readonly bandData = signal<Band | null>(null);
+  readonly similarAlbums = signal<Album[]>([]);
+  readonly similarBands = signal<Band[]>([]);
   readonly loaded = signal(false);
   onDelete(): void {
     const id = this.bandData()?.id;
@@ -70,6 +74,8 @@ export class BandInfo implements OnInit {
           this.router.navigate(['/bands', id, band.slug], { replaceUrl: true });
         }
         this.bandData.set(band);
+        this.similarAlbums.set((band.similarAlbums ?? []) as any);
+        this.similarBands.set((band.similarBands ?? []) as any);
         this.loaded.set(true);
       },
       error: (err) => console.error('Failed to load band', err),

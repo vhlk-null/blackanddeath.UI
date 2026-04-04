@@ -55,14 +55,14 @@ export class AddAlbumForm implements OnInit {
   tracks: { title: string; duration: string }[] = [{ title: '', duration: '' }];
 
   albumForm = new FormGroup({
-    albumName: new FormControl('Test Album', {
+    albumName: new FormControl('', {
       validators: [Validators.required, Validators.minLength(2)],
       nonNullable: true,
     }),
     albumBands: new FormControl<string[]>([], {
       nonNullable: true,
     }),
-    albumYear: new FormControl<number | null>(2024, {
+    albumYear: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(1900), Validators.max(2099)],
     }),
     albumType: new FormControl<AlbumType>(AlbumType.FullLength, {
@@ -84,15 +84,11 @@ export class AddAlbumForm implements OnInit {
     albumTags: new FormControl<string[]>([], {
       nonNullable: true,
     }),
-    albumStyles: new FormControl('Raw, Atmospheric', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    spotify: new FormControl('https://open.spotify.com/test', {
+    spotify: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
-    youtube: new FormControl('https://youtube.com/test', {
+    youtube: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
@@ -174,7 +170,6 @@ youtube: getLink(StreamingPlatform.YouTube),
   get albumGenres() { return this.albumForm.get('albumGenres')!; }
   get albumLabels() { return this.albumForm.get('albumLabels')!; }
   get albumTags() { return this.albumForm.get('albumTags')!; }
-  get albumStyles() { return this.albumForm.get('albumStyles')!; }
   get spotify() { return this.albumForm.get('spotify')!; }
 get youtube() { return this.albumForm.get('youtube')!; }
   get bandcamp() { return this.albumForm.get('bandcamp')!; }

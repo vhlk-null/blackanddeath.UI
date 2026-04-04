@@ -24,4 +24,6 @@ export interface Album {
   primaryGenre?: Genre | null;
   genres?: Genre[];
   tags?: Tag[];
+  similarAlbums?: Album[];
+  similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
 }

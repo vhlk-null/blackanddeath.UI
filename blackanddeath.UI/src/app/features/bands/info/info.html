@@ -120,14 +120,8 @@
 </app-section>
 
 
-<app-section [sectionTitle]="titles.videos">
-  <!-- @for (band of videos; track band.id) {
-  <app-band-card [bandCard]="band" />
-  } -->
-</app-section>
-
 <app-section [sectionTitle]="titles.similarBands">
-  <!-- @for (band of similarBands(); track band.id) {
+  @for (band of similarBands(); track band.id) {
   <app-band-card [bandCard]="band" />
-  } -->
+  }
 </app-section>

@@ -193,14 +193,9 @@
   }
 </app-section>
 
-<app-section [sectionTitle]="titles.videos">
-  @for (band of videos(); track band.id) {
-  <app-band-card [bandCard]="band" />
-  }
-</app-section>
-
 <app-section [sectionTitle]="titles.similarAlbums">
   @for (album of similarAlbums(); track album.id) {
   <app-album-card [albumCard]="album" />
   }
 </app-section>
+

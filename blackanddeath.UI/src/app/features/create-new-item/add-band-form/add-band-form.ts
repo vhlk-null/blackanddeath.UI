@@ -38,11 +38,11 @@ export class AddBandForm implements OnInit {
   readonly countryOptions = signal<SelectOption[]>([]);
 
   bandForm = new FormGroup({
-    bandName: new FormControl('Test Band', {
+    bandName: new FormControl('', {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    formedYear: new FormControl<number | null>(1991, {
+    formedYear: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(1900), Validators.max(2099)],
     }),
     bandCountries: new FormControl<string[]>([], {
@@ -57,27 +57,23 @@ export class AddBandForm implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    styles: new FormControl('Primitive and cold black metal with raw production', {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    facebook: new FormControl('https://facebook.com/testband', {
+    facebook: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
-    youtube: new FormControl('https://youtube.com/@testband', {
+    youtube: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
-    instagram: new FormControl('https://instagram.com/testband', {
+    instagram: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
-    twitter: new FormControl('https://twitter.com/testband', {
+    twitter: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
-    website: new FormControl('https://testband.com', {
+    website: new FormControl('', {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
@@ -120,7 +116,6 @@ export class AddBandForm implements OnInit {
       bandCountries: band.countries?.map(c => c.id) ?? [],
       bandGenres: band.genres?.map(g => g.id) ?? [],
       status: band.status ?? 'Unknown',
-      styles: band.bio ?? '',
     });
   }
 
@@ -129,7 +124,6 @@ export class AddBandForm implements OnInit {
   get bandCountries() { return this.bandForm.get('bandCountries')!; }
   get bandGenres() { return this.bandForm.get('bandGenres')!; }
   get status() { return this.bandForm.get('status')!; }
-  get styles() { return this.bandForm.get('styles')!; }
   get facebook() { return this.bandForm.get('facebook')!; }
   get youtube() { return this.bandForm.get('youtube')!; }
   get instagram() { return this.bandForm.get('instagram')!; }
@@ -167,7 +161,6 @@ export class AddBandForm implements OnInit {
       countryIds: v.bandCountries,
       genreIds: v.bandGenres,
       status: v.status,
-      bio: v.styles,
       facebook: v.facebook,
       youtube: v.youtube,
       instagram: v.instagram,
