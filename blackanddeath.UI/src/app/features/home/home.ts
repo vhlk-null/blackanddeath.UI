@@ -57,6 +57,8 @@ export class Home implements OnInit {
   mainTopRatedAlbums = signal<Album[]>([]);
   mainPopularBands = signal<Band[]>([]);
   mainRecentAlbums = signal<Album[]>(this.sectionData.recentlyAdded[0]);
+  mainRecentBands = signal<Band[]>([]);
+  recentlyAddedTab = signal(0);
   mainRecentVideos = signal<Band[]>([]);
   mainUpcomingReleases = signal<Album[]>(this.sectionData.upcomingReleases[0]);
 
@@ -77,19 +79,20 @@ export class Home implements OnInit {
   }
 
   ngOnInit(): void {
-    this.albumService.getAll().subscribe({
+    this.albumService.getAll({ pageIndex: 0, pageSize: 20, sortBy: 'Newest' }).subscribe({
       next: (albums) => {
         this.allAlbums = albums;
         this.mainTopRatedAlbums.set(this.albumsSlice(0, 0));
-        this.mainRecentAlbums.set(this.albumsSlice(1, 0));
+        this.mainRecentAlbums.set(albums.slice(0, 4));
         this.mainUpcomingReleases.set(this.albumsSlice(2, 0));
       }
     });
 
-    this.bandService.getAll().subscribe({
+    this.bandService.getAll({ pageIndex: 0, pageSize: 9, sortBy: 'Newest' }).subscribe({
       next: (bands) => {
         this.allBands = bands;
         this.mainPopularBands.set(this.bandsSlice(0, 0));
+        this.mainRecentBands.set(bands.slice(0, 3));
         this.mainRecentVideos.set(this.bandsSlice(1, 0));
       }
     });
@@ -104,7 +107,7 @@ export class Home implements OnInit {
   }
 
   onRecentlyAddedTabChange(index: number): void {
-    this.mainRecentAlbums.set(this.albumsSlice(1, index));
+    this.recentlyAddedTab.set(index);
   }
 
   onMetalVideosTabChange(index: number): void {

@@ -11,8 +11,14 @@
 </app-section>
 
 <app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" (tabChange)="onRecentlyAddedTabChange($event)">
-  @for (album of mainRecentAlbums(); track album.id) {
-    <app-album-card [albumCard]="album" />
+  @if (recentlyAddedTab() === 0) {
+    @for (album of mainRecentAlbums(); track album.id) {
+      <app-album-card [albumCard]="album" />
+    }
+  } @else {
+    @for (band of mainRecentBands(); track band.id) {
+      <app-band-card [bandCard]="band" />
+    }
   }
 </app-section>
 
