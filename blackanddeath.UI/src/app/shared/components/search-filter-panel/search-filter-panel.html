@@ -1,0 +1,167 @@
+<div class="filter-overlay" (click)="onOverlayClick($event)">
+  <div class="filter-panel" role="dialog" aria-modal="true" aria-label="Search filters">
+
+    <div class="filter-panel__tabs">
+      <button class="filter-panel__tab"
+        [class.filter-panel__tab--active]="activeTab() === 'albums'"
+        (click)="switchTab('albums')">Albums</button>
+      <button class="filter-panel__tab"
+        [class.filter-panel__tab--active]="activeTab() === 'bands'"
+        (click)="switchTab('bands')">Bands</button>
+    </div>
+
+    @if (activeTab() === 'albums') {
+    <div class="filter-panel__body">
+      <div class="filter-panel__row">
+        <div class="filter-panel__field filter-panel__field--autocomplete">
+          <label class="filter-panel__label">Band name</label>
+          <input class="filter-panel__input" type="text" placeholder="Type here..."
+            [value]="bandNameQuery()"
+            (input)="bandNameQuery.set($any($event.target).value); bandNameDropdownOpen.set(true); selectedBandId.set('')"
+            (focus)="bandNameDropdownOpen.set(true)"
+            (blur)="onAutocompleteBlur('bandName')" />
+          @if (bandNameDropdownOpen() && filteredBandNames().length) {
+          <ul class="filter-panel__dropdown">
+            @for (band of filteredBandNames(); track band.id) {
+            <li class="filter-panel__dropdown-item" (mousedown)="selectBand(band)">{{ band.name }}</li>
+            }
+          </ul>
+          }
+        </div>
+        <div class="filter-panel__field filter-panel__field--autocomplete">
+          <label class="filter-panel__label">Release title</label>
+          <input class="filter-panel__input" type="text" placeholder="Type here..."
+            [value]="releaseTitleQuery()"
+            (input)="releaseTitleQuery.set($any($event.target).value); releaseTitleDropdownOpen.set(true); selectedAlbumId.set('')"
+            (focus)="releaseTitleDropdownOpen.set(true)"
+            (blur)="onAutocompleteBlur('releaseTitle')" />
+          @if (releaseTitleDropdownOpen() && filteredAlbumNames().length) {
+          <ul class="filter-panel__dropdown">
+            @for (album of filteredAlbumNames(); track album.id) {
+            <li class="filter-panel__dropdown-item" (mousedown)="selectAlbum(album)">{{ album.name }}</li>
+            }
+          </ul>
+          }
+        </div>
+      </div>
+
+      <div class="filter-panel__row">
+        <div class="filter-panel__field">
+          <label class="filter-panel__label">Country</label>
+          <select class="filter-panel__select" [value]="selectedCountryId()"
+            (change)="selectedCountryId.set($any($event.target).value)">
+            <option value="">All</option>
+            @for (country of countries(); track country.id) {
+              <option [value]="country.id">{{ country.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="filter-panel__field">
+          <label class="filter-panel__label">Format of release</label>
+          <select class="filter-panel__select" [value]="selectedType()"
+            (change)="selectedType.set($any($event.target).value)">
+            <option value="">All</option>
+            @for (type of albumTypes; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-panel__row">
+        <div class="filter-panel__field">
+          <label class="filter-panel__label">Label</label>
+          <select class="filter-panel__select" [value]="selectedLabelId()"
+            (change)="selectedLabelId.set($any($event.target).value)">
+            <option value="">All</option>
+            @for (label of labels(); track label.id) {
+              <option [value]="label.id">{{ label.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="filter-panel__field">
+          <label class="filter-panel__label">Genre</label>
+          <select class="filter-panel__select" [value]="selectedGenreId()"
+            (change)="selectedGenreId.set($any($event.target).value)">
+            <option value="">All</option>
+            @for (genre of genres(); track genre.id) {
+              <option [value]="genre.id">{{ genre.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-panel__field">
+        <label class="filter-panel__label">Time period</label>
+        <div class="filter-panel__year-range">
+          <input class="filter-panel__input filter-panel__input--year" type="number"
+            placeholder="From" min="1960" max="2030"
+            [value]="yearFrom()" (input)="yearFrom.set(+$any($event.target).value || null)" />
+          <span class="filter-panel__year-sep">&mdash;</span>
+          <input class="filter-panel__input filter-panel__input--year" type="number"
+            placeholder="To" min="1960" max="2030"
+            [value]="yearTo()" (input)="yearTo.set(+$any($event.target).value || null)" />
+        </div>
+      </div>
+
+      <div class="filter-panel__field">
+        <label class="filter-panel__label">Words and tags for search</label>
+        <textarea class="filter-panel__textarea" placeholder="Type here..."
+          [value]="tags()" (input)="tags.set($any($event.target).value)"></textarea>
+      </div>
+
+      <button class="filter-panel__submit" (click)="searchAlbums()">Search Albums</button>
+    </div>
+    } @else {
+    <div class="filter-panel__body">
+      <div class="filter-panel__field filter-panel__field--autocomplete">
+        <label class="filter-panel__label">Band name</label>
+        <input class="filter-panel__input" type="text" placeholder="Type here..."
+          [value]="bandFilterQuery()"
+          (input)="bandFilterQuery.set($any($event.target).value); bandFilterDropdownOpen.set(true); selectedBandFilterId.set('')"
+          (focus)="bandFilterDropdownOpen.set(true)"
+          (blur)="onAutocompleteBlur('bandFilter')" />
+        @if (bandFilterDropdownOpen() && filteredBandNamesTab().length) {
+        <ul class="filter-panel__dropdown">
+          @for (band of filteredBandNamesTab(); track band.id) {
+          <li class="filter-panel__dropdown-item" (mousedown)="selectBandFilter(band)">{{ band.name }}</li>
+          }
+        </ul>
+        }
+      </div>
+
+      <div class="filter-panel__row">
+        <div class="filter-panel__field">
+          <label class="filter-panel__label">Country</label>
+          <select class="filter-panel__select" [value]="bandCountryId()"
+            (change)="bandCountryId.set($any($event.target).value)">
+            <option value="">All</option>
+            @for (country of countries(); track country.id) {
+              <option [value]="country.id">{{ country.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="filter-panel__field">
+          <label class="filter-panel__label">Genre</label>
+          <select class="filter-panel__select" [value]="bandGenreId()"
+            (change)="bandGenreId.set($any($event.target).value)">
+            <option value="">All</option>
+            @for (genre of genres(); track genre.id) {
+              <option [value]="genre.id">{{ genre.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-panel__field">
+        <label class="filter-panel__label">Words and tags for search</label>
+        <textarea class="filter-panel__textarea" placeholder="Type here..."
+          [value]="bandTags()" (input)="bandTags.set($any($event.target).value)"></textarea>
+      </div>
+
+      <button class="filter-panel__submit" (click)="searchBands()">Search Bands</button>
+    </div>
+    }
+
+  </div>
+</div>

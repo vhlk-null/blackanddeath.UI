@@ -269,7 +269,7 @@
   display: grid;
   grid-template-columns: 7rem 1fr;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.4rem;
 }
 
 .add-album__track-num {
@@ -284,8 +284,8 @@
   background: var(--color-bg);
   border: 1px solid var(--color-border-input);
   border-radius: var(--radius-md);
-  height: 2rem;
-  padding: 0 0.625rem;
+  height: 1.75rem;
+  padding: 0 0 0 0.5rem;
   color: var(--color-text);
   font-family: var(--font-family-body);
   font-size: 0.8125rem;

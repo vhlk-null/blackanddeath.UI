@@ -37,6 +37,12 @@ export class BandService {
     );
   }
 
+  getNames() {
+    return this.http.get<{ bands: { id: string; name: string }[] }>(BandEndpoints.GET_NAMES).pipe(
+      map(response => response.bands)
+    );
+  }
+
   getSummaries() {
     return this.http.get<{ bands: BandSummary[] }>(BandEndpoints.GET_SUMMARIES).pipe(
       map(response => response.bands)

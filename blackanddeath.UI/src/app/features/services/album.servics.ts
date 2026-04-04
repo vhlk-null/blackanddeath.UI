@@ -28,6 +28,12 @@ export class AlbumService {
 
   private http = inject(BaseHttpService);
 
+  getNames() {
+    return this.http.get<{ albums: { id: string; name: string }[] }>(AlbumEndpoints.GET_NAMES).pipe(
+      map(response => response.albums)
+    );
+  }
+
   getAll(params?: Record<string, unknown>) {
     return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_ALL, params).pipe(
       map(response => response.albums.data)
