@@ -119,7 +119,9 @@ export class AddVideoForm implements OnInit {
     this.videoBandService.create(bandId, dto).subscribe({
       next: () => {
         this.toastService.success('Video published successfully!');
-        this.router.navigate(['/']);
+        this.videoForm.reset({ bandId: [], videoName: '', yearVideo: null, countryId: [], videoType: 'Clip', youtube: '', info: '' });
+        this.youtubePreview.set(null);
+        this.submitting = false;
       },
       error: () => {
         this.toastService.error('Failed to publish video.');

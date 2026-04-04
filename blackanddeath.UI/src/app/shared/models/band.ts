@@ -2,6 +2,7 @@ import { Country } from './country';
 import { Genre } from './genre';
 import { AlbumType } from './enums/album-type.enum';
 import { AlbumFormat } from './enums/album-format.enum';
+import { VideoBand } from './video-band';
 
 export interface BandGenre {
   id: string;
@@ -39,4 +40,5 @@ export interface Band {
   albums?: BandAlbum[];
   similarAlbums?: BandAlbum[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
+  videos?: VideoBand[];
 }
