@@ -2,7 +2,6 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
-import { BandCard } from '../../bands/band-card/band-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
@@ -22,7 +21,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })

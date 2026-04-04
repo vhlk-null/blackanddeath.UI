@@ -1,0 +1,122 @@
+<div class="add-video">
+
+  <app-section sectionTitle="Add Form" class="add-video__form-section">
+    <div class="add-video__content">
+      <p class="add-video__note">Moderation can take 3 to 5 days!</p>
+
+      <form class="add-video__form" (ngSubmit)="onSubmit()" [formGroup]="videoForm" (keydown.enter)="onFormEnter($event)">
+
+        <div class="add-video__row add-video__row--multiselect">
+          <label class="add-video__label">Band name:</label>
+          <div class="add-video__field">
+            <app-multi-select
+              formControlName="bandId"
+              [options]="bandOptions()"
+              placeholder="Search bands..."
+            />
+            @if (bandId.invalid && bandId.touched) {
+              <span class="add-video__error">Band is required</span>
+            }
+          </div>
+        </div>
+
+        <div class="add-video__row">
+          <label class="add-video__label" for="video-name">Video name:</label>
+          <div class="add-video__field">
+            <input class="add-video__input" id="video-name" type="text" placeholder="Video name" autocomplete="off"
+              formControlName="videoName" />
+            @if (videoName.invalid && videoName.touched) {
+              <span class="add-video__error">Video name is required</span>
+            }
+          </div>
+        </div>
+
+        <div class="add-video__row">
+          <label class="add-video__label" for="video-year">Year video:</label>
+          <div class="add-video__field">
+            <input class="add-video__input" id="video-year" type="number" placeholder="Year" min="1900" max="2099"
+              formControlName="yearVideo" />
+            @if (yearVideo.invalid && yearVideo.touched) {
+              <span class="add-video__error">Enter a valid year (1900–2099)</span>
+            }
+          </div>
+        </div>
+
+        <div class="add-video__row add-video__row--multiselect">
+          <label class="add-video__label">Country:</label>
+          <div class="add-video__field">
+            <app-multi-select
+              formControlName="countryId"
+              [options]="countryOptions()"
+              placeholder="Search countries..."
+            />
+            @if (countryId.invalid && countryId.touched) {
+              <span class="add-video__error">Country is required</span>
+            }
+          </div>
+        </div>
+
+        <div class="add-video__row">
+          <label class="add-video__label" for="video-type">Type video:</label>
+          <select class="add-video__input add-video__select" id="video-type" formControlName="videoType">
+            @for (type of videoTypeOptions; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="add-video__row">
+          <label class="add-video__label" for="video-youtube">Youtube:</label>
+          <div class="add-video__field">
+            <input class="add-video__input" id="video-youtube" type="url" placeholder="https://..."
+              formControlName="youtube" />
+            @if (youtube.touched) {
+              @if (youtube.hasError('required')) {
+                <span class="add-video__error">YouTube link is required</span>
+              } @else if (youtube.hasError('pattern')) {
+                <span class="add-video__error">Enter a valid URL (https://...)</span>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="add-video__row add-video__row--textarea">
+          <label class="add-video__label" for="video-info">Info:</label>
+          <div class="add-video__field">
+            <textarea class="add-video__textarea" id="video-info" placeholder="Lineup, description..."
+              formControlName="info"></textarea>
+          </div>
+        </div>
+
+        <div class="add-video__actions">
+          <button class="add-video__btn add-video__btn--cancel" type="button" (click)="onCancel()">Cancel</button>
+          <button class="add-video__btn add-video__btn--publish" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Publishing...' : 'Publish' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </app-section>
+
+  <app-section sectionTitle="Links video added" class="add-video__preview-section">
+    <p class="add-video__preview-note">Copy URL only</p>
+    @if (youtubePreview()) {
+      <div class="add-video__preview">
+        <iframe [src]="youtubePreview()! | safeUrl" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+    } @else {
+      <div class="add-video__preview-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </div>
+    }
+    @if (info.value) {
+      <p class="add-video__preview-info">{{ info.value }}</p>
+    }
+  </app-section>
+
+</div>
