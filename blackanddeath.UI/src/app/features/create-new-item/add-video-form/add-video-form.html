@@ -1,5 +1,24 @@
 <div class="add-video">
 
+  <div class="add-video__preview-wrapper">
+    @if (youtubePreview()) {
+      <div class="add-video__preview">
+        <iframe [src]="youtubePreview()! | safeUrl" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+    } @else {
+      <div class="add-video__preview-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </div>
+    }
+    @if (info.value) {
+      <p class="add-video__preview-info">{{ info.value }}</p>
+    }
+  </div>
+
   <app-section sectionTitle="Add Form" class="add-video__form-section">
     <div class="add-video__content">
       <p class="add-video__note">Moderation can take 3 to 5 days!</p>
@@ -97,26 +116,6 @@
 
       </form>
     </div>
-  </app-section>
-
-  <app-section sectionTitle="Links video added" class="add-video__preview-section">
-    <p class="add-video__preview-note">Copy URL only</p>
-    @if (youtubePreview()) {
-      <div class="add-video__preview">
-        <iframe [src]="youtubePreview()! | safeUrl" frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen></iframe>
-      </div>
-    } @else {
-      <div class="add-video__preview-placeholder">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-      </div>
-    }
-    @if (info.value) {
-      <p class="add-video__preview-info">{{ info.value }}</p>
-    }
   </app-section>
 
 </div>
