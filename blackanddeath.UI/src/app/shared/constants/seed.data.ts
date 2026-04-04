@@ -26,6 +26,7 @@ function album(id: string, title: string, band: string, type: AlbumType, year: n
         genres: [{ id: '0', name: genre, parentGenreId: null }],
         streamingLinks: [],
         tracks: [],
+        videos: []
     };
 }
 

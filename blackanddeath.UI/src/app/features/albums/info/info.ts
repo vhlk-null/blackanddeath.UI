@@ -9,6 +9,7 @@ import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
+import { VideoBand } from '../../../shared/models/video-band';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
 import { toEmbedUrl } from '../../../shared/utils/streaming-embed';
@@ -69,6 +70,8 @@ export class Info implements OnInit {
   readonly discographyAlbums = signal<Album[]>([]);
   readonly similarAlbums = signal<Album[]>([]);
   readonly similarBands = signal<Band[]>([]);
+  readonly bandVideos = signal<VideoBand[]>([]);
+  readonly playingVideoId = signal<string | null>(null);
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
@@ -146,11 +149,18 @@ export class Info implements OnInit {
         this.loaded.set(true);
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
+        console.log(discography);
         this.discographyAlbums.set(discography);
         this.similarAlbums.set(album.similarAlbums ?? []);
         this.similarBands.set((album.similarBands ?? []) as any);
+        this.bandVideos.set(album.videos);
       },
       error: (err) => console.error('Failed to load album', err),
     });
+  }
+
+  getYoutubeId(url: string): string | null {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+    return match ? match[1] : null;
   }
 }

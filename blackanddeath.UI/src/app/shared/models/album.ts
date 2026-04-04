@@ -7,6 +7,7 @@ import { StreamingLink } from './streaming-link';
 import { ApiTrack } from './track';
 import { Label } from './label';
 import { Tag } from './tag';
+import { VideoBand } from './video-band';
 
 export interface Album {
   id: string;
@@ -24,6 +25,7 @@ export interface Album {
   primaryGenre?: Genre | null;
   genres?: Genre[];
   tags?: Tag[];
+  videos: VideoBand[];
   similarAlbums?: Album[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
 }

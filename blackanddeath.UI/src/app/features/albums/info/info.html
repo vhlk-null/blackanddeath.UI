@@ -195,6 +195,39 @@
 </app-section>
 }
 
+@if (bandVideos().length) {
+<app-section sectionTitle="Videos">
+  @for (video of bandVideos(); track video.id) {
+  <div class="band-video" (click)="playingVideoId.set(playingVideoId() === video.id ? null : video.id)">
+    <div class="band-video__cover">
+      @if (playingVideoId() === video.id) {
+        @if (getYoutubeId(video.youtubeLink); as videoId) {
+        <iframe class="band-video__iframe"
+          [src]="'https://www.youtube.com/embed/' + videoId + '?autoplay=1' | safeUrl"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+        }
+      } @else {
+        @if (getYoutubeId(video.youtubeLink); as videoId) {
+        <img class="band-video__thumb" [src]="'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg'" [alt]="video.name" />
+        <div class="band-video__play">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+        }
+      }
+    </div>
+    <div class="band-video__info">
+      <h3 class="band-video__name">{{ video.name }}</h3>
+      <p class="band-video__meta">{{ video.videoType }} &middot; {{ video.year }}</p>
+    </div>
+  </div>
+  }
+</app-section>
+}
+
 @if (similarAlbums().length) {
 <app-section [sectionTitle]="titles.similarAlbums">
   @for (album of similarAlbums(); track album.id) {
