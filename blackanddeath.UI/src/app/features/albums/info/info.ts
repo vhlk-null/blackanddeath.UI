@@ -7,6 +7,7 @@ import { AlbumCard } from '../card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
+import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
 import { Album } from '../../../shared/models/album';
@@ -24,7 +25,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })

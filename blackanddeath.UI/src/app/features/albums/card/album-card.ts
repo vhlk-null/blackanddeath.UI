@@ -2,10 +2,11 @@ import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Album } from '../../../shared/models/album';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
+import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 
 @Component({
   selector: 'app-album-card',
-  imports: [RouterLink],
+  imports: [RouterLink, TitleCaseAllPipe],
   templateUrl: './album-card.html',
   styleUrl: './album-card.scss',
 })

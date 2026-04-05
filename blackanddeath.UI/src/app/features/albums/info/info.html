@@ -1,6 +1,6 @@
 <div class="album-info">
 
-  <h1 class="album-info__title">{{ albumData()?.title }}</h1>
+  <h1 class="album-info__title">{{ albumData()?.title | titleCaseAll }}</h1>
   <p class="album-info__band-subtitle">
     @for (band of albumData()?.bands ?? []; track band.id; let last = $last) {
     <a [routerLink]="['/bands', band.id, band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) {, }
@@ -142,7 +142,7 @@
           <li class="album-info__track">
             <span class="album-info__track-num">{{ track.trackNumber < 10 ? '0' + track.trackNumber : track.trackNumber
                 }}</span>
-                <span class="album-info__track-title">{{ track.title }}</span>
+                <span class="album-info__track-title">{{ track.title | titleCaseAll }}</span>
                 @if (track.duration) {
                 <span class="album-info__track-duration">{{ track.duration }}</span>
                 }
