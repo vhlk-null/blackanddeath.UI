@@ -108,12 +108,12 @@ export class AddVideoForm implements OnInit {
     const v = this.videoForm.getRawValue();
     const bandId = v.bandId[0];
     const dto = {
-      name: v.videoName,
+      name: v.videoName.trim(),
       year: v.yearVideo!,
       countryId: v.countryId.length ? v.countryId[0] : null,
       videoType: v.videoType as VideoType,
-      youtubeLink: v.youtube,
-      info: v.info || null,
+      youtubeLink: v.youtube.trim(),
+      info: v.info.trim() || null,
     };
 
     this.videoBandService.create(bandId, dto).subscribe({

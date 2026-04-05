@@ -156,16 +156,16 @@ export class AddBandForm implements OnInit {
     const v = this.bandForm.getRawValue();
 
     const dto = {
-      name: v.bandName,
+      name: v.bandName.trim(),
       formedYear: v.formedYear!,
       countryIds: v.bandCountries,
       genreIds: v.bandGenres,
       status: v.status,
-      facebook: v.facebook,
-      youtube: v.youtube,
-      instagram: v.instagram,
-      twitter: v.twitter,
-      website: v.website,
+      facebook: v.facebook.trim(),
+      youtube: v.youtube.trim(),
+      instagram: v.instagram.trim(),
+      twitter: v.twitter.trim(),
+      website: v.website.trim(),
     };
 
     this.submitting = true;

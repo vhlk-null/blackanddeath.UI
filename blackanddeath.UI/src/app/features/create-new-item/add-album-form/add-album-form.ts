@@ -214,16 +214,16 @@ get youtube() { return this.albumForm.get('youtube')!; }
     const v = this.albumForm.getRawValue();
     const streamingLinks = [];
 
-    if (v.spotify) streamingLinks.push({ platform: StreamingPlatform.Spotify, embedCode: v.spotify });
-    if (v.youtube) streamingLinks.push({ platform: StreamingPlatform.YouTube, embedCode: v.youtube });
-    if (v.bandcamp) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp });
+    if (v.spotify.trim()) streamingLinks.push({ platform: StreamingPlatform.Spotify, embedCode: v.spotify.trim() });
+    if (v.youtube.trim()) streamingLinks.push({ platform: StreamingPlatform.YouTube, embedCode: v.youtube.trim() });
+    if (v.bandcamp.trim()) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp.trim() });
 
     const tracks = this.tracks
-      .map((t, i) => ({ trackNumber: i + 1, title: t.title, duration: t.duration }))
-      .filter(t => t.title.trim());
+      .map((t, i) => ({ trackNumber: i + 1, title: t.title.trim(), duration: t.duration.trim() }))
+      .filter(t => t.title);
 
     const dto = {
-      title: v.albumName,
+      title: v.albumName.trim(),
       releaseDate: v.albumYear!,
       type: v.albumType,
       format: AlbumFormat.CD,
@@ -263,7 +263,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
   }
 
   onCreateLabel(name: string): void {
-    this.labelService.create({ name }).subscribe({
+    this.labelService.create({ name: name.trim() }).subscribe({
       next: (result) => {
         const newOption = { id: result.id, name };
         this.labelOptions.update(opts => [...opts, newOption]);

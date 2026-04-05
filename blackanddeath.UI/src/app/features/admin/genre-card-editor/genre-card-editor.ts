@@ -91,8 +91,8 @@ export class GenreCardEditor implements OnInit {
     this.saving.set(true);
     const { genreIds, tagIds } = this.form.getRawValue();
     const dto = {
-      name: this.nameValue(),
-      description: this.card().description || this.nameValue(),
+      name: this.nameValue().trim(),
+      description: (this.card().description || this.nameValue()).trim(),
       orderNumber: this.orderValue(),
       genreIds,
       tagIds,
