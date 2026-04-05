@@ -1,5 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { switchMap, filter } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
@@ -66,19 +68,26 @@ export class BandInfo implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) return;
+  private destroyRef = inject(DestroyRef);
 
-    this.bandService.getById(id).subscribe({
+  ngOnInit(): void {
+    this.route.paramMap.pipe(
+      filter(params => !!params.get('id')),
+      switchMap(params => {
+        this.loaded.set(false);
+        return this.bandService.getById(params.get('id')!);
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (band) => {
         const urlSlug = this.route.snapshot.paramMap.get('slug');
         if (band.slug && urlSlug !== band.slug) {
-          this.router.navigate(['/bands', id, band.slug], { replaceUrl: true });
+          this.router.navigate(['/bands', band.id, band.slug], { replaceUrl: true });
         }
         this.bandData.set(band);
         this.similarAlbums.set((band.similarAlbums ?? []) as any);
         this.similarBands.set((band.similarBands ?? []) as any);
+        this.playingVideoId.set(null);
         this.loaded.set(true);
       },
       error: (err) => console.error('Failed to load band', err),

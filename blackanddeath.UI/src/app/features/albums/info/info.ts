@@ -1,5 +1,7 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { switchMap, filter } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
@@ -135,21 +137,27 @@ export class Info implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) return;
+  private destroyRef = inject(DestroyRef);
 
-    this.albumService.getById(id).subscribe({
+  ngOnInit(): void {
+    this.route.paramMap.pipe(
+      filter(params => !!params.get('id')),
+      switchMap(params => {
+        this.loaded.set(false);
+        return this.albumService.getById(params.get('id')!);
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (album) => {
         const urlSlug = this.route.snapshot.paramMap.get('slug');
         if (album.slug && urlSlug !== album.slug) {
-          this.router.navigate(['/albums', id, album.slug], { replaceUrl: true });
+          this.router.navigate(['/albums', album.id, album.slug], { replaceUrl: true });
         }
         this.albumData.set(album);
         this.loaded.set(true);
+        this.playingVideoId.set(null);
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
-        console.log(discography);
         this.discographyAlbums.set(discography);
         this.similarAlbums.set(album.similarAlbums ?? []);
         this.similarBands.set((album.similarBands ?? []) as any);
