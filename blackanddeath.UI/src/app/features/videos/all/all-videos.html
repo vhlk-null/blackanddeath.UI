@@ -1,0 +1,32 @@
+<div class="all-videos">
+
+  <div class="all-videos__header">
+    <h1 class="all-videos__title">Videos</h1>
+    <div class="all-videos__filter">
+      <label class="all-videos__filter-label" for="videos-sort">Sort by</label>
+      <select class="all-videos__filter-select" id="videos-sort"
+        [value]="activeSort()"
+        (change)="onSortChange($any($event.target).value)">
+        @for (option of sortOptions; track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="all-videos__grid">
+    @for (video of videos(); track video.id) {
+      <app-video-card [videoCard]="video" />
+    }
+  </div>
+
+  @if (total() > pageSize) {
+    <app-pagination
+      [total]="total()"
+      [pageSize]="pageSize"
+      [currentPage]="currentPage()"
+      (pageChange)="onPageChange($event)"
+    />
+  }
+
+</div>

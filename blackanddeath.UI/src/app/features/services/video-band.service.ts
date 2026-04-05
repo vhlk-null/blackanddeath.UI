@@ -16,6 +16,12 @@ export class VideoBandService {
     );
   }
 
+  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string; videoType?: string }) {
+    return this.http.get<{ videoBands: PaginatedResult<VideoBand> }>(VideoBandEndpoints.GET_ALL, params).pipe(
+      map(response => response.videoBands)
+    );
+  }
+
   getByBand(bandId: string, params?: { pageIndex?: number; pageSize?: number }) {
     return this.http.get<{ videoBands: PaginatedResult<VideoBand> }>(VideoBandEndpoints.GET_BY_BAND(bandId), params).pipe(
       map(response => response.videoBands.data)

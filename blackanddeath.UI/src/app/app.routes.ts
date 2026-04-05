@@ -12,6 +12,7 @@ import { CreateNewItem } from './features/create-new-item/create-new-item';
 import { AddAlbumForm } from './features/create-new-item/add-album-form/add-album-form';
 import { AddBandForm } from './features/create-new-item/add-band-form/add-band-form';
 import { Admin } from './features/admin/admin';
+import { AllVideos } from './features/videos/all/all-videos';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: 'bands/subgenres', component: BandSubgenres },
     { path: 'bands/:id/edit', component: AddBandForm },
     { path: 'bands/:id/:slug', component: BandInfo },
+    { path: 'videos', component: AllVideos },
     { path: 'genres', component: Genres },
     { path: 'genres/:id', component: GenreDetail },
     { path: 'create', component: CreateNewItem },
