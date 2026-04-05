@@ -23,8 +23,8 @@
 </app-section>
 
 <app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" (tabChange)="onMetalVideosTabChange($event)">
-  @for (band of mainRecentVideos(); track band.id) {
-    <app-band-card [bandCard]="band" />
+  @for (video of mainRecentVideos(); track video.id) {
+    <app-video-card [videoCard]="video" />
   }
 </app-section>
 

@@ -19,10 +19,13 @@ import {
 import { Seed } from '../../shared/constants/seed.data';
 import { AlbumService } from '../services/album.servics';
 import { BandService } from '../services/band.service';
+import { VideoBandService } from '../services/video-band.service';
+import { VideoBand } from '../../shared/models/video-band';
+import { VideoCard } from './video-card/video-card';
 
 @Component({
   selector: 'app-home',
-  imports: [Section, AlbumCard, BandCard],
+  imports: [Section, AlbumCard, BandCard, VideoCard],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -59,14 +62,16 @@ export class Home implements OnInit {
   mainRecentAlbums = signal<Album[]>(this.sectionData.recentlyAdded[0]);
   mainRecentBands = signal<Band[]>([]);
   recentlyAddedTab = signal(0);
-  mainRecentVideos = signal<Band[]>([]);
+  mainRecentVideos = signal<VideoBand[]>([]);
   mainUpcomingReleases = signal<Album[]>(this.sectionData.upcomingReleases[0]);
 
   private albumService = inject(AlbumService);
   private bandService = inject(BandService);
+  private videoBandService = inject(VideoBandService);
 
   private allAlbums: Album[] = [];
   private allBands: Band[] = [];
+  private allVideos: VideoBand[] = [];
 
   private albumsSlice(section: number, tab: number): Album[] {
     const start = (section * 3 + tab) * 4;
@@ -93,7 +98,13 @@ export class Home implements OnInit {
         this.allBands = bands;
         this.mainPopularBands.set(this.bandsSlice(0, 0));
         this.mainRecentBands.set(bands.slice(0, 3));
-        this.mainRecentVideos.set(this.bandsSlice(1, 0));
+      }
+    });
+
+    this.videoBandService.getAll({ pageIndex: 0, pageSize: 9 }).subscribe({
+      next: (videos) => {
+        this.allVideos = videos;
+        this.mainRecentVideos.set(videos.slice(0, 3));
       }
     });
   }
@@ -111,7 +122,9 @@ export class Home implements OnInit {
   }
 
   onMetalVideosTabChange(index: number): void {
-    this.mainRecentVideos.set(this.bandsSlice(1, index));
+    const types = ['Clip', 'Live', 'Playthrough'];
+    const filtered = this.allVideos.filter(v => v.videoType === types[index]);
+    this.mainRecentVideos.set(filtered.slice(0, 3));
   }
 
   onUpcomingReleasesTabChange(index: number): void {

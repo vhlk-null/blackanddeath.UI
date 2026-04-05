@@ -1,0 +1,22 @@
+<a class="video-card" [href]="videoCard().youtubeLink" target="_blank" rel="noopener noreferrer">
+  <div class="video-card__cover">
+    @if (thumbnailUrl) {
+      <img class="video-card__image" [src]="thumbnailUrl" [alt]="videoCard().name" />
+    } @else {
+      <div class="video-card__placeholder">
+        <svg class="video-card__placeholder-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 5v14l11-7L8 5z" fill="#606162"/>
+        </svg>
+      </div>
+    }
+    <div class="video-card__play-icon">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 5v14l11-7L8 5z" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+  <div class="video-card__info">
+    <h3 class="video-card__name" [title]="videoCard().name">{{ videoCard().name }}</h3>
+    <p class="video-card__meta">{{ videoCard().videoType }} · {{ videoCard().year }}</p>
+  </div>
+</a>

@@ -25,6 +25,7 @@ export class BandEndpoints {
 }
 
 export class VideoBandEndpoints {
+  public static GET_ALL = `${base}/library/videos`;
   public static GET_BY_BAND = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
   public static CREATE = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
   public static UPDATE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
