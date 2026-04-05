@@ -1,4 +1,5 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
+import { forkJoin, of, catchError } from 'rxjs';
 import { Section } from '../../shared/components/section/section';
 import { AlbumCard } from '../albums/card/album-card';
 import { BandCard } from '../bands/band-card/band-card';
@@ -57,6 +58,8 @@ export class Home implements OnInit {
     upcomingReleases: [this.seed.upcomingFullLength, this.seed.upcomingEP, this.seed.upcomingOther],
   };
 
+  loading = signal(true);
+
   mainTopRatedAlbums = signal<Album[]>([]);
   mainPopularBands = signal<Band[]>([]);
   mainRecentAlbums = signal<Album[]>(this.sectionData.recentlyAdded[0]);
@@ -68,6 +71,7 @@ export class Home implements OnInit {
   private albumService = inject(AlbumService);
   private bandService = inject(BandService);
   private videoBandService = inject(VideoBandService);
+
 
   private allAlbums: Album[] = [];
   private allBands: Band[] = [];
@@ -84,27 +88,28 @@ export class Home implements OnInit {
   }
 
   ngOnInit(): void {
-    this.albumService.getAll({ pageIndex: 0, pageSize: 20, sortBy: 'Newest' }).subscribe({
-      next: (albums) => {
+    forkJoin({
+      albums: this.albumService.getAll({ pageIndex: 0, pageSize: 20, sortBy: 'Newest' }),
+      bands: this.bandService.getAll({ pageIndex: 0, pageSize: 9, sortBy: 'Newest' }),
+      videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: 9 }).pipe(catchError(() => of([]))),
+    }).subscribe({
+      next: ({ albums, bands, videos }) => {
         this.allAlbums = albums;
         this.mainTopRatedAlbums.set(this.albumsSlice(0, 0));
         this.mainRecentAlbums.set(albums.slice(0, 4));
         this.mainUpcomingReleases.set(this.albumsSlice(2, 0));
-      }
-    });
 
-    this.bandService.getAll({ pageIndex: 0, pageSize: 9, sortBy: 'Newest' }).subscribe({
-      next: (bands) => {
         this.allBands = bands;
         this.mainPopularBands.set(this.bandsSlice(0, 0));
         this.mainRecentBands.set(bands.slice(0, 3));
-      }
-    });
 
-    this.videoBandService.getAll({ pageIndex: 0, pageSize: 9 }).subscribe({
-      next: (videos) => {
         this.allVideos = videos;
         this.mainRecentVideos.set(videos.slice(0, 3));
+
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
       }
     });
   }

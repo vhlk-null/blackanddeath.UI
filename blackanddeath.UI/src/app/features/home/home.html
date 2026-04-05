@@ -1,3 +1,4 @@
+@if (!loading()) {
 <app-section [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" (tabChange)="onTopRatedTabChange($event)">
   @for (album of mainTopRatedAlbums(); track album.id) {
     <app-album-card [albumCard]="album" />
@@ -34,4 +35,5 @@
     <app-album-card [albumCard]="album" />
   }
 </app-section>
+}
 }

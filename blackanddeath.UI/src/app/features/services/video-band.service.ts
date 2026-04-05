@@ -3,21 +3,22 @@ import { map } from 'rxjs';
 import { BaseHttpService } from './intrefaces/http';
 import { VideoBandEndpoints } from '../../shared/constants/endpoints';
 import { VideoBand, CreateVideoBandDto, UpdateVideoBandDto } from '../../shared/models/video-band';
+import { PaginatedResult } from '../../shared/models/paginated-result';
 
 @Injectable({ providedIn: 'root' })
 export class VideoBandService {
 
   private http = inject(BaseHttpService);
 
-  getAll(params?: { pageIndex?: number; pageSize?: number; videoType?: string }) {
-    return this.http.get<{ videos: VideoBand[] }>(VideoBandEndpoints.GET_ALL, params).pipe(
-      map(response => response.videos)
+  getAll(params?: { pageIndex?: number; pageSize?: number }) {
+    return this.http.get<{ videoBands: PaginatedResult<VideoBand> }>(VideoBandEndpoints.GET_ALL, params).pipe(
+      map(response => response.videoBands.data)
     );
   }
 
-  getByBand(bandId: string) {
-    return this.http.get<{ videos: VideoBand[] }>(VideoBandEndpoints.GET_BY_BAND(bandId)).pipe(
-      map(response => response.videos)
+  getByBand(bandId: string, params?: { pageIndex?: number; pageSize?: number }) {
+    return this.http.get<{ videoBands: PaginatedResult<VideoBand> }>(VideoBandEndpoints.GET_BY_BAND(bandId), params).pipe(
+      map(response => response.videoBands.data)
     );
   }
 
