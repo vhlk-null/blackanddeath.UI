@@ -1,12 +1,14 @@
 .filter-overlay {
   position: fixed;
-  inset: 0;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: var(--color-overlay);
   z-index: 200;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 4.5rem;
   overflow-y: auto;
   overscroll-behavior: contain;
   animation: filter-fade-in 0.2s ease;
@@ -15,11 +17,13 @@
 .filter-panel {
   background: var(--color-login-bg, var(--color-drawer-bg));
   border: 1px solid var(--color-login-border, var(--color-border));
-  border-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top: none;
   padding: 1.25rem 1.5rem 1.5rem;
   width: min(36rem, calc(100vw - 2rem));
   margin-bottom: 2rem;
-  animation: filter-scale-in 0.25s ease;
+  animation: filter-slide-down 0.3s ease;
 
   &__tabs {
     display: flex;
@@ -230,7 +234,7 @@
   to   { opacity: 1; }
 }
 
-@keyframes filter-scale-in {
-  from { opacity: 0; transform: translateY(-8px); }
+@keyframes filter-slide-down {
+  from { opacity: 0; transform: translateY(-100%); }
   to   { opacity: 1; transform: translateY(0); }
 }
