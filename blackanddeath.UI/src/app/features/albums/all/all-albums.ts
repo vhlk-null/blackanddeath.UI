@@ -26,6 +26,7 @@ export class AllAlbums implements OnInit {
 
   readonly albums = signal<Album[]>([]);
   readonly total = signal(0);
+  readonly loaded = signal(false);
   readonly currentPage = signal(1);
   readonly activeSort = signal<SortOption>('Newest');
   readonly activeGenreId = signal<string | null>(null);
@@ -90,6 +91,7 @@ export class AllAlbums implements OnInit {
       next: (result) => {
         this.albums.set(result.data);
         this.total.set(result.count);
+        this.loaded.set(true);
       },
     });
   }

@@ -25,6 +25,7 @@ export class AllBands implements OnInit {
 
   readonly bands = signal<Band[]>([]);
   readonly total = signal(0);
+  readonly loaded = signal(false);
   readonly currentPage = signal(1);
   readonly activeSort = signal<SortOption>('Newest');
   readonly activeGenreId = signal<string | null>(null);
@@ -85,6 +86,7 @@ export class AllBands implements OnInit {
       next: (result) => {
         this.bands.set(result.data);
         this.total.set(result.count);
+        this.loaded.set(true);
       },
     });
   }

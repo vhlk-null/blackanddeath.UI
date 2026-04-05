@@ -14,11 +14,15 @@
     </div>
   </div>
 
-  <div class="all-bands__grid">
-    @for (band of bands(); track band.id) {
-      <app-band-card [bandCard]="band" />
-    }
-  </div>
+  @if (loaded() && total() === 0) {
+    <p class="all-bands__empty">No bands found.</p>
+  } @else {
+    <div class="all-bands__grid">
+      @for (band of bands(); track band.id) {
+        <app-band-card [bandCard]="band" />
+      }
+    </div>
+  }
 
   @if (total() > pageSize) {
     <app-pagination

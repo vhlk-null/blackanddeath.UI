@@ -25,6 +25,9 @@
   </div>
   <div class="video-card__info">
     <h3 class="video-card__name" [title]="videoCard().name">{{ videoCard().name }}</h3>
+    @if (videoCard().bandName) {
+      <p class="video-card__band">{{ videoCard().bandName }}</p>
+    }
     <p class="video-card__meta">{{ videoCard().videoType }} · {{ videoCard().year }}</p>
   </div>
 </div>

@@ -14,11 +14,15 @@
     </div>
   </div>
 
-  <div class="all-albums__grid">
-    @for (album of albums(); track album.id) {
-      <app-album-card [albumCard]="album" />
-    }
-  </div>
+  @if (loaded() && total() === 0) {
+    <p class="all-albums__empty">No albums found.</p>
+  } @else {
+    <div class="all-albums__grid">
+      @for (album of albums(); track album.id) {
+        <app-album-card [albumCard]="album" />
+      }
+    </div>
+  }
 
   @if (total() > pageSize) {
     <app-pagination

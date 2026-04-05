@@ -25,6 +25,7 @@ export class AllVideos implements OnInit {
 
   readonly videos = signal<VideoBand[]>([]);
   readonly total = signal(0);
+  readonly loaded = signal(false);
   readonly currentPage = signal(1);
   readonly activeSort = signal<SortOption>('Newest');
   readonly activeVideoType = signal<string | null>(null);
@@ -73,6 +74,7 @@ export class AllVideos implements OnInit {
       next: (result) => {
         this.videos.set(result.data);
         this.total.set(result.count);
+        this.loaded.set(true);
       },
     });
   }

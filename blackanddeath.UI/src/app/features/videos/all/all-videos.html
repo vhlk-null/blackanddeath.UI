@@ -14,11 +14,15 @@
     </div>
   </div>
 
-  <div class="all-videos__grid">
-    @for (video of videos(); track video.id) {
-      <app-video-card [videoCard]="video" />
-    }
-  </div>
+  @if (loaded() && total() === 0) {
+    <p class="all-videos__empty">No videos found.</p>
+  } @else {
+    <div class="all-videos__grid">
+      @for (video of videos(); track video.id) {
+        <app-video-card [videoCard]="video" />
+      }
+    </div>
+  }
 
   @if (total() > pageSize) {
     <app-pagination
