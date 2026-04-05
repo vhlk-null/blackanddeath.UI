@@ -19,7 +19,9 @@
       ·
       <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
         [routerLink]="['/bands']" [queryParams]="{ countryId: bandCard().countries?.[0]?.id }">{{ bandCard().countries?.[0]?.name }}</span>
-      · {{ bandCard().formedYear }}
+      ·
+      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
+        [routerLink]="['/bands']" [queryParams]="{ formedYear: bandCard().formedYear }">{{ bandCard().formedYear }}</span>
     </p>
   </div>
 </a>
