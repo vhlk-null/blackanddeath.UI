@@ -17,7 +17,6 @@ import {
   METAL_VIDEOS_TABS,
   UPCOMING_RELEASES_TABS,
 } from '../../shared/constants/constants';
-import { Seed } from '../../shared/constants/seed.data';
 import { AlbumService } from '../services/album.servics';
 import { BandService } from '../services/band.service';
 import { VideoBandService } from '../services/video-band.service';
@@ -48,25 +47,15 @@ export class Home implements OnInit {
     upcomingReleases: UPCOMING_RELEASES_TABS,
   };
 
-  private readonly seed = new Seed();
-
-  private readonly sectionData = {
-    topRated: [this.seed.topRatedAllTime, this.seed.topRatedThisYear, this.seed.topRatedThisMonth],
-    popularBands: [this.seed.popularBandsAllTime, this.seed.popularBandsThisYear],
-    recentlyAdded: [this.seed.recentAlbums],
-    metalVideos: [this.seed.videoClips, this.seed.videoLive, this.seed.videoPlaythroughs],
-    upcomingReleases: [this.seed.upcomingFullLength, this.seed.upcomingEP, this.seed.upcomingOther],
-  };
-
   loading = signal(true);
 
   mainTopRatedAlbums = signal<Album[]>([]);
   mainPopularBands = signal<Band[]>([]);
-  mainRecentAlbums = signal<Album[]>(this.sectionData.recentlyAdded[0]);
+  mainRecentAlbums = signal<Album[]>([]);
   mainRecentBands = signal<Band[]>([]);
   recentlyAddedTab = signal(0);
   mainRecentVideos = signal<VideoBand[]>([]);
-  mainUpcomingReleases = signal<Album[]>(this.sectionData.upcomingReleases[0]);
+  mainUpcomingReleases = signal<Album[]>([]);
 
   private albumService = inject(AlbumService);
   private bandService = inject(BandService);
