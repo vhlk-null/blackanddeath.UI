@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Section } from '../../../shared/components/section/section';
@@ -6,6 +7,7 @@ import { MultiSelectInput, SelectOption } from '../../../shared/components/multi
 import { BandService } from '../../services/band.service';
 import { CountryService } from '../../services/country.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { FormDirtyService } from '../../../core/services/form-dirty.service';
 import { VideoBandService } from '../../services/video-band.service';
 import { VideoType } from '../../../shared/models/enums/video-type.enum';
 import { forkJoin } from 'rxjs';
@@ -22,6 +24,8 @@ export class AddVideoForm implements OnInit {
   private countryService = inject(CountryService);
   private videoBandService = inject(VideoBandService);
   private toastService = inject(ToastService);
+  private formDirty = inject(FormDirtyService);
+  private destroyRef = inject(DestroyRef);
   private router = inject(Router);
 
   readonly bandOptions = signal<SelectOption[]>([]);
@@ -68,6 +72,10 @@ export class AddVideoForm implements OnInit {
   }
 
   ngOnInit(): void {
+    this.videoForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.formDirty.markDirty());
+
     this.videoForm.get('youtube')!.valueChanges.subscribe(url => {
       this.youtubePreview.set(this.parseYoutubeEmbed(url));
     });
@@ -120,6 +128,7 @@ export class AddVideoForm implements OnInit {
       next: () => {
         this.toastService.success('Video published successfully!');
         this.videoForm.reset({ bandId: [], videoName: '', yearVideo: null, countryId: [], videoType: 'Clip', youtube: '', info: '' });
+        this.formDirty.markClean();
         this.youtubePreview.set(null);
         this.submitting = false;
       },

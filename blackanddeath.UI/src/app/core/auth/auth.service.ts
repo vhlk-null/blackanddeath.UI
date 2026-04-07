@@ -7,6 +7,7 @@ export interface UserProfile {
   name?: string;
   preferred_username?: string;
   email?: string;
+  role?: string | string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,6 +23,12 @@ export class AuthService {
   readonly userName = computed(() => {
     const p = this._profile();
     return p?.preferred_username ?? p?.name ?? p?.email ?? null;
+  });
+
+  readonly isAdmin = computed(() => {
+    const role = this._profile()?.role;
+    if (!role) return false;
+    return Array.isArray(role) ? role.includes('admin') : role === 'admin';
   });
 
   async init(): Promise<void> {

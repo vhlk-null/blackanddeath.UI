@@ -14,6 +14,8 @@ import { AddAlbumForm } from './features/create-new-item/add-album-form/add-albu
 import { AddBandForm } from './features/create-new-item/add-band-form/add-band-form';
 import { Admin } from './features/admin/admin';
 import { AllVideos } from './features/videos/all/all-videos';
+import { authGuard } from './core/guards/auth-guard';
+import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -28,7 +30,7 @@ export const routes: Routes = [
     { path: 'videos', component: AllVideos },
     { path: 'genres', component: Genres },
     { path: 'genres/:id', component: GenreDetail },
-    { path: 'create', component: CreateNewItem },
+    { path: 'create', component: CreateNewItem, canActivate: [authGuard], canDeactivate: [unsavedChangesGuard] },
     { path: 'admin', component: Admin },
     { path: 'auth/callback', component: AuthCallback }
 ];

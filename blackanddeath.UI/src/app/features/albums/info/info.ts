@@ -10,6 +10,7 @@ import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -33,6 +34,7 @@ export class Info implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  readonly auth = inject(AuthService);
   private albumService = inject(AlbumService);
   private toastService = inject(ToastService);
 

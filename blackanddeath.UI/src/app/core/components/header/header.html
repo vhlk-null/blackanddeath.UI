@@ -18,7 +18,7 @@
           </svg>
         }
       </button>
-      <a class="header__logo" href="/">Blackened Death Metal</a>
+      <a class="header__logo" routerLink="/">Blackened Death Metal</a>
     </div>
 
     <div class="header__center">
@@ -71,7 +71,9 @@
       <li><a routerLink="/videos" routerLinkActive="active" (click)="menuOpen.set(false)">Videos</a></li>
       <li><a routerLink="/genres" routerLinkActive="active" (click)="menuOpen.set(false)">Genres</a></li>
       <li><a routerLink="/create" routerLinkActive="active" (click)="menuOpen.set(false)">Create</a></li>
+      @if (auth.isAdmin()) {
       <li><a routerLink="/admin" routerLinkActive="active" (click)="menuOpen.set(false)">Admin</a></li>
+      }
     </ul>
   </nav>
   }
