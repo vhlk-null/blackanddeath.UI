@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
+import { AuthCallback } from './features/auth-callback/auth-callback';
 import { Subgenres } from './features/albums/subgenres/subgenres';
 import { Info } from './features/albums/info/info';
 import { AllAlbums } from './features/albums/all/all-albums';
@@ -28,5 +29,6 @@ export const routes: Routes = [
     { path: 'genres', component: Genres },
     { path: 'genres/:id', component: GenreDetail },
     { path: 'create', component: CreateNewItem },
-    { path: 'admin', component: Admin }
+    { path: 'admin', component: Admin },
+    { path: 'auth/callback', component: AuthCallback }
 ];
