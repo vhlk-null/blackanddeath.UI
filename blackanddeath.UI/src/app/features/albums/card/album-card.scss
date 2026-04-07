@@ -6,6 +6,10 @@
   @media (max-width: 40rem) {
     width: calc(50% - 0.3125rem);
   }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    width: calc(25% - 0.47rem);
+  }
 }
 
 
@@ -125,6 +129,29 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    &__cover {
+      aspect-ratio: 16 / 9;
+    }
+
+    &__placeholder {
+      aspect-ratio: 16 / 9;
+    }
+
+    &__image {
+      aspect-ratio: 16 / 9;
+    }
+
+    &__info {
+      margin-top: 0.375rem;
+      padding: 0.25rem 0.5rem 0.375rem;
+    }
+
+    &__band {
+      margin-bottom: 0.375rem;
+    }
   }
 
   @media (max-width: 480px) {

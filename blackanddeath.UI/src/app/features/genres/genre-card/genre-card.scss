@@ -6,6 +6,10 @@
   @media (max-width: 40rem) {
     width: calc(50% - 0.3125rem);
   }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    width: calc(33.333% - 0.42rem);
+  }
 }
 
 .genre-card {
@@ -44,6 +48,16 @@
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    &__cover {
+      aspect-ratio: 16 / 9;
+    }
+
+    &__name {
+      padding: 0.375rem 0.75rem 0.5rem;
+    }
   }
 
   &__name {

@@ -6,6 +6,10 @@
   @media (max-width: 480px) {
     width: 100%;
   }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    width: calc(33.333% - 0.42rem);
+  }
 }
 
 .video-card {
@@ -136,6 +140,12 @@
 
     &__info {
       padding: 0.25rem 0.5rem 0.5rem;
+    }
+  }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    &__info {
+      padding: 0.25rem 0.5rem 0.375rem;
     }
   }
 }
