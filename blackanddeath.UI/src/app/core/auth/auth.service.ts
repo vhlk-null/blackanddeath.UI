@@ -1,5 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService, EventType } from 'angular-oauth2-oidc';
+import { filter } from 'rxjs';
 import { authConfig } from './auth.config';
 
 export interface UserProfile {
@@ -41,16 +42,33 @@ export class AuthService {
       this._isAuthenticated.set(this.oauth.hasValidAccessToken());
 
       if (this._isAuthenticated()) {
-        this._profile.set(this.oauth.getIdentityClaims() as UserProfile);
+        await this.loadProfile();
       }
 
-      this.oauth.events.subscribe(() => {
-        const authenticated = this.oauth.hasValidAccessToken();
-        this._isAuthenticated.set(authenticated);
-        this._profile.set(authenticated ? (this.oauth.getIdentityClaims() as UserProfile) : null);
-      });
+      const tokenEvents: EventType[] = ['token_received', 'token_refreshed', 'logout'];
+      this.oauth.events
+        .pipe(filter(e => tokenEvents.includes(e.type)))
+        .subscribe(async e => {
+          const authenticated = this.oauth.hasValidAccessToken();
+          this._isAuthenticated.set(authenticated);
+          if (authenticated && e.type !== 'logout') {
+            await this.loadProfile();
+          } else {
+            this._profile.set(null);
+          }
+        });
     } catch {
       // IS недоступний — застосунок працює в анонімному режимі
+    }
+  }
+
+  private async loadProfile(): Promise<void> {
+    const claims = this.oauth.getIdentityClaims() as UserProfile;
+    try {
+      const userInfo = await this.oauth.loadUserProfile() as UserProfile;
+      this._profile.set({ ...claims, ...userInfo });
+    } catch {
+      this._profile.set(claims);
     }
   }
 

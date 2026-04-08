@@ -6,7 +6,7 @@ export const authConfig: AuthConfig = {
   postLogoutRedirectUri: 'http://localhost:4200',
   clientId: 'angular',
   responseType: 'code',
-  scope: 'openid profile libraryAPI offline_access',
+  scope: 'openid profile email roles libraryAPI offline_access',
   useSilentRefresh: false,
   showDebugInformation: true,
 };
