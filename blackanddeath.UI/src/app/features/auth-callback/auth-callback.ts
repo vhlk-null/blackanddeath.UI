@@ -25,6 +25,10 @@ export class AuthCallback implements OnInit {
   private readonly router = inject(Router);
 
   async ngOnInit(): Promise<void> {
+    // Silent refresh завантажує цей компонент в прихованому iframe.
+    // В такому випадку не треба робити нічого — бібліотека сама обробить токен.
+    if (window.parent !== window) return;
+
     await this.auth.init();
     await this.router.navigateByUrl('/');
   }
