@@ -137,6 +137,9 @@
         </div>
       </div>
       <div class="album-info__tab-content">
+        @if (!tracklistTabs().length) {
+          <p class="album-info__no-link">No tracklist or streaming links available.</p>
+        }
         @switch (tracklistTabs()[tracklistTabIndex()]) {
         @case ('Tracklist') {
         <ul class="album-info__tracks">

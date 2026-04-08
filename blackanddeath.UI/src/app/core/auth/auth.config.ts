@@ -7,6 +7,6 @@ export const authConfig: AuthConfig = {
   clientId: 'angular',
   responseType: 'code',
   scope: 'openid profile email roles libraryAPI offline_access',
-  useSilentRefresh: false,
+  useSilentRefresh: true,
   showDebugInformation: true,
 };

@@ -87,12 +87,12 @@
 
   @if (auth.isAuthenticated()) {
 
-  <div class="user-drawer__profile">
-    <div class="user-drawer__profile-info">
-      <span class="user-drawer__name">{{ auth.userName() }}</span>
-      <span class="user-drawer__email">{{ auth.profile()?.email }}</span>
-    </div>
+<div class="user-drawer__profile">
+  <div class="user-drawer__profile-info">
+    <span class="user-drawer__name">{{ auth.userName() ?? 'no name' }}</span>
+    <span class="user-drawer__email">{{ auth.profile()?.email ?? 'no email' }}</span>
   </div>
+</div>
 
   <div class="user-drawer__divider"></div>
 

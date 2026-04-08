@@ -17,7 +17,6 @@ import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
 import { Album } from '../../../shared/models/album';
-import { toEmbedUrl } from '../../../shared/utils/streaming-embed';
 
 @Component({
   selector: 'app-add-album-form',
@@ -227,7 +226,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
     if (v.bandcamp.trim()) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp.trim() });
 
     const tracks = this.tracks
-      .map((t, i) => ({ trackNumber: i + 1, title: t.title.trim(), duration: t.duration.trim() }))
+      .map((t, i) => ({ trackNumber: i + 1, title: t.title.trim(), duration: t.duration?.trim() || '' }))
       .filter(t => t.title);
 
     const dto = {

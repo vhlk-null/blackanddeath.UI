@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { OAuthService, EventType } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs';
 import { authConfig } from './auth.config';
 
@@ -34,7 +34,7 @@ export class AuthService {
 
   async init(): Promise<void> {
     this.oauth.configure(authConfig);
-    this.oauth.setupAutomaticSilentRefresh();
+    this.oauth.setStorage(localStorage);
 
     try {
       await this.oauth.loadDiscoveryDocumentAndTryLogin();
@@ -45,30 +45,50 @@ export class AuthService {
         await this.loadProfile();
       }
 
-      const tokenEvents: EventType[] = ['token_received', 'token_refreshed', 'logout'];
+      this.oauth.setupAutomaticSilentRefresh();
+
       this.oauth.events
-        .pipe(filter(e => tokenEvents.includes(e.type)))
-        .subscribe(async e => {
-          const authenticated = this.oauth.hasValidAccessToken();
-          this._isAuthenticated.set(authenticated);
-          if (authenticated && e.type !== 'logout') {
-            await this.loadProfile();
-          } else {
-            this._profile.set(null);
-          }
+        .pipe(filter(e => e.type === 'token_received'))
+        .subscribe(async () => {
+          this._isAuthenticated.set(true);
+          await this.loadProfile();
         });
+
+      this.oauth.events
+        .pipe(filter(e => e.type === 'token_refreshed'))
+        .subscribe(async () => {
+          this._isAuthenticated.set(true);
+          await this.loadProfile();
+        });
+
+      this.oauth.events
+        .pipe(filter(e => e.type === 'logout'))
+        .subscribe(() => {
+          this._isAuthenticated.set(false);
+          this._profile.set(null);
+        });
+
     } catch {
       // IS недоступний — застосунок працює в анонімному режимі
     }
   }
 
+  private _loadingProfile = false;
+
   private async loadProfile(): Promise<void> {
+    if (this._loadingProfile) return;
+    this._loadingProfile = true;
+
     const claims = this.oauth.getIdentityClaims() as UserProfile;
+
     try {
-      const userInfo = await this.oauth.loadUserProfile() as UserProfile;
+      const response = await this.oauth.loadUserProfile() as { info: UserProfile };
+      const userInfo = response?.info ?? (response as unknown as UserProfile);
       this._profile.set({ ...claims, ...userInfo });
     } catch {
       this._profile.set(claims);
+    } finally {
+      this._loadingProfile = false;
     }
   }
 
