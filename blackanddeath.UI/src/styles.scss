@@ -42,7 +42,7 @@ main, router-outlet + * {
   max-width: 90rem; // 1440px
   width: 100%;
   margin: 0 auto;
-  padding: 4.125rem clamp(1rem, 4.86vw, 4.375rem) 6rem; // 66px top, 70px sides at 1440px, 96px bottom
+  padding: calc(4rem + 4.125rem) clamp(1rem, 4.86vw, 4.375rem) 6rem; // 4rem — висота хедера // 66px top, 70px sides at 1440px, 96px bottom
 
   // TODO: remove debug styles
   // outline: 2px dashed red;

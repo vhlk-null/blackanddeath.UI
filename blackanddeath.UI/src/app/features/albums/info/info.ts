@@ -10,6 +10,7 @@ import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -33,6 +34,7 @@ export class Info implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  readonly auth = inject(AuthService);
   private albumService = inject(AlbumService);
   private toastService = inject(ToastService);
 
@@ -62,7 +64,8 @@ export class Info implements OnInit {
   readonly tracklistTabIndex = signal(0);
   readonly loaded = signal(false);
   readonly tracklistTabs = computed(() => {
-    const tabs = ['Tracklist'];
+    const tabs: string[] = [];
+    if (this.albumData()?.tracks?.length) tabs.push('Tracklist');
     if (this.youtubeEmbed()) tabs.push('YouTube');
     if (this.spotifyEmbed()) tabs.push('Spotify');
     if (this.bandcampEmbed()) tabs.push('Bandcamp');

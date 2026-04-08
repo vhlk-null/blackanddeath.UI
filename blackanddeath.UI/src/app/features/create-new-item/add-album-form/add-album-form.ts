@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
@@ -10,12 +11,12 @@ import { CountryService } from '../../services/country.service';
 import { LabelService } from '../../services/label.service';
 import { TagService } from '../../services/tag.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { FormDirtyService } from '../../../core/services/form-dirty.service';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
 import { Album } from '../../../shared/models/album';
-import { toEmbedUrl } from '../../../shared/utils/streaming-embed';
 
 @Component({
   selector: 'app-add-album-form',
@@ -31,6 +32,8 @@ export class AddAlbumForm implements OnInit {
   private labelService = inject(LabelService);
   private tagService = inject(TagService);
   private toastService = inject(ToastService);
+  private formDirty = inject(FormDirtyService);
+  private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -98,6 +101,10 @@ export class AddAlbumForm implements OnInit {
   });
 
   ngOnInit(): void {
+    this.albumForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.formDirty.markDirty());
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editMode = true;
@@ -219,7 +226,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
     if (v.bandcamp.trim()) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp.trim() });
 
     const tracks = this.tracks
-      .map((t, i) => ({ trackNumber: i + 1, title: t.title.trim(), duration: t.duration.trim() }))
+      .map((t, i) => ({ trackNumber: i + 1, title: t.title.trim(), duration: t.duration?.trim() || '' }))
       .filter(t => t.title);
 
     const dto = {
@@ -250,6 +257,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
         } else {
           this.toastService.success('Album published successfully!');
           this.albumForm.reset({ albumType: AlbumType.FullLength });
+          this.formDirty.markClean();
           this.previewUrl = null;
           this.coverFile = null;
         }

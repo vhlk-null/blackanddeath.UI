@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
@@ -7,6 +8,7 @@ import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { FormDirtyService } from '../../../core/services/form-dirty.service';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
 import { Band } from '../../../shared/models/band';
 
@@ -21,6 +23,8 @@ export class AddBandForm implements OnInit {
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private toastService = inject(ToastService);
+  private formDirty = inject(FormDirtyService);
+  private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -80,6 +84,10 @@ export class AddBandForm implements OnInit {
   });
 
   ngOnInit(): void {
+    this.bandForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.formDirty.markDirty());
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editMode = true;
@@ -182,6 +190,7 @@ export class AddBandForm implements OnInit {
         } else {
           this.toastService.success('Band published successfully!');
           this.bandForm.reset();
+          this.formDirty.markClean();
           this.previewUrl = null;
           this.logoFile = null;
         }

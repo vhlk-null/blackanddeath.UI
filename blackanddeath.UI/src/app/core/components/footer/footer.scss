@@ -81,14 +81,35 @@
     border-top: 1px solid var(--color-border);
     padding: 1.25rem 2rem;
     max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   &__copy {
-    display: block;
-    max-width: 71.25rem;
-    margin: 0 auto;
     font-family: var(--font-family-body);
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
+  }
+
+  &__theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    &:hover {
+      color: var(--color-text-heading);
+    }
   }
 }

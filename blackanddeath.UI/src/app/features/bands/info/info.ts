@@ -9,6 +9,7 @@ import { ImageLightbox } from '../../../shared/components/image-lightbox/image-l
 import { BandService } from '../../services/band.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { ToastService } from '../../../shared/services/toast.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
 import { BandCard } from '../band-card/band-card';
@@ -30,6 +31,7 @@ export class BandInfo implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  readonly auth = inject(AuthService);
   private bandService = inject(BandService);
   private toastService = inject(ToastService);
 
