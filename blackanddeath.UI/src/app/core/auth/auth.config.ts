@@ -10,4 +10,5 @@ export const authConfig: AuthConfig = {
   scope: 'openid profile email roles libraryAPI offline_access',
   useSilentRefresh: true,
   showDebugInformation: true,
+  strictDiscoveryDocumentValidation: false,
 };
