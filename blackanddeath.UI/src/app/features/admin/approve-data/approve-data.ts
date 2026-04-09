@@ -34,6 +34,24 @@ export class ApproveData implements OnInit {
     this.loadTab(tab);
   }
 
+  delete(item: PendingApprovalDto): void {
+    if (!confirm(`Delete "${item.name}"? This cannot be undone.`)) return;
+
+    const tab = this.activeTab();
+    const request$ = tab === 'Albums'
+      ? this.albumService.delete(item.id)
+      : tab === 'Bands'
+        ? this.bandService.delete(item.id)
+        : null;
+
+    if (!request$) return;
+
+    request$.subscribe({
+      next: () => this.items.update(list => list.filter(i => i.id !== item.id)),
+      error: (err) => console.error('Failed to delete item', err),
+    });
+  }
+
   navigateToEdit(item: PendingApprovalDto): void {
     const tab = this.activeTab();
     if (tab === 'Albums') {

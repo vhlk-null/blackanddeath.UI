@@ -31,13 +31,49 @@
       border-bottom: 1px solid var(--color-separator);
     }
 
+    tbody tr.approve-data__row--clickable {
+      cursor: pointer;
+    }
+
     tbody tr.approve-data__row--clickable:hover td {
       background: var(--color-drawer-link-hover-bg);
     }
   }
 
-  &__row--clickable {
+  &__actions {
+    white-space: nowrap;
+    text-align: right;
+    width: 1%;
+  }
+
+  &__action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
     cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &:hover {
+      color: var(--color-text);
+      background: var(--color-drawer-link-hover-bg);
+    }
+
+    &--delete:hover {
+      color: #c0392b;
+      background: rgba(192, 57, 43, 0.1);
+    }
   }
 
   &__slug,
