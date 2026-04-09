@@ -34,6 +34,7 @@ export class AuthService {
 
   async init(): Promise<void> {
     this.oauth.configure(authConfig);
+    this.oauth.strictDiscoveryDocumentValidation = false;
     this.oauth.setStorage(localStorage);
 
     try {
