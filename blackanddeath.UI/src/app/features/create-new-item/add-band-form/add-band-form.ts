@@ -205,6 +205,14 @@ export class AddBandForm implements OnInit {
     });
   }
 
+  onDelete(): void {
+    if (!confirm(`Delete this band? This cannot be undone.`)) return;
+    this.bandService.delete(this.bandId!).subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => this.toastService.error('Failed to delete band.'),
+    });
+  }
+
   onCancel(): void {
     if (this.editMode && this.bandId) {
       this.router.navigate(['/bands', this.bandId, this.bandSlug]);

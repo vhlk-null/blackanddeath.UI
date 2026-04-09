@@ -179,10 +179,15 @@
         </div>
 
         <div class="add-band__actions">
-          <button class="add-band__btn add-band__btn--cancel" type="button" (click)="onCancel()">Cancel</button>
-          <button class="add-band__btn add-band__btn--publish" type="submit" [disabled]="submitting">
-            {{ submitting ? 'Publishing...' : 'Publish' }}
-          </button>
+          <div class="add-band__actions-right">
+            <button class="add-band__btn add-band__btn--cancel" type="button" (click)="onCancel()">Cancel</button>
+            <button class="add-band__btn add-band__btn--publish" type="submit" [disabled]="submitting">
+              {{ submitting ? 'Publishing...' : 'Publish' }}
+            </button>
+          </div>
+          @if (editMode) {
+            <button class="add-band__btn add-band__btn--delete" type="button" (click)="onDelete()">Delete</button>
+          }
         </div>
 
       </form>

@@ -12,6 +12,7 @@ export interface PendingApprovalDto {
   id: string;
   name: string;
   slug: string | null;
+  createdBy: string;
 }
 
 export interface CreateAlbumDto {

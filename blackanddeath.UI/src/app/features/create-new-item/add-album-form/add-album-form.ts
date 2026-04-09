@@ -284,6 +284,14 @@ get youtube() { return this.albumForm.get('youtube')!; }
     });
   }
 
+  onDelete(): void {
+    if (!confirm(`Delete this album? This cannot be undone.`)) return;
+    this.albumService.delete(this.albumId!).subscribe({
+      next: () => this.router.navigate(['/']),
+      error: () => this.toastService.error('Failed to delete album.'),
+    });
+  }
+
   onCancel(): void {
     if (this.editMode && this.albumId) {
       this.router.navigate(['/albums', this.albumId]);

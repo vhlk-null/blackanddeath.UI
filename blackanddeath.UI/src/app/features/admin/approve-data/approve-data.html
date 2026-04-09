@@ -3,6 +3,10 @@
     <app-tabs [tabs]="tabs" (tabChange)="onTabChange($event)" />
   </div>
 
+  @if (!loading()) {
+    <p class="approve-data__count">{{ items().length }} item{{ items().length !== 1 ? 's' : '' }} pending</p>
+  }
+
   @if (loading()) {
     <p class="approve-data__empty">Loading...</p>
   } @else if (items().length === 0) {
@@ -16,6 +20,7 @@
           @if (activeTab() !== 'Videos') {
             <th>Slug</th>
           }
+          <th>Created by</th>
           <th></th>
         </tr>
       </thead>
@@ -30,6 +35,7 @@
             @if (activeTab() !== 'Videos') {
               <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
             }
+            <td class="approve-data__created-by">{{ item.createdBy }}</td>
             <td class="approve-data__actions" (click)="$event.stopPropagation()">
               <button class="approve-data__action-btn approve-data__action-btn--delete" title="Delete" (click)="delete(item)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
