@@ -94,6 +94,12 @@ export class AuthService {
 
   login(): void {
     console.log('[Auth] login called, discovery loaded:', !!(this.oauth as any).discoveryDocumentLoaded);
+    if (!(this.oauth as any).discoveryDocumentLoaded) {
+      this.oauth.loadDiscoveryDocument().then(() => {
+        this.oauth.initCodeFlow();
+      }).catch(err => console.error('[Auth] login discovery failed:', err));
+      return;
+    }
     this.oauth.initCodeFlow();
   }
 
