@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlbumService } from '../../services/album.servics';
+import { AuthService } from '../../../core/auth/auth.service';
 import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
@@ -26,6 +27,7 @@ import { Album } from '../../../shared/models/album';
 })
 export class AddAlbumForm implements OnInit {
   private albumService = inject(AlbumService);
+  private auth = inject(AuthService);
   private bandService = inject(BandService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
@@ -117,7 +119,7 @@ export class AddAlbumForm implements OnInit {
       countries: this.countryService.getAll(),
       labels: this.labelService.getAll(),
       tags: this.tagService.getAll(),
-      album: id ? this.albumService.getById(id) : of(null),
+      album: id ? (this.auth.isAdmin() ? this.albumService.adminGetById(id) : this.albumService.getById(id)) : of(null),
     }).subscribe({
       next: ({ bands, genres, countries, labels, tags, album }) => {
         this.bandOptions.set(bands.filter(b => b.id != null).map(b => ({ id: b.id!, name: b.name })));

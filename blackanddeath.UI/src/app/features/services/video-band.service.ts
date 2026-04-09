@@ -4,6 +4,7 @@ import { BaseHttpService } from './intrefaces/http';
 import { VideoBandEndpoints } from '../../shared/constants/endpoints';
 import { VideoBand, CreateVideoBandDto, UpdateVideoBandDto } from '../../shared/models/video-band';
 import { PaginatedResult } from '../../shared/models/paginated-result';
+import { PendingApprovalDto } from './album.servics';
 
 @Injectable({ providedIn: 'root' })
 export class VideoBandService {
@@ -38,5 +39,11 @@ export class VideoBandService {
 
   delete(bandId: string, id: string) {
     return this.http.delete<void>(VideoBandEndpoints.DELETE(bandId, id));
+  }
+
+  getPendingApproval() {
+    return this.http.get<{ videoBands: PendingApprovalDto[] }>(VideoBandEndpoints.PENDING_APPROVAL).pipe(
+      map(response => response.videoBands)
+    );
   }
 }

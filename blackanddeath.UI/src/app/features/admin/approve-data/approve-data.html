@@ -1,0 +1,37 @@
+<div class="approve-data">
+  <div class="approve-data__tabs">
+    <app-tabs [tabs]="tabs" (tabChange)="onTabChange($event)" />
+  </div>
+
+  @if (loading()) {
+    <p class="approve-data__empty">Loading...</p>
+  } @else if (items().length === 0) {
+    <p class="approve-data__empty">No pending items.</p>
+  } @else {
+    <table class="approve-data__table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          @if (activeTab() !== 'Videos') {
+            <th>Slug</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of items(); track item.id) {
+          <tr
+            [class.approve-data__row--clickable]="activeTab() !== 'Videos'"
+            (click)="navigateToEdit(item)"
+          >
+            <td class="approve-data__id">{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            @if (activeTab() !== 'Videos') {
+              <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

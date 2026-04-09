@@ -11,6 +11,7 @@ export class AlbumEndpoints {
   public static UPDATE = (id: string) => `${base}/library/albums/${id}`;
   public static UPDATE_COVER = (id: string) => `${base}/library/albums/${id}/cover`;
   public static DELETE = (id: string) => `${base}/library/albums/${id}`;
+  public static PENDING_APPROVAL = `${base}/library/albums/pending-approval`;
 }
 
 export class BandEndpoints {
@@ -22,6 +23,7 @@ export class BandEndpoints {
   public static UPDATE = (id: string) => `${base}/library/bands/${id}`;
   public static UPDATE_LOGO = (id: string) => `${base}/library/bands/${id}/logo`;
   public static DELETE = (id: string) => `${base}/library/bands/${id}`;
+  public static PENDING_APPROVAL = `${base}/library/bands/pending-approval`;
 }
 
 export class VideoBandEndpoints {
@@ -30,6 +32,7 @@ export class VideoBandEndpoints {
   public static CREATE = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
   public static UPDATE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
   public static DELETE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
+  public static PENDING_APPROVAL = `${base}/library/video-bands/pending-approval`;
 }
 
 export class GenreEndpoints {
@@ -50,6 +53,15 @@ export class GenreEndpoints {
   public static CREATE = `${base}/library/genres`;
   public static UPDATE = (id: string) => `${base}/library/genres/${id}`;
   public static DELETE = (id: string) => `${base}/library/genres/${id}`;
+}
+
+export class AdminEndpoints {
+  public static GET_ALL_ALBUMS = `${base}/library/admin/albums`;
+  public static GET_ALBUM_BY_ID = (id: string) => `${base}/library/admin/albums/${id}`;
+  public static GET_ALL_BANDS = `${base}/library/admin/bands`;
+  public static GET_BAND_BY_ID = (id: string) => `${base}/library/admin/bands/${id}`;
+  public static GET_ALL_VIDEOS = `${base}/library/admin/videos`;
+  public static GET_VIDEOS_BY_BAND = (bandId: string) => `${base}/library/admin/bands/${bandId}/videos`;
 }
 
 export class CountryEndpoints {

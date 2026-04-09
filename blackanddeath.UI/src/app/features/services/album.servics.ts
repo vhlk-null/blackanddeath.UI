@@ -1,12 +1,18 @@
 import { inject, Injectable } from "@angular/core";
 import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
-import { AlbumEndpoints } from "../../shared/constants/endpoints";
+import { AdminEndpoints, AlbumEndpoints } from "../../shared/constants/endpoints";
 import { Album } from "../../shared/models/album";
 import { AlbumType } from "../../shared/models/enums/album-type.enum";
 import { AlbumFormat } from "../../shared/models/enums/album-format.enum";
 import { StreamingLink } from "../../shared/models/streaming-link";
 import { PaginatedResult } from "../../shared/models/paginated-result";
+
+export interface PendingApprovalDto {
+  id: string;
+  name: string;
+  slug: string | null;
+}
 
 export interface CreateAlbumDto {
   title: string;
@@ -74,5 +80,17 @@ export class AlbumService {
 
   delete(id: string) {
     return this.http.delete<void>(AlbumEndpoints.DELETE(id));
+  }
+
+  adminGetById(id: string) {
+    return this.http.get<{ album: Album }>(AdminEndpoints.GET_ALBUM_BY_ID(id)).pipe(
+      map(response => response.album)
+    );
+  }
+
+  getPendingApproval() {
+    return this.http.get<{ albums: PendingApprovalDto[] }>(AlbumEndpoints.PENDING_APPROVAL).pipe(
+      map(response => response.albums)
+    );
   }
 }

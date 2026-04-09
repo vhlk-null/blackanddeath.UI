@@ -4,6 +4,7 @@ import { BaseHttpService } from "./intrefaces/http";
 import { BandEndpoints } from "../../shared/constants/endpoints";
 import { Band } from "../../shared/models/band";
 import { BandSummary } from "../../shared/models/band-summary";
+import { PendingApprovalDto } from "./album.servics";
 
 export interface CreateBandDto {
   name: string;
@@ -77,5 +78,11 @@ export class BandService {
 
   delete(id: string) {
     return this.http.delete<void>(BandEndpoints.DELETE(id));
+  }
+
+  getPendingApproval() {
+    return this.http.get<{ bands: PendingApprovalDto[] }>(BandEndpoints.PENDING_APPROVAL).pipe(
+      map(response => response.bands)
+    );
   }
 }
