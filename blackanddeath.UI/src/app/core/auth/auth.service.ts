@@ -68,8 +68,8 @@ export class AuthService {
           this._profile.set(null);
         });
 
-    } catch {
-      // IS недоступний — застосунок працює в анонімному режимі
+    } catch (err) {
+      console.error('[Auth] init failed, anonymous mode:', err);
     }
   }
 
@@ -93,6 +93,7 @@ export class AuthService {
   }
 
   login(): void {
+    console.log('[Auth] login called, discovery loaded:', !!(this.oauth as any).discoveryDocumentLoaded);
     this.oauth.initCodeFlow();
   }
 
