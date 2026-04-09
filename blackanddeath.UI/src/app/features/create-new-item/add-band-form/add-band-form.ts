@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BandService } from '../../services/band.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -20,6 +21,7 @@ import { Band } from '../../../shared/models/band';
 })
 export class AddBandForm implements OnInit {
   private bandService = inject(BandService);
+  private auth = inject(AuthService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private toastService = inject(ToastService);
@@ -97,7 +99,7 @@ export class AddBandForm implements OnInit {
     forkJoin({
       genres: this.genreService.getAll(),
       countries: this.countryService.getAll(),
-      band: id ? this.bandService.getById(id) : of(null),
+      band: id ? (this.auth.isAdmin() ? this.bandService.adminGetById(id) : this.bandService.getById(id)) : of(null),
     }).subscribe({
       next: ({ genres, countries, band }) => {
         this.genreOptions.set(genres);        

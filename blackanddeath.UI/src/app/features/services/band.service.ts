@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { map } from "rxjs";
 import { BaseHttpService } from "./intrefaces/http";
-import { BandEndpoints } from "../../shared/constants/endpoints";
+import { AdminEndpoints, BandEndpoints } from "../../shared/constants/endpoints";
 import { Band } from "../../shared/models/band";
 import { BandSummary } from "../../shared/models/band-summary";
 import { PendingApprovalDto } from "./album.servics";
@@ -78,6 +78,12 @@ export class BandService {
 
   delete(id: string) {
     return this.http.delete<void>(BandEndpoints.DELETE(id));
+  }
+
+  adminGetById(id: string) {
+    return this.http.get<{ band: Band }>(AdminEndpoints.GET_BAND_BY_ID(id)).pipe(
+      map(response => response.band)
+    );
   }
 
   getPendingApproval() {
