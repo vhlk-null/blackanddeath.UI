@@ -31,7 +31,8 @@ export class AllBands implements OnInit {
   readonly activeGenreId = signal<string | null>(null);
   readonly activeCountryId = signal<string | null>(null);
   readonly activeStatus = signal<string | null>(null);
-  readonly activeFormedYear = signal<string | null>(null);
+  readonly activeYearFrom = signal<string | null>(null);
+  readonly activeYearTo = signal<string | null>(null);
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -41,7 +42,8 @@ export class AllBands implements OnInit {
       this.activeGenreId.set(params['genreId'] ?? null);
       this.activeCountryId.set(params['countryId'] ?? null);
       this.activeStatus.set(params['status'] ?? null);
-      this.activeFormedYear.set(params['formedYear'] ?? null);
+      this.activeYearFrom.set(params['yearFrom'] ?? null);
+      this.activeYearTo.set(params['yearTo'] ?? null);
       this.load();
     });
   }
@@ -67,7 +69,8 @@ export class AllBands implements OnInit {
         genreId: this.activeGenreId() ?? undefined,
         countryId: this.activeCountryId() ?? undefined,
         status: this.activeStatus() ?? undefined,
-        formedYear: this.activeFormedYear() ?? undefined,
+        yearFrom: this.activeYearFrom() ?? undefined,
+        yearTo: this.activeYearTo() ?? undefined,
       },
       queryParamsHandling: 'merge',
     });
@@ -81,7 +84,8 @@ export class AllBands implements OnInit {
       genreId: this.activeGenreId() ?? undefined,
       countryId: this.activeCountryId() ?? undefined,
       status: this.activeStatus() ?? undefined,
-      formedYear: this.activeFormedYear() ?? undefined,
+      yearFrom: this.activeYearFrom() ?? undefined,
+      yearTo: this.activeYearTo() ?? undefined,
     }).subscribe({
       next: (result) => {
         this.bands.set(result.data);

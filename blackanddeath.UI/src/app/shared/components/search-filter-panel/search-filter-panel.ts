@@ -140,7 +140,8 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     if (this.selectedCountryId()) params['countryId'] = this.selectedCountryId();
     if (this.selectedLabelId()) params['labelId'] = this.selectedLabelId();
     if (this.selectedType()) params['type'] = this.selectedType();
-    if (this.yearFrom()) params['year'] = String(this.yearFrom());
+    if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
+    if (this.yearTo()) params['yearTo'] = String(this.yearTo());
 
     this.router.navigate(['/albums'], { queryParams: params });
     this.closed.emit();
@@ -150,6 +151,8 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     const params: Record<string, string> = {};
     if (this.bandGenreId()) params['genreId'] = this.bandGenreId();
     if (this.bandCountryId()) params['countryId'] = this.bandCountryId();
+    if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
+    if (this.yearTo()) params['yearTo'] = String(this.yearTo());
 
     this.router.navigate(['/bands'], { queryParams: params });
     this.closed.emit();

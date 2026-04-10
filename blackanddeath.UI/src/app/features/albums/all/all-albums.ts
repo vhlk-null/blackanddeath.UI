@@ -29,10 +29,12 @@ export class AllAlbums implements OnInit {
   readonly loaded = signal(false);
   readonly currentPage = signal(1);
   readonly activeSort = signal<SortOption>('Newest');
+  readonly activeName = signal<string | null>(null);
   readonly activeGenreId = signal<string | null>(null);
   readonly activeCountryId = signal<string | null>(null);
   readonly activeType = signal<string | null>(null);
-  readonly activeYear = signal<string | null>(null);
+  readonly activeYearFrom = signal<string | null>(null);
+  readonly activeYearTo = signal<string | null>(null);
   readonly activeLabelId = signal<string | null>(null);
 
   ngOnInit(): void {
@@ -40,10 +42,12 @@ export class AllAlbums implements OnInit {
       const sort = params['sort'] as SortOption;
       this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');
       this.currentPage.set(Number(params['page']) || 1);
+      this.activeName.set(params['name'] ?? null);
       this.activeGenreId.set(params['genreId'] ?? null);
       this.activeCountryId.set(params['countryId'] ?? null);
       this.activeType.set(params['type'] ?? null);
-      this.activeYear.set(params['year'] ?? null);
+      this.activeYearFrom.set(params['yearFrom'] ?? null);
+      this.activeYearTo.set(params['yearTo'] ?? null);
       this.activeLabelId.set(params['labelId'] ?? null);
       this.load();
     });
@@ -67,10 +71,12 @@ export class AllAlbums implements OnInit {
       queryParams: {
         sort: this.activeSort(),
         page: this.currentPage(),
+        name: this.activeName() ?? undefined,
         genreId: this.activeGenreId() ?? undefined,
         countryId: this.activeCountryId() ?? undefined,
         type: this.activeType() ?? undefined,
-        year: this.activeYear() ?? undefined,
+        yearFrom: this.activeYearFrom() ?? undefined,
+        yearTo: this.activeYearTo() ?? undefined,
         labelId: this.activeLabelId() ?? undefined,
       },
       queryParamsHandling: 'merge',
@@ -85,7 +91,8 @@ export class AllAlbums implements OnInit {
       genreId: this.activeGenreId() ?? undefined,
       countryId: this.activeCountryId() ?? undefined,
       type: this.activeType() ?? undefined,
-      year: this.activeYear() ?? undefined,
+      yearFrom: this.activeYearFrom() ?? undefined,
+      yearTo: this.activeYearTo() ?? undefined,
       labelId: this.activeLabelId() ?? undefined,
     }).subscribe({
       next: (result) => {
