@@ -38,6 +38,14 @@ main, router-outlet + * {
   flex: 1;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+html.scroll-locked body {
+  overflow: hidden;
+}
+
 .container {
   max-width: 90rem; // 1440px
   width: 100%;

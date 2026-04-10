@@ -82,7 +82,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly bandTags = signal('');
 
   ngOnInit(): void {
-    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('scroll-locked');
     this.genreService.getAll().subscribe(g => this.genres.set(g));
     this.countryService.getAll().subscribe(c => this.countries.set(c));
     this.labelService.getAll().subscribe(l => this.labels.set(l));
@@ -91,7 +91,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    document.body.style.overflow = '';
+    document.documentElement.classList.remove('scroll-locked');
   }
 
   selectBand(band: NameEntry): void {
