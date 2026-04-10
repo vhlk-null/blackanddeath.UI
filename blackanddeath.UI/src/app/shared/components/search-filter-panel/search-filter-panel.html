@@ -162,6 +162,27 @@
       </div>
 
       <div class="filter-panel__field">
+        <label class="filter-panel__label">Time period</label>
+        <div class="year-slider">
+          <div class="year-slider__track">
+            <div class="year-slider__fill" [style.left.%]="yearFromPct()" [style.width.%]="yearToPct() - yearFromPct()"></div>
+            <input class="year-slider__input" type="range"
+              [min]="yearMin" [max]="yearMax"
+              [value]="yearFrom() ?? yearMin"
+              (input)="onYearFromInput($any($event.target).value)" />
+            <input class="year-slider__input" type="range"
+              [min]="yearMin" [max]="yearMax"
+              [value]="yearTo() ?? yearMax"
+              (input)="onYearToInput($any($event.target).value)" />
+          </div>
+          <div class="year-slider__labels">
+            <span>{{ yearFrom() ?? yearMin }}</span>
+            <span>{{ yearTo() ?? yearMax }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-panel__field">
         <label class="filter-panel__label">Words and tags for search</label>
         <textarea class="filter-panel__textarea" placeholder="Type here..."
           [value]="bandTags()" (input)="bandTags.set($any($event.target).value)"></textarea>
