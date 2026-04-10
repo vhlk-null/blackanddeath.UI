@@ -64,8 +64,18 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly selectedGenreId = signal('');
   readonly selectedLabelId = signal('');
   readonly selectedType = signal('');
+  readonly yearMin = 1960;
+  readonly yearMax = new Date().getFullYear();
+
   readonly yearFrom = signal<number | null>(null);
   readonly yearTo = signal<number | null>(null);
+
+  readonly yearFromPct = computed(() =>
+    ((( this.yearFrom() ?? this.yearMin) - this.yearMin) / (this.yearMax - this.yearMin)) * 100
+  );
+  readonly yearToPct = computed(() =>
+    (((this.yearTo() ?? this.yearMax) - this.yearMin) / (this.yearMax - this.yearMin)) * 100
+  );
   readonly tags = signal('');
 
   // Band filters
@@ -143,6 +153,18 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
 
     this.router.navigate(['/bands'], { queryParams: params });
     this.closed.emit();
+  }
+
+  onYearFromInput(value: string): void {
+    const v = +value;
+    const to = this.yearTo() ?? this.yearMax;
+    this.yearFrom.set(v >= to ? to - 1 : v);
+  }
+
+  onYearToInput(value: string): void {
+    const v = +value;
+    const from = this.yearFrom() ?? this.yearMin;
+    this.yearTo.set(v <= from ? from + 1 : v);
   }
 
   onOverlayClick(event: MouseEvent): void {

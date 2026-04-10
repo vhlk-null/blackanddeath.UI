@@ -93,14 +93,22 @@
 
       <div class="filter-panel__field">
         <label class="filter-panel__label">Time period</label>
-        <div class="filter-panel__year-range">
-          <input class="filter-panel__input filter-panel__input--year" type="number"
-            placeholder="From" min="1960" max="2030"
-            [value]="yearFrom()" (input)="yearFrom.set(+$any($event.target).value || null)" />
-          <span class="filter-panel__year-sep">&mdash;</span>
-          <input class="filter-panel__input filter-panel__input--year" type="number"
-            placeholder="To" min="1960" max="2030"
-            [value]="yearTo()" (input)="yearTo.set(+$any($event.target).value || null)" />
+        <div class="year-slider">
+          <div class="year-slider__track">
+            <div class="year-slider__fill" [style.left.%]="yearFromPct()" [style.width.%]="yearToPct() - yearFromPct()"></div>
+            <input class="year-slider__input" type="range"
+              [min]="yearMin" [max]="yearMax"
+              [value]="yearFrom() ?? yearMin"
+              (input)="onYearFromInput($any($event.target).value)" />
+            <input class="year-slider__input" type="range"
+              [min]="yearMin" [max]="yearMax"
+              [value]="yearTo() ?? yearMax"
+              (input)="onYearToInput($any($event.target).value)" />
+          </div>
+          <div class="year-slider__labels">
+            <span>{{ yearFrom() ?? yearMin }}</span>
+            <span>{{ yearTo() ?? yearMax }}</span>
+          </div>
         </div>
       </div>
 
