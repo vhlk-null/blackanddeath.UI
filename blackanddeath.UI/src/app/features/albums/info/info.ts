@@ -63,6 +63,7 @@ export class Info implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly tracklistTabIndex = signal(0);
   readonly loaded = signal(false);
+  readonly notFound = signal(false);
   readonly tracklistTabs = computed(() => {
     const tabs: string[] = [];
     if (this.albumData()?.tracks?.length) tabs.push('Tracklist');
@@ -167,7 +168,12 @@ export class Info implements OnInit {
         this.similarBands.set((album.similarBands ?? []) as any);
         this.bandVideos.set(album.videos);
       },
-      error: (err) => console.error('Failed to load album', err),
+      error: (err) => {
+        if (err?.status === 404) {
+          this.notFound.set(true);
+          this.loaded.set(true);
+        }
+      },
     });
   }
 

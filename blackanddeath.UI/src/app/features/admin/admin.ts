@@ -29,17 +29,17 @@ export class Admin {
     if (index === 1) {
       this.genreService.getCardsDetails().subscribe({
         next: (cards) => this.genreCards.set(cards),
-        error: (err) => console.error('Failed to load genre cards', err),
+        error: () => {},
       });
 
       this.genreService.getAll().subscribe({
         next: (genres) => this.genreOptions.set(genres.map(g => ({ id: g.id, name: g.name }))),
-        error: (err) => console.error('Failed to load genres', err),
+        error: () => {},
       });
 
       this.tagService.getAll().subscribe({
         next: (tags) => this.tagOptions.set(tags.map(t => ({ id: t.id, name: t.name }))),
-        error: (err) => console.error('Failed to load tags', err),
+        error: () => {},
       });
     }
   }

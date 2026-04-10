@@ -64,7 +64,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly selectedGenreId = signal('');
   readonly selectedLabelId = signal('');
   readonly selectedType = signal('');
-  readonly yearMin = 1960;
+  readonly yearMin = 1980;
   readonly yearMax = new Date().getFullYear();
 
   readonly yearFrom = signal<number | null>(null);

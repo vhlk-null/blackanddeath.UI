@@ -2,6 +2,57 @@
   max-width: 71.25rem;
   margin: 0 auto 4.125rem;
 
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5rem 2rem;
+    gap: 1rem;
+  }
+
+  &__not-found-icon {
+    width: 4rem;
+    height: 4rem;
+    color: var(--color-text-heading);
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+
+  &__not-found-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    margin: 0;
+    color: var(--color-text-heading);
+  }
+
+  &__not-found-text {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  &__not-found-back {
+    margin-top: 1rem;
+    padding: 0.6rem 1.5rem;
+    border: 1px solid var(--color-separator);
+    color: var(--color-text-heading);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: border-color 0.2s, background 0.2s;
+
+    &:hover {
+      border-color: var(--color-text-heading);
+      background: var(--color-border);
+    }
+  }
+
   &__title {
     font-family: 'Cinzel', serif;
     font-weight: var(--font-weight-regular);

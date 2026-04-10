@@ -52,6 +52,7 @@ export class BandInfo implements OnInit {
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly infoTabIndex = signal(0);
+  readonly notFound = signal(false);
   readonly bandData = signal<Band | null>(null);
   readonly similarAlbums = signal<Album[]>([]);
   readonly similarBands = signal<Band[]>([]);
@@ -92,7 +93,12 @@ export class BandInfo implements OnInit {
         this.playingVideoId.set(null);
         this.loaded.set(true);
       },
-      error: (err) => console.error('Failed to load band', err),
+      error: (err) => {
+        if (err?.status === 404) {
+          this.notFound.set(true);
+          this.loaded.set(true);
+        }
+      },
     });
   }
 

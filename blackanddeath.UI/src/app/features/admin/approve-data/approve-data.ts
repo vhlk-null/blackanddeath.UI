@@ -48,7 +48,7 @@ export class ApproveData implements OnInit {
 
     request$.subscribe({
       next: () => this.items.update(list => list.filter(i => i.id !== item.id)),
-      error: (err) => console.error('Failed to delete item', err),
+      error: () => {},
     });
   }
 
@@ -74,10 +74,7 @@ export class ApproveData implements OnInit {
         this.items.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load pending approval items', err);
-        this.loading.set(false);
-      },
+      error: () => { this.loading.set(false); },
     });
   }
 }

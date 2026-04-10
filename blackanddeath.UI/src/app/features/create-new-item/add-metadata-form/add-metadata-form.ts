@@ -88,7 +88,7 @@ export class AddMetadataForm implements OnInit {
           return s;
         }));
       },
-      error: (err) => console.error('Failed to load metadata', err),
+      error: () => {},
     });
   }
 

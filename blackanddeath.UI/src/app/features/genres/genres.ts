@@ -18,7 +18,7 @@ export class Genres implements OnInit {
   ngOnInit(): void {
     this.genreService.getCards().subscribe({
       next: (genres) => this.genres.set(genres),
-      error: (err) => console.error('Failed to load genre cards', err),
+      error: () => {},
     });
   }
 }
