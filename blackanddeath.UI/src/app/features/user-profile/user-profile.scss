@@ -1,0 +1,412 @@
+.profile {
+  max-width: 71.25rem;
+  margin: 0 auto 4rem;
+
+  // ─── Header ───────────────────────────────────────────────────────────────
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
+  }
+
+  &__avatar {
+    position: relative;
+    flex-shrink: 0;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+  }
+
+  &__avatar-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  &__avatar-status {
+    position: absolute;
+    bottom: 0.25rem;
+    right: 0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    border: 2px solid var(--color-bg);
+
+    &--online {
+      background: #4caf50;
+    }
+  }
+
+  &__identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__username {
+    font-family: 'Cinzel', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  &__rank {
+    color: var(--color-text-muted);
+  }
+
+  &__separator {
+    color: var(--color-separator);
+  }
+
+  &__location {
+    color: var(--color-text-muted);
+  }
+
+  &__online-label {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.125rem;
+
+    &--online {
+      color: #4caf50;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-separator);
+    background: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &:hover {
+      color: var(--color-text-heading);
+      border-color: var(--color-text-heading);
+    }
+  }
+
+  // ─── Stats ────────────────────────────────────────────────────────────────
+
+  &__stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 1.75rem;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  &__stat-label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  &__stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9375rem;
+    color: var(--color-text-heading);
+  }
+
+  // ─── Main Tabs ────────────────────────────────────────────────────────────
+
+  &__tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+  }
+
+  &__tab {
+    padding: 0.625rem 1.25rem;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+
+    &:hover {
+      color: var(--color-text-heading);
+    }
+
+    &--active {
+      color: var(--color-text-heading);
+      border-bottom-color: var(--color-text-heading);
+    }
+  }
+
+  // ─── Content ──────────────────────────────────────────────────────────────
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  &__new-collection {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    background: none;
+    border: 1px solid var(--color-separator);
+    padding: 0.375rem 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: var(--color-text-heading);
+      border-color: var(--color-text-heading);
+    }
+  }
+
+  // ─── Placeholder cards row (albums) ───────────────────────────────────────
+
+  &__cards-row {
+    display: flex;
+    gap: 0.625rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+
+    &--bands {
+      .profile__placeholder-card {
+        flex: 0 0 calc(25% - 0.47rem);
+      }
+    }
+  }
+
+  &__placeholder-card {
+    flex: 0 0 calc(16.666% - 0.52rem);
+    min-width: 0;
+    border-radius: 5px;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+
+    &--band {
+      aspect-ratio: 16 / 9;
+
+      .profile__placeholder-cover {
+        aspect-ratio: unset;
+        height: 100%;
+      }
+    }
+  }
+
+  &__placeholder-cover {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-card-bg);
+
+    svg {
+      width: 40%;
+      height: 40%;
+    }
+  }
+
+  // ─── Collections ──────────────────────────────────────────────────────────
+
+  &__collections {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  &__collection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__collection-covers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2px;
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 2;
+    background: var(--color-border);
+  }
+
+  &__collection-cover {
+    background: var(--color-card-bg);
+    aspect-ratio: 1;
+  }
+
+  &__collection-name {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--color-text-heading);
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  &__collection-meta {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  // ─── Activity ─────────────────────────────────────────────────────────────
+
+  &__activity {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__activity-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__activity-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  &__activity-body {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--font-size-sm);
+  }
+
+  &__activity-user {
+    color: var(--color-text-heading);
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__activity-action {
+    color: var(--color-text-muted);
+  }
+
+  &__activity-target {
+    color: var(--color-text-heading);
+    cursor: pointer;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__activity-time {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  // ─── Responsive ───────────────────────────────────────────────────────────
+
+  @media (max-width: 48rem) {
+    &__collections {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__cards-row {
+      .profile__placeholder-card {
+        flex: 0 0 calc(50% - 0.31rem);
+      }
+    }
+
+    &__stats {
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+  }
+}

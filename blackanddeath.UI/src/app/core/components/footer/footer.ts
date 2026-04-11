@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-footer',
@@ -10,5 +9,4 @@ import { ThemeService } from '../../services/theme.service';
 })
 export class Footer {
   readonly year = new Date().getFullYear();
-  readonly theme = inject(ThemeService);
 }

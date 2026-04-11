@@ -1,0 +1,179 @@
+<div class="profile">
+
+  <!-- Header -->
+  <div class="profile__header">
+    <div class="profile__avatar">
+      <svg class="profile__avatar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="profile__avatar-status" [class.profile__avatar-status--online]="isOnline()"></span>
+    </div>
+
+    <div class="profile__identity">
+      <h1 class="profile__username">{{ username() }}</h1>
+      <div class="profile__meta">
+        <span class="profile__rank">Azaghal</span>
+        <span class="profile__separator">·</span>
+        <span class="profile__location">Switzerland</span>
+      </div>
+      <span class="profile__online-label" [class.profile__online-label--online]="isOnline()">
+        {{ isOnline() ? 'Online' : 'Offline' }}
+      </span>
+    </div>
+
+    <div class="profile__actions">
+      <button class="profile__action-btn" title="Favourite">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
+            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="profile__action-btn" title="Share">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+      <button class="profile__action-btn" title="Message">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"
+            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="profile__stats">
+    @for (stat of stats; track stat.label) {
+    <div class="profile__stat">
+      <span class="profile__stat-label">{{ stat.label }}</span>
+      <span class="profile__stat-value">{{ stat.value }}</span>
+    </div>
+    }
+  </div>
+
+  <!-- Main tabs -->
+  <div class="profile__tabs">
+    @for (tab of mainTabs; track tab; let i = $index) {
+    <button class="profile__tab" [class.profile__tab--active]="activeMainTab() === i" (click)="activeMainTab.set(i)">
+      {{ tab }}
+    </button>
+    }
+  </div>
+
+  <!-- Favourites tab -->
+  @if (activeMainTab() === 0) {
+  <div class="profile__content">
+
+    <!-- Favourite Albums -->
+    <div class="profile__section">
+      <h2 class="profile__section-title">Favourite Albums</h2>
+      <div class="profile__cards-row">
+        @for (i of placeholders(6); track i) {
+        <div class="profile__placeholder-card">
+          <div class="profile__placeholder-cover">
+            <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
+              <path d="M85.5 0C132.72 0 171 38.2797 171 85.5C171 132.72 132.72 171 85.5 171C38.2797 171 0 132.72 0 85.5C0 38.2797 38.2797 0 85.5 0ZM119.71 133.576C113.843 137.859 107.126 141.048 99.8604 142.844L103.436 158.445C113.333 156.04 122.441 151.617 130.3 145.637L119.71 133.576ZM133.942 118.561C132.431 120.882 130.755 123.087 128.932 125.158L140.891 135.788C143.416 132.926 145.72 129.865 147.777 126.631L133.942 118.561ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5ZM30.7461 37.2188C28.2207 40.0805 25.9164 43.1419 23.8594 46.376L37.6943 54.4463C39.2056 52.1246 40.8813 49.9199 42.7051 47.8486L30.7461 37.2188ZM68.2012 14.5615C58.3037 16.9667 49.1959 21.3902 41.3369 27.3701L51.9268 39.4307C57.7939 35.1476 64.5108 31.959 71.7764 30.1631L68.2012 14.5615Z" fill="#606162"/>
+            </svg>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Favourite Bands -->
+    <div class="profile__section">
+      <h2 class="profile__section-title">Favourite Bands</h2>
+      <div class="profile__cards-row profile__cards-row--bands">
+        @for (i of placeholders(3); track i) {
+        <div class="profile__placeholder-card profile__placeholder-card--band">
+          <div class="profile__placeholder-cover">
+            <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
+              <path d="M85.5 0C132.72 0 171 38.2797 171 85.5C171 132.72 132.72 171 85.5 171C38.2797 171 0 132.72 0 85.5C0 38.2797 38.2797 0 85.5 0ZM119.71 133.576C113.843 137.859 107.126 141.048 99.8604 142.844L103.436 158.445C113.333 156.04 122.441 151.617 130.3 145.637L119.71 133.576ZM133.942 118.561C132.431 120.882 130.755 123.087 128.932 125.158L140.891 135.788C143.416 132.926 145.72 129.865 147.777 126.631L133.942 118.561ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5ZM30.7461 37.2188C28.2207 40.0805 25.9164 43.1419 23.8594 46.376L37.6943 54.4463C39.2056 52.1246 40.8813 49.9199 42.7051 47.8486L30.7461 37.2188ZM68.2012 14.5615C58.3037 16.9667 49.1959 21.3902 41.3369 27.3701L51.9268 39.4307C57.7939 35.1476 64.5108 31.959 71.7764 30.1631L68.2012 14.5615Z" fill="#606162"/>
+            </svg>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Favourite Clips -->
+    <div class="profile__section">
+      <h2 class="profile__section-title">Favourite Clips</h2>
+      <div class="profile__cards-row profile__cards-row--bands">
+        @for (i of placeholders(3); track i) {
+        <div class="profile__placeholder-card profile__placeholder-card--band">
+          <div class="profile__placeholder-cover">
+            <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
+              <path d="M85.5 0C132.72 0 171 38.2797 171 85.5C171 132.72 132.72 171 85.5 171C38.2797 171 0 132.72 0 85.5C0 38.2797 38.2797 0 85.5 0ZM119.71 133.576C113.843 137.859 107.126 141.048 99.8604 142.844L103.436 158.445C113.333 156.04 122.441 151.617 130.3 145.637L119.71 133.576ZM133.942 118.561C132.431 120.882 130.755 123.087 128.932 125.158L140.891 135.788C143.416 132.926 145.72 129.865 147.777 126.631L133.942 118.561ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5ZM30.7461 37.2188C28.2207 40.0805 25.9164 43.1419 23.8594 46.376L37.6943 54.4463C39.2056 52.1246 40.8813 49.9199 42.7051 47.8486L30.7461 37.2188ZM68.2012 14.5615C58.3037 16.9667 49.1959 21.3902 41.3369 27.3701L51.9268 39.4307C57.7939 35.1476 64.5108 31.959 71.7764 30.1631L68.2012 14.5615Z" fill="#606162"/>
+            </svg>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+  </div>
+  }
+
+  <!-- Collections tab -->
+  @if (activeMainTab() === 2) {
+  <div class="profile__content">
+    <div class="profile__section">
+      <div class="profile__section-header">
+        <h2 class="profile__section-title">My Collections</h2>
+        <button class="profile__new-collection">+ New Collection</button>
+      </div>
+      <div class="profile__collections">
+        @for (col of collections; track col.id) {
+        <div class="profile__collection">
+          <div class="profile__collection-covers">
+            @for (i of placeholders(8); track i) {
+            <div class="profile__collection-cover"></div>
+            }
+          </div>
+          <p class="profile__collection-name">{{ col.name }}</p>
+          <p class="profile__collection-meta">{{ col.albumCount }} albums · {{ col.bandCount }} bands</p>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Activity tab -->
+  @if (activeMainTab() === 3) {
+  <div class="profile__content">
+    <div class="profile__section">
+      <h2 class="profile__section-title">Recent Activity</h2>
+      <div class="profile__activity">
+        @for (item of activities; track item.time) {
+        <div class="profile__activity-item">
+          <div class="profile__activity-avatar">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="profile__activity-body">
+            <span class="profile__activity-user">{{ item.user }}</span>
+            <span class="profile__activity-action"> {{ item.action }} </span>
+            <span class="profile__activity-target">{{ item.target }}</span>
+          </div>
+          <span class="profile__activity-time">{{ item.time }}</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+</div>

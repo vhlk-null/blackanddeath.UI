@@ -1,0 +1,99 @@
+<div class="settings">
+
+  <h1 class="settings__title">Settings</h1>
+
+  <!-- Appearance -->
+  <section class="settings__section">
+    <h2 class="settings__section-title">Appearance</h2>
+    <p class="settings__section-desc">Choose how the site looks for you.</p>
+
+    <div class="settings__themes">
+      @for (t of themes; track t.value) {
+      <button
+        class="settings__theme-option"
+        [class.settings__theme-option--active]="theme.theme() === t.value"
+        [attr.data-theme-preview]="t.value"
+        (click)="setTheme(t.value)">
+        <span class="settings__theme-preview">
+          <span class="settings__theme-preview-bar"></span>
+          <span class="settings__theme-preview-card"></span>
+          <span class="settings__theme-preview-card settings__theme-preview-card--sm"></span>
+        </span>
+        <span class="settings__theme-name">{{ t.label }}</span>
+        <span class="settings__theme-desc">{{ t.description }}</span>
+        @if (theme.theme() === t.value) {
+        <span class="settings__theme-check">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        }
+      </button>
+      }
+    </div>
+  </section>
+
+  <div class="settings__divider"></div>
+
+  <!-- Account -->
+  <section class="settings__section">
+    <h2 class="settings__section-title">Account</h2>
+    <p class="settings__section-desc">Manage your account information.</p>
+
+    <div class="settings__fields">
+      <div class="settings__field">
+        <label class="settings__label">Username</label>
+        <input class="settings__input" type="text" placeholder="Your username" disabled />
+        <span class="settings__field-hint">Username changes are not available yet.</span>
+      </div>
+      <div class="settings__field">
+        <label class="settings__label">Email</label>
+        <input class="settings__input" type="email" placeholder="your@email.com" disabled />
+        <span class="settings__field-hint">Email is managed through your identity provider.</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="settings__divider"></div>
+
+  <!-- Notifications -->
+  <section class="settings__section">
+    <h2 class="settings__section-title">Notifications</h2>
+    <p class="settings__section-desc">Control what you get notified about.</p>
+
+    <div class="settings__toggles">
+      <div class="settings__toggle-row">
+        <div class="settings__toggle-info">
+          <span class="settings__toggle-label">New releases from favourite bands</span>
+          <span class="settings__toggle-hint">Get notified when a band you follow releases new music</span>
+        </div>
+        <label class="settings__switch">
+          <input type="checkbox" checked disabled />
+          <span class="settings__switch-track"></span>
+        </label>
+      </div>
+      <div class="settings__toggle-row">
+        <div class="settings__toggle-info">
+          <span class="settings__toggle-label">Comments on your activity</span>
+          <span class="settings__toggle-hint">When someone replies to your comment or rates your review</span>
+        </div>
+        <label class="settings__switch">
+          <input type="checkbox" disabled />
+          <span class="settings__switch-track"></span>
+        </label>
+      </div>
+      <div class="settings__toggle-row">
+        <div class="settings__toggle-info">
+          <span class="settings__toggle-label">Site announcements</span>
+          <span class="settings__toggle-hint">Major updates and news from the team</span>
+        </div>
+        <label class="settings__switch">
+          <input type="checkbox" checked disabled />
+          <span class="settings__switch-track"></span>
+        </label>
+      </div>
+    </div>
+    <p class="settings__coming-soon">Full notification settings coming soon.</p>
+  </section>
+
+</div>

@@ -14,11 +14,15 @@ import { AddAlbumForm } from './features/create-new-item/add-album-form/add-albu
 import { AddBandForm } from './features/create-new-item/add-band-form/add-band-form';
 import { Admin } from './features/admin/admin';
 import { AllVideos } from './features/videos/all/all-videos';
+import { UserProfile } from './features/user-profile/user-profile';
+import { Settings } from './features/settings/settings';
 import { adminGuard } from './core/guards/admin.guard';
 import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
     { path: '', component: Home },
+    { path: 'profile', component: UserProfile },
+    { path: 'settings', component: Settings },
     { path: 'albums', component: AllAlbums },
     { path: 'albums/subgenres', component: Subgenres },
     { path: 'albums/:id/edit', component: AddAlbumForm, canActivate: [adminGuard] },
