@@ -80,6 +80,7 @@
 
   &__band {
     display: block;
+    min-height: 1.25rem; // reserve space even when band is missing
     margin: 0 0 1rem; // 16px gap after band name
     font-family: 'Inter', var(--font-family-body);
     font-weight: 400;

@@ -21,9 +21,11 @@
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
             [routerLink]="['/albums']" [queryParams]="{ type: albumCard().type }">{{ typeLabel() }}</span>
           · <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ year: albumCard().releaseDate }">{{ albumCard().releaseDate }}</span> ·
+            [routerLink]="['/albums']" [queryParams]="{ year: albumCard().releaseDate }">{{ albumCard().releaseDate }}</span>
+          @if (albumCard().countries?.[0]?.name) { ·
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
             [routerLink]="['/albums']" [queryParams]="{ countryId: albumCard().countries?.[0]?.id }">{{ albumCard().countries?.[0]?.name }}</span>
+          }
         </p>
         <p class="card__genre">
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
