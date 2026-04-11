@@ -19,6 +19,10 @@ export interface BandAlbum {
   coverUrl: string | null;
   type: AlbumType;
   format: AlbumFormat;
+  genres?: { id: string; name: string; slug: string; isPrimary: boolean }[];
+  countries?: { id: string; name: string; code: string }[];
+  bandId?: string;
+  bandName?: string;
 }
 
 export interface Band {

@@ -77,6 +77,49 @@ export class Info implements OnInit {
   readonly albumData = signal<Album | null>(null);
   readonly discographyAlbums = signal<Album[]>([]);
   readonly discographyExpanded = signal(false);
+
+  readonly discographyGroups = computed(() => {
+    const bands = this.albumData()?.bands ?? [];
+    const currentId = this.albumData()?.id;
+
+    // Count how many bands each album appears in
+    const albumBandCount = new Map<string, number>();
+    for (const b of bands) {
+      for (const a of b.discography ?? []) {
+        albumBandCount.set(a.id, (albumBandCount.get(a.id) ?? 0) + 1);
+      }
+    }
+
+    // Per-band groups (exclude shared albums and current album)
+    const groups: { bandId: string | null; bandName: string; bandSlug: string; albums: any[] }[] = [];
+    for (const b of bands) {
+      const solo = (b.discography ?? []).filter(a => a.id !== currentId && albumBandCount.get(a.id) === 1);
+      if (solo.length) {
+        groups.push({ bandId: b.id, bandName: b.name, bandSlug: b.slug, albums: solo });
+      }
+    }
+
+    // Shared group — albums present in 2+ bands, excluding current album
+    const seen = new Set<string>();
+    const shared: any[] = [];
+    for (const b of bands) {
+      for (const a of b.discography ?? []) {
+        if (a.id !== currentId && albumBandCount.get(a.id)! > 1 && !seen.has(a.id)) {
+          seen.add(a.id);
+          shared.push(a);
+        }
+      }
+    }
+    if (shared.length) {
+      groups.push({ bandId: null, bandName: 'Collaborations', bandSlug: '', albums: shared });
+    }
+
+    return groups;
+  });
+
+  readonly totalDiscographyAlbums = computed(() =>
+    this.discographyGroups().reduce((sum, g) => sum + g.albums.length, 0)
+  );
   readonly similarAlbums = signal<Album[]>([]);
   readonly similarBands = signal<Band[]>([]);
   readonly bandVideos = signal<VideoBand[]>([]);

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { switchMap, filter } from 'rxjs';
@@ -11,7 +11,6 @@ import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Band } from '../../../shared/models/band';
-import { VideoBand } from '../../../shared/models/video-band';
 import { BandCard } from '../band-card/band-card';
 import { Album } from '../../../shared/models/album';
 import {
@@ -60,6 +59,32 @@ export class BandInfo implements OnInit {
   readonly similarBands = signal<Band[]>([]);
   readonly loaded = signal(false);
   readonly playingVideoId = signal<string | null>(null);
+
+  /** Albums grouped: own first, then co-artist groups */
+  readonly discographyGroups = computed(() => {
+    const band = this.bandData();
+    if (!band?.albums?.length) return [];
+    const bandId = band.id;
+
+    const own = band.albums.filter(a => !a.bandId || a.bandId === bandId);
+    const coArtistMap = new Map<string, { bandName: string; albums: typeof own }>();
+    for (const a of band.albums) {
+      if (a.bandId && a.bandId !== bandId) {
+        if (!coArtistMap.has(a.bandId)) {
+          coArtistMap.set(a.bandId, { bandName: a.bandName ?? a.bandId, albums: [] });
+        }
+        coArtistMap.get(a.bandId)!.albums.push(a);
+      }
+    }
+    const groups: { label: string | null; albums: typeof own }[] = [];
+    if (own.length) groups.push({ label: null, albums: own });
+    for (const g of coArtistMap.values()) {
+      groups.push({ label: g.bandName, albums: g.albums });
+    }
+    return groups;
+  });
+
+  readonly totalAlbums = computed(() => this.bandData()?.albums?.length ?? 0);
   onDelete(): void {
     const id = this.bandData()?.id;
     if (!id || !confirm('Delete this band?')) return;

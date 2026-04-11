@@ -132,12 +132,12 @@
 <app-image-lightbox [src]="lightboxSrc()!" (close)="lightboxSrc.set(null)" />
 }
 
-@if (bandData()?.albums?.length) {
+@if (totalAlbums()) {
 <app-section [sectionTitle]="titles.discography">
-  @if ((bandData()!.albums!.length) > 4) {
+  @if (totalAlbums() > 4) {
   <button sectionAction class="discography-show-more__btn" (click)="discographyExpanded.set(!discographyExpanded())">
     @if (!discographyExpanded()) {
-      Show all {{ bandData()!.albums!.length }} releases
+      Show all {{ totalAlbums() }} releases
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <polyline points="6 9 12 15 18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -149,12 +149,15 @@
     }
   </button>
   }
-  @for (album of bandData()!.albums!.slice(0, 4); track album.id) {
-    <app-album-card [albumCard]="$any(album)" />
-  }
-  @if (discographyExpanded()) {
-    @for (album of bandData()!.albums!.slice(4); track album.id) {
-      <app-album-card class="discography-extra" [albumCard]="$any(album)" />
+
+  @for (group of discographyGroups(); track $index; let gi = $index) {
+    @if (discographyExpanded() || gi === 0) {
+      @if (group.label) {
+        <h3 class="discography-group__label">{{ group.label }}</h3>
+      }
+      @for (album of (discographyExpanded() ? group.albums : group.albums.slice(0, 4)); track album.id; let ai = $index) {
+        <app-album-card [class.discography-extra]="ai >= 4" [albumCard]="$any(album)" />
+      }
     }
   }
 </app-section>
