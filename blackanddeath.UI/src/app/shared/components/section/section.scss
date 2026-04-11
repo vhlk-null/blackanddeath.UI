@@ -26,9 +26,16 @@
 }
 
 
-.section-title {
-  margin: 0 auto;
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   max-width: var(--section-body-max-width, 71.25rem);
+  margin: 0 auto;
+}
+
+.section-title {
+  margin: 0;
   font-family: 'Cinzel', serif;
   font-style: normal;
   font-weight: var(--font-weight-regular);

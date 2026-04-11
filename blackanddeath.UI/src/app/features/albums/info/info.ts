@@ -76,6 +76,7 @@ export class Info implements OnInit {
 
   readonly albumData = signal<Album | null>(null);
   readonly discographyAlbums = signal<Album[]>([]);
+  readonly discographyExpanded = signal(false);
   readonly similarAlbums = signal<Album[]>([]);
   readonly similarBands = signal<Band[]>([]);
   readonly bandVideos = signal<VideoBand[]>([]);
@@ -162,6 +163,7 @@ export class Info implements OnInit {
         this.albumData.set(album);
         this.loaded.set(true);
         this.playingVideoId.set(null);
+        this.discographyExpanded.set(false);
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
         this.discographyAlbums.set(discography);
