@@ -111,8 +111,9 @@ export class MultiSelectInput implements ControlValueAccessor {
   }
 
   private resolveSelected(ids: string[]): void {
+    const optionMap = new Map(this.options().map(o => [o.id, o]));
     const matched = ids
-      .map(id => this.options().find(o => o.id === id))
+      .map(id => optionMap.get(id))
       .filter((o): o is SelectOption => !!o);
     this.selected.set(matched);
   }
