@@ -55,6 +55,7 @@ export class BandInfo implements OnInit {
   readonly infoTabIndex = signal(0);
   readonly notFound = signal(false);
   readonly bandData = signal<Band | null>(null);
+  readonly discographyExpanded = signal(false);
   readonly similarAlbums = signal<Album[]>([]);
   readonly similarBands = signal<Band[]>([]);
   readonly loaded = signal(false);
@@ -89,6 +90,7 @@ export class BandInfo implements OnInit {
           this.router.navigate(['/bands', band.id, band.slug], { replaceUrl: true });
         }
         this.bandData.set(band);
+        this.discographyExpanded.set(false);
         this.similarAlbums.set((band.similarAlbums ?? []) as any);
         this.similarBands.set((band.similarBands ?? []) as any);
         this.playingVideoId.set(null);
