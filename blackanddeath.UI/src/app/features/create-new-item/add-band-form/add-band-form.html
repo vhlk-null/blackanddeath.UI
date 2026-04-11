@@ -30,9 +30,6 @@
               {{ logoFile ? (logoFile.name.length > 24 ? logoFile.name.slice(0, 24) + '…' : logoFile.name) : 'Upload image' }}
               <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
             </label>
-            @if (logoError) {
-              <span class="add-band__error">Logo is required</span>
-            }
           </div>
         </div>
 
@@ -50,10 +47,10 @@
         <div class="add-band__row">
           <label class="add-band__label" for="band-foundation">Foundation:</label>
           <div class="add-band__field">
-            <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1900" max="2099"
+            <input class="add-band__input" id="band-foundation" type="number" placeholder="Year" min="1960" [max]="currentYear"
               formControlName="formedYear" />
             @if (formedYear.invalid && formedYear.touched) {
-              <span class="add-band__error">Enter a valid year (1900–2099)</span>
+              <span class="add-band__error">Enter a valid year (1960–{{ currentYear }})</span>
             }
           </div>
         </div>

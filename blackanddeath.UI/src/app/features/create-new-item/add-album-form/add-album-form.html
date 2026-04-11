@@ -30,9 +30,6 @@
               {{ coverFile ? (coverFile.name.length > 24 ? coverFile.name.slice(0, 24) + '…' : coverFile.name) : 'Upload image' }}
               <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
             </label>
-            @if (coverError) {
-              <span class="add-album__error">Cover image is required</span>
-            }
           </div>
         </div>
 
@@ -53,7 +50,8 @@
             <app-multi-select
               formControlName="albumBands"
               [options]="bandOptions()"
-              placeholder="Search bands..."
+              [allowCreate]="true"
+              placeholder="Search or add band..."
             />
           </div>
         </div>
@@ -61,10 +59,10 @@
         <div class="add-album__row">
           <label class="add-album__label" for="album-year">Year:</label>
           <div class="add-album__field">
-            <input class="add-album__input" id="album-year" type="number" placeholder="Year" min="1900" max="2099"
+            <input class="add-album__input" id="album-year" type="number" placeholder="Year" min="1960" [max]="currentYear + 1"
               formControlName="albumYear" />
             @if (albumYear.invalid && albumYear.touched) {
-              <span class="add-album__error">Enter a valid year (1900–2099)</span>
+              <span class="add-album__error">Enter a valid year (1960–{{ currentYear + 1 }})</span>
             }
           </div>
         </div>
@@ -105,8 +103,8 @@
               formControlName="albumLabels"
               [options]="labelOptions()"
               [allowCreate]="true"
+              [maxItems]="1"
               placeholder="Search or add label..."
-              (create)="onCreateLabel($event)"
             />
             @if (albumLabels.invalid && albumLabels.touched) {
               <span class="add-album__error">At least one label is required</span>

@@ -30,6 +30,7 @@ export class AddBandForm implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  readonly currentYear = new Date().getFullYear();
   editMode = false;
   bandId: string | null = null;
   bandSlug: string | null = null;
@@ -49,7 +50,7 @@ export class AddBandForm implements OnInit {
       nonNullable: true,
     }),
     formedYear: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(1900), Validators.max(2099)],
+      validators: [Validators.required, Validators.min(1960), Validators.max(new Date().getFullYear())],
     }),
     bandCountries: new FormControl<string[]>([], {
       validators: [Validators.required],
@@ -156,9 +157,7 @@ export class AddBandForm implements OnInit {
   }
 
   onSubmit(): void {
-    this.logoError = !this.logoFile && !this.existingLogoUrl;
-
-    if (this.bandForm.invalid || this.logoError) {
+    if (this.bandForm.invalid) {
       this.bandForm.markAllAsTouched();
       return;
     }

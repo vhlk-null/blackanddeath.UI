@@ -1,4 +1,4 @@
-import { Component, computed, effect, forwardRef, input, output, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, forwardRef, input, output, signal, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface SelectOption {
@@ -20,8 +20,11 @@ export class MultiSelectInput implements ControlValueAccessor {
   options = input<SelectOption[]>([]);
   placeholder = input('Search...');
   allowCreate = input(false);
+  maxItems = input<number | null>(null);
 
   readonly create = output<string>();
+
+  @ViewChild('inputRef') inputRef?: ElementRef<HTMLInputElement>;
 
   readonly query = signal('');
   readonly selected = signal<SelectOption[]>([]);
@@ -47,9 +50,15 @@ export class MultiSelectInput implements ControlValueAccessor {
 ;
   });
 
+  readonly isAtMax = computed(() => {
+    const max = this.maxItems();
+    return max !== null && this.selected().length >= max;
+  });
+
   readonly canCreate = computed(() => {
     const q = this.query().trim();
     return this.allowCreate() &&
+      !this.isAtMax() &&
       q.length > 0 &&
       !this.options().some(o => o.name.toLowerCase() === q.toLowerCase());
   });
@@ -83,8 +92,9 @@ export class MultiSelectInput implements ControlValueAccessor {
   requestCreate(): void {
     const name = this.query().trim();
     if (name) {
+      const newOption: SelectOption = { id: `new::${name}`, name };
+      this.select(newOption);
       this.create.emit(name);
-      this.query.set('');
     }
   }
 

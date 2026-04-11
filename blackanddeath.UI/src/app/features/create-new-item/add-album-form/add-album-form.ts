@@ -40,6 +40,7 @@ export class AddAlbumForm implements OnInit {
   private route = inject(ActivatedRoute);
 
   readonly albumTypeOptions = Object.values(AlbumType);
+  readonly currentYear = new Date().getFullYear();
 
   readonly bandOptions = signal<SelectOption[]>([]);
   readonly genreOptions = signal<SelectOption[]>([]);
@@ -68,7 +69,7 @@ export class AddAlbumForm implements OnInit {
       nonNullable: true,
     }),
     albumYear: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(1900), Validators.max(2099)],
+      validators: [Validators.required, Validators.min(1960), Validators.max(new Date().getFullYear() + 1)],
     }),
     albumType: new FormControl<AlbumType>(AlbumType.FullLength, {
       validators: [Validators.required],
@@ -213,9 +214,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
   }
 
   onSubmit(): void {
-    this.coverError = !this.coverFile && !this.existingCoverUrl;
-
-    if (this.albumForm.invalid || this.coverError) {
+    if (this.albumForm.invalid) {
       this.albumForm.markAllAsTouched();
       return;
     }
@@ -231,15 +230,22 @@ get youtube() { return this.albumForm.get('youtube')!; }
       .map((t, i) => ({ trackNumber: i + 1, title: t.title.trim(), duration: t.duration?.trim() || '' }))
       .filter(t => t.title);
 
+    const labelIds = v.albumLabels.filter(id => !id.startsWith('new::'));
+    const labelNames = v.albumLabels
+      .filter(id => id.startsWith('new::'))
+      .map(id => id.slice(5));
+
     const dto = {
       title: v.albumName.trim(),
       releaseDate: v.albumYear!,
       type: v.albumType,
       format: AlbumFormat.CD,
-      bandIds: v.albumBands,
+      bandIds: v.albumBands.filter(id => !id.startsWith('new::')),
+      bandNames: v.albumBands.filter(id => id.startsWith('new::')).map(id => id.slice(5)),
       countryIds: v.albumCountries,
       genreIds: v.albumGenres,
-      labelIds: v.albumLabels,
+      labelIds,
+      labelNames,
       tagIds: v.albumTags,
       streamingLinks,
       tracks,
@@ -269,18 +275,6 @@ get youtube() { return this.albumForm.get('youtube')!; }
         this.toastService.error(this.editMode ? 'Failed to update album.' : 'Failed to publish album.');
         this.submitting.set(false);
       },
-    });
-  }
-
-  onCreateLabel(name: string): void {
-    this.labelService.create({ name: name.trim() }).subscribe({
-      next: (result) => {
-        const newOption = { id: result.id, name };
-        this.labelOptions.update(opts => [...opts, newOption]);
-        const current = this.albumForm.get('albumLabels')!.value as string[];
-        this.albumForm.patchValue({ albumLabels: [...current, result.id] });
-      },
-      error: () => this.toastService.error(`Failed to create label "${name}".`),
     });
   }
 

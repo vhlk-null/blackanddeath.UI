@@ -21,9 +21,11 @@ export interface CreateAlbumDto {
   type: AlbumType;
   format: AlbumFormat;
   bandIds?: string[];
+  bandNames?: string[];
   countryIds?: string[];
   genreIds?: string[];
   labelIds?: string[];
+  labelNames?: string[];
   tagIds?: string[];
   streamingLinks?: StreamingLink[];
   tracks?: { trackNumber: number; title: string; duration: string }[];
