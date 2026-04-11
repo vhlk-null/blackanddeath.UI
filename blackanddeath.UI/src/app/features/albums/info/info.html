@@ -228,7 +228,7 @@
 
   @for (group of discographyGroups(); track group.bandId; let gi = $index) {
     @if (discographyExpanded() || gi === 0) {
-      @if (discographyGroups().length > 1 || !group.bandId || (albumData()?.bands?.length ?? 0) > 1) {
+      @if ((albumData()?.bands?.length ?? 0) > 1 && (discographyGroups().length > 1 || !group.bandId)) {
         <h3 class="discography-group__label">
           @if (group.bandId) {
             <a [routerLink]="['/bands', group.bandId, group.bandSlug]" class="discography-group__band-link">{{ group.bandName }}</a>
