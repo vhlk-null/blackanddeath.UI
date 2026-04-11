@@ -82,36 +82,48 @@ export class Info implements OnInit {
     const bands = this.albumData()?.bands ?? [];
     const currentId = this.albumData()?.id;
 
-    // Count how many bands each album appears in
-    const albumBandCount = new Map<string, number>();
+    // Build map: albumId -> unique bandIds that contain it
+    const albumBands = new Map<string, string[]>();
     for (const b of bands) {
       for (const a of b.discography ?? []) {
-        albumBandCount.set(a.id, (albumBandCount.get(a.id) ?? 0) + 1);
+        if (!albumBands.has(a.id)) albumBands.set(a.id, []);
+        const ids = albumBands.get(a.id)!;
+        if (!ids.includes(b.id!)) ids.push(b.id!);
       }
     }
 
-    // Per-band groups (exclude shared albums and current album)
+    // Per-band solo groups (album belongs only to this band)
     const groups: { bandId: string | null; bandName: string; bandSlug: string; albums: any[] }[] = [];
     for (const b of bands) {
-      const solo = (b.discography ?? []).filter(a => a.id !== currentId && albumBandCount.get(a.id) === 1);
+      const solo = (b.discography ?? []).filter(
+        a => a.id !== currentId && albumBands.get(a.id)?.length === 1
+      );
       if (solo.length) {
         groups.push({ bandId: b.id, bandName: b.name, bandSlug: b.slug, albums: solo });
       }
     }
 
-    // Shared group — albums present in 2+ bands, excluding current album
+    // Collaboration groups — grouped by sorted combination of bandIds
+    const collabMap = new Map<string, { label: string; albums: any[] }>();
     const seen = new Set<string>();
-    const shared: any[] = [];
     for (const b of bands) {
       for (const a of b.discography ?? []) {
-        if (a.id !== currentId && albumBandCount.get(a.id)! > 1 && !seen.has(a.id)) {
-          seen.add(a.id);
-          shared.push(a);
+        if (a.id === currentId || seen.has(a.id)) continue;
+        const participantIds = albumBands.get(a.id) ?? [];
+        if (participantIds.length < 2) continue;
+        seen.add(a.id);
+        const key = [...participantIds].sort().join('|');
+        if (!collabMap.has(key)) {
+          const label = participantIds
+            .map(id => bands.find(b2 => b2.id === id)?.name ?? id)
+            .join(' & ');
+          collabMap.set(key, { label, albums: [] });
         }
+        collabMap.get(key)!.albums.push(a);
       }
     }
-    if (shared.length) {
-      groups.push({ bandId: null, bandName: 'Collaborations', bandSlug: '', albums: shared });
+    for (const [, collab] of collabMap) {
+      groups.push({ bandId: null, bandName: collab.label, bandSlug: '', albums: collab.albums });
     }
 
     return groups;
