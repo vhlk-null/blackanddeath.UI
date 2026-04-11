@@ -28,4 +28,6 @@ export interface Album {
   videos: VideoBand[];
   similarAlbums?: Album[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
+  bandId?: string;
+  bandName?: string;
 }

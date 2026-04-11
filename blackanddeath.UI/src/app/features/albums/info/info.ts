@@ -82,21 +82,27 @@ export class Info implements OnInit {
     const bands = this.albumData()?.bands ?? [];
     const currentId = this.albumData()?.id;
 
-    // Build map: albumId -> unique bandIds that contain it
-    const albumBands = new Map<string, string[]>();
+    // Build map: albumId -> unique bandIds from the album's own bandId field
+    // Each album entry carries its own bandId — use that to detect collaborations
+    const albumBands = new Map<string, Set<string>>();
+    const albumByBand = new Map<string, Map<string, any>>(); // bandId -> (albumId -> album)
     for (const b of bands) {
       for (const a of b.discography ?? []) {
-        if (!albumBands.has(a.id)) albumBands.set(a.id, []);
-        const ids = albumBands.get(a.id)!;
-        if (!ids.includes(b.id!)) ids.push(b.id!);
+        // Track all bandIds this album is associated with (via a.bandId)
+        if (!albumBands.has(a.id)) albumBands.set(a.id, new Set());
+        if (a.bandId) albumBands.get(a.id)!.add(a.bandId);
+        // Deduplicate albums per owning band
+        if (!albumByBand.has(b.id!)) albumByBand.set(b.id!, new Map());
+        if (!albumByBand.get(b.id!)!.has(a.id)) albumByBand.get(b.id!)!.set(a.id, a);
       }
     }
 
-    // Per-band solo groups (album belongs only to this band)
+    // Per-band solo groups (album belongs only to this one band)
     const groups: { bandId: string | null; bandName: string; bandSlug: string; albums: any[] }[] = [];
     for (const b of bands) {
-      const solo = (b.discography ?? []).filter(
-        a => a.id !== currentId && albumBands.get(a.id)?.length === 1
+      const deduped = [...(albumByBand.get(b.id!) ?? new Map()).values()];
+      const solo = deduped.filter(
+        a => a.id !== currentId && (albumBands.get(a.id)?.size ?? 0) <= 1
       );
       if (solo.length) {
         groups.push({ bandId: b.id, bandName: b.name, bandSlug: b.slug, albums: solo });
@@ -107,14 +113,16 @@ export class Info implements OnInit {
     const collabMap = new Map<string, { label: string; albums: any[] }>();
     const seen = new Set<string>();
     for (const b of bands) {
-      for (const a of b.discography ?? []) {
+      const deduped = [...(albumByBand.get(b.id!) ?? new Map()).values()];
+      for (const a of deduped) {
         if (a.id === currentId || seen.has(a.id)) continue;
-        const participantIds = albumBands.get(a.id) ?? [];
+        const participantIds = [...(albumBands.get(a.id) ?? [])];
         if (participantIds.length < 2) continue;
         seen.add(a.id);
         const key = [...participantIds].sort().join('|');
         if (!collabMap.has(key)) {
-          const label = participantIds
+          // Prefer band name from bands[] if available, else from albumBands
+          const label = [...participantIds].sort()
             .map(id => bands.find(b2 => b2.id === id)?.name ?? id)
             .join(' & ');
           collabMap.set(key, { label, albums: [] });
