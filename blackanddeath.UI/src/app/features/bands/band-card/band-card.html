@@ -1,7 +1,7 @@
 <a class="band-card" [routerLink]="['/bands', bandCard().id, bandCard().slug]">
   <div class="band-card__cover">
-    @if (bandCard().logoUrl) {
-      <img class="band-card__image" [src]="bandCard().logoUrl" [alt]="bandCard().name" />
+    @if (bandCard().logoUrl && !imageError()) {
+      <img class="band-card__image" [src]="bandCard().logoUrl" [alt]="bandCard().name" (error)="imageError.set(true)" />
     } @else {
       <div class="band-card__placeholder">
         <svg class="band-card__placeholder-vinyl" viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">

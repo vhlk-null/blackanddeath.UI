@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Album } from '../../../shared/models/album';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
@@ -12,6 +12,7 @@ import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 })
 export class AlbumCard {
   albumCard = input.required<Album>();
+  readonly imageError = signal(false);
 
   readonly typeLabels: Record<AlbumType, string> = {
     [AlbumType.FullLength]: 'Full-Length',

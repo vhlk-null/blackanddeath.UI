@@ -5,8 +5,13 @@ import { Album } from '../../../shared/models/album';
 import { AlbumCard } from '../card/album-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 
-const SORT_OPTIONS = ['Newest', 'Oldest', 'ReleaseDate', 'Title'] as const;
-type SortOption = typeof SORT_OPTIONS[number];
+const SORT_OPTIONS = [
+  { value: 'Newest', label: 'Newest' },
+  { value: 'Oldest', label: 'Oldest' },
+  { value: 'ReleaseDate', label: 'Release Date' },
+  { value: 'Title', label: 'Title' },
+] as const;
+type SortOption = typeof SORT_OPTIONS[number]['value'];
 const PAGE_SIZE = 20;
 
 
@@ -40,7 +45,8 @@ export class AllAlbums implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const sort = params['sort'] as SortOption;
-      this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');
+      const validSort = SORT_OPTIONS.find(o => o.value === sort);
+      this.activeSort.set(validSort ? sort : 'Newest');
       this.currentPage.set(Number(params['page']) || 1);
       this.activeName.set(params['name'] ?? null);
       this.activeGenreId.set(params['genreId'] ?? null);

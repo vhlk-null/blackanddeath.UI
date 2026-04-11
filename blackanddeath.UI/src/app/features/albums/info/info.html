@@ -84,10 +84,10 @@
   <div class="album-info__body">
 
     <div class="album-info__left">
-      <div class="album-info__cover" [style.cursor]="albumData()?.coverUrl ? 'pointer' : 'default'"
-        (click)="albumData()?.coverUrl && lightboxSrc.set(albumData()!.coverUrl!)">
-        @if (albumData()?.coverUrl) {
-        <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" />
+      <div class="album-info__cover" [style.cursor]="albumData()?.coverUrl && !imageError() ? 'pointer' : 'default'"
+        (click)="albumData()?.coverUrl && !imageError() && lightboxSrc.set(albumData()!.coverUrl!)">
+        @if (albumData()?.coverUrl && !imageError()) {
+        <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" (error)="imageError.set(true)" />
         } @else if (loaded()) {
 
         <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">

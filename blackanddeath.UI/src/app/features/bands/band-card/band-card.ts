@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Band } from '../../../shared/models/band';
 
@@ -10,4 +10,5 @@ import { Band } from '../../../shared/models/band';
 })
 export class BandCard {
   bandCard = input.required<Band>();
+  readonly imageError = signal(false);
 }

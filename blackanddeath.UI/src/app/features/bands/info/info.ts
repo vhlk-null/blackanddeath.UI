@@ -51,6 +51,7 @@ export class BandInfo implements OnInit {
   };
 
   readonly lightboxSrc = signal<string | null>(null);
+  readonly imageError = signal(false);
   readonly infoTabIndex = signal(0);
   readonly notFound = signal(false);
   readonly bandData = signal<Band | null>(null);

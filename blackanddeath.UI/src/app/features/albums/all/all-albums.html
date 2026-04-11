@@ -7,8 +7,8 @@
       <select class="all-albums__filter-select" id="albums-sort"
         [value]="activeSort()"
         (change)="onSortChange($any($event.target).value)">
-        @for (option of sortOptions; track option) {
-          <option [value]="option">{{ option }}</option>
+        @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
         }
       </select>
     </div>

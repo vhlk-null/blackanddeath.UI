@@ -39,6 +39,7 @@ export class Info implements OnInit {
   private toastService = inject(ToastService);
 
   readonly lightboxSrc = signal<string | null>(null);
+  readonly imageError = signal(false);
 
   readonly tabs = {
     info: ALBUM_INFORMATION,

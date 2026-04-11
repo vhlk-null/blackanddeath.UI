@@ -48,8 +48,8 @@
     height: 100%;
 
     &-vinyl {
-      width: min(171px, 60%);
-      height: min(171px, 60%);
+      width: 171px;
+      height: 171px;
       flex-shrink: 0;
     }
   }
