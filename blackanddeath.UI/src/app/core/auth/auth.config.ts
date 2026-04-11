@@ -8,7 +8,7 @@ export const authConfig: AuthConfig = {
   silentRefreshRedirectUri: `${window.location.origin}/silent-refresh.html`,
   clientId: 'angular',
   responseType: 'code',
-  scope: 'openid profile email roles libraryAPI offline_access',
+  scope: 'openid profile email roles blackeneddeath.api offline_access',
   useSilentRefresh: true,
   silentRefreshTimeout: 5000,
   sessionChecksEnabled: false,
