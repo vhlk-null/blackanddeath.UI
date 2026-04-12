@@ -71,6 +71,7 @@ export class Info implements OnInit {
     if (this.youtubeEmbed()) tabs.push('YouTube');
     if (this.spotifyEmbed()) tabs.push('Spotify');
     if (this.appleMusicEmbed()) tabs.push('Apple Music');
+    if (this.amazonMusicEmbed()) tabs.push('Amazon Music');
     if (this.deezerEmbed()) tabs.push('Deezer');
     if (this.bandcampEmbed()) tabs.push('Bandcamp');
     return tabs;
@@ -108,6 +109,11 @@ export class Info implements OnInit {
   readonly spotifyEmbed = computed(() => {
     const url = this.getRawLink(StreamingPlatform.Spotify);
     return url ? toEmbedUrl(url, 'Spotify') : null;
+  });
+
+  readonly amazonMusicEmbed = computed(() => {
+    const url = this.getRawLink(StreamingPlatform.AmazonMusic);
+    return url ? toEmbedUrl(url, 'AmazonMusic') : null;
   });
 
   readonly deezerEmbed = computed(() => {

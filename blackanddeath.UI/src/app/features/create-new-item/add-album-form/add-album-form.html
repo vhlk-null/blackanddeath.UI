@@ -182,6 +182,17 @@
           </div>
         </div>
 
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-amazon">Amazon Music:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-amazon" type="url" placeholder="https://www.amazon.com/music/player/albums/..."
+              formControlName="amazonMusic" />
+            @if (amazonMusic.touched && amazonMusic.hasError('pattern')) {
+              <span class="add-album__error">Enter a valid URL (https://...)</span>
+            }
+          </div>
+        </div>
+
         <div class="add-album__row add-album__row--textarea">
           <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
           <div class="add-album__field">

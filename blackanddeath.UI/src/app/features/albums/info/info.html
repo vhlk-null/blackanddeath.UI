@@ -177,6 +177,13 @@
             allowfullscreen></iframe>
         </div>
         }
+        @case ('Amazon Music') {
+        <div class="album-info__embed album-info__embed--spotify">
+          <iframe [src]="amazonMusicEmbed()! | safeUrl"
+            width="100%" height="352px" frameBorder="0"
+            style="border-radius:20px"></iframe>
+        </div>
+        }
         @case ('Deezer') {
         <div class="album-info__embed album-info__embed--spotify">
           <iframe title="deezer-widget" [src]="deezerEmbed()! | safeUrl"

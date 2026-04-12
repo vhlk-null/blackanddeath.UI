@@ -106,6 +106,10 @@ export class AddAlbumForm implements OnInit {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
+    amazonMusic: new FormControl('', {
+      validators: [Validators.pattern('https?://.+')],
+      nonNullable: true,
+    }),
     bandcamp: new FormControl('', {
       nonNullable: true,
     }),
@@ -178,6 +182,7 @@ export class AddAlbumForm implements OnInit {
       youtube: getLink(StreamingPlatform.YouTube),
       appleMusic: getLink(StreamingPlatform.AppleMusic),
       deezer: getLink(StreamingPlatform.Deezer),
+      amazonMusic: getLink(StreamingPlatform.AmazonMusic),
       bandcamp: getLink(StreamingPlatform.Bandcamp),
     });
   }
@@ -194,6 +199,7 @@ export class AddAlbumForm implements OnInit {
   get youtube() { return this.albumForm.get('youtube')!; }
   get appleMusic() { return this.albumForm.get('appleMusic')!; }
   get deezer() { return this.albumForm.get('deezer')!; }
+  get amazonMusic() { return this.albumForm.get('amazonMusic')!; }
   get bandcamp() { return this.albumForm.get('bandcamp')!; }
 
   addTrack(): void {
@@ -238,6 +244,7 @@ export class AddAlbumForm implements OnInit {
     if (v.youtube.trim()) streamingLinks.push({ platform: StreamingPlatform.YouTube, embedCode: v.youtube.trim() });
     if (v.appleMusic.trim()) streamingLinks.push({ platform: StreamingPlatform.AppleMusic, embedCode: v.appleMusic.trim() });
     if (v.deezer.trim()) streamingLinks.push({ platform: StreamingPlatform.Deezer, embedCode: v.deezer.trim() });
+    if (v.amazonMusic.trim()) streamingLinks.push({ platform: StreamingPlatform.AmazonMusic, embedCode: v.amazonMusic.trim() });
     if (v.bandcamp.trim()) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp.trim() });
 
     const tracks = this.tracks
