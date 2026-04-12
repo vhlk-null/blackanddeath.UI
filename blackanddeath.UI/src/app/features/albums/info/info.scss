@@ -322,7 +322,7 @@
   &__tracks {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0.75rem 0 0;
     overflow-y: auto;
     // cover(367px) + rating(~48px) + meta table(~160px) - tracklist header(~2.5rem)
     max-height: calc(22.9375rem + 3rem + 10rem - 2.5rem);
@@ -385,6 +385,7 @@
       aspect-ratio: unset;
       height: 100%;
       flex: 1;
+      min-height: 18rem;
     }
 
 
