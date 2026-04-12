@@ -9,7 +9,7 @@ export const authConfig: AuthConfig = {
   clientId: 'angular',
   responseType: 'code',
   scope: 'openid profile email roles blackeneddeath.api offline_access',
-  useSilentRefresh: false,
+  useSilentRefresh: true,
   silentRefreshTimeout: 5000,
   sessionChecksEnabled: false,
   showDebugInformation: true,

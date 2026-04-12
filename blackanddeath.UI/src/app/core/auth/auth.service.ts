@@ -58,12 +58,10 @@ export class AuthService {
         });
 
       this.oauth.events
-        .pipe(filter(e => e.type === 'token_expires'))
+        .pipe(filter(e => e.type === 'silent_refresh_error'))
         .subscribe(() => {
-          this.oauth.refreshToken().catch(() => {
-            this._isAuthenticated.set(false);
-            this._profile.set(null);
-          });
+          this._isAuthenticated.set(false);
+          this._profile.set(null);
         });
 
       this.oauth.events
