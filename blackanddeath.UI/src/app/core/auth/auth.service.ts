@@ -52,9 +52,10 @@ export class AuthService {
 
       this.oauth.events
         .pipe(filter(e => e.type === 'token_refreshed'))
-        .subscribe(async () => {
+        .subscribe(() => {
           this._isAuthenticated.set(true);
-          await this.loadProfile();
+          const claims = this.oauth.getIdentityClaims() as UserProfile;
+          if (claims) this._profile.set(claims);
         });
 
       this.oauth.events
