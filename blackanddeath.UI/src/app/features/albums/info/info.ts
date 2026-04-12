@@ -70,6 +70,7 @@ export class Info implements OnInit {
     if (this.albumData()?.tracks?.length) tabs.push('Tracklist');
     if (this.youtubeEmbed()) tabs.push('YouTube');
     if (this.spotifyEmbed()) tabs.push('Spotify');
+    if (this.appleMusicEmbed()) tabs.push('Apple Music');
     if (this.bandcampEmbed()) tabs.push('Bandcamp');
     return tabs;
   });
@@ -106,6 +107,11 @@ export class Info implements OnInit {
   readonly spotifyEmbed = computed(() => {
     const url = this.getRawLink(StreamingPlatform.Spotify);
     return url ? toEmbedUrl(url, 'Spotify') : null;
+  });
+
+  readonly appleMusicEmbed = computed(() => {
+    const url = this.getRawLink(StreamingPlatform.AppleMusic);
+    return url ? toEmbedUrl(url, 'AppleMusic') : null;
   });
 
   readonly bandcampEmbed = computed(() => {

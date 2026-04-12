@@ -160,6 +160,17 @@
           </div>
         </div>
 
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-apple-music">Apple Music:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-apple-music" type="url" placeholder="https://music.apple.com/..."
+              formControlName="appleMusic" />
+            @if (appleMusic.touched && appleMusic.hasError('pattern')) {
+              <span class="add-album__error">Enter a valid URL (https://...)</span>
+            }
+          </div>
+        </div>
+
         <div class="add-album__row add-album__row--textarea">
           <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
           <div class="add-album__field">

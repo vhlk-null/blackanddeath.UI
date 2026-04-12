@@ -2,7 +2,7 @@
  * Converts a user-supplied streaming URL to an embeddable iframe src.
  * Returns null if the URL cannot be converted to an embed (e.g. Bandcamp).
  */
-export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandcamp'): string | null {
+export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandcamp' | 'AppleMusic'): string | null {
   if (!url) return null;
 
   if (platform === 'YouTube') {
@@ -35,6 +35,20 @@ export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandc
     } catch {
       return null;
     }
+  }
+
+  if (platform === 'AppleMusic') {
+    // https://music.apple.com/us/album/name/id  →  https://embed.music.apple.com/us/album/name/id
+    try {
+      const u = new URL(url);
+      if (u.hostname === 'embed.music.apple.com') return url;
+      if (u.hostname === 'music.apple.com') {
+        return `https://embed.music.apple.com${u.pathname}`;
+      }
+    } catch {
+      return null;
+    }
+    return null;
   }
 
   if (platform === 'Bandcamp') {

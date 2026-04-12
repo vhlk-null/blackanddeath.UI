@@ -98,6 +98,10 @@ export class AddAlbumForm implements OnInit {
       validators: [Validators.pattern('https?://.+')],
       nonNullable: true,
     }),
+    appleMusic: new FormControl('', {
+      validators: [Validators.pattern('https?://.+')],
+      nonNullable: true,
+    }),
     bandcamp: new FormControl('', {
       nonNullable: true,
     }),
@@ -167,7 +171,8 @@ export class AddAlbumForm implements OnInit {
       albumLabels: album.label?.id ? [album.label.id] : [],
       albumTags: album.tags?.map(t => t.id) ?? [],
       spotify: getLink(StreamingPlatform.Spotify),
-youtube: getLink(StreamingPlatform.YouTube),
+      youtube: getLink(StreamingPlatform.YouTube),
+      appleMusic: getLink(StreamingPlatform.AppleMusic),
       bandcamp: getLink(StreamingPlatform.Bandcamp),
     });
   }
@@ -181,7 +186,8 @@ youtube: getLink(StreamingPlatform.YouTube),
   get albumLabels() { return this.albumForm.get('albumLabels')!; }
   get albumTags() { return this.albumForm.get('albumTags')!; }
   get spotify() { return this.albumForm.get('spotify')!; }
-get youtube() { return this.albumForm.get('youtube')!; }
+  get youtube() { return this.albumForm.get('youtube')!; }
+  get appleMusic() { return this.albumForm.get('appleMusic')!; }
   get bandcamp() { return this.albumForm.get('bandcamp')!; }
 
   addTrack(): void {
@@ -224,6 +230,7 @@ get youtube() { return this.albumForm.get('youtube')!; }
 
     if (v.spotify.trim()) streamingLinks.push({ platform: StreamingPlatform.Spotify, embedCode: v.spotify.trim() });
     if (v.youtube.trim()) streamingLinks.push({ platform: StreamingPlatform.YouTube, embedCode: v.youtube.trim() });
+    if (v.appleMusic.trim()) streamingLinks.push({ platform: StreamingPlatform.AppleMusic, embedCode: v.appleMusic.trim() });
     if (v.bandcamp.trim()) streamingLinks.push({ platform: StreamingPlatform.Bandcamp, embedCode: v.bandcamp.trim() });
 
     const tracks = this.tracks
