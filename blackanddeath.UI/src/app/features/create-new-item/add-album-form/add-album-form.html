@@ -186,34 +186,25 @@
     <span class="add-album__tracklist-title">Tracklist</span>
   </div>
   <div class="add-album__tracklist-body">
-    <div class="add-album__tracklist-col">
-      @for (track of tracks; track track; let i = $index) {
-        <div class="add-album__track-row">
-          <span class="add-album__track-num">{{ (i + 1).toString().padStart(2, '0') }} Track:</span>
-          <input
-            class="add-album__track-input"
-            type="text"
-            placeholder="type here.."
-            [(ngModel)]="tracks[i].title"
-            [ngModelOptions]="{ standalone: true }"
-          />
-        </div>
-      }
-    </div>
-    <div class="add-album__tracklist-col">
-      @for (track of tracks; track track; let i = $index) {
-        <div class="add-album__track-row">
-          <span class="add-album__track-num">{{ (i + 1).toString().padStart(2, '0') }} Duration:</span>
-          <input
-            class="add-album__track-input add-album__track-input--duration"
-            type="text"
-            placeholder="type here.."
-            [(ngModel)]="tracks[i].duration"
-            [ngModelOptions]="{ standalone: true }"
-          />
-        </div>
-      }
-    </div>
+    @for (track of tracks; track track; let i = $index) {
+      <div class="add-album__track-row">
+        <span class="add-album__track-num">{{ (i + 1).toString().padStart(2, '0') }}</span>
+        <input
+          class="add-album__track-input"
+          type="text"
+          placeholder="Track title..."
+          [(ngModel)]="tracks[i].title"
+          [ngModelOptions]="{ standalone: true }"
+        />
+        <input
+          class="add-album__track-input add-album__track-input--duration"
+          type="text"
+          placeholder="0:00"
+          [(ngModel)]="tracks[i].duration"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+    }
   </div>
   <div class="add-album__tracklist-actions">
     <button class="add-album__btn add-album__btn--cancel" type="button" (click)="deleteTrack()">Delete track</button>

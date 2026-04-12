@@ -42,8 +42,10 @@ body {
   scrollbar-gutter: stable;
 }
 
+html.scroll-locked,
 html.scroll-locked body {
   overflow: hidden;
+  touch-action: none;
 }
 
 .container {
