@@ -80,7 +80,7 @@
 
   &__band {
     display: block;
-    margin: 0 0 0.75rem;
+    margin: 0;
     font-family: 'Inter', var(--font-family-body);
     font-weight: 400;
     font-size: 1rem; // 16px
@@ -108,7 +108,7 @@
   }
 
   &__meta {
-    margin: 0 0 0.125rem;
+    margin: 0.75rem 0 0.125rem;
     font-family: var(--font-family-body);
     font-weight: var(--font-weight-regular);
     font-size: var(--font-size-sm);
