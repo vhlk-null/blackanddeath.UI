@@ -30,8 +30,10 @@ export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandc
     // https://open.spotify.com/embed/album/ID  (already embed)
     try {
       const u = new URL(url);
-      if (u.pathname.startsWith('/embed/')) return url.includes('theme=0') ? url : `${url}&theme=0`;
-      return `https://open.spotify.com/embed${u.pathname}?theme=0`;
+      const base = u.pathname.startsWith('/embed/')
+        ? `https://open.spotify.com${u.pathname}`
+        : `https://open.spotify.com/embed${u.pathname}`;
+      return `${base}?utm_source=oembed&theme=0`;
     } catch {
       return null;
     }
