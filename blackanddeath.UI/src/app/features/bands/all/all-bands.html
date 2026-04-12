@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  @if (loaded() && total() === 0) {
+  @if (loaded() && bands().length === 0) {
     <p class="all-bands__empty">No bands found.</p>
   } @else {
     <div class="all-bands__grid">

@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  @if (loaded() && total() === 0) {
+  @if (loaded() && albums().length === 0) {
     <p class="all-albums__empty">No albums found.</p>
   } @else {
     <div class="all-albums__grid">
