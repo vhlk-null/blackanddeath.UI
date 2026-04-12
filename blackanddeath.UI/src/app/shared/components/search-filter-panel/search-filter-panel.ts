@@ -1,14 +1,17 @@
 import { Component, computed, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GenreService } from '../../../features/services/genre.service';
 import { CountryService } from '../../../features/services/country.service';
 import { LabelService } from '../../../features/services/label.service';
 import { BandService } from '../../../features/services/band.service';
 import { AlbumService } from '../../../features/services/album.servics';
+import { TagService } from '../../../features/services/tag.service';
 import { Genre } from '../../models/genre';
 import { Country } from '../../models/country';
 import { Label } from '../../models/label';
 import { AlbumType } from '../../models/enums/album-type.enum';
+import { MultiSelectInput, SelectOption } from '../multi-select/multi-select';
 
 interface NameEntry { id: string; name: string; }
 
@@ -16,6 +19,7 @@ type FilterTab = 'albums' | 'bands';
 
 @Component({
   selector: 'app-search-filter-panel',
+  imports: [FormsModule, MultiSelectInput],
   templateUrl: './search-filter-panel.html',
   styleUrl: './search-filter-panel.scss',
 })
@@ -26,6 +30,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   private labelService = inject(LabelService);
   private bandService = inject(BandService);
   private albumService = inject(AlbumService);
+  private tagService = inject(TagService);
 
   readonly closed = output<void>();
 
@@ -36,6 +41,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly labels = signal<Label[]>([]);
   readonly bandNames = signal<NameEntry[]>([]);
   readonly albumNames = signal<NameEntry[]>([]);
+  readonly tagOptions = signal<SelectOption[]>([]);
 
   readonly albumTypes = Object.values(AlbumType);
 
@@ -76,7 +82,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly yearToPct = computed(() =>
     (((this.yearTo() ?? this.yearMax) - this.yearMin) / (this.yearMax - this.yearMin)) * 100
   );
-  readonly tags = signal('');
+  readonly selectedTagIds = signal<string[]>([]);
 
   // Band filters
   readonly bandFilterQuery = signal('');
@@ -89,7 +95,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly selectedBandFilterId = signal('');
   readonly bandCountryId = signal('');
   readonly bandGenreId = signal('');
-  readonly bandTags = signal('');
+  readonly selectedBandTagIds = signal<string[]>([]);
 
   ngOnInit(): void {
     document.documentElement.classList.add('scroll-locked');
@@ -98,6 +104,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     this.labelService.getAll().subscribe(l => this.labels.set(l));
     this.bandService.getNames().subscribe(b => this.bandNames.set(b));
     this.albumService.getNames().subscribe(a => this.albumNames.set(a));
+    this.tagService.getAll().subscribe(t => this.tagOptions.set(t));
   }
 
   ngOnDestroy(): void {
@@ -142,6 +149,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     if (this.selectedType()) params['type'] = this.selectedType();
     if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
     if (this.yearTo()) params['yearTo'] = String(this.yearTo());
+    if (this.selectedTagIds().length) params['tagIds'] = this.selectedTagIds().join(',');
 
     this.router.navigate(['/albums'], { queryParams: params });
     this.closed.emit();
@@ -153,6 +161,7 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     if (this.bandCountryId()) params['countryId'] = this.bandCountryId();
     if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
     if (this.yearTo()) params['yearTo'] = String(this.yearTo());
+    if (this.selectedBandTagIds().length) params['tagIds'] = this.selectedBandTagIds().join(',');
 
     this.router.navigate(['/bands'], { queryParams: params });
     this.closed.emit();

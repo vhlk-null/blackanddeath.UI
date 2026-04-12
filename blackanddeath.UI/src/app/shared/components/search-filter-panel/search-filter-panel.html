@@ -113,9 +113,12 @@
       </div>
 
       <div class="filter-panel__field">
-        <label class="filter-panel__label">Words and tags for search</label>
-        <textarea class="filter-panel__textarea" placeholder="Type here..."
-          [value]="tags()" (input)="tags.set($any($event.target).value)"></textarea>
+        <label class="filter-panel__label">Tags</label>
+        <app-multi-select
+          [options]="tagOptions()"
+          placeholder="Search tags..."
+          [(ngModel)]="selectedTagIds"
+        />
       </div>
 
       <button class="filter-panel__submit" (click)="searchAlbums()">Search Albums</button>
@@ -183,9 +186,12 @@
       </div>
 
       <div class="filter-panel__field">
-        <label class="filter-panel__label">Words and tags for search</label>
-        <textarea class="filter-panel__textarea" placeholder="Type here..."
-          [value]="bandTags()" (input)="bandTags.set($any($event.target).value)"></textarea>
+        <label class="filter-panel__label">Tags</label>
+        <app-multi-select
+          [options]="tagOptions()"
+          placeholder="Search tags..."
+          [(ngModel)]="selectedBandTagIds"
+        />
       </div>
 
       <button class="filter-panel__submit" (click)="searchBands()">Search Bands</button>

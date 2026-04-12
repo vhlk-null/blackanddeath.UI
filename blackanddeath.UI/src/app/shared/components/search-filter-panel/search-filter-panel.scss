@@ -265,28 +265,6 @@
 
 .filter-panel {
 
-  &__textarea {
-    background: var(--color-input-bg);
-    border: 1px solid var(--color-border-input);
-    border-radius: var(--radius-md);
-    padding: 0.75rem;
-    color: var(--color-text);
-    font-family: var(--font-family-body);
-    font-size: 0.875rem;
-    outline: none;
-    resize: vertical;
-    min-height: 3.5rem;
-    transition: border-color 0.15s ease;
-
-    &::placeholder {
-      color: var(--color-text-placeholder);
-    }
-
-    &:focus {
-      border-color: var(--color-border-input-focus);
-    }
-  }
-
   &__submit {
     align-self: flex-end;
     height: 2.5rem;
