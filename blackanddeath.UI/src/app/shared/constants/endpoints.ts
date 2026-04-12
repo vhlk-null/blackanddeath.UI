@@ -64,6 +64,16 @@ export class AdminEndpoints {
   public static GET_VIDEOS_BY_BAND = (bandId: string) => `${base}/library/admin/bands/${bandId}/videos`;
 }
 
+export class RatingEndpoints {
+  static readonly base = environment.usercontentUrl;
+  public static RATE_ALBUM = `${RatingEndpoints.base}/albumRatings`;
+  public static RATE_BAND = `${RatingEndpoints.base}/bandRatings`;
+  public static GET_ALBUM_RATING = (albumId: string) => `${RatingEndpoints.base}/albumRatings/${albumId}`;
+  public static GET_ALBUM_AVERAGE = (albumId: string) => `${RatingEndpoints.base}/albumRatings/${albumId}/average`;
+  public static GET_BAND_RATING = (bandId: string) => `${RatingEndpoints.base}/bandRatings/${bandId}`;
+  public static GET_BAND_AVERAGE = (bandId: string) => `${RatingEndpoints.base}/bandRatings/${bandId}/average`;
+}
+
 export class CountryEndpoints {
   public static GET_ALL = `${base}/library/countries`;
   public static GET_BY_ID = (id: string) => `${base}/library/countries/${id}`;

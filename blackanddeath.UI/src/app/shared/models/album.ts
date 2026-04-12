@@ -29,6 +29,8 @@ export interface Album {
   similarAlbums?: Album[];
   discographyGroups?: DiscographyGroup[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
+  averageRating?: number | null;
+  ratingsCount?: number;
   bandId?: string;
   bandName?: string;
 }

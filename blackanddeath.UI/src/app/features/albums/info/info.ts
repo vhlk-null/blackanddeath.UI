@@ -11,6 +11,7 @@ import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { RatingService } from '../../services/rating.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -36,12 +37,14 @@ export class Info implements OnInit {
   private router = inject(Router);
   readonly auth = inject(AuthService);
   private albumService = inject(AlbumService);
+  private ratingService = inject(RatingService);
   private toastService = inject(ToastService);
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly imageError = signal(false);
   readonly copied = signal(false);
   readonly shared = signal(false);
+  readonly userRating = signal<number | null>(null);
 
   readonly tabs = {
     info: ALBUM_INFORMATION,
@@ -159,6 +162,26 @@ export class Info implements OnInit {
     return type ? (this.typeLabels[type] ?? type) : '';
   });
 
+  setAlbumRating(rating: number): void {
+    const userId = this.auth.userId();
+    if (!userId) {
+      this.toastService.info('Sign in to rate this album.');
+      return;
+    }
+    const albumId = this.albumData()?.id;
+    if (!albumId) return;
+
+    this.ratingService.rateAlbum(userId, albumId, rating).pipe(
+      switchMap(() => this.ratingService.getUserAlbumRating(albumId, userId)),
+    ).subscribe({
+      next: (r) => {
+        this.userRating.set(rating);
+        if (r) this.albumData.update(a => a ? { ...a, averageRating: r.averageRating } : a);
+      },
+      error: () => this.toastService.error('Failed to save rating.'),
+    });
+  }
+
   copyLink(): void {
     navigator.clipboard.writeText(window.location.href).then(() => {
       this.copied.set(true);
@@ -209,12 +232,27 @@ export class Info implements OnInit {
         this.loaded.set(true);
         this.playingVideoId.set(null);
         this.discographyExpanded.set(false);
+        this.userRating.set(null);
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
         this.discographyAlbums.set(discography);
         this.similarAlbums.set(album.similarAlbums ?? []);
         this.similarBands.set((album.similarBands ?? []) as any);
         this.bandVideos.set(album.videos);
+
+        const userId = this.auth.userId();
+        if (userId) {
+          this.ratingService.getUserAlbumRating(album.id, userId).subscribe(r => {
+            if (r) {
+              this.userRating.set(r.userRating);
+              this.albumData.update(a => a ? { ...a, averageRating: r.averageRating } : a);
+            }
+          });
+        } else {
+          this.ratingService.getAlbumAverage(album.id).subscribe(avg => {
+            if (avg != null) this.albumData.update(a => a ? { ...a, averageRating: avg } : a);
+          });
+        }
       },
       error: (err) => {
         if (err?.status === 404) {

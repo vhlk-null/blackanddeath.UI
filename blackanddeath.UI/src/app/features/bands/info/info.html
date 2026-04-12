@@ -102,7 +102,11 @@
           fill="#606162" />
       </svg>
       }
-      <app-star-rating class="band-info__rating" (ratingChange)="setBandRating($event)"/>
+      <app-star-rating class="band-info__rating"
+        [rating]="userRating() ?? 0"
+        [averageRating]="bandData()?.averageRating"
+        [ratingsCount]="bandData()?.ratingsCount"
+        (ratingChange)="setBandRating($event)" />
     </div>
 
     <table class="band-info__meta">

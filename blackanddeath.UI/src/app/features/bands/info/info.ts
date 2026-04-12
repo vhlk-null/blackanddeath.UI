@@ -10,6 +10,7 @@ import { BandService } from '../../services/band.service';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { RatingService } from '../../services/rating.service';
 import { Band } from '../../../shared/models/band';
 import { BandCard } from '../band-card/band-card';
 import { Album } from '../../../shared/models/album';
@@ -33,6 +34,7 @@ export class BandInfo implements OnInit {
   readonly auth = inject(AuthService);
   private bandService = inject(BandService);
   private toastService = inject(ToastService);
+  private ratingService = inject(RatingService);
 
   readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
@@ -53,6 +55,7 @@ export class BandInfo implements OnInit {
   readonly imageError = signal(false);
   readonly copied = signal(false);
   readonly shared = signal(false);
+  readonly userRating = signal<number | null>(null);
   readonly infoTabIndex = signal(0);
   readonly notFound = signal(false);
   readonly bandData = signal<Band | null>(null);
@@ -139,6 +142,21 @@ export class BandInfo implements OnInit {
         this.similarBands.set((band.similarBands ?? []) as any);
         this.playingVideoId.set(null);
         this.loaded.set(true);
+        this.userRating.set(null);
+
+        const userId = this.auth.userId();
+        if (userId) {
+          this.ratingService.getUserBandRating(band.id, userId).subscribe(r => {
+            if (r) {
+              this.userRating.set(r.userRating);
+              this.bandData.update(b => b ? { ...b, averageRating: r.averageRating } : b);
+            }
+          });
+        } else {
+          this.ratingService.getBandAverage(band.id).subscribe(avg => {
+            if (avg != null) this.bandData.update(b => b ? { ...b, averageRating: avg } : b);
+          });
+        }
       },
       error: (err) => {
         if (err?.status === 404) {
@@ -155,5 +173,22 @@ export class BandInfo implements OnInit {
   }
 
   setBandRating(rating: number): void {
+    const userId = this.auth.userId();
+    if (!userId) {
+      this.toastService.info('Sign in to rate this band.');
+      return;
+    }
+    const bandId = this.bandData()?.id;
+    if (!bandId) return;
+
+    this.ratingService.rateBand(userId, bandId, rating).pipe(
+      switchMap(() => this.ratingService.getUserBandRating(bandId, userId)),
+    ).subscribe({
+      next: (r) => {
+        this.userRating.set(rating);
+        if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating } : b);
+      },
+      error: () => this.toastService.error('Failed to save rating.'),
+    });
   }
 }

@@ -44,5 +44,7 @@ export interface Band {
   albums?: BandAlbum[];
   similarAlbums?: BandAlbum[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
+  averageRating?: number | null;
+  ratingsCount?: number;
   videos?: VideoBand[];
 }

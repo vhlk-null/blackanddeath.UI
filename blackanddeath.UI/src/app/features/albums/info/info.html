@@ -110,7 +110,11 @@
         </svg>
         }
       </div>
-      <app-star-rating class="album-info__rating" />
+      <app-star-rating class="album-info__rating"
+        [rating]="userRating() ?? 0"
+        [averageRating]="albumData()?.averageRating"
+        [ratingsCount]="albumData()?.ratingsCount"
+        (ratingChange)="setAlbumRating($event)" />
       <table class="album-info__meta">
         <tr>
           <td class="label">Release:</td>

@@ -1,11 +1,35 @@
 <div class="star-rating" (mouseleave)="onLeave()">
-  @for (star of stars; track star) {
-    <svg class="star-rating__star"
-      [class.empty]="!isFilled(star)"
-      (mouseenter)="onHover(star)"
-      (click)="onSelect(star)"
-      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-    </svg>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      @for (star of stars; track star) {
+        <linearGradient [id]="'half-' + star" x1="0" x2="1" y1="0" y2="0">
+          <stop [attr.offset]="getHalfOffset(star)" stop-color="var(--color-star)" />
+          <stop [attr.offset]="getHalfOffset(star)" stop-color="transparent" />
+        </linearGradient>
+      }
+    </defs>
+  </svg>
+
+  <div class="star-rating__stars">
+    @for (star of stars; track star) {
+      <svg class="star-rating__star"
+        (mouseenter)="onHover(star)"
+        (click)="onSelect(star)"
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polygon
+          [attr.fill]="getFill(star)"
+          [attr.stroke]="getStroke(star)"
+          stroke-width="1.5"
+          points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+    }
+  </div>
+  @if (averageRating() != null) {
+    <div class="star-rating__info">
+      <span class="star-rating__avg">{{ displayAvg }}</span>
+      @if (ratingsCount() != null) {
+        <span class="star-rating__count">({{ ratingsCount() }})</span>
+      }
+    </div>
   }
 </div>
