@@ -5,8 +5,6 @@ export interface CanComponentDeactivate {
 }
 
 export const unsavedChangesGuard: CanDeactivateFn<CanComponentDeactivate> = (component) => {
-  console.log('unsavedChangesGuard called', component);
-  console.log('canDeactivate:', component.canDeactivate());
   if (component.canDeactivate()) {
     return true;
   }

@@ -18,7 +18,7 @@
   <h1 class="album-info__title">{{ albumData()?.title | titleCaseAll }}</h1>
   <p class="album-info__band-subtitle">
     @for (band of albumData()?.bands ?? []; track band.id; let last = $last) {
-    <a [routerLink]="['/bands', band.id, band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) {, }
+      <a [routerLink]="['/bands', band.id, band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) { & }
     }
   </p>
 
@@ -226,14 +226,14 @@
   </button>
   }
 
-  @for (group of discographyGroups(); track group.bandId; let gi = $index) {
+  @for (group of discographyGroups(); track group.label; let gi = $index) {
     @if (discographyExpanded() || gi === 0) {
-      @if ((albumData()?.bands?.length ?? 0) > 1 && (discographyGroups().length > 1 || !group.bandId)) {
+      @if (discographyGroups().length > 1) {
         <h3 class="discography-group__label">
           @if (group.bandId) {
-            <a [routerLink]="['/bands', group.bandId, group.bandSlug]" class="discography-group__band-link">{{ group.bandName }}</a>
+            <a [routerLink]="['/bands', group.bandId, group.bandSlug]" class="discography-group__band-link">{{ group.label }}</a>
           } @else {
-            {{ group.bandName }}
+            {{ group.label }}
           }
         </h3>
       }

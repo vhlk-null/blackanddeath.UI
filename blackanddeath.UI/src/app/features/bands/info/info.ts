@@ -134,4 +134,7 @@ export class BandInfo implements OnInit {
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
     return match ? match[1] : null;
   }
+
+  setBandRating(rating: number): void {
+  }
 }

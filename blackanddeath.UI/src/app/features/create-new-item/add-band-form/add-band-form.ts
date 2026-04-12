@@ -108,7 +108,6 @@ export class AddBandForm implements OnInit {
         this.countryOptions.set(countries);
 
         if (band) {
-          console.log(band?.genres);
           this.patchForm(band);
         }
       },

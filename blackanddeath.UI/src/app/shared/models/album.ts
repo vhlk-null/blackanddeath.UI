@@ -1,6 +1,6 @@
 import { AlbumType } from './enums/album-type.enum';
 import { AlbumFormat } from './enums/album-format.enum';
-import { BandSummary } from './band-summary';
+import { BandSummary, DiscographyGroup } from './band-summary';
 import { Country } from './country';
 import { Genre } from './genre';
 import { StreamingLink } from './streaming-link';
@@ -27,6 +27,7 @@ export interface Album {
   tags?: Tag[];
   videos: VideoBand[];
   similarAlbums?: Album[];
+  discographyGroups?: DiscographyGroup[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
   bandId?: string;
   bandName?: string;

@@ -26,6 +26,8 @@ export class AuthService {
     return p?.preferred_username ?? p?.name ?? p?.email ?? null;
   });
 
+  readonly userId = computed(() => this._profile()?.sub ?? null);
+
   readonly isAdmin = computed(() => {
     const role = this._profile()?.role;
     if (!role) return false;
@@ -49,17 +51,19 @@ export class AuthService {
       this.oauth.setupAutomaticSilentRefresh();
 
       this.oauth.events
-        .pipe(filter(e => e.type === 'token_received'))
+        .pipe(filter(e => ['token_received', 'token_refreshed'].includes(e.type)))
         .subscribe(async () => {
           this._isAuthenticated.set(true);
           await this.loadProfile();
         });
 
       this.oauth.events
-        .pipe(filter(e => e.type === 'token_refreshed'))
-        .subscribe(async () => {
-          this._isAuthenticated.set(true);
-          await this.loadProfile();
+        .pipe(filter(e => e.type === 'token_expires'))
+        .subscribe(() => {
+          this.oauth.refreshToken().catch(() => {
+            this._isAuthenticated.set(false);
+            this._profile.set(null);
+          });
         });
 
       this.oauth.events
@@ -70,7 +74,7 @@ export class AuthService {
         });
 
     } catch (err) {
-      console.error('[Auth] init failed, anonymous mode:', err);
+     
     }
   }
 
@@ -93,12 +97,11 @@ export class AuthService {
     }
   }
 
-  login(): void {
-    console.log('[Auth] login called, discovery loaded:', !!(this.oauth as any).discoveryDocumentLoaded);
+  login(): void {   
     if (!(this.oauth as any).discoveryDocumentLoaded) {
       this.oauth.loadDiscoveryDocument().then(() => {
         this.oauth.initCodeFlow();
-      }).catch(err => console.error('[Auth] login discovery failed:', err));
+      }).catch();
       return;
     }
     this.oauth.initCodeFlow();
