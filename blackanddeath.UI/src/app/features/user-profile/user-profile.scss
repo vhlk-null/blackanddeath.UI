@@ -2,15 +2,21 @@
   max-width: 71.25rem;
   margin: 0 auto 4rem;
 
-  // ─── Header ───────────────────────────────────────────────────────────────
+  // ─── Header card ──────────────────────────────────────────────────────────
 
-  &__header {
+  &__card {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 0;
+    margin-bottom: 2rem;
+  }
+
+  &__card-top {
     display: flex;
     align-items: flex-start;
-    gap: 1.5rem;
-    padding: 2rem 0 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 1.5rem;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
   }
 
   &__avatar {
@@ -131,7 +137,10 @@
   &__stats {
     display: flex;
     gap: 2.5rem;
-    margin-bottom: 1.75rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 0;
   }
 
   &__stat {
@@ -158,12 +167,11 @@
   &__tabs {
     display: flex;
     gap: 0;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 2rem;
+    margin-bottom: 0;
   }
 
   &__tab {
-    padding: 0.625rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     font-family: var(--font-family-body);
     font-size: var(--font-size-sm);
     letter-spacing: 0.05em;
