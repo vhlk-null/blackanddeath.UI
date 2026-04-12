@@ -48,22 +48,7 @@ export class AuthService {
         await this.loadProfile();
       }
 
-      this.oauth.setupAutomaticSilentRefresh();
-
-      this.oauth.events
-        .pipe(filter(e => e.type === 'token_refreshed'))
-        .subscribe(() => {
-          this._isAuthenticated.set(true);
-          const claims = this.oauth.getIdentityClaims() as UserProfile;
-          if (claims) this._profile.set(claims);
-        });
-
-      this.oauth.events
-        .pipe(filter(e => ['session_error', 'silent_refresh_error', 'token_refresh_error'].includes(e.type)))
-        .subscribe(() => {
-          this._isAuthenticated.set(false);
-          this._profile.set(null);
-        });
+      this.scheduleTokenRefresh();
 
       this.oauth.events
         .pipe(filter(e => e.type === 'logout'))
@@ -75,6 +60,31 @@ export class AuthService {
     } catch (err) {
      
     }
+  }
+
+  private _refreshTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private scheduleTokenRefresh(): void {
+    if (this._refreshTimer) clearTimeout(this._refreshTimer);
+    const expiresAt = this.oauth.getAccessTokenExpiration();
+    if (!expiresAt) return;
+    const delay = expiresAt - Date.now() - 30_000;
+    if (delay <= 0) { this.doRefresh(); return; }
+    this._refreshTimer = setTimeout(() => this.doRefresh(), delay);
+  }
+
+  private doRefresh(): void {
+    this.oauth.refreshToken()
+      .then(() => {
+        this._isAuthenticated.set(true);
+        const claims = this.oauth.getIdentityClaims() as UserProfile;
+        if (claims) this._profile.set(claims);
+        this.scheduleTokenRefresh();
+      })
+      .catch(() => {
+        this._isAuthenticated.set(false);
+        this._profile.set(null);
+      });
   }
 
   private _loadingProfile = false;
