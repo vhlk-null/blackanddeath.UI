@@ -178,7 +178,7 @@
         </div>
         }
         @case ('Spotify') {
-        <div class="album-info__embed">
+        <div class="album-info__embed album-info__embed--spotify">
           <iframe [src]="spotifyEmbed()! | safeUrl" frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
@@ -186,7 +186,7 @@
         @case ('Bandcamp') {
         @if (bandcampEmbed(); as bc) {
         @if (bc.embedSrc) {
-        <div class="album-info__embed">
+        <div class="album-info__embed album-info__embed--bandcamp">
           <iframe [src]="bc.embedSrc | safeUrl" seamless frameborder="0"></iframe>
         </div>
         } @else {

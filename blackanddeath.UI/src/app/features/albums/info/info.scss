@@ -360,6 +360,13 @@
       border-radius: var(--radius-md);
     }
 
+    &--spotify,
+    &--bandcamp {
+      aspect-ratio: unset;
+      height: 100%;
+      flex: 1;
+    }
+
 
     &--link {
       padding-top: 0;
