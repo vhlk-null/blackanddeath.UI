@@ -40,6 +40,8 @@ export class Info implements OnInit {
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly imageError = signal(false);
+  readonly copied = signal(false);
+  readonly shared = signal(false);
 
   readonly tabs = {
     info: ALBUM_INFORMATION,
@@ -156,6 +158,23 @@ export class Info implements OnInit {
     const type = this.albumData()?.type;
     return type ? (this.typeLabels[type] ?? type) : '';
   });
+
+  copyLink(): void {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
+    });
+  }
+
+  share(): void {
+    if (navigator.share) {
+      navigator.share({ url: window.location.href, title: this.albumData()?.title ?? '' });
+    } else {
+      this.copyLink();
+      this.shared.set(true);
+      setTimeout(() => this.shared.set(false), 2000);
+    }
+  }
 
   onDelete(): void {
     const id = this.albumData()?.id;
