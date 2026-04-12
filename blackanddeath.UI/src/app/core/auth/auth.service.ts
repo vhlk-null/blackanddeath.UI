@@ -48,8 +48,6 @@ export class AuthService {
         await this.loadProfile();
       }
 
-      this.oauth.setupAutomaticSilentRefresh();
-
       this.oauth.events
         .pipe(filter(e => ['token_received', 'token_refreshed'].includes(e.type)))
         .subscribe(async () => {
@@ -58,10 +56,12 @@ export class AuthService {
         });
 
       this.oauth.events
-        .pipe(filter(e => e.type === 'silent_refresh_error'))
+        .pipe(filter(e => e.type === 'token_expires'))
         .subscribe(() => {
-          this._isAuthenticated.set(false);
-          this._profile.set(null);
+          this.oauth.refreshToken().catch(() => {
+            this._isAuthenticated.set(false);
+            this._profile.set(null);
+          });
         });
 
       this.oauth.events
