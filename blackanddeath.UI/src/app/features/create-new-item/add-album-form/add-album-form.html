@@ -171,6 +171,17 @@
           </div>
         </div>
 
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-deezer">Deezer:</label>
+          <div class="add-album__field">
+            <input class="add-album__input" id="album-deezer" type="url" placeholder="https://www.deezer.com/album/..."
+              formControlName="deezer" />
+            @if (deezer.touched && deezer.hasError('pattern')) {
+              <span class="add-album__error">Enter a valid URL (https://...)</span>
+            }
+          </div>
+        </div>
+
         <div class="add-album__row add-album__row--textarea">
           <label class="add-album__label" for="album-bandcamp">Bandcamp:</label>
           <div class="add-album__field">

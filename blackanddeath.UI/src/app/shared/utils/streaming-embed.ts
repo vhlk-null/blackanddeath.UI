@@ -2,7 +2,7 @@
  * Converts a user-supplied streaming URL to an embeddable iframe src.
  * Returns null if the URL cannot be converted to an embed (e.g. Bandcamp).
  */
-export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandcamp' | 'AppleMusic'): string | null {
+export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandcamp' | 'AppleMusic' | 'Deezer'): string | null {
   if (!url) return null;
 
   if (platform === 'YouTube') {
@@ -35,6 +35,19 @@ export function toEmbedUrl(url: string, platform: 'YouTube' | 'Spotify' | 'Bandc
     } catch {
       return null;
     }
+  }
+
+  if (platform === 'Deezer') {
+    // https://www.deezer.com/album/ID  →  https://widget.deezer.com/widget/dark/album/ID
+    try {
+      const u = new URL(url);
+      if (u.hostname === 'widget.deezer.com') return url;
+      const match = u.pathname.match(/(?:\/[a-z]{2})?\/(album|playlist|track)\/(\d+)/);
+      if (match) return `https://widget.deezer.com/widget/dark/${match[1]}/${match[2]}`;
+    } catch {
+      return null;
+    }
+    return null;
   }
 
   if (platform === 'AppleMusic') {
