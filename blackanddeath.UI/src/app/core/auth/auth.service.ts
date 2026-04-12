@@ -40,7 +40,7 @@ export class AuthService {
     this.oauth.setStorage(localStorage);
 
     try {
-      await this.oauth.loadDiscoveryDocumentAndTryLogin();
+      await this.oauth.tryLogin();
 
       this._isAuthenticated.set(this.oauth.hasValidAccessToken());
 
@@ -106,13 +106,7 @@ export class AuthService {
     }
   }
 
-  login(): void {   
-    if (!(this.oauth as any).discoveryDocumentLoaded) {
-      this.oauth.loadDiscoveryDocument().then(() => {
-        this.oauth.initCodeFlow();
-      }).catch();
-      return;
-    }
+  login(): void {
     this.oauth.initCodeFlow();
   }
 
