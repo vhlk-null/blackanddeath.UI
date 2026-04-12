@@ -10,9 +10,9 @@ export const authConfig: AuthConfig = {
   responseType: 'code',
   scope: 'openid profile email roles blackeneddeath.api offline_access',
   useSilentRefresh: false,
-  silentRefreshTimeout: 5000,
   sessionChecksEnabled: false,
-  showDebugInformation: true,
+  showDebugInformation: false,
   strictDiscoveryDocumentValidation: false,
   timeoutFactor: 0.75,
+  oidc: true,
 };
