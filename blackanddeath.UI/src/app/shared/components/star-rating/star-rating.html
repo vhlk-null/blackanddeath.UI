@@ -24,7 +24,7 @@
       </svg>
     }
   </div>
-  @if (averageRating() != null) {
+  @if (averageRating() != null && averageRating()! > 0) {
     <div class="star-rating__info">
       <span class="star-rating__avg">{{ displayAvg }}</span>
       @if (ratingsCount() != null) {
