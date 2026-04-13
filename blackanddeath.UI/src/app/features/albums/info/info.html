@@ -112,10 +112,18 @@
       </div>
       <app-star-rating class="album-info__rating"
         [rating]="userRating() ?? 0"
-        [averageRating]="albumData()?.averageRating"
-        [ratingsCount]="albumData()?.ratingsCount"
         (ratingChange)="setAlbumRating($event)" />
       <table class="album-info__meta">
+        @if (albumData()?.averageRating) {
+        <tr>
+          <td class="label">Rating:</td>
+          <td>{{ albumData()!.averageRating!.toFixed(1) }}
+            @if (albumData()?.ratingsCount) {
+              <span class="album-info__meta-count">({{ albumData()!.ratingsCount }})</span>
+            }
+          </td>
+        </tr>
+        }
         <tr>
           <td class="label">Release:</td>
           <td><a class="album-info__meta-link" [routerLink]="['/albums']"

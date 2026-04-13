@@ -171,12 +171,10 @@ export class Info implements OnInit {
     const albumId = this.albumData()?.id;
     if (!albumId) return;
 
-    this.ratingService.rateAlbum(userId, albumId, rating).pipe(
-      switchMap(() => this.ratingService.getUserAlbumRating(albumId, userId)),
-    ).subscribe({
+    this.ratingService.rateAlbum(userId, albumId, rating).subscribe({
       next: (r) => {
-        this.userRating.set(rating);
-        if (r) this.albumData.update(a => a ? { ...a, averageRating: r.averageRating } : a);
+        this.userRating.set(r.userRating);
+        this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });
@@ -245,12 +243,12 @@ export class Info implements OnInit {
           this.ratingService.getUserAlbumRating(album.id, userId).subscribe(r => {
             if (r) {
               this.userRating.set(r.userRating);
-              this.albumData.update(a => a ? { ...a, averageRating: r.averageRating } : a);
+              this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
             }
           });
         } else {
-          this.ratingService.getAlbumAverage(album.id).subscribe(avg => {
-            if (avg != null) this.albumData.update(a => a ? { ...a, averageRating: avg } : a);
+          this.ratingService.getAlbumAverage(album.id).subscribe(r => {
+            if (r) this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
           });
         }
       },

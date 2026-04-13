@@ -149,12 +149,12 @@ export class BandInfo implements OnInit {
           this.ratingService.getUserBandRating(band.id, userId).subscribe(r => {
             if (r) {
               this.userRating.set(r.userRating);
-              this.bandData.update(b => b ? { ...b, averageRating: r.averageRating } : b);
+              this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
             }
           });
         } else {
-          this.ratingService.getBandAverage(band.id).subscribe(avg => {
-            if (avg != null) this.bandData.update(b => b ? { ...b, averageRating: avg } : b);
+          this.ratingService.getBandAverage(band.id).subscribe(r => {
+            if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
           });
         }
       },
@@ -181,12 +181,10 @@ export class BandInfo implements OnInit {
     const bandId = this.bandData()?.id;
     if (!bandId) return;
 
-    this.ratingService.rateBand(userId, bandId, rating).pipe(
-      switchMap(() => this.ratingService.getUserBandRating(bandId, userId)),
-    ).subscribe({
+    this.ratingService.rateBand(userId, bandId, rating).subscribe({
       next: (r) => {
-        this.userRating.set(rating);
-        if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating } : b);
+        this.userRating.set(r.userRating);
+        this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });
