@@ -108,16 +108,19 @@
     </div>
 
     <table class="band-info__meta">
-      @if (bandData()?.averageRating) {
       <tr>
         <td class="label">Rating:</td>
-        <td>{{ bandData()!.averageRating!.toFixed(1) }}
-          @if (bandData()?.ratingsCount) {
-            <span class="band-info__meta-count">({{ bandData()!.ratingsCount }})</span>
+        <td>
+          @if (bandData()?.averageRating) {
+            {{ bandData()!.averageRating!.toFixed(1) }}
+            @if (bandData()?.ratingsCount) {
+              <span class="band-info__meta-count">({{ bandData()!.ratingsCount }})</span>
+            }
+          } @else {
+            <span class="band-info__meta-empty">No ratings yet</span>
           }
         </td>
       </tr>
-      }
       <tr>
         <td class="label">Country:</td>
         <td>

@@ -114,16 +114,19 @@
         [rating]="userRating() ?? 0"
         (ratingChange)="setAlbumRating($event)" />
       <table class="album-info__meta">
-        @if (albumData()?.averageRating) {
         <tr>
           <td class="label">Rating:</td>
-          <td>{{ albumData()!.averageRating!.toFixed(1) }}
-            @if (albumData()?.ratingsCount) {
-              <span class="album-info__meta-count">({{ albumData()!.ratingsCount }})</span>
+          <td>
+            @if (albumData()?.averageRating) {
+              {{ albumData()!.averageRating!.toFixed(1) }}
+              @if (albumData()?.ratingsCount) {
+                <span class="album-info__meta-count">({{ albumData()!.ratingsCount }})</span>
+              }
+            } @else {
+              <span class="album-info__meta-empty">No ratings yet</span>
             }
           </td>
         </tr>
-        }
         <tr>
           <td class="label">Release:</td>
           <td><a class="album-info__meta-link" [routerLink]="['/albums']"

@@ -225,6 +225,11 @@
     }
   }
 
+  &__meta-empty {
+    color: var(--color-text-placeholder);
+    font-style: italic;
+  }
+
   &__meta-link {
     color: inherit;
     text-decoration: none;
