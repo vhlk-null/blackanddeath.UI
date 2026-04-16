@@ -11,6 +11,7 @@ import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { RatingService } from '../../services/rating.service';
+import { FavoriteService } from '../../services/favorite.service';
 import { Band } from '../../../shared/models/band';
 import { BandCard } from '../band-card/band-card';
 import { Album } from '../../../shared/models/album';
@@ -35,6 +36,7 @@ export class BandInfo implements OnInit {
   private bandService = inject(BandService);
   private toastService = inject(ToastService);
   private ratingService = inject(RatingService);
+  private favoriteService = inject(FavoriteService);
 
   readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
@@ -64,6 +66,7 @@ export class BandInfo implements OnInit {
   readonly similarBands = signal<Band[]>([]);
   readonly loaded = signal(false);
   readonly playingVideoId = signal<string | null>(null);
+  readonly isFavorite = signal(false);
 
   /** Albums grouped: own first, then co-artist groups */
   readonly discographyGroups = computed(() => {
@@ -107,6 +110,20 @@ export class BandInfo implements OnInit {
     }
   }
 
+  toggleFavorite(): void {
+    const userId = this.auth.userId();
+    const bandId = this.bandData()?.id;
+    if (!userId || !bandId) return;
+
+    if (this.isFavorite()) {
+      this.favoriteService.removeFavoriteBand(bandId, userId)
+        .subscribe(() => this.isFavorite.set(false));
+    } else {
+      this.favoriteService.addFavoriteBand(bandId, userId)
+        .subscribe(() => this.isFavorite.set(true));
+    }
+  }
+
   onDelete(): void {
     const id = this.bandData()?.id;
     if (!id || !confirm('Delete this band?')) return;
@@ -141,6 +158,7 @@ export class BandInfo implements OnInit {
         this.userRating.set(null);
 
         const userId = this.auth.userId();
+        this.isFavorite.set(false);
         if (userId) {
           this.ratingService.getUserBandRating(band.id, userId).subscribe(r => {
             if (r) {
@@ -148,6 +166,8 @@ export class BandInfo implements OnInit {
               this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
             }
           });
+          this.favoriteService.checkFavoriteBand(band.id, userId)
+            .subscribe(v => this.isFavorite.set(v));
         } else {
           this.ratingService.getBandAverage(band.id).subscribe(r => {
             if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);

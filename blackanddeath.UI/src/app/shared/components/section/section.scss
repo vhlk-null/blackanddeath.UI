@@ -39,7 +39,7 @@
     &::-webkit-scrollbar { display: none; }
 
     & > * {
-      flex: 0 0 calc((100cqw - 3 * 0.625rem) / 4);
+      flex: 0 0 calc((100cqw - (var(--columns, 4) - 1) * 0.625rem) / var(--columns, 4));
     }
   }
 

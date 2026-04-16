@@ -228,6 +228,7 @@
 
     &--active svg {
       stroke: var(--color-tab-active);
+      fill: var(--color-tab-active);
       animation: icon-pop 0.25s ease;
     }
   }

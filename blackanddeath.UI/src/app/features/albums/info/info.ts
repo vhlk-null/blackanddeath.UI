@@ -12,6 +12,7 @@ import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { RatingService } from '../../services/rating.service';
+import { FavoriteService } from '../../services/favorite.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -39,6 +40,7 @@ export class Info implements OnInit {
   private albumService = inject(AlbumService);
   private ratingService = inject(RatingService);
   private toastService = inject(ToastService);
+  private favoriteService = inject(FavoriteService);
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly imageError = signal(false);
@@ -97,6 +99,7 @@ export class Info implements OnInit {
   readonly similarBands = signal<Band[]>([]);
   readonly bandVideos = signal<VideoBand[]>([]);
   readonly playingVideoId = signal<string | null>(null);
+  readonly isFavorite = signal(false);
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
@@ -197,6 +200,20 @@ export class Info implements OnInit {
     }
   }
 
+  toggleFavorite(): void {
+    const userId = this.auth.userId();
+    const albumId = this.albumData()?.id;
+    if (!userId || !albumId) return;
+
+    if (this.isFavorite()) {
+      this.favoriteService.removeFavoriteAlbum(albumId, userId)
+        .subscribe(() => this.isFavorite.set(false));
+    } else {
+      this.favoriteService.addFavoriteAlbum(albumId, userId)
+        .subscribe(() => this.isFavorite.set(true));
+    }
+  }
+
   onDelete(): void {
     const id = this.albumData()?.id;
     if (!id || !confirm('Delete this album?')) return;
@@ -235,6 +252,7 @@ export class Info implements OnInit {
         this.bandVideos.set(album.videos);
 
         const userId = this.auth.userId();
+        this.isFavorite.set(false);
         if (userId) {
           this.ratingService.getUserAlbumRating(album.id, userId).subscribe(r => {
             if (r) {
@@ -242,6 +260,8 @@ export class Info implements OnInit {
               this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
             }
           });
+          this.favoriteService.checkFavoriteAlbum(album.id, userId)
+            .subscribe(v => this.isFavorite.set(v));
         } else {
           this.ratingService.getAlbumAverage(album.id).subscribe(r => {
             if (r) this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);

@@ -66,6 +66,22 @@ export class AdminEndpoints {
   public static GET_VIDEOS_BY_BAND = (bandId: string) => `${base}/library/admin/bands/${bandId}/videos`;
 }
 
+export class FavoriteEndpoints {
+  static readonly base = environment.usercontentUrl;
+  public static FAVORITE_ALBUMS = `${FavoriteEndpoints.base}/favoriteAlbums`;
+  public static FAVORITE_BANDS = `${FavoriteEndpoints.base}/favoriteBands`;
+  public static GET_FAVORITE_ALBUMS = (userId: string) => `${FavoriteEndpoints.base}/favoriteAlbums/${userId}`;
+  public static GET_FAVORITE_BANDS = (userId: string) => `${FavoriteEndpoints.base}/favoriteBands/${userId}`;
+  public static CHECK_FAVORITE_ALBUM = `${FavoriteEndpoints.base}/favoriteAlbums/check`;
+  public static CHECK_FAVORITE_BAND = `${FavoriteEndpoints.base}/favoriteBands/check`;
+  public static DELETE_FAVORITE_ALBUM = (albumId: string, userId: string) => `${FavoriteEndpoints.base}/favoriteAlbums?userId=${userId}&albumId=${albumId}`;
+  public static DELETE_FAVORITE_BAND = (bandId: string, userId: string) => `${FavoriteEndpoints.base}/favoriteBands?userId=${userId}&bandId=${bandId}`;
+  public static GET_FAVORITE_VIDEOS = (userId: string) => `${FavoriteEndpoints.base}/favoriteVideos/${userId}`;
+  public static CHECK_FAVORITE_VIDEO = `${FavoriteEndpoints.base}/favoriteVideos/check`;
+  public static FAVORITE_VIDEOS = `${FavoriteEndpoints.base}/favoriteVideos`;
+  public static DELETE_FAVORITE_VIDEO = (videoId: string, userId: string) => `${FavoriteEndpoints.base}/favoriteVideos?userId=${userId}&videoId=${videoId}`;
+}
+
 export class RatingEndpoints {
   static readonly base = environment.usercontentUrl;
   public static RATE_ALBUM = `${RatingEndpoints.base}/albumRatings`;

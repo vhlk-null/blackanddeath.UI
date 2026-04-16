@@ -1,16 +1,25 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { FavoriteService } from '../services/favorite.service';
+import { AlbumCard } from '../albums/card/album-card';
+import { BandCard } from '../bands/band-card/band-card';
+import { VideoCard } from '../home/video-card/video-card';
+import { Section } from '../../shared/components/section/section';
+import { Album } from '../../shared/models/album';
+import { Band } from '../../shared/models/band';
+import { VideoBand } from '../../shared/models/video-band';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [],
+  imports: [AlbumCard, BandCard, VideoCard, Section],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
-export class UserProfile {
+export class UserProfile implements OnInit {
   private route = inject(ActivatedRoute);
   readonly auth = inject(AuthService);
+  private favoriteService = inject(FavoriteService);
 
   // Tabs for main content
   readonly mainTabs = ['Favourites', 'Playlists', 'Collections', 'Activity'];
@@ -28,8 +37,22 @@ export class UserProfile {
   ];
 
   readonly isOnline = signal(true);
-
   readonly username = computed(() => this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User');
+  readonly favoriteAlbums = signal<Album[]>([]);
+  readonly favoriteBands = signal<Band[]>([]);
+  readonly favoriteVideos = signal<VideoBand[]>([]);
+
+  ngOnInit(): void {
+    const userId = this.auth.userId();
+    if (userId) {
+      this.favoriteService.getFavoriteAlbums(userId, { pageIndex: 1, pageSize: 20 })
+        .subscribe(r => this.favoriteAlbums.set(r.data));
+      this.favoriteService.getFavoriteBands(userId, { pageIndex: 1, pageSize: 20 })
+        .subscribe(r => this.favoriteBands.set(r.data));
+      this.favoriteService.getFavoriteVideos(userId, { pageIndex: 1, pageSize: 20 })
+        .subscribe(r => this.favoriteVideos.set(r.data));
+    }
+  }
 
   // Mock collection data
   readonly collections = [

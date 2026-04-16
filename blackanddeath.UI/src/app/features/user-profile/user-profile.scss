@@ -205,6 +205,10 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    app-section {
+      --section-spacing: 0;
+    }
   }
 
   &__section-header {
@@ -246,14 +250,26 @@
     gap: 0.625rem;
     overflow-x: auto;
     scrollbar-width: none;
+    container-type: inline-size;
 
     &::-webkit-scrollbar { display: none; }
 
+    & > app-album-card {
+      flex: 0 0 calc((100cqw - 3 * 0.625rem) / 4);
+    }
+
     &--bands {
-      .profile__placeholder-card {
-        flex: 0 0 calc(25% - 0.47rem);
+      & > app-band-card {
+        flex: 0 0 calc((100cqw - 2 * 0.625rem) / 3);
       }
     }
+  }
+
+  &__empty {
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    padding: 1rem 0;
   }
 
   &__placeholder-card {
