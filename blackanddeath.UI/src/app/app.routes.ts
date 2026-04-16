@@ -17,11 +17,12 @@ import { AllVideos } from './features/videos/all/all-videos';
 import { UserProfile } from './features/user-profile/user-profile';
 import { Settings } from './features/settings/settings';
 import { adminGuard } from './core/guards/admin.guard';
+import { authGuard } from './core/guards/auth-guard';
 import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
     { path: '', component: Home },
-    { path: 'profile', component: UserProfile },
+    { path: 'profile', component: UserProfile, canActivate: [authGuard] },
     { path: 'settings', component: Settings },
     { path: 'albums', component: AllAlbums },
     { path: 'albums/subgenres', component: Subgenres },
