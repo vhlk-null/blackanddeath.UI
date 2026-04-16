@@ -61,8 +61,8 @@ export class AlbumService {
     );
   }
 
-  getBySlug(slug: string) {
-    return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_SLUG(slug)).pipe(
+  getBySlug(slug: string, params?: { similarPageNumber?: number; similarPageSize?: number }) {
+    return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_SLUG(slug), params).pipe(
       map(response => response.album)
     );
   }

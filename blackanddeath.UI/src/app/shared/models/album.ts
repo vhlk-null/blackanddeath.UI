@@ -8,6 +8,7 @@ import { ApiTrack } from './track';
 import { Label } from './label';
 import { Tag } from './tag';
 import { VideoBand } from './video-band';
+import { PaginatedResult } from './paginated-result';
 
 export interface Album {
   id: string;
@@ -26,7 +27,7 @@ export interface Album {
   genres?: Genre[];
   tags?: Tag[];
   videos: VideoBand[];
-  similarAlbums?: Album[];
+  similarAlbums?: PaginatedResult<Album>;
   discographyGroups?: DiscographyGroup[];
   similarBands?: { id: string; slug: string; name: string; logoUrl: string | null }[];
   averageRating?: number | null;

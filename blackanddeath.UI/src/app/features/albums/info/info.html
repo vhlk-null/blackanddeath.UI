@@ -328,7 +328,7 @@
 }
 
 @if (similarAlbums().length) {
-<app-section [sectionTitle]="titles.similarAlbums" [arrows]="false" [scroll]="false">
+<app-section [sectionTitle]="titles.similarAlbums">
   @for (album of similarAlbums(); track album.id) {
   <app-album-card [albumCard]="album" />
   }

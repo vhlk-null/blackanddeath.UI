@@ -225,7 +225,7 @@
 }
 
 @if (similarBands().length) {
-<app-section [sectionTitle]="titles.similarBands" [arrows]="false" [scroll]="false">
+<app-section [sectionTitle]="titles.similarBands">
   @for (band of similarBands(); track band.id) {
   <app-band-card [bandCard]="band" />
   }

@@ -217,7 +217,7 @@ export class Info implements OnInit {
       filter(params => !!params.get('slug')),
       switchMap(params => {
         this.loaded.set(false);
-        return this.albumService.getBySlug(params.get('slug')!);
+        return this.albumService.getBySlug(params.get('slug')!, { similarPageSize: 20 });
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
@@ -230,7 +230,7 @@ export class Info implements OnInit {
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
         this.discographyAlbums.set(discography);
-        this.similarAlbums.set(album.similarAlbums ?? []);
+        this.similarAlbums.set(album.similarAlbums?.data ?? []);
         this.similarBands.set((album.similarBands ?? []) as any);
         this.bandVideos.set(album.videos);
 
