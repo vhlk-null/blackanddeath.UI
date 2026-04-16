@@ -72,6 +72,8 @@ export class RatingEndpoints {
   public static GET_ALBUM_AVERAGE = (albumId: string) => `${RatingEndpoints.base}/albumRatings/${albumId}/average`;
   public static GET_BAND_RATING = (bandId: string) => `${RatingEndpoints.base}/bandRatings/${bandId}`;
   public static GET_BAND_AVERAGE = (bandId: string) => `${RatingEndpoints.base}/bandRatings/${bandId}/average`;
+  public static TOP_RATED_ALBUMS = `${RatingEndpoints.base}/top-rated/albums`;
+  public static TOP_RATED_BANDS = `${RatingEndpoints.base}/top-rated/bands`;
 }
 
 export class CountryEndpoints {
