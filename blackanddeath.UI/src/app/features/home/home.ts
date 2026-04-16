@@ -64,9 +64,7 @@ export class Home implements OnInit {
   private ratingService = inject(RatingService);
 
 
-  private allTopRatedAlbums: Album[] = [];
   private allAlbums: Album[] = [];
-  private allBands: Band[] = [];
   private allVideos: VideoBand[] = [];
 
   private albumsSlice(section: number, tab: number): Album[] {
@@ -77,17 +75,15 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     forkJoin({
-      topRatedAlbums: this.ratingService.getTopRatedAlbums({ pageIndex: 0, pageSize: 20 }),
-      topRatedBands: this.ratingService.getTopRatedBands({ pageIndex: 0, pageSize: 20 }),
+      topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: 20 }),
+      topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: 20 }),
       albums: this.albumService.getAll({ pageIndex: 0, pageSize: 20, sortBy: 'Newest' }),
       bands: this.bandService.getAll({ pageIndex: 0, pageSize: 9, sortBy: 'Newest' }),
       videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: 9 }).pipe(catchError(() => of([]))),
     }).subscribe({
       next: ({ topRatedAlbums, topRatedBands, albums, bands, videos }) => {
-        this.allTopRatedAlbums = topRatedAlbums;
         this.mainTopRatedAlbums.set(topRatedAlbums.slice(0, 4));
 
-        this.allBands = topRatedBands;
         this.mainPopularBands.set(topRatedBands.slice(0, 3));
 
         this.allAlbums = albums;
@@ -107,14 +103,18 @@ export class Home implements OnInit {
     });
   }
 
+  private readonly periodMap = ['All', 'Year', 'Month'];
+
   onTopRatedTabChange(index: number): void {
-    const start = index * 4;
-    this.mainTopRatedAlbums.set(this.allTopRatedAlbums.slice(start, start + 4));
+    const period = this.periodMap[index];
+    this.ratingService.getTopRatedAlbums({ period, pageIndex: 0, pageSize: 4 })
+      .subscribe(albums => this.mainTopRatedAlbums.set(albums));
   }
 
   onPopularBandsTabChange(index: number): void {
-    const start = index * 3;
-    this.mainPopularBands.set(this.allBands.slice(start, start + 3));
+    const period = this.periodMap[index];
+    this.ratingService.getTopRatedBands({ period, pageIndex: 0, pageSize: 3 })
+      .subscribe(bands => this.mainPopularBands.set(bands));
   }
 
   onRecentlyAddedTabChange(index: number): void {
