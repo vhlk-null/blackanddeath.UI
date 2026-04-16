@@ -82,6 +82,16 @@ export class FavoriteEndpoints {
   public static DELETE_FAVORITE_VIDEO = (videoId: string, userId: string) => `${FavoriteEndpoints.base}/favoriteVideos?userId=${userId}&videoId=${videoId}`;
 }
 
+export class ReviewEndpoints {
+  static readonly base = environment.usercontentUrl;
+  public static GET_ALBUM_REVIEWS = (albumId: string) => `${ReviewEndpoints.base}/albumReviews/${albumId}`;
+  public static CREATE_ALBUM_REVIEW = `${ReviewEndpoints.base}/albumReviews`;
+  public static DELETE_ALBUM_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/albumReviews/${reviewId}`;
+  public static GET_BAND_REVIEWS = (bandId: string) => `${ReviewEndpoints.base}/bandReviews/${bandId}`;
+  public static CREATE_BAND_REVIEW = `${ReviewEndpoints.base}/bandReviews`;
+  public static DELETE_BAND_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/bandReviews/${reviewId}`;
+}
+
 export class RatingEndpoints {
   static readonly base = environment.usercontentUrl;
   public static RATE_ALBUM = `${RatingEndpoints.base}/albumRatings`;

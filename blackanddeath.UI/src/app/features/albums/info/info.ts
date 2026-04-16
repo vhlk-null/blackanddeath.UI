@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { switchMap, filter } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
@@ -13,6 +14,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
+import { ReviewService, Review } from '../../services/review.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -28,7 +30,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -41,6 +43,7 @@ export class Info implements OnInit {
   private ratingService = inject(RatingService);
   private toastService = inject(ToastService);
   private favoriteService = inject(FavoriteService);
+  private reviewService = inject(ReviewService);
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly imageError = signal(false);
@@ -100,6 +103,15 @@ export class Info implements OnInit {
   readonly bandVideos = signal<VideoBand[]>([]);
   readonly playingVideoId = signal<string | null>(null);
   readonly isFavorite = signal(false);
+
+  // Reviews
+  readonly reviews = signal<Review[]>([]);
+  readonly reviewsTotal = signal(0);
+  readonly reviewsLoaded = signal(false);
+  readonly reviewTitle = signal('');
+  readonly reviewBody = signal('');
+  readonly reviewGrade = signal(0);
+  readonly reviewSubmitting = signal(false);
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
@@ -250,6 +262,11 @@ export class Info implements OnInit {
         this.similarAlbums.set(album.similarAlbums?.data ?? []);
         this.similarBands.set((album.similarBands ?? []) as any);
         this.bandVideos.set(album.videos);
+        this.reviews.set([]);
+        this.reviewsLoaded.set(false);
+        this.reviewTitle.set('');
+        this.reviewBody.set('');
+        this.reviewGrade.set(0);
 
         const userId = this.auth.userId();
         this.isFavorite.set(false);
@@ -274,6 +291,65 @@ export class Info implements OnInit {
           this.loaded.set(true);
         }
       },
+    });
+  }
+
+  selectTab(index: number): void {
+    this.infoTabIndex.set(index);
+    if (index === 1 && !this.reviewsLoaded()) {
+      this.loadReviews();
+    }
+  }
+
+  loadReviews(): void {
+    const albumId = this.albumData()?.id;
+    if (!albumId) return;
+    this.reviewService.getAlbumReviews(albumId, { pageIndex: 1, pageSize: 20 }).subscribe(r => {
+      this.reviews.set(r.data);
+      this.reviewsTotal.set(r.count);
+      this.reviewsLoaded.set(true);
+    });
+  }
+
+  submitReview(): void {
+    const userId = this.auth.userId();
+    const albumId = this.albumData()?.id;
+    if (!userId || !albumId || this.reviewSubmitting()) return;
+
+    const title = this.reviewTitle().trim();
+    const body = this.reviewBody().trim();
+    const grade = this.reviewGrade();
+    if (!title || !body || !grade) {
+      this.toastService.info('Please fill in title, review text and grade.');
+      return;
+    }
+
+    const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+    this.reviewSubmitting.set(true);
+    this.reviewService.createAlbumReview({ albumId, userId, username, title, body, grade }).subscribe({
+      next: (review) => {
+        this.reviews.update(r => [review, ...r]);
+        this.reviewsTotal.update(t => t + 1);
+        this.reviewTitle.set('');
+        this.reviewBody.set('');
+        this.reviewGrade.set(0);
+        this.reviewSubmitting.set(false);
+        this.toastService.success('Review submitted.');
+      },
+      error: () => {
+        this.reviewSubmitting.set(false);
+        this.toastService.error('Failed to submit review.');
+      },
+    });
+  }
+
+  deleteReview(reviewId: string): void {
+    this.reviewService.deleteAlbumReview(reviewId).subscribe({
+      next: () => {
+        this.reviews.update(r => r.filter(x => x.id !== reviewId));
+        this.reviewsTotal.update(t => t - 1);
+      },
+      error: () => this.toastService.error('Failed to delete review.'),
     });
   }
 

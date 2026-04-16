@@ -233,6 +233,54 @@
     }
   }
 
+  &__tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.3rem;
+    margin-left: 0.4rem;
+    border-radius: 0.625rem;
+    background: var(--color-separator);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-body);
+    vertical-align: middle;
+  }
+
+  &__reviews {
+    margin-top: 0;
+  }
+
+  &__reviews-signin {
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin: 0 0 2rem;
+
+    a {
+      color: var(--color-tab-active);
+      text-decoration: none;
+      cursor: pointer;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  &__reviews-count {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0 0 1.25rem;
+  }
+
+  &__reviews-empty {
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    padding: 1.5rem 0;
+  }
+
   &__meta-empty {
     color: var(--color-text-placeholder);
     font-style: italic;
@@ -289,6 +337,218 @@
       padding-right: 3.25rem;
       width: 1%;
     }
+  }
+}
+
+// ─── Review form ─────────────────────────────────────────────────────────────
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-card-bg);
+
+  &__title {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+
+    &:focus { border-color: var(--color-tab-active); }
+    &::placeholder { color: var(--color-text-placeholder); }
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    min-height: 7rem;
+
+    &:focus { border-color: var(--color-tab-active); }
+    &::placeholder { color: var(--color-text-placeholder); }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__grade {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  &__grade-label {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-right: 0.4rem;
+  }
+
+  &__star {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 0.1rem;
+    font-size: 1.25rem;
+    color: var(--color-separator);
+    line-height: 1;
+    transition: color 0.15s, transform 0.15s;
+
+    &.active { color: var(--color-star, #c9a84c); }
+    &:hover { transform: scale(1.2); color: var(--color-star, #c9a84c); }
+  }
+
+  &__grade-value {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-left: 0.5rem;
+  }
+
+  &__submit {
+    padding: 0.5rem 1.5rem;
+    background: none;
+    border: 1px solid var(--color-separator);
+    color: var(--color-text-heading);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-tab-active);
+      color: var(--color-tab-active);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ─── Review card ─────────────────────────────────────────────────────────────
+
+.review-card {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-separator);
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  &__album {
+    font-family: 'Cinzel', serif;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  &__grade {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--color-tab-active);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: 1.125rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-heading);
+    margin: 0 0 0.75rem;
+  }
+
+  &__body {
+    font-family: var(--font-family-body);
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    line-height: 1.7;
+    margin: 0 0 1rem;
+    white-space: pre-line;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__author {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-heading);
+    font-weight: 500;
+  }
+
+  &__date {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    flex: 1;
+  }
+
+  &__delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-muted);
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      stroke: currentColor;
+    }
+
+    &:hover { color: #e05252; }
   }
 }
 
