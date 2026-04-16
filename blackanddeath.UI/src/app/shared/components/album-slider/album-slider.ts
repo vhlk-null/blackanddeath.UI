@@ -25,12 +25,4 @@ export class AlbumSlider implements AfterViewInit, OnChanges {
     const el = this.track()?.nativeElement;
     if (el) el.scrollLeft = 0;
   }
-
-  scroll(direction: 'prev' | 'next'): void {
-    const el = this.track()?.nativeElement;
-    if (!el) return;
-    const cardWidth = el.querySelector('app-album-card')?.clientWidth ?? 0;
-    const gap = 10; // 0.625rem ≈ 10px
-    el.scrollBy({ left: direction === 'next' ? cardWidth + gap : -(cardWidth + gap), behavior: 'smooth' });
-  }
 }

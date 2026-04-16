@@ -12,11 +12,11 @@
         </div>
         }
         <div class="section-content-wrapper">
-            <button class="section-arrow section-arrow--prev" [class.section-arrow--visible]="hovered()" aria-label="Previous" (click)="scrollContent(-1)">&#8249;</button>
-            <div class="section-content" [style.--columns]="columns()" #contentEl>
+            @if (arrows()) {<button class="section-arrow section-arrow--prev" [class.section-arrow--visible]="hovered()" aria-label="Previous" (click)="scrollContent(-1)">&#8249;</button>}
+            <div class="section-content" [class.section-content--scroll]="scroll()" [class.section-content--wrap]="!scroll()" [style.--columns]="columns()" #contentEl>
                 <ng-content></ng-content>
             </div>
-            <button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>
+            @if (arrows()) {<button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>}
         </div>
     </div>
 </div>

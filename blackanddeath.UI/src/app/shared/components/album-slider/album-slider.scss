@@ -4,9 +4,7 @@
 }
 
 .slider {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  display: block;
 
   &__track {
     display: flex;
@@ -27,28 +25,4 @@
     scroll-snap-align: start;
   }
 
-  &__btn {
-    flex-shrink: 0;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    border: 1px solid var(--color-separator);
-    background: var(--color-card-bg);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s, border-color 0.2s;
-
-    svg {
-      width: 1rem;
-      height: 1rem;
-    }
-
-    &:hover {
-      color: var(--color-text-heading);
-      border-color: var(--color-text-heading);
-    }
-  }
 }

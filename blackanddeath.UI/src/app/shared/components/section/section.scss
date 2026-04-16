@@ -10,6 +10,7 @@
   display: block;
   max-width: var(--section-body-max-width, 71.25rem); // 1140px
   margin: 0 auto;
+  container-type: inline-size;
 }
 
 .section-tabs {
@@ -24,18 +25,27 @@
 
 .section-content {
   display: flex;
-  flex-wrap: nowrap;
   gap: 1.5rem 0.625rem;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
   margin-top: 1.5rem;
-  padding-top: 0.5rem;
-  padding-bottom: 2rem;
-  margin-bottom: -2rem;
 
-  // hide scrollbar
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  &--scroll {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    padding-top: 0.5rem;
+    padding-bottom: 2rem;
+    margin-bottom: -2rem;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    & > * {
+      flex: 0 0 calc((100cqw - 3 * 0.625rem) / 4);
+    }
+  }
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
 }
 
 .section-arrow {
@@ -50,7 +60,7 @@
   height: 2.5rem;
   border-radius: 50%;
   border: 1px solid var(--color-separator);
-  background: var(--color-surface, #1a1a1a);
+  background: var(--color-header-bg);
   color: var(--color-text-heading);
   font-size: 2rem;
   line-height: 1;

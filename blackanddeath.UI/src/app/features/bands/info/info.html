@@ -160,7 +160,7 @@
 }
 
 @if (totalAlbums()) {
-<app-section [sectionTitle]="titles.discography">
+<app-section [sectionTitle]="titles.discography" [arrows]="false" [scroll]="false">
   @if (totalAlbums() > 4) {
   <button sectionAction class="discography-show-more__btn" (click)="discographyExpanded.set(!discographyExpanded())">
     @if (!discographyExpanded()) {
@@ -192,7 +192,7 @@
 
 
 @if (bandData()?.videos?.length) {
-<app-section sectionTitle="Videos">
+<app-section sectionTitle="Videos" [arrows]="false" [scroll]="false">
   @for (video of bandData()!.videos!; track video.id) {
   <div class="band-video" (click)="playingVideoId.set(playingVideoId() === video.id ? null : video.id)">
     <div class="band-video__cover">
@@ -225,7 +225,7 @@
 }
 
 @if (similarBands().length) {
-<app-section [sectionTitle]="titles.similarBands">
+<app-section [sectionTitle]="titles.similarBands" [arrows]="false" [scroll]="false">
   @for (band of similarBands(); track band.id) {
   <app-band-card [bandCard]="band" />
   }
