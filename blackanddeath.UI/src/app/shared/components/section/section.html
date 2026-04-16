@@ -1,4 +1,4 @@
-<div class="section-container">
+<div class="section-container" (mouseenter)="hovered.set(true)" (mouseleave)="hovered.set(false)">
     @if (sectionTitle()) {
     <div class="section-header">
       <h1 class="section-title">{{ sectionTitle() }}</h1>
@@ -11,8 +11,12 @@
             <app-tabs [tabs]="tabs()!" [initialIndex]="initialTab()" (tabChange)="tabChange.emit($event)"></app-tabs>
         </div>
         }
-        <div class="section-content" [style.--columns]="columns()">
-            <ng-content></ng-content>
+        <div class="section-content-wrapper">
+            <button class="section-arrow section-arrow--prev" [class.section-arrow--visible]="hovered()" aria-label="Previous" (click)="scrollContent(-1)">&#8249;</button>
+            <div class="section-content" [style.--columns]="columns()" #contentEl>
+                <ng-content></ng-content>
+            </div>
+            <button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>
         </div>
     </div>
 </div>

@@ -67,33 +67,29 @@ export class Home implements OnInit {
   private allAlbums: Album[] = [];
   private allVideos: VideoBand[] = [];
 
-  private albumsSlice(section: number, tab: number): Album[] {
-    const start = (section * 3 + tab) * 4;
-    return this.allAlbums.slice(start, start + 4);
-  }
 
 
   ngOnInit(): void {
     forkJoin({
-      topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: 20 }),
-      topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: 20 }),
-      albums: this.albumService.getAll({ pageIndex: 0, pageSize: 20, sortBy: 'Newest' }),
-      bands: this.bandService.getAll({ pageIndex: 0, pageSize: 9, sortBy: 'Newest' }),
-      videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: 9 }).pipe(catchError(() => of([]))),
+      topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: 50 }),
+      topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: 30 }),
+      albums: this.albumService.getAll({ pageIndex: 0, pageSize: 50, sortBy: 'Newest' }),
+      bands: this.bandService.getAll({ pageIndex: 0, pageSize: 30, sortBy: 'Newest' }),
+      videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: 30 }).pipe(catchError(() => of([]))),
     }).subscribe({
       next: ({ topRatedAlbums, topRatedBands, albums, bands, videos }) => {
-        this.mainTopRatedAlbums.set(topRatedAlbums.slice(0, 4));
+        this.mainTopRatedAlbums.set(topRatedAlbums);
 
-        this.mainPopularBands.set(topRatedBands.slice(0, 3));
+        this.mainPopularBands.set(topRatedBands);
 
         this.allAlbums = albums;
-        this.mainRecentAlbums.set(albums.slice(0, 4));
-        this.mainUpcomingReleases.set(this.albumsSlice(2, 0));
+        this.mainRecentAlbums.set(albums);
+        this.mainUpcomingReleases.set(albums.slice(8));
 
-        this.mainRecentBands.set(bands.slice(0, 3));
+        this.mainRecentBands.set(bands);
 
         this.allVideos = videos;
-        this.mainRecentVideos.set(videos.slice(0, 3));
+        this.mainRecentVideos.set(videos);
 
         this.loading.set(false);
       },
@@ -107,13 +103,13 @@ export class Home implements OnInit {
 
   onTopRatedTabChange(index: number): void {
     const period = this.periodMap[index];
-    this.ratingService.getTopRatedAlbums({ period, pageIndex: 0, pageSize: 4 })
+    this.ratingService.getTopRatedAlbums({ period, pageIndex: 0, pageSize: 50 })
       .subscribe(albums => this.mainTopRatedAlbums.set(albums));
   }
 
   onPopularBandsTabChange(index: number): void {
     const period = this.periodMap[index];
-    this.ratingService.getTopRatedBands({ period, pageIndex: 0, pageSize: 3 })
+    this.ratingService.getTopRatedBands({ period, pageIndex: 0, pageSize: 30 })
       .subscribe(bands => this.mainPopularBands.set(bands));
   }
 
@@ -124,10 +120,10 @@ export class Home implements OnInit {
   onMetalVideosTabChange(index: number): void {
     const types = ['Clip', 'Live', 'Playthrough'];
     const filtered = this.allVideos.filter(v => v.videoType === types[index]);
-    this.mainRecentVideos.set(filtered.slice(0, 3));
+    this.mainRecentVideos.set(filtered);
   }
 
   onUpcomingReleasesTabChange(index: number): void {
-    this.mainUpcomingReleases.set(this.albumsSlice(2, index));
+    this.mainUpcomingReleases.set(this.allAlbums.slice(8));
   }
 }

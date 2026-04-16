@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal, viewChild, ElementRef } from '@angular/core';
 import { Tabs } from '../tabs/tabs';
 
 @Component({
@@ -13,4 +13,13 @@ export class Section {
   initialTab = input<number>(0);
   columns = input<number>(4);
   tabChange = output<number>();
+
+  hovered = signal(false);
+  contentEl = viewChild<ElementRef<HTMLElement>>('contentEl');
+
+  scrollContent(direction: -1 | 1): void {
+    const el = this.contentEl()?.nativeElement;
+    if (!el) return;
+    el.scrollBy({ left: direction * el.clientWidth, behavior: 'smooth' });
+  }
 }

@@ -1,14 +1,13 @@
 :host {
   display: block;
-  min-width: 0;
-  width: calc(25% - 0.47rem);
+  flex: 0 0 calc(25% - 0.47rem);
 
   @media (max-width: 40rem) {
-    width: calc(50% - 0.3125rem);
+    flex: 0 0 calc(50% - 0.3125rem);
   }
 
   @media (max-height: 31.25rem) and (orientation: landscape) {
-    width: calc(50% - 0.3125rem);
+    flex: 0 0 calc(50% - 0.3125rem);
   }
 }
 
