@@ -18,7 +18,7 @@
   <h1 class="album-info__title">{{ albumData()?.title | titleCaseAll }}</h1>
   <p class="album-info__band-subtitle">
     @for (band of albumData()?.bands ?? []; track band.id; let last = $last) {
-      <a [routerLink]="['/bands', band.id, band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) { & }
+      <a [routerLink]="['/bands', band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) { & }
     }
   </p>
 

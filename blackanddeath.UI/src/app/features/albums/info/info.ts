@@ -214,18 +214,14 @@ export class Info implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
-      filter(params => !!params.get('id')),
+      filter(params => !!params.get('slug')),
       switchMap(params => {
         this.loaded.set(false);
-        return this.albumService.getById(params.get('id')!);
+        return this.albumService.getBySlug(params.get('slug')!);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (album) => {
-        const urlSlug = this.route.snapshot.paramMap.get('slug');
-        if (album.slug && urlSlug !== album.slug) {
-          this.router.navigate(['/albums', album.id, album.slug], { replaceUrl: true });
-        }
         this.albumData.set(album);
         this.loaded.set(true);
         this.playingVideoId.set(null);

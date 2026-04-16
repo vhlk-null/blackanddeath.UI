@@ -62,6 +62,12 @@ export class BandService {
     );
   }
 
+  getBySlug(slug: string) {
+    return this.http.get<{ band: Band }>(BandEndpoints.GET_BY_SLUG(slug)).pipe(
+      map(response => response.band)
+    );
+  }
+
   create(dto: CreateBandDto, logo?: File | null) {
     const form = new FormData();
     form.append('band', JSON.stringify(dto));

@@ -282,7 +282,7 @@ export class AddAlbumForm implements OnInit {
       next: (album) => {
         if (this.editMode) {
           this.toastService.success('Album updated successfully!');
-          this.router.navigate(['/albums', this.albumId, album?.slug ?? this.albumSlug]);
+          this.router.navigate(['/albums', album?.slug ?? this.albumSlug]);
         } else {
           this.toastService.success('Album published successfully!');
           this.albumForm.reset({ albumType: AlbumType.FullLength });

@@ -186,7 +186,7 @@ export class AddBandForm implements OnInit {
       next: (band) => {
         if (this.editMode) {
           this.toastService.success('Band updated successfully!');
-          this.router.navigate(['/bands', this.bandId, band?.slug ?? this.bandSlug]);
+          this.router.navigate(['/bands', band?.slug ?? this.bandSlug]);
         } else {
           this.toastService.success('Band published successfully!');
           this.bandForm.reset();

@@ -61,6 +61,12 @@ export class AlbumService {
     );
   }
 
+  getBySlug(slug: string) {
+    return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_SLUG(slug)).pipe(
+      map(response => response.album)
+    );
+  }
+
   getByBand(bandId: string, params?: Record<string, unknown>) {
     return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_BY_BAND(bandId), params).pipe(
       map(response => response.albums.data)

@@ -1,4 +1,4 @@
-<a class="card" [routerLink]="['/albums', albumCard().id, albumCard().slug]">
+<a class="card" [routerLink]="['/albums', albumCard().slug]">
     <div class="card__cover">
         @if (albumCard().coverUrl && !imageError()) {
         <img class="card__image" [src]="albumCard().coverUrl" [alt]="albumCard().title" (error)="imageError.set(true)" />
@@ -17,7 +17,7 @@
         @if (albumCard().bands?.[0]?.name) {
         <a class="card__band" [title]="albumCard().bands?.[0]?.name ?? ''"
           (click)="$event.preventDefault(); $event.stopPropagation()"
-          [routerLink]="['/bands', albumCard().bands?.[0]?.id, albumCard().bands?.[0]?.slug]">{{ albumCard().bands?.[0]?.name }}</a>
+          [routerLink]="['/bands', albumCard().bands?.[0]?.slug]">{{ albumCard().bands?.[0]?.name }}</a>
         }
         <p class="card__meta">
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"

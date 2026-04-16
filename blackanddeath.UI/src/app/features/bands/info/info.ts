@@ -124,18 +124,14 @@ export class BandInfo implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
-      filter(params => !!params.get('id')),
+      filter(params => !!params.get('slug')),
       switchMap(params => {
         this.loaded.set(false);
-        return this.bandService.getById(params.get('id')!);
+        return this.bandService.getBySlug(params.get('slug')!);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (band) => {
-        const urlSlug = this.route.snapshot.paramMap.get('slug');
-        if (band.slug && urlSlug !== band.slug) {
-          this.router.navigate(['/bands', band.id, band.slug], { replaceUrl: true });
-        }
         this.bandData.set(band);
         this.discographyExpanded.set(false);
         this.similarAlbums.set((band.similarAlbums ?? []) as any);
