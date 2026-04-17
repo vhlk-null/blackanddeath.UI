@@ -174,6 +174,7 @@ export class BandInfo implements OnInit {
         this.reviewTitle.set('');
         this.reviewBody.set('');
         this.reviewUserRating.set(0);
+        this.reviewService.getBandReviewsCount(band.id).subscribe(c => this.reviewsTotal.set(c));
 
         const userId = this.auth.userId();
         this.isFavorite.set(false);

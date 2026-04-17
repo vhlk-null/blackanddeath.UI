@@ -268,6 +268,7 @@ export class Info implements OnInit {
         this.reviewTitle.set('');
         this.reviewBody.set('');
         this.reviewUserRating.set(0);
+        this.reviewService.getAlbumReviewsCount(album.id).subscribe(c => this.reviewsTotal.set(c));
 
         const userId = this.auth.userId();
         this.isFavorite.set(false);

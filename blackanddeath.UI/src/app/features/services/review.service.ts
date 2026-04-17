@@ -40,6 +40,18 @@ function mapReview(dto: ReviewDto): Review {
 export class ReviewService {
   private http = inject(BaseHttpService);
 
+  getAlbumReviewsCount(albumId: string) {
+    return this.http.get<number>(ReviewEndpoints.GET_ALBUM_REVIEWS_COUNT(albumId)).pipe(
+      catchError(() => of(0)),
+    );
+  }
+
+  getBandReviewsCount(bandId: string) {
+    return this.http.get<number>(ReviewEndpoints.GET_BAND_REVIEWS_COUNT(bandId)).pipe(
+      catchError(() => of(0)),
+    );
+  }
+
   getAlbumReviews(albumId: string, params: { pageIndex: number; pageSize: number }) {
     return this.http.get<PaginatedResult<ReviewDto>>(
       ReviewEndpoints.GET_ALBUM_REVIEWS(albumId), params

@@ -84,10 +84,12 @@ export class FavoriteEndpoints {
 
 export class ReviewEndpoints {
   static readonly base = environment.usercontentUrl;
-  public static GET_ALBUM_REVIEWS = (albumId: string) => `${ReviewEndpoints.base}/albumReviews/${albumId}`;
+  public static GET_ALBUM_REVIEWS = (albumId: string) => `${ReviewEndpoints.base}/album-reviews/${albumId}`;
+  public static GET_ALBUM_REVIEWS_COUNT = (albumId: string) => `${ReviewEndpoints.base}/album-reviews/${albumId}/count`;
+  public static GET_BAND_REVIEWS_COUNT = (bandId: string) => `${ReviewEndpoints.base}/band-reviews/${bandId}/count`;
   public static CREATE_ALBUM_REVIEW = `${ReviewEndpoints.base}/albumReviews`;
   public static DELETE_ALBUM_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/albumReviews/${reviewId}`;
-  public static GET_BAND_REVIEWS = (bandId: string) => `${ReviewEndpoints.base}/bandReviews/${bandId}`;
+  public static GET_BAND_REVIEWS = (bandId: string) => `${ReviewEndpoints.base}/band-reviews/${bandId}`;
   public static CREATE_BAND_REVIEW = `${ReviewEndpoints.base}/bandReviews`;
   public static DELETE_BAND_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/bandReviews/${reviewId}`;
 }
