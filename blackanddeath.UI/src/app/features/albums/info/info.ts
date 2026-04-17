@@ -249,16 +249,32 @@ export class Info implements OnInit {
   setAlbumRating(rating: number): void {
     const userId = this.auth.userId();
     if (!userId) { this.toastService.info('Sign in to rate this album.'); return; }
+    const albumId = this.albumData()?.id;
+    if (!albumId) return;
+
     const reviewId = this.userReviewId();
-    if (!reviewId) return;
-    const existing = this.reviews().find(r => r.id === reviewId);
-    this.reviewService.updateAlbumReview(reviewId, { title: existing?.title ?? '', body: existing?.body ?? '', userRating: rating }).subscribe({
-      next: (updated) => {
-        this.userRating.set(updated.userRating);
-        this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
-      },
-      error: () => this.toastService.error('Failed to save rating.'),
-    });
+    if (reviewId) {
+      const existing = this.reviews().find(r => r.id === reviewId);
+      this.reviewService.updateAlbumReview(reviewId, { title: existing?.title ?? '', body: existing?.body ?? '', userRating: rating }).subscribe({
+        next: (updated) => {
+          this.userRating.set(updated.userRating);
+          this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
+        },
+        error: () => this.toastService.error('Failed to save rating.'),
+      });
+    } else {
+      const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+      this.reviewService.createAlbumReview({ albumId, userId, username, title: '', body: '', userRating: rating }).subscribe({
+        next: (review) => {
+          this.userRating.set(review.userRating);
+          this.userReviewId.set(review.id);
+          this.reviews.update(r => [review, ...r]);
+          this.reviewsTotal.update(t => t + 1);
+          this.albumData.update(a => a ? { ...a } : a);
+        },
+        error: () => this.toastService.error('Failed to save rating.'),
+      });
+    }
   }
 
   copyLink(): void {
