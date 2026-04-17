@@ -194,7 +194,6 @@
         <div class="review-card">
           @if (editingReviewId() === review.id) {
             <div class="review-card__edit-form">
-              <app-star-rating [rating]="editUserRating()" (ratingChange)="editUserRating.set($event)" />
               <input class="review-form__input" type="text" [value]="editTitle()" (input)="editTitle.set($any($event.target).value)" maxlength="120" />
               <textarea class="review-form__textarea review-form__textarea--auto" [value]="editBody()" (input)="editBody.set($any($event.target).value)"></textarea>
               <div class="review-card__edit-actions">
@@ -202,6 +201,10 @@
                   {{ editSubmitting() ? 'Saving…' : 'Save' }}
                 </button>
                 <button class="review-card__cancel" (click)="cancelEditReview()">Cancel</button>
+                <div class="review-form__grade">
+                  <span class="review-form__grade-label">{{ editUserRating() > 0 ? editUserRating() + '/10' : '' }}</span>
+                  <app-star-rating [rating]="editUserRating()" (ratingChange)="editUserRating.set($event)" />
+                </div>
               </div>
             </div>
           } @else {
