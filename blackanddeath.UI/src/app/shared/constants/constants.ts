@@ -26,11 +26,11 @@ export const CAVERNOUS_BLACK_DEATH_TABS = SUBGENRE_TABS;
 export const BLACKENED_DEATH_TABS = SUBGENRE_TABS;
 
 // Album info
-export const ALBUM_INFORMATION = ['Songs', 'Review'];
+export const ALBUM_INFORMATION = ['Songs', 'Reviews'];
 export const DISCOGRAPHY_TITLE = 'Discography';
 export const VIDEOS_TITLE = 'Videos';
 export const SIMILAR_ALBUMS_TITLE = 'Similar Albums';
 
 // Band info
-export const BAND_INFORMATION = ['Members', 'Biography', 'Review'];
+export const BAND_INFORMATION = ['Members', 'Biography', 'Reviews'];
 export const SIMILAR_BANDS_TITLE = 'Similar Bands';

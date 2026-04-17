@@ -10,7 +10,7 @@ export interface Review {
   username: string;
   title: string;
   body: string;
-  userRating: number;
+  userRating: number | null;
   createdAt: string;
 }
 
@@ -20,7 +20,7 @@ interface ReviewDto {
   username: string;
   title: string;
   body: string;
-  userRating: number;
+  userRating: number | null;
   createdAt: string;
 }
 
@@ -52,7 +52,7 @@ export class ReviewService {
     );
   }
 
-  getAlbumReviews(albumId: string, params: { pageIndex: number; pageSize: number }) {
+  getAlbumReviews(albumId: string, params: { pageIndex: number; pageSize: number; orderBy?: string }) {
     return this.http.get<PaginatedResult<ReviewDto>>(
       ReviewEndpoints.GET_ALBUM_REVIEWS(albumId), params
     ).pipe(
@@ -67,11 +67,15 @@ export class ReviewService {
     );
   }
 
+  updateAlbumReview(reviewId: string, payload: { title: string; body: string; userRating: number }) {
+    return this.http.put<ReviewDto>(ReviewEndpoints.UPDATE_ALBUM_REVIEW(reviewId), payload).pipe(map(mapReview));
+  }
+
   deleteAlbumReview(reviewId: string) {
     return this.http.delete<void>(ReviewEndpoints.DELETE_ALBUM_REVIEW(reviewId));
   }
 
-  getBandReviews(bandId: string, params: { pageIndex: number; pageSize: number }) {
+  getBandReviews(bandId: string, params: { pageIndex: number; pageSize: number; orderBy?: string }) {
     return this.http.get<PaginatedResult<ReviewDto>>(
       ReviewEndpoints.GET_BAND_REVIEWS(bandId), params
     ).pipe(
@@ -84,6 +88,10 @@ export class ReviewService {
     return this.http.post<ReviewDto>(ReviewEndpoints.CREATE_BAND_REVIEW, payload).pipe(
       map(mapReview),
     );
+  }
+
+  updateBandReview(reviewId: string, payload: { title: string; body: string; userRating: number }) {
+    return this.http.put<ReviewDto>(ReviewEndpoints.UPDATE_BAND_REVIEW(reviewId), payload).pipe(map(mapReview));
   }
 
   deleteBandReview(reviewId: string) {

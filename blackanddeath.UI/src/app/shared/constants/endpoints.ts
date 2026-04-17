@@ -89,8 +89,10 @@ export class ReviewEndpoints {
   public static GET_BAND_REVIEWS = (bandId: string) => `${ReviewEndpoints.base}/band-reviews/${bandId}`;
   public static GET_BAND_REVIEWS_COUNT = (bandId: string) => `${ReviewEndpoints.base}/band-reviews/${bandId}/count`;
   public static CREATE_ALBUM_REVIEW = `${ReviewEndpoints.base}/album-reviews`;
+  public static UPDATE_ALBUM_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/album-reviews/${reviewId}`;
   public static DELETE_ALBUM_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/album-reviews/${reviewId}`;
   public static CREATE_BAND_REVIEW = `${ReviewEndpoints.base}/band-reviews`;
+  public static UPDATE_BAND_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/band-reviews/${reviewId}`;
   public static DELETE_BAND_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/band-reviews/${reviewId}`;
 }
 

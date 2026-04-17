@@ -476,6 +476,25 @@
   }
 }
 
+.reviews-controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+
+  &__sort {
+    background: var(--color-input-bg, var(--color-card-bg));
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    outline: none;
+
+    &:focus { border-color: var(--color-tab-active); }
+  }
+}
+
 // ─── Review form ─────────────────────────────────────────────────────────────
 
 .review-form {
@@ -528,6 +547,12 @@
 
     &:focus { border-color: var(--color-tab-active); }
     &::placeholder { color: var(--color-text-placeholder); }
+
+    &--auto {
+      field-sizing: content;
+      min-height: 7rem;
+      resize: none;
+    }
   }
 
   &__footer {
@@ -674,9 +699,7 @@
     color: var(--color-tab-active);
     opacity: 0.8;
 
-    &:hover {
-      opacity: 1;
-    }
+    &:hover { opacity: 1; }
   }
 
   &__footer {
@@ -705,6 +728,24 @@
     flex: 1;
   }
 
+  &__edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-muted);
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      stroke: currentColor;
+    }
+
+    &:hover { color: var(--color-tab-active); }
+  }
+
   &__delete {
     background: none;
     border: none;
@@ -721,6 +762,36 @@
     }
 
     &:hover { color: #e05252; }
+  }
+
+  &__rating {
+    display: block;
+    margin-top: 0.75rem;
+  }
+
+  &__edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__edit-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__cancel {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    padding: 0;
+
+    &:hover { color: var(--color-text); }
   }
 }
 

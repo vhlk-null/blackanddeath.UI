@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -113,6 +113,19 @@ export class Info implements OnInit {
   readonly reviewUserRating = signal(0);
   readonly reviewSubmitting = signal(false);
   readonly hasUserReview = computed(() => this.reviews().some(r => r.userId === this.auth.userId()));
+  readonly reviewSort = signal<'newest' | 'oldest' | 'highest-rated' | 'lowest-rated'>('newest');
+
+  constructor() {
+    effect(() => {
+      const sort = this.reviewSort();
+      if (this.reviewsEverLoaded) {
+        this.loadReviews(sort);
+      }
+    });
+  }
+
+  private reviewsEverLoaded = false;
+
   readonly expandedReviews = signal<Set<string>>(new Set());
 
   toggleReviewExpanded(id: string): void {
@@ -126,6 +139,46 @@ export class Info implements OnInit {
   isReviewExpanded(id: string): boolean {
     return this.expandedReviews().has(id);
   }
+
+  readonly editingReviewId = signal<string | null>(null);
+  readonly editTitle = signal('');
+  readonly editBody = signal('');
+  readonly editUserRating = signal(0);
+  readonly editSubmitting = signal(false);
+
+  startEditReview(review: { id: string; title: string; body: string; userRating: number | null }): void {
+    this.editingReviewId.set(review.id);
+    this.editTitle.set(review.title);
+    this.editBody.set(review.body);
+    this.editUserRating.set(review.userRating ?? 0);
+  }
+
+  cancelEditReview(): void {
+    this.editingReviewId.set(null);
+  }
+
+  saveEditReview(): void {
+    const id = this.editingReviewId();
+    if (!id || this.editSubmitting()) return;
+    const title = this.editTitle().trim();
+    const body = this.editBody().trim();
+    if (!title || !body) { this.toastService.info('Please fill in title and review text.'); return; }
+    this.editSubmitting.set(true);
+    const userRating = this.editUserRating();
+    this.reviewService.updateAlbumReview(id, { title, body, userRating }).subscribe({
+      next: (updated) => {
+        this.reviews.update(r => r.map(x => x.id === id ? updated : x));
+        this.editingReviewId.set(null);
+        this.editSubmitting.set(false);
+        this.toastService.success('Review updated.');
+      },
+      error: () => {
+        this.editSubmitting.set(false);
+        this.toastService.error('Failed to update review.');
+      },
+    });
+  }
+
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
@@ -316,13 +369,22 @@ export class Info implements OnInit {
     }
   }
 
-  loadReviews(): void {
+  private readonly orderByMap: Record<string, string> = {
+    'newest': 'Newest',
+    'oldest': 'Oldest',
+    'highest-rated': 'HighestRated',
+    'lowest-rated': 'LowestRated',
+  };
+
+  loadReviews(sort = this.reviewSort()): void {
     const albumId = this.albumData()?.id;
     if (!albumId) return;
-    this.reviewService.getAlbumReviews(albumId, { pageIndex: 1, pageSize: 20 }).subscribe(r => {
+    const orderBy = this.orderByMap[sort];
+    this.reviewService.getAlbumReviews(albumId, { pageIndex: 1, pageSize: 20, orderBy }).subscribe(r => {
       this.reviews.set(r.data);
       this.reviewsTotal.set(r.count);
       this.reviewsLoaded.set(true);
+      this.reviewsEverLoaded = true;
     });
   }
 
@@ -359,6 +421,7 @@ export class Info implements OnInit {
   }
 
   deleteReview(reviewId: string): void {
+    if (!confirm('Are you sure you want to delete this review?')) return;
     this.reviewService.deleteAlbumReview(reviewId).subscribe({
       next: () => {
         this.reviews.update(r => r.filter(x => x.id !== reviewId));

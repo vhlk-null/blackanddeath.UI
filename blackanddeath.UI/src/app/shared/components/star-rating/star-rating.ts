@@ -11,6 +11,7 @@ export class StarRating {
   readonly rating = input<number>(0);
   readonly averageRating = input<number | null | undefined>(null);
   readonly ratingsCount = input<number | undefined>(undefined);
+  readonly readonly = input<boolean>(false);
   readonly ratingChange = output<number>();
 
   readonly hoverRating = signal(0);
@@ -24,7 +25,7 @@ export class StarRating {
   }
 
   onHover(star: number): void {
-    this.hoverRating.set(star);
+    if (!this.readonly()) this.hoverRating.set(star);
   }
 
   onLeave(): void {
@@ -32,7 +33,7 @@ export class StarRating {
   }
 
   onSelect(star: number): void {
-    this.ratingChange.emit(star);
+    if (!this.readonly()) this.ratingChange.emit(star);
   }
 
   get displayAvg(): string {
