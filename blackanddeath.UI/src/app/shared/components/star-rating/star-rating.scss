@@ -18,10 +18,11 @@
     width: 1.25rem;
     height: 1.25rem;
     cursor: pointer;
+    transform: rotate(180deg);
     transition: transform 0.15s ease;
 
     &:hover {
-      transform: scale(1.2);
+      transform: rotate(180deg) scale(1.2);
     }
   }
 
