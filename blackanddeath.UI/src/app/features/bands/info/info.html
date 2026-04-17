@@ -184,9 +184,7 @@
           <p class="review-card__body">{{ review.body }}</p>
           <div class="review-card__footer">
             <span class="review-card__author">{{ review.username }}</span>
-            @if (auth.userId() === review.userId) {
-              <span class="review-card__own-grade">{{ review.userRating }}/10</span>
-            }
+            <span class="review-card__own-grade">{{ review.userRating }}/10</span>
             <span class="review-card__date">{{ review.createdAt | date:'MMM d, y' }}</span>
             @if (auth.isAdmin() || auth.userId() === review.userId) {
             <button class="review-card__delete" (click)="deleteReview(review.id)" title="Delete review">
