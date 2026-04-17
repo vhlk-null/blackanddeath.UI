@@ -77,7 +77,7 @@ export class BandInfo implements OnInit {
   readonly reviewsLoaded = signal(false);
   readonly reviewTitle = signal('');
   readonly reviewBody = signal('');
-  readonly reviewUserRating = signal(0);
+  readonly reviewUserRating = computed(() => this.userRating() ?? 0);
   readonly reviewSubmitting = signal(false);
   readonly hasUserReview = computed(() => this.reviews().some(r => r.userId === this.auth.userId()));
   readonly reviewSort = signal<'newest' | 'oldest' | 'highest-rated' | 'lowest-rated'>('newest');
@@ -134,6 +134,7 @@ export class BandInfo implements OnInit {
     this.reviewService.updateBandReview(id, { title, body, userRating }).subscribe({
       next: (updated) => {
         this.reviews.update(r => r.map(x => x.id === id ? updated : x));
+        this.userRating.set(updated.userRating);
         this.editingReviewId.set(null);
         this.editSubmitting.set(false);
         this.toastService.success('Review updated.');
@@ -238,7 +239,6 @@ export class BandInfo implements OnInit {
         this.reviewsLoaded.set(false);
         this.reviewTitle.set('');
         this.reviewBody.set('');
-        this.reviewUserRating.set(0);
         this.reviewService.getBandReviewsCount(band.id).subscribe(c => this.reviewsTotal.set(c));
 
         const userId = this.auth.userId();
@@ -312,9 +312,9 @@ export class BandInfo implements OnInit {
       next: (review) => {
         this.reviews.update(r => [review, ...r]);
         this.reviewsTotal.update(t => t + 1);
+        this.userRating.set(review.userRating);
         this.reviewTitle.set('');
         this.reviewBody.set('');
-        this.reviewUserRating.set(0);
         this.reviewSubmitting.set(false);
         this.toastService.success('Review submitted.');
       },
@@ -354,6 +354,8 @@ export class BandInfo implements OnInit {
       next: (r) => {
         this.userRating.set(r.userRating);
         this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
+        const uid = this.auth.userId();
+        this.reviews.update(list => list.map(rv => rv.userId === uid ? { ...rv, userRating: r.userRating } : rv));
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });
