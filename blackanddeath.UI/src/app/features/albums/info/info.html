@@ -46,7 +46,7 @@
             stroke-linejoin="round" />
         </svg>
       </button>
-      <button class="album-info__action-btn" [class.album-info__action-btn--active]="shared()" title="Share" (click)="share()">
+      <button class="album-info__action-btn" [class.album-info__action-btn--active-no-anim]="shared()" title="Share" (click)="share()">
         @if (shared()) {
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <polyline points="20 6 9 17 4 12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -59,7 +59,7 @@
           </svg>
         }
       </button>
-      <button class="album-info__action-btn" [class.album-info__action-btn--active]="copied()" title="Copy link" (click)="copyLink()">
+      <button class="album-info__action-btn" [class.album-info__action-btn--active-no-anim]="copied()" title="Copy link" (click)="copyLink()">
         @if (copied()) {
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <polyline points="20 6 9 17 4 12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
