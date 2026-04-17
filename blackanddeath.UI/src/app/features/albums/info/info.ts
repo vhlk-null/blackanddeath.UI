@@ -110,8 +110,9 @@ export class Info implements OnInit {
   readonly reviewsLoaded = signal(false);
   readonly reviewTitle = signal('');
   readonly reviewBody = signal('');
-  readonly reviewGrade = signal(0);
+  readonly reviewUserRating = signal(0);
   readonly reviewSubmitting = signal(false);
+  readonly hasUserReview = computed(() => this.reviews().some(r => r.userId === this.auth.userId()));
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
@@ -266,7 +267,7 @@ export class Info implements OnInit {
         this.reviewsLoaded.set(false);
         this.reviewTitle.set('');
         this.reviewBody.set('');
-        this.reviewGrade.set(0);
+        this.reviewUserRating.set(0);
 
         const userId = this.auth.userId();
         this.isFavorite.set(false);
@@ -318,21 +319,21 @@ export class Info implements OnInit {
 
     const title = this.reviewTitle().trim();
     const body = this.reviewBody().trim();
-    const grade = this.reviewGrade();
-    if (!title || !body || !grade) {
-      this.toastService.info('Please fill in title, review text and grade.');
+    if (!title || !body) {
+      this.toastService.info('Please fill in title and review text.');
       return;
     }
+    const userRating = this.reviewUserRating();
 
     const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
     this.reviewSubmitting.set(true);
-    this.reviewService.createAlbumReview({ albumId, userId, username, title, body, grade }).subscribe({
+    this.reviewService.createAlbumReview({ albumId, userId, username, title, body, userRating }).subscribe({
       next: (review) => {
         this.reviews.update(r => [review, ...r]);
         this.reviewsTotal.update(t => t + 1);
         this.reviewTitle.set('');
         this.reviewBody.set('');
-        this.reviewGrade.set(0);
+        this.reviewUserRating.set(0);
         this.reviewSubmitting.set(false);
         this.toastService.success('Review submitted.');
       },

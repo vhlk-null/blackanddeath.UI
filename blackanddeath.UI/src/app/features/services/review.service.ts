@@ -10,7 +10,7 @@ export interface Review {
   username: string;
   title: string;
   body: string;
-  grade: number;
+  userRating: number;
   createdAt: string;
 }
 
@@ -20,7 +20,7 @@ interface ReviewDto {
   username: string;
   title: string;
   body: string;
-  grade: number;
+  userRating: number;
   createdAt: string;
 }
 
@@ -31,7 +31,7 @@ function mapReview(dto: ReviewDto): Review {
     username: dto.username,
     title: dto.title,
     body: dto.body,
-    grade: dto.grade,
+    userRating: dto.userRating,
     createdAt: dto.createdAt,
   };
 }
@@ -49,7 +49,7 @@ export class ReviewService {
     );
   }
 
-  createAlbumReview(payload: { albumId: string; userId: string; username: string; title: string; body: string; grade: number }) {
+  createAlbumReview(payload: { albumId: string; userId: string; username: string; title: string; body: string; userRating: number }) {
     return this.http.post<ReviewDto>(ReviewEndpoints.CREATE_ALBUM_REVIEW, payload).pipe(
       map(mapReview),
     );
@@ -68,7 +68,7 @@ export class ReviewService {
     );
   }
 
-  createBandReview(payload: { bandId: string; userId: string; username: string; title: string; body: string; grade: number }) {
+  createBandReview(payload: { bandId: string; userId: string; username: string; title: string; body: string; userRating: number }) {
     return this.http.post<ReviewDto>(ReviewEndpoints.CREATE_BAND_REVIEW, payload).pipe(
       map(mapReview),
     );
