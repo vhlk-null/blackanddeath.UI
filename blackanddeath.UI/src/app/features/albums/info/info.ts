@@ -105,6 +105,7 @@ export class Info implements OnInit {
   readonly isFavorite = signal(false);
 
   // Reviews
+  readonly userReviewId = signal<string | null>(null);
   readonly reviews = signal<Review[]>([]);
   readonly reviewsTotal = signal(0);
   readonly reviewsLoaded = signal(false);
@@ -247,19 +248,14 @@ export class Info implements OnInit {
 
   setAlbumRating(rating: number): void {
     const userId = this.auth.userId();
-    if (!userId) {
-      this.toastService.info('Sign in to rate this album.');
-      return;
-    }
-    const albumId = this.albumData()?.id;
-    if (!albumId) return;
-
-    this.ratingService.rateAlbum(userId, albumId, rating).subscribe({
-      next: (r) => {
-        this.userRating.set(r.userRating);
-        this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
-        const uid = this.auth.userId();
-        this.reviews.update(list => list.map(rv => rv.userId === uid ? { ...rv, userRating: r.userRating } : rv));
+    if (!userId) { this.toastService.info('Sign in to rate this album.'); return; }
+    const reviewId = this.userReviewId();
+    if (!reviewId) return;
+    const existing = this.reviews().find(r => r.id === reviewId);
+    this.reviewService.updateAlbumReview(reviewId, { title: existing?.title ?? '', body: existing?.body ?? '', userRating: rating }).subscribe({
+      next: (updated) => {
+        this.userRating.set(updated.userRating);
+        this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });
@@ -326,6 +322,7 @@ export class Info implements OnInit {
         this.playingVideoId.set(null);
         this.discographyExpanded.set(false);
         this.userRating.set(null);
+        this.userReviewId.set(null);
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
         this.discographyAlbums.set(discography);
@@ -346,6 +343,10 @@ export class Info implements OnInit {
               this.userRating.set(r.userRating);
               this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
             }
+          });
+          this.reviewService.getAlbumReviews(album.id, { pageIndex: 1, pageSize: 100 }).subscribe(r => {
+            const mine = r.data.find(x => x.userId === userId);
+            if (mine) this.userReviewId.set(mine.id);
           });
           this.favoriteService.checkFavoriteAlbum(album.id, userId)
             .subscribe(v => this.isFavorite.set(v));
@@ -410,6 +411,7 @@ export class Info implements OnInit {
         this.reviews.update(r => [review, ...r]);
         this.reviewsTotal.update(t => t + 1);
         this.userRating.set(review.userRating);
+        this.userReviewId.set(review.id);
         this.reviewTitle.set('');
         this.reviewBody.set('');
         this.reviewSubmitting.set(false);

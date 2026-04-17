@@ -72,6 +72,7 @@ export class BandInfo implements OnInit {
   readonly isFavorite = signal(false);
 
   // Reviews
+  readonly userReviewId = signal<string | null>(null);
   readonly reviews = signal<Review[]>([]);
   readonly reviewsTotal = signal(0);
   readonly reviewsLoaded = signal(false);
@@ -235,6 +236,7 @@ export class BandInfo implements OnInit {
         this.playingVideoId.set(null);
         this.loaded.set(true);
         this.userRating.set(null);
+        this.userReviewId.set(null);
         this.reviews.set([]);
         this.reviewsLoaded.set(false);
         this.reviewTitle.set('');
@@ -249,6 +251,10 @@ export class BandInfo implements OnInit {
               this.userRating.set(r.userRating);
               this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
             }
+          });
+          this.reviewService.getBandReviews(band.id, { pageIndex: 1, pageSize: 100 }).subscribe(r => {
+            const mine = r.data.find(x => x.userId === userId);
+            if (mine) this.userReviewId.set(mine.id);
           });
           this.favoriteService.checkFavoriteBand(band.id, userId)
             .subscribe(v => this.isFavorite.set(v));
@@ -313,6 +319,7 @@ export class BandInfo implements OnInit {
         this.reviews.update(r => [review, ...r]);
         this.reviewsTotal.update(t => t + 1);
         this.userRating.set(review.userRating);
+        this.userReviewId.set(review.id);
         this.reviewTitle.set('');
         this.reviewBody.set('');
         this.reviewSubmitting.set(false);
@@ -343,19 +350,14 @@ export class BandInfo implements OnInit {
 
   setBandRating(rating: number): void {
     const userId = this.auth.userId();
-    if (!userId) {
-      this.toastService.info('Sign in to rate this band.');
-      return;
-    }
-    const bandId = this.bandData()?.id;
-    if (!bandId) return;
-
-    this.ratingService.rateBand(userId, bandId, rating).subscribe({
-      next: (r) => {
-        this.userRating.set(r.userRating);
-        this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
-        const uid = this.auth.userId();
-        this.reviews.update(list => list.map(rv => rv.userId === uid ? { ...rv, userRating: r.userRating } : rv));
+    if (!userId) { this.toastService.info('Sign in to rate this band.'); return; }
+    const reviewId = this.userReviewId();
+    if (!reviewId) return;
+    const existing = this.reviews().find(r => r.id === reviewId);
+    this.reviewService.updateBandReview(reviewId, { title: existing?.title ?? '', body: existing?.body ?? '', userRating: rating }).subscribe({
+      next: (updated) => {
+        this.userRating.set(updated.userRating);
+        this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });

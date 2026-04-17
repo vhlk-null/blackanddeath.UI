@@ -109,7 +109,7 @@
         </button>
         <div class="review-form__grade">
           <span class="review-form__grade-label">{{ reviewUserRating() > 0 ? reviewUserRating() + '/10' : '' }}</span>
-          <app-star-rating [rating]="reviewUserRating()" (ratingChange)="setAlbumRating($event)" />
+          <app-star-rating [rating]="reviewUserRating()" (ratingChange)="userRating.set($event)" />
         </div>
       </div>
     </div>
