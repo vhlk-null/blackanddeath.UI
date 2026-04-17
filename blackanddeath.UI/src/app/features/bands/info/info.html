@@ -181,7 +181,12 @@
         @for (review of reviews(); track review.id) {
         <div class="review-card">
           <h4 class="review-card__title">{{ review.title }}</h4>
-          <p class="review-card__body">{{ review.body }}</p>
+          <p class="review-card__body" [class.review-card__body--collapsed]="!isReviewExpanded(review.id)">{{ review.body }}</p>
+          @if (review.body.length > 300) {
+          <button class="review-card__expand" (click)="toggleReviewExpanded(review.id)">
+            {{ isReviewExpanded(review.id) ? 'Show less' : 'Read more' }}
+          </button>
+          }
           <div class="review-card__footer">
             <span class="review-card__author">{{ review.username }}</span>
             <span class="review-card__own-grade">{{ review.userRating }}/10</span>

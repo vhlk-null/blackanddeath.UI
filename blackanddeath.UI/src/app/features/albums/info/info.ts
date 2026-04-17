@@ -113,6 +113,19 @@ export class Info implements OnInit {
   readonly reviewUserRating = signal(0);
   readonly reviewSubmitting = signal(false);
   readonly hasUserReview = computed(() => this.reviews().some(r => r.userId === this.auth.userId()));
+  readonly expandedReviews = signal<Set<string>>(new Set());
+
+  toggleReviewExpanded(id: string): void {
+    this.expandedReviews.update(set => {
+      const next = new Set(set);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  isReviewExpanded(id: string): boolean {
+    return this.expandedReviews().has(id);
+  }
 
   private getRawLink(platform: StreamingPlatform): string | null {
     const links = this.albumData()?.streamingLinks ?? [];
