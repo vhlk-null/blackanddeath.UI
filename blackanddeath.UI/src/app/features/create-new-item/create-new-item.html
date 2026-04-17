@@ -1,4 +1,4 @@
-<app-section sectionTitle="Expand the Archive" [tabs]="tabs" (tabChange)="onTabChange($event)">
+<app-section sectionTitle="Expand the Archive" [tabs]="tabs" [arrows]="false" [scroll]="false" (tabChange)="onTabChange($event)">
 
     @switch (activeTab()) {
     @case (0) {
