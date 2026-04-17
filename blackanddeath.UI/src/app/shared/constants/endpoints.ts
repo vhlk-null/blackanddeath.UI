@@ -86,6 +86,7 @@ export class ReviewEndpoints {
   static readonly base = environment.usercontentUrl;
   public static GET_ALBUM_REVIEWS = (albumId: string) => `${ReviewEndpoints.base}/album-reviews/${albumId}`;
   public static GET_ALBUM_REVIEWS_COUNT = (albumId: string) => `${ReviewEndpoints.base}/album-reviews/${albumId}/count`;
+  public static GET_BAND_REVIEWS = (bandId: string) => `${ReviewEndpoints.base}/band-reviews/${bandId}`;
   public static GET_BAND_REVIEWS_COUNT = (bandId: string) => `${ReviewEndpoints.base}/band-reviews/${bandId}/count`;
   public static CREATE_ALBUM_REVIEW = `${ReviewEndpoints.base}/album-reviews`;
   public static DELETE_ALBUM_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/album-reviews/${reviewId}`;
