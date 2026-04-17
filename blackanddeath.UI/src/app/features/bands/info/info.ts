@@ -379,7 +379,7 @@ export class BandInfo implements OnInit {
         next: (review) => {
           this.userReviewId.set(review.id);
           this.reviews.update(r => [review, ...r]);
-          this.reviewsTotal.update(t => t + 1);
+          this.reviewService.getBandReviewsCount(bandId).subscribe(c => this.reviewsTotal.set(c));
           refreshRating();
         },
         error: () => this.toastService.error('Failed to save rating.'),

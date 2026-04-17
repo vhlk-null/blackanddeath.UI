@@ -277,7 +277,7 @@ export class Info implements OnInit {
         next: (review) => {
           this.userReviewId.set(review.id);
           this.reviews.update(r => [review, ...r]);
-          this.reviewsTotal.update(t => t + 1);
+          this.reviewService.getAlbumReviewsCount(albumId).subscribe(c => this.reviewsTotal.set(c));
           refreshRating();
         },
         error: () => this.toastService.error('Failed to save rating.'),
