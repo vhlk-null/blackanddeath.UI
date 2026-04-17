@@ -91,6 +91,7 @@
     </div>
   </div>
 
+  @if (infoTabIndex() !== 2) {
   <div class="band-info__body">
 
     <div class="band-info__left">
@@ -153,6 +154,7 @@
     </table>
 
   </div>
+  } <!-- end @if (infoTabIndex() !== 2) -->
 
   @if (infoTabIndex() === 2) {
   <div class="band-info__reviews">
