@@ -354,13 +354,22 @@ export class BandInfo implements OnInit {
     const bandId = this.bandData()?.id;
     if (!bandId) return;
 
+    const refreshRating = () => {
+      this.ratingService.getUserBandRating(bandId, userId).subscribe(r => {
+        if (r) {
+          this.userRating.set(r.userRating);
+          this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
+        }
+      });
+    };
+
     const reviewId = this.userReviewId();
     if (reviewId) {
       const existing = this.reviews().find(r => r.id === reviewId);
       this.reviewService.updateBandReview(reviewId, { title: existing?.title ?? '', body: existing?.body ?? '', userRating: rating }).subscribe({
         next: (updated) => {
-          this.userRating.set(updated.userRating);
           this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
+          refreshRating();
         },
         error: () => this.toastService.error('Failed to save rating.'),
       });
@@ -368,10 +377,10 @@ export class BandInfo implements OnInit {
       const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
       this.reviewService.createBandReview({ bandId, userId, username, title: '', body: '', userRating: rating }).subscribe({
         next: (review) => {
-          this.userRating.set(review.userRating);
           this.userReviewId.set(review.id);
           this.reviews.update(r => [review, ...r]);
           this.reviewsTotal.update(t => t + 1);
+          refreshRating();
         },
         error: () => this.toastService.error('Failed to save rating.'),
       });
