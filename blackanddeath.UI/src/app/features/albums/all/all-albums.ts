@@ -119,8 +119,9 @@ export class AllAlbums implements OnInit {
       this.activeGenreNames.set(toArray(params['genreName']));
       this.activeCountryNames.set(toArray(params['countryName']));
       this.activeTypes.set(toArray(params['type']));
-      this.activeYearFrom.set(params['yearFrom'] ?? null);
-      this.activeYearTo.set(params['yearTo'] ?? null);
+      const exactYear = params['year'] ?? null;
+      this.activeYearFrom.set(exactYear ?? params['yearFrom'] ?? null);
+      this.activeYearTo.set(exactYear ?? params['yearTo'] ?? null);
       this.activeLabelNames.set(toArray(params['labelName']));
       this.syncDraftsFromActive();
       this.load();
@@ -199,6 +200,7 @@ export class AllAlbums implements OnInit {
         genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
         countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
         type: this.activeTypes().length ? this.activeTypes() : undefined,
+        year: null,
         yearFrom: this.activeYearFrom() ?? undefined,
         yearTo: this.activeYearTo() ?? undefined,
         labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
