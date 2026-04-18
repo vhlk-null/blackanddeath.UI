@@ -1,4 +1,4 @@
-<app-section [sectionTitle]="title">
+<app-section [sectionTitle]="title" [scroll]="false" [arrows]="false">
   @for (genre of genres(); track genre.id) {
   <app-genre-card [genre]="genre" />
   }
