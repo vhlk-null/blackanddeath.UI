@@ -24,6 +24,7 @@
     <div class="header__center">
       <div class="header__search">
         <input type="text" placeholder="Search here..." aria-label="Search" />
+        <!-- filter btn: dev only
         <button class="header__filter-btn" (click)="filterOpen.set(!filterOpen())" aria-label="Toggle filters">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -38,6 +39,7 @@
             <line x1="17" y1="16" x2="23" y2="16" />
           </svg>
         </button>
+        -->
         <svg class="header__search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8" />
@@ -47,6 +49,7 @@
     </div>
 
     <div class="header__right">
+      <!-- theme toggle: dev only
       <button class="header__theme-btn" (click)="theme.cycle()" [attr.aria-label]="'Theme: ' + theme.theme()">
         @switch (theme.theme()) {
           @case ('dark') {
@@ -70,6 +73,7 @@
           }
         }
       </button>
+      -->
       <button class="header__user-btn" (click)="userMenuOpen.set(true)" aria-label="User menu">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
           stroke-linecap="round" stroke-linejoin="round">

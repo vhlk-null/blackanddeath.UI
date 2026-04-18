@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -24,6 +24,12 @@ import {
   SIMILAR_BANDS_TITLE,
 } from '../../../shared/constants/constants';
 
+export interface AlbumReview extends Review {
+  albumId: string;
+  albumTitle: string;
+  albumSlug: string;
+}
+
 @Component({
   selector: 'app-band-info',
   imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, DatePipe],
@@ -40,6 +46,7 @@ export class BandInfo implements OnInit {
   private ratingService = inject(RatingService);
   private favoriteService = inject(FavoriteService);
   private reviewService = inject(ReviewService);
+  private destroyRef = inject(DestroyRef);
 
   readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
@@ -71,84 +78,24 @@ export class BandInfo implements OnInit {
   readonly playingVideoId = signal<string | null>(null);
   readonly isFavorite = signal(false);
 
-  // Reviews
-  readonly userReviewId = signal<string | null>(null);
-  readonly reviews = signal<Review[]>([]);
+  // Album reviews aggregated across band's discography
+  readonly albumReviews = signal<AlbumReview[]>([]);
   readonly reviewsTotal = signal(0);
   readonly reviewsLoaded = signal(false);
-  readonly reviewTitle = signal('');
-  readonly reviewBody = signal('');
-  readonly reviewUserRating = computed(() => this.userRating() ?? 0);
-  readonly reviewSubmitting = signal(false);
-  readonly hasUserReview = computed(() => this.reviews().some(r => r.userId === this.auth.userId()));
   readonly reviewSort = signal<'newest' | 'oldest' | 'highest-rated' | 'lowest-rated'>('newest');
-
-  private reviewsEverLoaded = false;
-
-  constructor() {
-    effect(() => {
-      const sort = this.reviewSort();
-      if (this.reviewsEverLoaded) {
-        this.loadReviews(sort);
-      }
-    });
-  }
   readonly expandedReviews = signal<Set<string>>(new Set());
 
-  toggleReviewExpanded(id: string): void {
-    this.expandedReviews.update(set => {
-      const next = new Set(set);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
+  readonly sortedAlbumReviews = computed(() => {
+    const sort = this.reviewSort();
+    return [...this.albumReviews()].sort((a, b) => {
+      if (sort === 'newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sort === 'oldest') return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sort === 'highest-rated') return (b.userRating ?? 0) - (a.userRating ?? 0);
+      if (sort === 'lowest-rated') return (a.userRating ?? 0) - (b.userRating ?? 0);
+      return 0;
     });
-  }
+  });
 
-  isReviewExpanded(id: string): boolean {
-    return this.expandedReviews().has(id);
-  }
-
-  readonly editingReviewId = signal<string | null>(null);
-  readonly editTitle = signal('');
-  readonly editBody = signal('');
-  readonly editUserRating = signal(0);
-  readonly editSubmitting = signal(false);
-
-  startEditReview(review: { id: string; title: string; body: string; userRating: number | null }): void {
-    this.editingReviewId.set(review.id);
-    this.editTitle.set(review.title);
-    this.editBody.set(review.body);
-    this.editUserRating.set(review.userRating ?? 0);
-  }
-
-  cancelEditReview(): void {
-    this.editingReviewId.set(null);
-  }
-
-  saveEditReview(): void {
-    const id = this.editingReviewId();
-    if (!id || this.editSubmitting()) return;
-    const title = this.editTitle().trim();
-    const body = this.editBody().trim();
-    if (!title || !body) { this.toastService.info('Please fill in title and review text.'); return; }
-    this.editSubmitting.set(true);
-    const userRating = this.editUserRating();
-    this.reviewService.updateBandReview(id, { title, body, userRating }).subscribe({
-      next: (updated) => {
-        this.reviews.update(r => r.map(x => x.id === id ? updated : x));
-        this.userRating.set(updated.userRating);
-        this.editingReviewId.set(null);
-        this.editSubmitting.set(false);
-        this.toastService.success('Review updated.');
-      },
-      error: () => {
-        this.editSubmitting.set(false);
-        this.toastService.error('Failed to update review.');
-      },
-    });
-  }
-
-
-  /** Albums grouped: own first, then co-artist groups */
   readonly discographyGroups = computed(() => {
     const band = this.bandData();
     if (!band?.albums?.length) return [];
@@ -173,6 +120,19 @@ export class BandInfo implements OnInit {
   });
 
   readonly totalAlbums = computed(() => this.bandData()?.albums?.length ?? 0);
+
+  toggleReviewExpanded(id: string): void {
+    this.expandedReviews.update(set => {
+      const next = new Set(set);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  isReviewExpanded(id: string): boolean {
+    return this.expandedReviews().has(id);
+  }
+
   copyLink(): void {
     navigator.clipboard.writeText(window.location.href).then(() => {
       this.copied.set(true);
@@ -184,9 +144,10 @@ export class BandInfo implements OnInit {
     if (navigator.share) {
       navigator.share({ url: window.location.href, title: this.bandData()?.name ?? '' });
     } else {
-      this.copyLink();
-      this.shared.set(true);
-      setTimeout(() => this.shared.set(false), 2000);
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        this.shared.set(true);
+        setTimeout(() => this.shared.set(false), 2000);
+      });
     }
   }
 
@@ -217,8 +178,6 @@ export class BandInfo implements OnInit {
     });
   }
 
-  private destroyRef = inject(DestroyRef);
-
   ngOnInit(): void {
     this.route.paramMap.pipe(
       filter(params => !!params.get('slug')),
@@ -227,7 +186,9 @@ export class BandInfo implements OnInit {
         this.notFound.set(false);
         this.imageError.set(false);
         this.infoTabIndex.set(0);
-        this.reviewsEverLoaded = false;
+        this.albumReviews.set([]);
+        this.reviewsLoaded.set(false);
+        this.reviewsTotal.set(0);
         return this.bandService.getBySlug(params.get('slug')!);
       }),
       takeUntilDestroyed(this.destroyRef),
@@ -240,25 +201,15 @@ export class BandInfo implements OnInit {
         this.playingVideoId.set(null);
         this.loaded.set(true);
         this.userRating.set(null);
-        this.userReviewId.set(null);
-        this.reviews.set([]);
-        this.reviewsLoaded.set(false);
-        this.reviewTitle.set('');
-        this.reviewBody.set('');
-        this.reviewService.getBandReviewsCount(band.id).subscribe(c => this.reviewsTotal.set(c));
+        this.isFavorite.set(false);
 
         const userId = this.auth.userId();
-        this.isFavorite.set(false);
         if (userId) {
           this.ratingService.getUserBandRating(band.id, userId).subscribe(r => {
             if (r) {
               this.userRating.set(r.userRating);
               this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
             }
-          });
-          this.reviewService.getBandReviews(band.id, { pageIndex: 1, pageSize: 100 }).subscribe(r => {
-            const mine = r.data.find(x => x.userId === userId);
-            if (mine) this.userReviewId.set(mine.id);
           });
           this.favoriteService.checkFavoriteBand(band.id, userId)
             .subscribe(v => this.isFavorite.set(v));
@@ -280,67 +231,32 @@ export class BandInfo implements OnInit {
   selectTab(index: number): void {
     this.infoTabIndex.set(index);
     if (index === 2 && !this.reviewsLoaded()) {
-      this.loadReviews();
+      this.loadAlbumReviews();
     }
   }
 
-  private readonly orderByMap: Record<string, string> = {
-    'newest': 'Newest',
-    'oldest': 'Oldest',
-    'highest-rated': 'HighestRated',
-    'lowest-rated': 'LowestRated',
-  };
-
-  loadReviews(sort = this.reviewSort()): void {
+  loadAlbumReviews(): void {
     const bandId = this.bandData()?.id;
-    if (!bandId) return;
-    const orderBy = this.orderByMap[sort];
-    this.reviewService.getBandReviews(bandId, { pageIndex: 1, pageSize: 20, orderBy }).subscribe(r => {
-      this.reviews.set(r.data);
+    if (!bandId) { this.reviewsLoaded.set(true); return; }
+
+    this.reviewService.getBandReviews(bandId, { pageIndex: 1, pageSize: 100 }).subscribe(r => {
+      const reviews: AlbumReview[] = r.data.map(review => ({
+        ...review,
+        albumId: '',
+        albumTitle: '',
+        albumSlug: '',
+      }));
+      this.albumReviews.set(reviews);
       this.reviewsTotal.set(r.count);
       this.reviewsLoaded.set(true);
-      this.reviewsEverLoaded = true;
     });
   }
 
-  submitReview(): void {
-    const userId = this.auth.userId();
-    const bandId = this.bandData()?.id;
-    if (!userId || !bandId || this.reviewSubmitting()) return;
-
-    const title = this.reviewTitle().trim();
-    const body = this.reviewBody().trim();
-    if (!title || !body) {
-      this.toastService.info('Please fill in title and review text.');
-      return;
-    }
-    const userRating = this.reviewUserRating();
-
-    const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
-    this.reviewSubmitting.set(true);
-    this.reviewService.createBandReview({ bandId, userId, username, title, body, userRating }).subscribe({
-      next: (review) => {
-        this.reviews.update(r => [review, ...r]);
-        this.reviewsTotal.update(t => t + 1);
-        this.userRating.set(review.userRating);
-        this.userReviewId.set(review.id);
-        this.reviewTitle.set('');
-        this.reviewBody.set('');
-        this.reviewSubmitting.set(false);
-        this.toastService.success('Review submitted.');
-      },
-      error: () => {
-        this.reviewSubmitting.set(false);
-        this.toastService.error('Failed to submit review.');
-      },
-    });
-  }
-
-  deleteReview(reviewId: string): void {
+  deleteAlbumReview(reviewId: string): void {
     if (!confirm('Are you sure you want to delete this review?')) return;
-    this.reviewService.deleteBandReview(reviewId).subscribe({
+    this.reviewService.deleteAlbumReview(reviewId).subscribe({
       next: () => {
-        this.reviews.update(r => r.filter(x => x.id !== reviewId));
+        this.albumReviews.update(r => r.filter(x => x.id !== reviewId));
         this.reviewsTotal.update(t => t - 1);
       },
       error: () => this.toastService.error('Failed to delete review.'),
@@ -358,36 +274,22 @@ export class BandInfo implements OnInit {
     const bandId = this.bandData()?.id;
     if (!bandId) return;
 
-    const refreshRating = () => {
-      this.ratingService.getUserBandRating(bandId, userId).subscribe(r => {
-        if (r) {
-          this.userRating.set(r.userRating);
-          this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
-        }
-      });
-    };
+    this.ratingService.getUserBandRating(bandId, userId).subscribe(r => {
+      if (r) {
+        this.userRating.set(r.userRating);
+        this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
+      }
+    });
 
-    const reviewId = this.userReviewId();
-    if (reviewId) {
-      const existing = this.reviews().find(r => r.id === reviewId);
-      this.reviewService.updateBandReview(reviewId, { title: existing?.title ?? '', body: existing?.body ?? '', userRating: rating }).subscribe({
-        next: (updated) => {
-          this.reviews.update(list => list.map(r => r.id === updated.id ? updated : r));
-          refreshRating();
-        },
-        error: () => this.toastService.error('Failed to save rating.'),
-      });
-    } else {
-      const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
-      this.reviewService.createBandReview({ bandId, userId, username, title: '', body: '', userRating: rating }).subscribe({
-        next: (review) => {
-          this.userReviewId.set(review.id);
-          this.reviews.update(r => [review, ...r]);
-          this.reviewService.getBandReviewsCount(bandId).subscribe(c => this.reviewsTotal.set(c));
-          refreshRating();
-        },
-        error: () => this.toastService.error('Failed to save rating.'),
-      });
-    }
+    this.ratingService.rateBand(userId, bandId, rating).subscribe({
+      next: () => {
+        this.userRating.set(rating);
+        this.ratingService.getUserBandRating(bandId, userId).subscribe(r => {
+          if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
+        });
+      },
+      error: () => this.toastService.error('Failed to save rating.'),
+    });
   }
 }
+

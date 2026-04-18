@@ -50,7 +50,7 @@ export class BandService {
     );
   }
 
-  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string; name?: string; genreId?: string; countryId?: string; status?: string; yearFrom?: string; yearTo?: string }) {
+  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string; name?: string; genreId?: string; genreName?: string[]; countryId?: string; countryName?: string[]; status?: string[]; yearFrom?: string; yearTo?: string }) {
     return this.http.get<BandsResponse>(BandEndpoints.GET_ALL, params).pipe(
       map(response => response.bands)
     );

@@ -26,12 +26,16 @@
             [routerLink]="['/albums']" [queryParams]="{ year: albumCard().releaseDate }">{{ albumCard().releaseDate }}</span>
           @if (albumCard().countries?.[0]?.name) { ·
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ countryId: albumCard().countries?.[0]?.id }">{{ albumCard().countries?.[0]?.name }}</span>
+            [routerLink]="['/albums']" [queryParams]="{ countryName: albumCard().countries?.[0]?.name }">{{ albumCard().countries?.[0]?.name }}</span>
           }
         </p>
         <p class="card__genre">
+          @if ((albumCard().primaryGenre ?? albumCard().genres?.[0])?.name) {
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ genreId: (albumCard().primaryGenre ?? albumCard().genres?.[0])?.id }">{{ (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }}</span>
+            [routerLink]="['/albums']" [queryParams]="{ genreName: (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }">{{ (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }}</span>
+          } @else {
+          <span>{{ (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }}</span>
+          }
         </p>
     </div>
 </a>

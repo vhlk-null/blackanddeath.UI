@@ -2,17 +2,123 @@
 
   <div class="all-albums__header">
     <h1 class="all-albums__title">Albums</h1>
-    <div class="all-albums__filter">
-      <label class="all-albums__filter-label" for="albums-sort">Sort by</label>
-      <select class="all-albums__filter-select" id="albums-sort"
-        [value]="activeSort()"
-        (change)="onSortChange($any($event.target).value)">
-        @for (option of sortOptions; track option.value) {
-          <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select>
+    <div class="all-albums__controls">
+      <button class="all-albums__filter-btn" [class.all-albums__filter-btn--active]="filtersOpen()" (click)="toggleFilters()" type="button">
+        <!-- <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg> -->
+        Filters
+      </button>
+      <div class="all-albums__sort">
+        <label class="all-albums__filter-label" for="albums-sort">Sort by</label>
+        <select class="all-albums__filter-select" id="albums-sort"
+          [value]="activeSort()"
+          (change)="onSortChange($any($event.target).value)">
+          @for (option of sortOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
     </div>
   </div>
+
+  @if (filtersOpen()) {
+  <div class="all-albums__filter-bar">
+    <div class="all-albums__filter-fields">
+      <div class="all-albums__filter-field">
+        <span class="all-albums__filter-field-label">Genre</span>
+        <app-multi-select-names [groups]="genreGroups()" placeholder="Any genre" [(selected)]="draftGenres" />
+      </div>
+      <div class="all-albums__filter-field">
+        <span class="all-albums__filter-field-label">Country</span>
+        <app-multi-select-names [options]="countryNames()" placeholder="Any country" [(selected)]="draftCountries" />
+      </div>
+      <div class="all-albums__filter-field">
+        <span class="all-albums__filter-field-label">Label</span>
+        <app-multi-select-names [options]="labelNames()" placeholder="Any label" [(selected)]="draftLabels" />
+      </div>
+      <div class="all-albums__filter-field">
+        <span class="all-albums__filter-field-label">Type</span>
+        <app-multi-select-names [options]="albumTypes" placeholder="Any type" [(selected)]="draftTypes" />
+      </div>
+      <div class="all-albums__filter-field all-albums__filter-field--year">
+        <span class="all-albums__filter-field-label">Time period</span>
+        <div class="all-albums__year-slider">
+          <div class="all-albums__year-slider-track">
+            <div class="all-albums__year-slider-fill" [style.left.%]="draftYearFromPct()" [style.width.%]="draftYearToPct() - draftYearFromPct()"></div>
+            <input class="all-albums__year-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearFrom()" (input)="onDraftYearFrom($any($event.target).value)" />
+            <input class="all-albums__year-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearTo()" (input)="onDraftYearTo($any($event.target).value)" />
+          </div>
+          <div class="all-albums__year-slider-labels">
+            <span>{{ draftYearFrom() }}</span>
+            <span>{{ draftYearTo() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="all-albums__filter-actions">
+      <button class="all-albums__cancel-btn" type="button" (click)="toggleFilters()">Cancel</button>
+      <button class="all-albums__apply-btn" type="button" (click)="applyFilters()">Apply Filters</button>
+    </div>
+  </div>
+  }
+
+  @if (activeGenreNames().length || activeCountryNames().length || activeTypes().length || activeYearFrom() || activeLabelNames().length || activeName()) {
+  <div class="all-albums__chips">
+    @if (activeGenreNames().length) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Genre</span>
+        <span class="all-albums__chip-val">{{ activeGenreNames().join(', ') }}</span>
+        <button (click)="clearFilter('genre')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+    @if (activeCountryNames().length) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Country</span>
+        <span class="all-albums__chip-val">{{ activeCountryNames().join(', ') }}</span>
+        <button (click)="clearFilter('country')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+    @if (activeTypes().length) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Type</span>
+        <span class="all-albums__chip-val">{{ activeTypes().map(v => albumTypeLabel(v)).join(', ') }}</span>
+        <button (click)="clearFilter('type')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+    @if (activeLabelNames().length) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Label</span>
+        <span class="all-albums__chip-val">{{ activeLabelNames().join(', ') }}</span>
+        <button (click)="clearFilter('label')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+    @if (activeYearFrom()) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Years</span>
+        <span class="all-albums__chip-val">{{ activeYearFrom() }}{{ activeYearTo() ? '–' + activeYearTo() : '+' }}</span>
+        <button (click)="clearFilter('year')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+    @if (activeName()) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Title</span>
+        <span class="all-albums__chip-val">{{ activeName() }}</span>
+        <button (click)="clearFilter('name')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+  </div>
+  }
 
   @if (loaded() && albums().length === 0) {
     <p class="all-albums__empty">No albums found.</p>

@@ -136,7 +136,7 @@ export class Home implements OnInit {
       .subscribe(albums => this.mainTopRatedAlbums.set(albums));
   }
 
-  onTopRatedLoadMore(): void {
+  onTopRatedLoadMore(section: Section): void {
     if (this.loading$.topRatedAlbums || !this.hasMore.topRatedAlbums) return;
     this.loading$.topRatedAlbums = true;
     const nextPage = this.pages.topRatedAlbums + 1;
@@ -150,6 +150,7 @@ export class Home implements OnInit {
           this.hasMore.topRatedAlbums = false;
         }
         this.loading$.topRatedAlbums = false;
+        section.unlockLoadMore();
       });
   }
 
@@ -162,7 +163,7 @@ export class Home implements OnInit {
       .subscribe(bands => this.mainPopularBands.set(bands));
   }
 
-  onPopularBandsLoadMore(): void {
+  onPopularBandsLoadMore(section: Section): void {
     if (this.loading$.popularBands || !this.hasMore.popularBands) return;
     this.loading$.popularBands = true;
     const nextPage = this.pages.popularBands + 1;
@@ -176,6 +177,7 @@ export class Home implements OnInit {
           this.hasMore.popularBands = false;
         }
         this.loading$.popularBands = false;
+        section.unlockLoadMore();
       });
   }
 
@@ -183,7 +185,7 @@ export class Home implements OnInit {
     this.recentlyAddedTab.set(index);
   }
 
-  onRecentAlbumsLoadMore(): void {
+  onRecentAlbumsLoadMore(section: Section): void {
     if (this.loading$.recentAlbums || !this.hasMore.recentAlbums) return;
     this.loading$.recentAlbums = true;
     const nextPage = this.pages.recentAlbums + 1;
@@ -197,10 +199,11 @@ export class Home implements OnInit {
           this.hasMore.recentAlbums = false;
         }
         this.loading$.recentAlbums = false;
+        section.unlockLoadMore();
       });
   }
 
-  onRecentBandsLoadMore(): void {
+  onRecentBandsLoadMore(section: Section): void {
     if (this.loading$.recentBands || !this.hasMore.recentBands) return;
     this.loading$.recentBands = true;
     const nextPage = this.pages.recentBands + 1;
@@ -214,14 +217,15 @@ export class Home implements OnInit {
           this.hasMore.recentBands = false;
         }
         this.loading$.recentBands = false;
+        section.unlockLoadMore();
       });
   }
 
-  onRecentlyAddedLoadMore(): void {
+  onRecentlyAddedLoadMore(section: Section): void {
     if (this.recentlyAddedTab() === 0) {
-      this.onRecentAlbumsLoadMore();
+      this.onRecentAlbumsLoadMore(section);
     } else {
-      this.onRecentBandsLoadMore();
+      this.onRecentBandsLoadMore(section);
     }
   }
 
@@ -231,7 +235,7 @@ export class Home implements OnInit {
     this.mainRecentVideos.set(filtered);
   }
 
-  onVideosLoadMore(): void {
+  onVideosLoadMore(section: Section): void {
     if (this.loading$.videos || !this.hasMore.videos) return;
     this.loading$.videos = true;
     const nextPage = this.pages.videos + 1;
@@ -247,6 +251,7 @@ export class Home implements OnInit {
           this.hasMore.videos = false;
         }
         this.loading$.videos = false;
+        section.unlockLoadMore();
       });
   }
 

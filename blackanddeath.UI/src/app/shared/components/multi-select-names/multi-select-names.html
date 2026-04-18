@@ -1,0 +1,35 @@
+<div class="msn" [class.msn--open]="isOpen()">
+  <div class="msn__control" (click)="focusInput()">
+    @for (name of selected(); track name) {
+      <span class="msn__chip">
+        <span class="msn__chip-text">{{ name }}</span>
+        <button class="msn__chip-remove" type="button" (click)="remove(name, $event)" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke-width="1.5" stroke-linecap="round" stroke="currentColor"/></svg>
+        </button>
+      </span>
+    }
+    <input
+      #inputRef
+      class="msn__input"
+      type="text"
+      autocomplete="off"
+      [placeholder]="selected().length === 0 ? placeholder() : ''"
+      [value]="query()"
+      (input)="query.set($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    />
+  </div>
+  @if (isOpen() && hasResults()) {
+    <ul class="msn__dropdown">
+      @for (group of filteredGroups(); track group.label) {
+        @if (group.label) {
+          <li class="msn__group-label" [class.msn__option]="group.selectable" (mousedown)="group.selectable ? (selectGroup($event, group.label)) : null">{{ group.label }}</li>
+        }
+        @for (name of group.items; track name) {
+          <li class="msn__option" (mousedown)="$event.preventDefault(); select(name)">{{ name }}</li>
+        }
+      }
+    </ul>
+  }
+</div>

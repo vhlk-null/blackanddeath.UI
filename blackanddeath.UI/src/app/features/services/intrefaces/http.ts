@@ -10,7 +10,10 @@ export class BaseHttpService {
     let httpParams = new HttpParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
+        if (value === undefined || value === null) return;
+        if (Array.isArray(value)) {
+          value.forEach(v => { httpParams = httpParams.append(key, String(v)); });
+        } else {
           httpParams = httpParams.set(key, String(value));
         }
       });

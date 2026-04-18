@@ -503,6 +503,17 @@
   padding: 1.25rem 0;
   border-bottom: 1px solid var(--color-separator);
 
+  &__album-link {
+    display: inline-block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-tab-active);
+    text-decoration: none;
+    margin-bottom: 0.375rem;
+
+    &:hover { text-decoration: underline; }
+  }
+
   &__header {
     display: flex;
     align-items: baseline;

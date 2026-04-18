@@ -21,7 +21,13 @@
     margin: 0;
   }
 
-  &__filter {
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__sort {
     display: flex;
     align-items: center;
     gap: 0.625rem;
@@ -49,15 +55,233 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.625rem center;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s;
+    &:focus { border-color: var(--color-border-input-focus); }
+    option { background: var(--color-input-bg); color: var(--color-text); }
+  }
 
-    &:focus {
-      border-color: var(--color-border-input-focus);
+  &__filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 2.25rem;
+    padding: 0 0.875rem;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    &:hover { color: var(--color-text); border-color: var(--color-border-input-focus); }
+    &--active { border-color: var(--color-text-muted); color: var(--color-text); }
+  }
+
+  // Filter bar
+  &__filter-bar {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-separator);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.25rem;
+  }
+
+  &__filter-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem 0.75rem;
+  }
+
+  &__filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 10rem;
+
+    &--year {
+      flex: 2;
+      min-width: 14rem;
     }
 
-    option {
-      background: var(--color-input-bg);
+    &-label {
+      font-family: var(--font-family-body);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--color-separator);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+
+  &__cancel-btn {
+    height: 2rem;
+    padding: 0 1.125rem;
+    background: none;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    font-family: var(--font-family-body);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    &:hover { color: var(--color-text); border-color: var(--color-border-input-focus); }
+  }
+
+  &__apply-btn {
+    height: 2rem;
+    padding: 0 1.375rem;
+    background: var(--color-text-heading);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: 'Cinzel', serif;
+    font-size: 0.8125rem;
+    letter-spacing: 0.07em;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    &:hover { opacity: 0.85; }
+  }
+
+  // Year slider
+  &__year-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+
+    &-track {
+      position: relative;
+      height: 0.25rem;
+      background: var(--color-border-input);
+      border-radius: 99px;
+      margin: 0.6rem 0 0.25rem;
+    }
+
+    &-fill {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      background: var(--color-text-muted);
+      border-radius: 99px;
+      pointer-events: none;
+    }
+
+    &-input {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%);
+      appearance: none;
+      background: transparent;
+      pointer-events: none;
+      margin: 0;
+      height: 0;
+
+      &::-webkit-slider-thumb {
+        appearance: none;
+        pointer-events: all;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: var(--color-text-muted);
+        border: 2px solid var(--color-bg);
+        cursor: pointer;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        transition: background 0.15s;
+        &:hover { background: var(--color-text-heading); }
+      }
+
+      &::-moz-range-thumb {
+        pointer-events: all;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: var(--color-text-muted);
+        border: 2px solid var(--color-bg);
+        cursor: pointer;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      }
+    }
+
+    &-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-family-body);
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+  }
+
+  // Active filter chips
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 1.625rem;
+    padding: 0 0.5rem 0 0;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-card-border);
+    border-radius: 999px;
+    font-family: var(--font-family-body);
+    overflow: hidden;
+
+    &-cat {
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--color-bg);
+      background: var(--color-text-muted);
+      padding: 0 0.5rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    &-val {
+      font-size: 0.8rem;
       color: var(--color-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 18rem;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      background: none;
+      border: none;
+      padding: 0;
+      flex-shrink: 0;
+      cursor: pointer;
+      color: var(--color-text);
+      transition: color 0.15s;
+      line-height: 1;
+      &:hover { color: var(--color-text-heading); }
     }
   }
 
@@ -70,9 +294,7 @@
       grid-template-columns: 1fr;
     }
 
-    app-band-card {
-      width: 100%;
-    }
+    app-band-card { width: 100%; }
   }
 
   &__empty {

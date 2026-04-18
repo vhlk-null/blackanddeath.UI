@@ -49,7 +49,7 @@ export class AlbumService {
     );
   }
 
-  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string; name?: string; genreId?: string; countryId?: string; type?: string; yearFrom?: string; yearTo?: string; labelId?: string }) {
+  getAllPaginated(params: { pageIndex: number; pageSize: number; sortBy?: string; name?: string; genreId?: string; genreName?: string[]; countryId?: string; countryName?: string[]; type?: string[]; yearFrom?: string; yearTo?: string; labelId?: string; labelName?: string[] }) {
     return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_ALL, params).pipe(
       map(response => response.albums)
     );
