@@ -48,46 +48,22 @@
       <div class="filter-panel__row">
         <div class="filter-panel__field">
           <label class="filter-panel__label">Country</label>
-          <select class="filter-panel__select" [value]="selectedCountryId()"
-            (change)="selectedCountryId.set($any($event.target).value)">
-            <option value="">All</option>
-            @for (country of countries(); track country.id) {
-              <option [value]="country.id">{{ country.name }}</option>
-            }
-          </select>
+          <app-custom-select [options]="countryOptions()" [value]="selectedCountryId()" (valueChange)="selectedCountryId.set($event)" />
         </div>
         <div class="filter-panel__field">
           <label class="filter-panel__label">Format of release</label>
-          <select class="filter-panel__select" [value]="selectedType()"
-            (change)="selectedType.set($any($event.target).value)">
-            <option value="">All</option>
-            @for (type of albumTypes; track type) {
-              <option [value]="type">{{ type }}</option>
-            }
-          </select>
+          <app-custom-select [options]="albumTypeOptions()" [value]="selectedType()" (valueChange)="selectedType.set($event)" />
         </div>
       </div>
 
       <div class="filter-panel__row">
         <div class="filter-panel__field">
           <label class="filter-panel__label">Label</label>
-          <select class="filter-panel__select" [value]="selectedLabelId()"
-            (change)="selectedLabelId.set($any($event.target).value)">
-            <option value="">All</option>
-            @for (label of labels(); track label.id) {
-              <option [value]="label.id">{{ label.name }}</option>
-            }
-          </select>
+          <app-custom-select [options]="labelOptions()" [value]="selectedLabelId()" (valueChange)="selectedLabelId.set($event)" />
         </div>
         <div class="filter-panel__field">
           <label class="filter-panel__label">Genre</label>
-          <select class="filter-panel__select" [value]="selectedGenreId()"
-            (change)="selectedGenreId.set($any($event.target).value)">
-            <option value="">All</option>
-            @for (genre of genres(); track genre.id) {
-              <option [value]="genre.id">{{ genre.name }}</option>
-            }
-          </select>
+          <app-custom-select [options]="genreOptions()" [value]="selectedGenreId()" (valueChange)="selectedGenreId.set($event)" />
         </div>
       </div>
 
@@ -144,23 +120,11 @@
       <div class="filter-panel__row">
         <div class="filter-panel__field">
           <label class="filter-panel__label">Country</label>
-          <select class="filter-panel__select" [value]="bandCountryId()"
-            (change)="bandCountryId.set($any($event.target).value)">
-            <option value="">All</option>
-            @for (country of countries(); track country.id) {
-              <option [value]="country.id">{{ country.name }}</option>
-            }
-          </select>
+          <app-custom-select [options]="countryOptions()" [value]="bandCountryId()" (valueChange)="bandCountryId.set($event)" />
         </div>
         <div class="filter-panel__field">
           <label class="filter-panel__label">Genre</label>
-          <select class="filter-panel__select" [value]="bandGenreId()"
-            (change)="bandGenreId.set($any($event.target).value)">
-            <option value="">All</option>
-            @for (genre of genres(); track genre.id) {
-              <option [value]="genre.id">{{ genre.name }}</option>
-            }
-          </select>
+          <app-custom-select [options]="genreOptions()" [value]="bandGenreId()" (valueChange)="bandGenreId.set($event)" />
         </div>
       </div>
 

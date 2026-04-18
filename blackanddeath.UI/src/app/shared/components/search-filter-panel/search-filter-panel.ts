@@ -12,6 +12,7 @@ import { Country } from '../../models/country';
 import { Label } from '../../models/label';
 import { AlbumType } from '../../models/enums/album-type.enum';
 import { MultiSelectInput, SelectOption } from '../multi-select/multi-select';
+import { CustomSelect, CustomSelectOption } from '../custom-select/custom-select';
 
 interface NameEntry { id: string; name: string; }
 
@@ -19,7 +20,7 @@ type FilterTab = 'albums' | 'bands';
 
 @Component({
   selector: 'app-search-filter-panel',
-  imports: [FormsModule, MultiSelectInput],
+  imports: [FormsModule, MultiSelectInput, CustomSelect],
   templateUrl: './search-filter-panel.html',
   styleUrl: './search-filter-panel.scss',
 })
@@ -44,6 +45,19 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly tagOptions = signal<SelectOption[]>([]);
 
   readonly albumTypes = Object.values(AlbumType);
+
+  readonly countryOptions = computed<CustomSelectOption[]>(() =>
+    this.countries().map(c => ({ value: c.id, label: c.name }))
+  );
+  readonly genreOptions = computed<CustomSelectOption[]>(() =>
+    this.genres().map(g => ({ value: g.id, label: g.name }))
+  );
+  readonly labelOptions = computed<CustomSelectOption[]>(() =>
+    this.labels().map(l => ({ value: l.id, label: l.name }))
+  );
+  readonly albumTypeOptions = computed<CustomSelectOption[]>(() =>
+    this.albumTypes.map(t => ({ value: t, label: t }))
+  );
 
   // Band name autocomplete (Albums tab)
   readonly bandNameQuery = signal('');

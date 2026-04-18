@@ -63,8 +63,27 @@ export class Home implements OnInit {
   private videoBandService = inject(VideoBandService);
   private ratingService = inject(RatingService);
 
+  private readonly PAGE_SIZE = { albums: 50, bands: 30, videos: 30 };
 
-  private allAlbums: Album[] = [];
+  private pages = {
+    topRatedAlbums: 0,
+    popularBands: 0,
+    recentAlbums: 0,
+    recentBands: 0,
+    videos: 0,
+  };
+
+  private loading$ = {
+    topRatedAlbums: false,
+    popularBands: false,
+    recentAlbums: false,
+    recentBands: false,
+    videos: false,
+  };
+
+  private topRatedPeriod = 'All';
+  private popularBandsPeriod = 'All';
+
   private allVideos: VideoBand[] = [];
 
 
@@ -82,7 +101,6 @@ export class Home implements OnInit {
 
         this.mainPopularBands.set(topRatedBands);
 
-        this.allAlbums = albums;
         this.mainRecentAlbums.set(albums);
         this.mainUpcomingReleases.set(albums.slice(8));
 
@@ -103,18 +121,86 @@ export class Home implements OnInit {
 
   onTopRatedTabChange(index: number): void {
     const period = this.periodMap[index];
-    this.ratingService.getTopRatedAlbums({ period, pageIndex: 0, pageSize: 50 })
+    this.topRatedPeriod = period;
+    this.pages.topRatedAlbums = 0;
+    this.ratingService.getTopRatedAlbums({ period, pageIndex: 0, pageSize: this.PAGE_SIZE.albums })
       .subscribe(albums => this.mainTopRatedAlbums.set(albums));
+  }
+
+  onTopRatedLoadMore(): void {
+    if (this.loading$.topRatedAlbums) return;
+    this.loading$.topRatedAlbums = true;
+    const nextPage = this.pages.topRatedAlbums + 1;
+    this.ratingService.getTopRatedAlbums({ period: this.topRatedPeriod, pageIndex: nextPage, pageSize: this.PAGE_SIZE.albums })
+      .subscribe(albums => {
+        if (albums.length) {
+          this.pages.topRatedAlbums = nextPage;
+          this.mainTopRatedAlbums.update(prev => [...prev, ...albums]);
+        }
+        this.loading$.topRatedAlbums = false;
+      });
   }
 
   onPopularBandsTabChange(index: number): void {
     const period = this.periodMap[index];
-    this.ratingService.getTopRatedBands({ period, pageIndex: 0, pageSize: 30 })
+    this.popularBandsPeriod = period;
+    this.pages.popularBands = 0;
+    this.ratingService.getTopRatedBands({ period, pageIndex: 0, pageSize: this.PAGE_SIZE.bands })
       .subscribe(bands => this.mainPopularBands.set(bands));
+  }
+
+  onPopularBandsLoadMore(): void {
+    if (this.loading$.popularBands) return;
+    this.loading$.popularBands = true;
+    const nextPage = this.pages.popularBands + 1;
+    this.ratingService.getTopRatedBands({ period: this.popularBandsPeriod, pageIndex: nextPage, pageSize: this.PAGE_SIZE.bands })
+      .subscribe(bands => {
+        if (bands.length) {
+          this.pages.popularBands = nextPage;
+          this.mainPopularBands.update(prev => [...prev, ...bands]);
+        }
+        this.loading$.popularBands = false;
+      });
   }
 
   onRecentlyAddedTabChange(index: number): void {
     this.recentlyAddedTab.set(index);
+  }
+
+  onRecentAlbumsLoadMore(): void {
+    if (this.loading$.recentAlbums) return;
+    this.loading$.recentAlbums = true;
+    const nextPage = this.pages.recentAlbums + 1;
+    this.albumService.getAll({ pageIndex: nextPage, pageSize: this.PAGE_SIZE.albums, sortBy: 'Newest' })
+      .subscribe(albums => {
+        if (albums.length) {
+          this.pages.recentAlbums = nextPage;
+          this.mainRecentAlbums.update(prev => [...prev, ...albums]);
+        }
+        this.loading$.recentAlbums = false;
+      });
+  }
+
+  onRecentBandsLoadMore(): void {
+    if (this.loading$.recentBands) return;
+    this.loading$.recentBands = true;
+    const nextPage = this.pages.recentBands + 1;
+    this.bandService.getAll({ pageIndex: nextPage, pageSize: this.PAGE_SIZE.bands, sortBy: 'Newest' })
+      .subscribe(bands => {
+        if (bands.length) {
+          this.pages.recentBands = nextPage;
+          this.mainRecentBands.update(prev => [...prev, ...bands]);
+        }
+        this.loading$.recentBands = false;
+      });
+  }
+
+  onRecentlyAddedLoadMore(): void {
+    if (this.recentlyAddedTab() === 0) {
+      this.onRecentAlbumsLoadMore();
+    } else {
+      this.onRecentBandsLoadMore();
+    }
   }
 
   onMetalVideosTabChange(index: number): void {
@@ -123,7 +209,23 @@ export class Home implements OnInit {
     this.mainRecentVideos.set(filtered);
   }
 
-  onUpcomingReleasesTabChange(index: number): void {
-    this.mainUpcomingReleases.set(this.allAlbums.slice(8));
+  onVideosLoadMore(): void {
+    if (this.loading$.videos) return;
+    this.loading$.videos = true;
+    const nextPage = this.pages.videos + 1;
+    this.videoBandService.getAll({ pageIndex: nextPage, pageSize: this.PAGE_SIZE.videos })
+      .pipe(catchError(() => of([])))
+      .subscribe(videos => {
+        if (videos.length) {
+          this.pages.videos = nextPage;
+          this.allVideos = [...this.allVideos, ...videos];
+          this.mainRecentVideos.update(prev => [...prev, ...videos]);
+        }
+        this.loading$.videos = false;
+      });
+  }
+
+  onUpcomingReleasesTabChange(_index: number): void {
+    this.mainUpcomingReleases.set(this.mainRecentAlbums().slice(8));
   }
 }

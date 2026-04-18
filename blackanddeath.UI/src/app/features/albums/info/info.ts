@@ -336,6 +336,10 @@ export class Info implements OnInit {
       filter(params => !!params.get('slug')),
       switchMap(params => {
         this.loaded.set(false);
+        this.notFound.set(false);
+        this.imageError.set(false);
+        this.infoTabIndex.set(0);
+        this.reviewsEverLoaded = false;
         return this.albumService.getBySlug(params.get('slug')!, { similarPageSize: 20 });
       }),
       takeUntilDestroyed(this.destroyRef),

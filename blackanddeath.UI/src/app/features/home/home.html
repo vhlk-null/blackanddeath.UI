@@ -1,6 +1,6 @@
 @if (!loading()) {
 @if (mainTopRatedAlbums().length) {
-<app-section [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" (tabChange)="onTopRatedTabChange($event)">
+<app-section [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" (tabChange)="onTopRatedTabChange($event)" (loadMore)="onTopRatedLoadMore()">
   @for (album of mainTopRatedAlbums(); track album.id) {
     <app-album-card [albumCard]="album" />
   }
@@ -8,7 +8,7 @@
 }
 
 @if (mainPopularBands().length) {
-<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" (tabChange)="onPopularBandsTabChange($event)">
+<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" (tabChange)="onPopularBandsTabChange($event)" (loadMore)="onPopularBandsLoadMore()">
   @for (band of mainPopularBands(); track band.id) {
     <app-band-card [bandCard]="band" />
   }
@@ -16,7 +16,7 @@
 }
 
 @if (mainRecentAlbums().length || mainRecentBands().length) {
-<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" (tabChange)="onRecentlyAddedTabChange($event)">
+<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" (tabChange)="onRecentlyAddedTabChange($event)" (loadMore)="onRecentlyAddedLoadMore()">
   @if (recentlyAddedTab() === 0) {
     @for (album of mainRecentAlbums(); track album.id) {
       <app-album-card [albumCard]="album" />
@@ -30,7 +30,7 @@
 }
 
 @if (mainRecentVideos().length) {
-<app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" (tabChange)="onMetalVideosTabChange($event)">
+<app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" (tabChange)="onMetalVideosTabChange($event)" (loadMore)="onVideosLoadMore()">
   @for (video of mainRecentVideos(); track video.id) {
     <app-video-card [videoCard]="video" />
   }

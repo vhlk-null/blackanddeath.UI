@@ -224,6 +224,10 @@ export class BandInfo implements OnInit {
       filter(params => !!params.get('slug')),
       switchMap(params => {
         this.loaded.set(false);
+        this.notFound.set(false);
+        this.imageError.set(false);
+        this.infoTabIndex.set(0);
+        this.reviewsEverLoaded = false;
         return this.bandService.getBySlug(params.get('slug')!);
       }),
       takeUntilDestroyed(this.destroyRef),

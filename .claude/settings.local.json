@@ -35,7 +35,8 @@
       "Bash(cmd /c \"tasklist | findstr node\")",
       "Bash(\"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\src\\\\app\\\\shared\\\\components\\\\star-rating\\\\star-rating.html\")",
       "Bash(cmd /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :4200''\\) do taskkill /PID %a /F 2>&1\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")"
     ]
   }
 }
