@@ -11,11 +11,12 @@ import { CountryService } from '../../services/country.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { FormDirtyService } from '../../../core/services/form-dirty.service';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
+import { CustomSelect, CustomSelectOption } from '../../../shared/components/custom-select/custom-select';
 import { Band } from '../../../shared/models/band';
 
 @Component({
   selector: 'app-add-band-form',
-  imports: [Section, ReactiveFormsModule, MultiSelectInput],
+  imports: [Section, ReactiveFormsModule, MultiSelectInput, CustomSelect],
   templateUrl: './add-band-form.html',
   styleUrl: './add-band-form.scss',
 })
@@ -31,6 +32,13 @@ export class AddBandForm implements OnInit {
   private route = inject(ActivatedRoute);
 
   readonly currentYear = new Date().getFullYear();
+  readonly statusSelectOptions: CustomSelectOption[] = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Disbanded', label: 'Disbanded' },
+    { value: 'OnHold', label: 'On hold' },
+    { value: 'Unknown', label: 'Unknown' },
+    { value: 'ChangedName', label: 'Changed name' },
+  ];
   editMode = false;
   bandId: string | null = null;
   bandSlug: string | null = null;

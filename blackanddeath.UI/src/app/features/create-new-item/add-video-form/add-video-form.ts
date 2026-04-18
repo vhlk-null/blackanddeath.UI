@@ -12,10 +12,11 @@ import { VideoBandService } from '../../services/video-band.service';
 import { VideoType } from '../../../shared/models/enums/video-type.enum';
 import { forkJoin } from 'rxjs';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
+import { CustomSelect, CustomSelectOption } from '../../../shared/components/custom-select/custom-select';
 
 @Component({
   selector: 'app-add-video-form',
-  imports: [Section, ReactiveFormsModule, MultiSelectInput, SafeUrlPipe],
+  imports: [Section, ReactiveFormsModule, MultiSelectInput, SafeUrlPipe, CustomSelect],
   templateUrl: './add-video-form.html',
   styleUrl: './add-video-form.scss',
 })
@@ -32,6 +33,7 @@ export class AddVideoForm implements OnInit {
   readonly countryOptions = signal<SelectOption[]>([]);
 
   readonly videoTypeOptions = Object.values(VideoType);
+  readonly videoTypeSelectOptions: CustomSelectOption[] = Object.values(VideoType).map(t => ({ value: t, label: t }));
 
   submitting = false;
 

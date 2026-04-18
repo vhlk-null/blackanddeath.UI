@@ -123,11 +123,7 @@
 
         <div class="add-album__row">
           <label class="add-album__label" for="album-type">Type:</label>
-          <select class="add-album__input add-album__select" id="album-type" formControlName="albumType">
-            @for (type of albumTypeOptions; track type) {
-              <option [value]="type">{{ type }}</option>
-            }
-          </select>
+          <app-custom-select [options]="albumTypeSelectOptions" placeholder="" formControlName="albumType" />
         </div>
 
         <div class="add-album__row">

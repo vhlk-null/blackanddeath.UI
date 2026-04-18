@@ -32,6 +32,7 @@
     flex-wrap: nowrap;
     overflow-x: scroll;
     scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
     padding-top: 0.5rem;
     padding-bottom: 2rem;
     margin-bottom: -2rem;
@@ -39,7 +40,9 @@
     &::-webkit-scrollbar { display: none; }
 
     & > * {
-      flex: 0 0 calc((100cqw - (var(--columns, 4) - 1) * 0.625rem) / var(--columns, 4));
+      flex: 0 0 auto;
+      width: calc((100cqw - (var(--columns, 4) - 1) * 0.625rem) / var(--columns, 4));
+      scroll-snap-align: start;
     }
   }
 

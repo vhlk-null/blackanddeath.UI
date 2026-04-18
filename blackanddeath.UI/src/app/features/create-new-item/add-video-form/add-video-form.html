@@ -74,11 +74,7 @@
 
         <div class="add-video__row">
           <label class="add-video__label" for="video-type">Type video:</label>
-          <select class="add-video__input add-video__select" id="video-type" formControlName="videoType">
-            @for (type of videoTypeOptions; track type) {
-              <option [value]="type">{{ type }}</option>
-            }
-          </select>
+          <app-custom-select [options]="videoTypeSelectOptions" placeholder="" formControlName="videoType" />
         </div>
 
         <div class="add-video__row">

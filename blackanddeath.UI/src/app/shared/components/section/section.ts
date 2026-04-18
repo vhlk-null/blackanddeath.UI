@@ -1,4 +1,4 @@
-import { Component, input, output, signal, viewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, input, output, signal, viewChild, ElementRef } from '@angular/core';
 import { Tabs } from '../tabs/tabs';
 
 @Component({
@@ -7,7 +7,7 @@ import { Tabs } from '../tabs/tabs';
   templateUrl: './section.html',
   styleUrl: './section.scss',
 })
-export class Section implements OnDestroy {
+export class Section {
   sectionTitle = input<string>('');
   tabs = input<string[]>();
   initialTab = input<number>(0);
@@ -20,12 +20,15 @@ export class Section implements OnDestroy {
   hovered = signal(false);
   contentEl = viewChild<ElementRef<HTMLElement>>('contentEl');
 
-  private scrollListener: (() => void) | null = null;
-
   scrollContent(direction: -1 | 1): void {
     const el = this.contentEl()?.nativeElement;
     if (!el) return;
-    el.scrollBy({ left: direction * el.clientWidth, behavior: 'smooth' });
+    const firstChild = el.firstElementChild as HTMLElement | null;
+    if (!firstChild) return;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const cardWidth = firstChild.getBoundingClientRect().width + gap;
+    const visibleCards = Math.max(1, Math.floor(el.clientWidth / cardWidth));
+    el.scrollBy({ left: direction * cardWidth * visibleCards, behavior: 'smooth' });
   }
 
   onScroll(event: Event): void {
@@ -35,5 +38,4 @@ export class Section implements OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {}
 }

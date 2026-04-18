@@ -14,6 +14,7 @@ import { TagService } from '../../services/tag.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { FormDirtyService } from '../../../core/services/form-dirty.service';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
+import { CustomSelect, CustomSelectOption } from '../../../shared/components/custom-select/custom-select';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { StreamingPlatform } from '../../../shared/models/enums/streaming-platform.enum';
@@ -21,7 +22,7 @@ import { Album } from '../../../shared/models/album';
 
 @Component({
   selector: 'app-add-album-form',
-  imports: [Section, ReactiveFormsModule, FormsModule, MultiSelectInput],
+  imports: [Section, ReactiveFormsModule, FormsModule, MultiSelectInput, CustomSelect],
   templateUrl: './add-album-form.html',
   styleUrl: './add-album-form.scss',
 })
@@ -40,6 +41,7 @@ export class AddAlbumForm implements OnInit {
   private route = inject(ActivatedRoute);
 
   readonly albumTypeOptions = Object.values(AlbumType);
+  readonly albumTypeSelectOptions: CustomSelectOption[] = Object.values(AlbumType).map(t => ({ value: t, label: t }));
   readonly currentYear = new Date().getFullYear();
 
   readonly bandOptions = signal<SelectOption[]>([]);

@@ -7,11 +7,11 @@
   </button>
   @if (isOpen()) {
   <ul class="custom-select__dropdown">
-    <li class="custom-select__option" [class.custom-select__option--selected]="value() === ''" (click)="select('')">
+    <li class="custom-select__option" [class.custom-select__option--selected]="currentValue === ''" (click)="select('')">
       {{ placeholder() }}
     </li>
     @for (opt of options(); track opt.value) {
-    <li class="custom-select__option" [class.custom-select__option--selected]="value() === opt.value" (click)="select(opt.value)">
+    <li class="custom-select__option" [class.custom-select__option--selected]="currentValue === opt.value" (click)="select(opt.value)">
       {{ opt.label }}
     </li>
     }

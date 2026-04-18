@@ -81,6 +81,14 @@ export class Home implements OnInit {
     videos: false,
   };
 
+  private hasMore = {
+    topRatedAlbums: true,
+    popularBands: true,
+    recentAlbums: true,
+    recentBands: true,
+    videos: true,
+  };
+
   private topRatedPeriod = 'All';
   private popularBandsPeriod = 'All';
 
@@ -123,12 +131,13 @@ export class Home implements OnInit {
     const period = this.periodMap[index];
     this.topRatedPeriod = period;
     this.pages.topRatedAlbums = 0;
+    this.hasMore.topRatedAlbums = true;
     this.ratingService.getTopRatedAlbums({ period, pageIndex: 0, pageSize: this.PAGE_SIZE.albums })
       .subscribe(albums => this.mainTopRatedAlbums.set(albums));
   }
 
   onTopRatedLoadMore(): void {
-    if (this.loading$.topRatedAlbums) return;
+    if (this.loading$.topRatedAlbums || !this.hasMore.topRatedAlbums) return;
     this.loading$.topRatedAlbums = true;
     const nextPage = this.pages.topRatedAlbums + 1;
     this.ratingService.getTopRatedAlbums({ period: this.topRatedPeriod, pageIndex: nextPage, pageSize: this.PAGE_SIZE.albums })
@@ -136,6 +145,9 @@ export class Home implements OnInit {
         if (albums.length) {
           this.pages.topRatedAlbums = nextPage;
           this.mainTopRatedAlbums.update(prev => [...prev, ...albums]);
+          if (albums.length < this.PAGE_SIZE.albums) this.hasMore.topRatedAlbums = false;
+        } else {
+          this.hasMore.topRatedAlbums = false;
         }
         this.loading$.topRatedAlbums = false;
       });
@@ -145,12 +157,13 @@ export class Home implements OnInit {
     const period = this.periodMap[index];
     this.popularBandsPeriod = period;
     this.pages.popularBands = 0;
+    this.hasMore.popularBands = true;
     this.ratingService.getTopRatedBands({ period, pageIndex: 0, pageSize: this.PAGE_SIZE.bands })
       .subscribe(bands => this.mainPopularBands.set(bands));
   }
 
   onPopularBandsLoadMore(): void {
-    if (this.loading$.popularBands) return;
+    if (this.loading$.popularBands || !this.hasMore.popularBands) return;
     this.loading$.popularBands = true;
     const nextPage = this.pages.popularBands + 1;
     this.ratingService.getTopRatedBands({ period: this.popularBandsPeriod, pageIndex: nextPage, pageSize: this.PAGE_SIZE.bands })
@@ -158,6 +171,9 @@ export class Home implements OnInit {
         if (bands.length) {
           this.pages.popularBands = nextPage;
           this.mainPopularBands.update(prev => [...prev, ...bands]);
+          if (bands.length < this.PAGE_SIZE.bands) this.hasMore.popularBands = false;
+        } else {
+          this.hasMore.popularBands = false;
         }
         this.loading$.popularBands = false;
       });
@@ -168,7 +184,7 @@ export class Home implements OnInit {
   }
 
   onRecentAlbumsLoadMore(): void {
-    if (this.loading$.recentAlbums) return;
+    if (this.loading$.recentAlbums || !this.hasMore.recentAlbums) return;
     this.loading$.recentAlbums = true;
     const nextPage = this.pages.recentAlbums + 1;
     this.albumService.getAll({ pageIndex: nextPage, pageSize: this.PAGE_SIZE.albums, sortBy: 'Newest' })
@@ -176,13 +192,16 @@ export class Home implements OnInit {
         if (albums.length) {
           this.pages.recentAlbums = nextPage;
           this.mainRecentAlbums.update(prev => [...prev, ...albums]);
+          if (albums.length < this.PAGE_SIZE.albums) this.hasMore.recentAlbums = false;
+        } else {
+          this.hasMore.recentAlbums = false;
         }
         this.loading$.recentAlbums = false;
       });
   }
 
   onRecentBandsLoadMore(): void {
-    if (this.loading$.recentBands) return;
+    if (this.loading$.recentBands || !this.hasMore.recentBands) return;
     this.loading$.recentBands = true;
     const nextPage = this.pages.recentBands + 1;
     this.bandService.getAll({ pageIndex: nextPage, pageSize: this.PAGE_SIZE.bands, sortBy: 'Newest' })
@@ -190,6 +209,9 @@ export class Home implements OnInit {
         if (bands.length) {
           this.pages.recentBands = nextPage;
           this.mainRecentBands.update(prev => [...prev, ...bands]);
+          if (bands.length < this.PAGE_SIZE.bands) this.hasMore.recentBands = false;
+        } else {
+          this.hasMore.recentBands = false;
         }
         this.loading$.recentBands = false;
       });
@@ -210,7 +232,7 @@ export class Home implements OnInit {
   }
 
   onVideosLoadMore(): void {
-    if (this.loading$.videos) return;
+    if (this.loading$.videos || !this.hasMore.videos) return;
     this.loading$.videos = true;
     const nextPage = this.pages.videos + 1;
     this.videoBandService.getAll({ pageIndex: nextPage, pageSize: this.PAGE_SIZE.videos })
@@ -220,6 +242,9 @@ export class Home implements OnInit {
           this.pages.videos = nextPage;
           this.allVideos = [...this.allVideos, ...videos];
           this.mainRecentVideos.update(prev => [...prev, ...videos]);
+          if (videos.length < this.PAGE_SIZE.videos) this.hasMore.videos = false;
+        } else {
+          this.hasMore.videos = false;
         }
         this.loading$.videos = false;
       });

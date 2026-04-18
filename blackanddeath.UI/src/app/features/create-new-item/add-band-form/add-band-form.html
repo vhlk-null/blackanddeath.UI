@@ -58,13 +58,7 @@
         <div class="add-band__row">
           <label class="add-band__label" for="band-status">Status:</label>
           <div class="add-band__field">
-            <select class="add-band__input" id="band-status" formControlName="status">
-              <option value="Active">Active</option>
-              <option value="Disbanded">Disbanded</option>
-              <option value="OnHold">On hold</option>
-              <option value="Unknown">Unknown</option>
-              <option value="ChangedName">Changed name</option>
-            </select>
+            <app-custom-select [options]="statusSelectOptions" placeholder="" formControlName="status" />
             @if (status.invalid && status.touched) {
               <span class="add-band__error">Status is required</span>
             }
