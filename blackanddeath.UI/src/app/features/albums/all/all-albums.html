@@ -8,14 +8,8 @@
         Filters
       </button>
       <div class="all-albums__sort">
-        <label class="all-albums__filter-label" for="albums-sort">Sort by</label>
-        <select class="all-albums__filter-select" id="albums-sort"
-          [value]="activeSort()"
-          (change)="onSortChange($any($event.target).value)">
-          @for (option of sortOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
+        <label class="all-albums__filter-label">Sort by</label>
+        <app-custom-select [options]="$any(sortOptions)" [value]="activeSort()" (valueChange)="onSortChange($event)" />
       </div>
     </div>
   </div>
