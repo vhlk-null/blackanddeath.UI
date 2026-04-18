@@ -21,6 +21,8 @@ export class Section {
   hovered = signal(false);
   contentEl = viewChild<ElementRef<HTMLElement>>('contentEl');
 
+  private _emittingLoadMore = false;
+
   scrollContent(direction: -1 | 1): void {
     const el = this.contentEl()?.nativeElement;
     if (!el) return;
@@ -33,9 +35,15 @@ export class Section {
   }
 
   onScroll(event: Event): void {
+    if (this._emittingLoadMore) return;
     const el = event.target as HTMLElement;
-    if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 50) {
+    const firstChild = el.firstElementChild as HTMLElement | null;
+    const cardWidth = firstChild ? firstChild.getBoundingClientRect().width : el.clientWidth;
+    const threshold = cardWidth * 3;
+    if (el.scrollLeft + el.clientWidth >= el.scrollWidth - threshold) {
+      this._emittingLoadMore = true;
       this.loadMore.emit();
+      setTimeout(() => { this._emittingLoadMore = false; }, 1500);
     }
   }
 

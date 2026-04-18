@@ -137,6 +137,31 @@
     gap: 0.5rem;
   }
 
+  &__theme-btn {
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    cursor: pointer;
+    padding: 0.375rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    height: 2.25rem;
+    width: 2.25rem;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--color-border-input-focus);
+    }
+
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
+      flex-shrink: 0;
+      color: var(--color-text-muted);
+    }
+  }
+
   &__user-btn {
     background: var(--color-input-bg);
     border: 1px solid var(--color-border-input);
