@@ -119,3 +119,23 @@
   letter-spacing: 0.085em;
   color: var(--color-text-heading);
 }
+
+.section-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  &__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--color-border-input);
+    transition: background 0.2s;
+
+    &--active {
+      background: var(--color-text-muted);
+    }
+  }
+}
+
