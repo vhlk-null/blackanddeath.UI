@@ -1,5 +1,9 @@
 .section-container {
   margin-top: var(--section-spacing, 4.125rem); // 66px default
+
+  @media (max-width: 40rem) {
+    margin-top: 2rem;
+  }
 }
 
 :host(:first-child) .section-container {
@@ -28,6 +32,11 @@
   gap: 1.5rem 0.625rem;
   margin-top: 1.5rem;
 
+  @media (max-width: 40rem) {
+    gap: 1rem 0.5rem;
+    margin-top: 1rem;
+  }
+
   &--scroll {
     flex-wrap: nowrap;
     overflow-x: scroll;
@@ -43,6 +52,10 @@
       flex: 0 0 auto;
       width: calc((100cqw - (var(--columns, 4) - 1) * 0.625rem) / var(--columns, 4));
       scroll-snap-align: start;
+
+      @media (max-width: 40rem) {
+        width: calc((100cqw - (var(--mobile-columns, 2) - 1) * 0.5rem) / var(--mobile-columns, 2)) !important;
+      }
     }
   }
 

@@ -12,6 +12,7 @@ export class Section {
   tabs = input<string[]>();
   initialTab = input<number>(0);
   columns = input<number>(4);
+  mobileColumns = input<number>(2);
   arrows = input<boolean>(true);
   scroll = input<boolean>(true);
   tabChange = output<number>();
