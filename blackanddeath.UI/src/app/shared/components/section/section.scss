@@ -1,8 +1,12 @@
 .section-container {
   margin-top: var(--section-spacing, 4.125rem); // 66px default
+  position: relative;
+  padding-top: 2rem;
+  margin-top: calc(var(--section-spacing, 4.125rem) - 2rem);
 
   @media (max-width: 40rem) {
-    margin-top: 2rem;
+    margin-top: calc(2rem - 2rem);
+    padding-top: 2rem;
   }
 }
 
@@ -93,11 +97,18 @@
     pointer-events: auto;
   }
 
-  &:hover {
+  &--visible#{&}--disabled {
+    opacity: 0.25;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &:hover:not(&--disabled) {
     background: var(--color-card-border);
     border-color: var(--color-tab-active);
     color: var(--color-tab-active);
   }
+
 }
 
 

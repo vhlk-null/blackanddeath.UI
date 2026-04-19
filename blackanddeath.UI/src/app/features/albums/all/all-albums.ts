@@ -11,7 +11,6 @@ import { Label } from '../../../shared/models/label';
 import { AlbumCard } from '../card/album-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { MultiSelectNames } from '../../../shared/components/multi-select-names/multi-select-names';
-import { CustomSelect } from '../../../shared/components/custom-select/custom-select';
 
 const toArray = (v: string | string[] | undefined): string[] =>
   !v ? [] : Array.isArray(v) ? v : [v];
@@ -44,7 +43,7 @@ const ALBUM_TYPES = Object.keys(ALBUM_TYPE_MAP);
   selector: 'app-all-albums',
   templateUrl: './all-albums.html',
   styleUrl: './all-albums.scss',
-  imports: [AlbumCard, Pagination, MultiSelectNames, CustomSelect],
+  imports: [AlbumCard, Pagination, MultiSelectNames],
 })
 export class AllAlbums implements OnInit {
   private albumService = inject(AlbumService);
@@ -59,6 +58,7 @@ export class AllAlbums implements OnInit {
   readonly countries = signal<Country[]>([]);
   readonly labels = signal<Label[]>([]);
   readonly filtersOpen = signal(false);
+  readonly showSortMenu = signal(false);
 
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();

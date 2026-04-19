@@ -178,6 +178,10 @@
     }
   }
 
+  &__picker-wrap {
+    position: relative;
+  }
+
   &__actions {
     display: flex;
     gap: 1rem;

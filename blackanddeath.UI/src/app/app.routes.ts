@@ -15,6 +15,7 @@ import { AddBandForm } from './features/create-new-item/add-band-form/add-band-f
 import { Admin } from './features/admin/admin';
 import { AllVideos } from './features/videos/all/all-videos';
 import { UserProfile } from './features/user-profile/user-profile';
+import { CollectionDetailPage } from './features/collections/collection-detail/collection-detail';
 import { Settings } from './features/settings/settings';
 import { adminGuard } from './core/guards/admin.guard';
 import { authGuard } from './core/guards/auth-guard';
@@ -23,6 +24,7 @@ import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'profile', component: UserProfile, canActivate: [authGuard] },
+    { path: 'collections/:id', component: CollectionDetailPage, canActivate: [authGuard] },
     { path: 'settings', component: Settings },
     { path: 'albums', component: AllAlbums },
     { path: 'albums/subgenres', component: Subgenres },

@@ -20,9 +20,11 @@
           [routerLink]="['/bands', albumCard().bands?.[0]?.slug]">{{ albumCard().bands?.[0]?.name }}</a>
         }
         <p class="card__meta">
+          @if (typeLabel()) {
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
             [routerLink]="['/albums']" [queryParams]="{ type: albumCard().type }">{{ typeLabel() }}</span>
-          · <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
+          · }
+          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
             [routerLink]="['/albums']" [queryParams]="{ year: albumCard().releaseDate }">{{ albumCard().releaseDate }}</span>
           @if (albumCard().countries?.[0]?.name) { ·
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"

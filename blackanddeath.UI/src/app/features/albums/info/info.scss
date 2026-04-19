@@ -121,6 +121,10 @@
     padding-bottom: 0.5rem;
   }
 
+  &__picker-wrap {
+    position: relative;
+  }
+
   &__action-btn {
     background: none;
     border: none;

@@ -35,6 +35,7 @@ export class AllBands implements OnInit {
   readonly genres = signal<Genre[]>([]);
   readonly countries = signal<Country[]>([]);
   readonly filtersOpen = signal(false);
+  readonly showSortMenu = signal(false);
 
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();

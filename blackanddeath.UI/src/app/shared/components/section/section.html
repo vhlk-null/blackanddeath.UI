@@ -1,4 +1,4 @@
-<div class="section-container" (mouseenter)="hovered.set(true)" (mouseleave)="hovered.set(false)">
+<div class="section-container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
     @if (sectionTitle()) {
     <div class="section-header">
       <h1 class="section-title">{{ sectionTitle() }}</h1>
@@ -12,11 +12,11 @@
         </div>
         }
         <div class="section-content-wrapper">
-            @if (arrows()) {<button class="section-arrow section-arrow--prev" [class.section-arrow--visible]="hovered()" aria-label="Previous" (click)="scrollContent(-1)">&#8249;</button>}
+            @if (arrows()) {<button class="section-arrow section-arrow--prev" [class.section-arrow--visible]="hovered()" [class.section-arrow--disabled]="!canScrollLeft()" [disabled]="!canScrollLeft()" aria-label="Previous" (click)="scrollContent(-1)">&#8249;</button>}
             <div class="section-content" [class.section-content--scroll]="scroll()" [class.section-content--wrap]="!scroll()" [style.--columns]="columns()" [style.--mobile-columns]="mobileColumns()" #contentEl (scroll)="onScroll($event)">
                 <ng-content></ng-content>
             </div>
-            @if (arrows()) {<button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>}
+            @if (arrows()) {<button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" [class.section-arrow--disabled]="!canScrollRight()" [disabled]="!canScrollRight()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>}
         </div>
     </div>
     @if (dotCount() > 1) {

@@ -96,6 +96,24 @@ export class ReviewEndpoints {
   public static DELETE_BAND_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/band-reviews/${reviewId}`;
 }
 
+export class UserProfileEndpoints {
+  static readonly base = environment.usercontentUrl;
+  public static GET_PROFILE = (userId: string) => `${UserProfileEndpoints.base}/profile/${userId}`;
+}
+
+export class CollectionEndpoints {
+  static readonly base = environment.usercontentUrl;
+  public static GET_BY_USER = (userId: string) => `${CollectionEndpoints.base}/collections/user/${userId}`;
+  public static GET_BY_ID = (id: string) => `${CollectionEndpoints.base}/collections/${id}`;
+  public static CREATE = `${CollectionEndpoints.base}/collections`;
+  public static UPDATE = (id: string) => `${CollectionEndpoints.base}/collections/${id}`;
+  public static DELETE = (id: string) => `${CollectionEndpoints.base}/collections/${id}`;
+  public static ADD_ALBUM = (id: string) => `${CollectionEndpoints.base}/collections/${id}/albums`;
+  public static REMOVE_ALBUM = (id: string, albumId: string) => `${CollectionEndpoints.base}/collections/${id}/albums/${albumId}`;
+  public static ADD_BAND = (id: string) => `${CollectionEndpoints.base}/collections/${id}/bands`;
+  public static REMOVE_BAND = (id: string, bandId: string) => `${CollectionEndpoints.base}/collections/${id}/bands/${bandId}`;
+}
+
 export class RatingEndpoints {
   static readonly base = environment.usercontentUrl;
   public static RATE_ALBUM = `${RatingEndpoints.base}/albumRatings`;

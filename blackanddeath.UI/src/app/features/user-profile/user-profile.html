@@ -50,7 +50,7 @@
 
     <!-- Stats -->
     <div class="profile__stats">
-      @for (stat of stats; track stat.label) {
+      @for (stat of stats(); track stat.label) {
       <div class="profile__stat">
         <span class="profile__stat-label">{{ stat.label }}</span>
         <span class="profile__stat-value">{{ stat.value }}</span>
@@ -76,7 +76,7 @@
     <div class="profile__section">
       <h2 class="profile__section-title">Favourite Albums</h2>
       @if (favoriteAlbums().length) {
-        <app-section sectionTitle="" >
+        <app-section sectionTitle="" [arrows]="favoriteAlbums().length > 4">
           @for (album of favoriteAlbums(); track album.id) {
             <app-album-card [albumCard]="album" />
           }
@@ -90,7 +90,7 @@
     <div class="profile__section">
       <h2 class="profile__section-title">Favourite Bands</h2>
       @if (favoriteBands().length) {
-        <app-section sectionTitle="" [columns]="3">
+        <app-section sectionTitle="" [columns]="3" [arrows]="favoriteBands().length > 3">
           @for (band of favoriteBands(); track band.id) {
             <app-band-card [bandCard]="band" />
           }
@@ -119,26 +119,300 @@
 
   <!-- Collections tab -->
   @if (activeMainTab() === 2) {
-  <div class="profile__content">
-    <div class="profile__section">
-      <div class="profile__section-header">
-        <h2 class="profile__section-title">My Collections</h2>
-        <button class="profile__new-collection">+ New Collection</button>
-      </div>
-      <div class="profile__collections">
-        @for (col of collections; track col.id) {
-        <div class="profile__collection">
-          <div class="profile__collection-covers">
-            @for (i of placeholders(8); track i) {
-            <div class="profile__collection-cover"></div>
+  <div class="profile__collections-layout">
+
+    <!-- Left sidebar -->
+    <div class="profile__collections-sidebar">
+      <div class="profile__collections-sidebar-header">
+        <span class="profile__collections-sidebar-title">Collections</span>
+        <div class="profile__collections-sidebar-actions">
+          <!-- Sort -->
+          <div class="profile__collections-sort-wrap">
+            <button class="profile__collections-sort-btn" [class.profile__collections-sort-btn--active]="showSortMenu()" title="Sort" (click)="showSortMenu.set(!showSortMenu())">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6H21M6 12H18M9 18H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+            @if (showSortMenu()) {
+              <div class="profile__collections-sort-menu">
+                <p class="profile__collections-sort-label">Sort by</p>
+                <button class="profile__collections-sort-option" [class.profile__collections-sort-option--active]="collectionSort() === 'recent'" (click)="collectionSort.set('recent'); showSortMenu.set(false)">
+                  Recent @if (collectionSort() === 'recent') { <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> }
+                </button>
+                <button class="profile__collections-sort-option" [class.profile__collections-sort-option--active]="collectionSort() === 'added'" (click)="collectionSort.set('added'); showSortMenu.set(false)">
+                  Recently added @if (collectionSort() === 'added') { <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> }
+                </button>
+                <button class="profile__collections-sort-option" [class.profile__collections-sort-option--active]="collectionSort() === 'alpha'" (click)="collectionSort.set('alpha'); showSortMenu.set(false)">
+                  Alphabetical @if (collectionSort() === 'alpha') { <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> }
+                </button>
+              </div>
             }
           </div>
-          <p class="profile__collection-name">{{ col.name }}</p>
-          <p class="profile__collection-meta">{{ col.albumCount }} albums · {{ col.bandCount }} bands</p>
+          <!-- New -->
+          @if (!creatingCollection()) {
+            <button class="profile__collections-new-btn" title="New collection" (click)="startCreatingCollection()">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          }
         </div>
+      </div>
+
+      <!-- Search -->
+      <div class="profile__collections-search">
+        <svg class="profile__collections-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input
+          class="profile__collections-search-input"
+          type="text"
+          placeholder="Search collections…"
+          [ngModel]="collectionSearch()"
+          (ngModelChange)="collectionSearch.set($event)"
+        />
+        @if (collectionSearch()) {
+          <button class="profile__collections-search-clear" (click)="collectionSearch.set('')">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
         }
       </div>
+
+      @if (creatingCollection()) {
+        <div class="profile__collections-create">
+          <label class="profile__collections-cover-pick" title="Add cover">
+            @if (newCollectionCoverPreview()) {
+              <img [src]="newCollectionCoverPreview()!" alt="cover" />
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
+            <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onNewCoverChange($event)" />
+          </label>
+          <div class="profile__collections-create-fields">
+            <input
+              class="profile__collections-create-input"
+              type="text"
+              placeholder="Collection name…"
+              [ngModel]="newCollectionName()"
+              (ngModelChange)="newCollectionName.set($event)"
+              (keyup.enter)="confirmCreateCollection()"
+              (keyup.escape)="cancelCreateCollection()"
+              autofocus
+            />
+            <div class="profile__collections-type-toggle">
+              <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'album'" (click)="newCollectionType.set('album')">Albums</button>
+              <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'band'" (click)="newCollectionType.set('band')">Bands</button>
+            </div>
+            <div class="profile__collections-create-actions">
+              <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmCreateCollection()">Create</button>
+              <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelCreateCollection()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="profile__collections-list">
+        @if (collectionService.all().length === 0 && !creatingCollection()) {
+          <p class="profile__collections-empty">No collections yet.</p>
+        }
+
+        @if (albumCollections().length > 0) {
+          <p class="profile__collections-group-label">Albums</p>
+        }
+        @for (col of albumCollections(); track col.id) {
+          <ng-container *ngTemplateOutlet="collectionItem; context: { col: col }" />
+        }
+
+        @if (bandCollections().length > 0) {
+          <p class="profile__collections-group-label">Bands</p>
+        }
+        @for (col of bandCollections(); track col.id) {
+          <ng-container *ngTemplateOutlet="collectionItem; context: { col: col }" />
+        }
+      </div>
+
+      <ng-template #collectionItem let-col="col">
+        <div class="profile__collections-item" [class.profile__collections-item--active]="selectedCollection()?.id === col.id" (click)="selectCollection(col.id)">
+          <div class="profile__collections-item-thumb">
+            @if (col.coverUrl) {
+              <img [src]="col.coverUrl" alt="cover" />
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            }
+          </div>
+          <div class="profile__collections-item-info">
+            @if (editingCollectionId() === col.id) {
+              <input
+                class="profile__collections-rename-input"
+                type="text"
+                [ngModel]="editingCollectionName()"
+                (ngModelChange)="editingCollectionName.set($event)"
+                (keyup.enter)="confirmEditCollection()"
+                (keyup.escape)="cancelEditCollection()"
+                (click)="$event.stopPropagation()"
+                autofocus
+              />
+            } @else {
+              <span class="profile__collections-item-name">{{ col.name }}</span>
+            }
+            <span class="profile__collections-item-meta">{{ (col.albumCount || 0) + (col.bandCount || 0) }} items</span>
+          </div>
+          <div class="profile__collections-item-actions">
+            <button class="profile__collections-item-btn" title="Rename" (click)="$event.stopPropagation(); startEditingCollection(col.id, col.name, col.coverUrl)">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="profile__collections-item-btn profile__collections-item-btn--danger" title="Delete" (click)="$event.stopPropagation(); deleteCollection(col.id)">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </ng-template>
     </div>
+
+    <!-- Right content panel -->
+    <div class="profile__collections-panel">
+      @if (collectionService.all().length === 0) {
+        <div class="profile__collections-panel-empty">
+          <p>Create a collection to get started.</p>
+        </div>
+      } @else if (collectionDetailLoading()) {
+        <div class="profile__collections-panel-empty">
+          <p>Loading…</p>
+        </div>
+      } @else if (selectedCollection()) {
+
+        <!-- Spotify-style hero header -->
+        <div class="profile__col-hero">
+          <!-- Cover -->
+          <label class="profile__col-hero-cover" title="Change cover">
+            @if (editingCollectionId() === selectedCollection()!.id && editingCollectionCoverPreview()) {
+              <img [src]="editingCollectionCoverPreview()!" alt="cover" />
+            } @else if (selectedCollection()!.coverUrl) {
+              <img [src]="selectedCollection()!.coverUrl" alt="cover" />
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            }
+            <div class="profile__col-hero-cover-overlay">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onHeroCoverChange($event)" />
+          </label>
+
+          <!-- Meta -->
+          <div class="profile__col-hero-meta">
+            <span class="profile__col-hero-label">Collection</span>
+            @if (editingCollectionId() === selectedCollection()!.id) {
+              <input
+                class="profile__col-hero-name-input"
+                type="text"
+                [ngModel]="editingCollectionName()"
+                (ngModelChange)="editingCollectionName.set($event)"
+                (keyup.enter)="confirmEditCollection()"
+                (keyup.escape)="cancelEditCollection()"
+                (click)="$event.stopPropagation()"
+                autofocus
+              />
+              <div class="profile__col-hero-actions">
+                <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmEditCollection()">Save</button>
+                <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelEditCollection()">Cancel</button>
+              </div>
+            } @else {
+              <h2 class="profile__col-hero-name" (dblclick)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)" title="Double-click to rename">{{ selectedCollection()!.name }}</h2>
+              <p class="profile__col-hero-count">{{ (selectedCollection()!.albumCount || 0) + (selectedCollection()!.bandCount || 0) }} items</p>
+              <div class="profile__col-hero-actions">
+                <button class="profile__collections-item-btn" title="Rename" (click)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button class="profile__collections-item-btn profile__collections-item-btn--danger" title="Delete" (click)="deleteCollection(selectedCollection()!.id)">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (selectedCollection()!.albums.length === 0 && selectedCollection()!.bands.length === 0) {
+          <p class="profile__collections-panel-hint">No items yet. Use the bookmark icon on album or band pages to add them here.</p>
+        }
+
+        @if (selectedCollection()!.albums.length > 0 || selectedCollection()!.bands.length > 0) {
+          <!-- Table header -->
+          <div class="profile__col-table-header">
+            <span class="profile__col-table-num">#</span>
+            <span class="profile__col-table-title">Title</span>
+            <span class="profile__col-table-band">Artist / Band</span>
+            <span class="profile__col-table-type">Type</span>
+          </div>
+
+          <!-- Albums -->
+          @for (album of selectedCollection()!.albums; track album.id; let i = $index) {
+            <a class="profile__col-row" [routerLink]="['/albums', album.slug]">
+              <span class="profile__col-row-num">{{ i + 1 }}</span>
+              <div class="profile__col-row-thumb">
+                @if (album.coverUrl) {
+                  <img [src]="album.coverUrl" [alt]="album.title" />
+                } @else {
+                  <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
+                    <path d="M85.5 0C132.72 0 171 38.28 171 85.5C171 132.72 132.72 171 85.5 171C38.28 171 0 132.72 0 85.5C0 38.28 38.28 0 85.5 0ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5Z" fill="#606162"/>
+                  </svg>
+                }
+              </div>
+              <span class="profile__col-row-name">{{ album.title }}</span>
+              <span class="profile__col-row-band">{{ album.bands?.[0]?.name ?? '—' }}</span>
+              <span class="profile__col-row-type">{{ album.type }}</span>
+            </a>
+          }
+
+          <!-- Bands -->
+          @for (band of selectedCollection()!.bands; track band.id; let i = $index) {
+            <a class="profile__col-row" [routerLink]="['/bands', band.slug]">
+              <span class="profile__col-row-num">{{ selectedCollection()!.albums.length + i + 1 }}</span>
+              <div class="profile__col-row-thumb profile__col-row-thumb--band">
+                @if (band.logoUrl) {
+                  <img [src]="band.logoUrl" [alt]="band.name" />
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                }
+              </div>
+              <span class="profile__col-row-name">{{ band.name }}</span>
+              <span class="profile__col-row-band">{{ band.primaryGenre?.name ?? '—' }}</span>
+              <span class="profile__col-row-type">Band</span>
+            </a>
+          }
+        }
+      } @else {
+        <div class="profile__collections-panel-empty">
+          <p>Select a collection to view its contents.</p>
+        </div>
+      }
+    </div>
+
   </div>
   }
 

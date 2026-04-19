@@ -1,0 +1,110 @@
+.col-detail {
+  max-width: 71.25rem;
+  margin: 0 auto 4rem;
+
+  &__loading {
+    color: var(--color-text-muted);
+    padding: 4rem 0;
+    text-align: center;
+    font-size: 0.875rem;
+  }
+
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  &__not-found-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  &__back-link {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    text-decoration: none;
+
+    &:hover { color: var(--color-text-heading); }
+  }
+
+  &__header {
+    margin-bottom: 2.5rem;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.25rem;
+    transition: color 0.15s;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &:hover { color: var(--color-text-heading); }
+  }
+
+  &__title {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: 0.085em;
+    color: var(--color-text-heading);
+    margin: 0 0 0.5rem;
+  }
+
+  &__description {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.5rem;
+  }
+
+  &__meta {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-body);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    margin: 0;
+  }
+
+  &__section {
+    margin-bottom: 2.5rem;
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 0.625rem;
+  }
+
+  &__section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-heading);
+    margin: 0 0 1rem;
+  }
+
+  &__empty {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    padding: 2rem 0;
+  }
+}

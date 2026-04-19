@@ -14,6 +14,8 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { ReviewService, Review } from '../../services/review.service';
+import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
+import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { Band } from '../../../shared/models/band';
 import { BandCard } from '../band-card/band-card';
 import { Album } from '../../../shared/models/album';
@@ -32,7 +34,7 @@ export interface AlbumReview extends Review {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, DatePipe],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, DatePipe, CollectionPicker],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -47,6 +49,7 @@ export class BandInfo implements OnInit {
   private favoriteService = inject(FavoriteService);
   private reviewService = inject(ReviewService);
   private destroyRef = inject(DestroyRef);
+  private collectionService = inject(CollectionService);
 
   readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
@@ -77,6 +80,22 @@ export class BandInfo implements OnInit {
   readonly loaded = signal(false);
   readonly playingVideoId = signal<string | null>(null);
   readonly isFavorite = signal(false);
+  readonly showCollectionPicker = signal(false);
+  readonly collectionItem = computed<CollectionItem | null>(() => {
+    const id = this.bandData()?.id;
+    return id ? { id, type: 'band' } : null;
+  });
+
+  openCollectionPicker(): void {
+    const userId = this.auth.userId();
+    if (!userId) return;
+    if (this.showCollectionPicker()) { this.showCollectionPicker.set(false); return; }
+    if (this.collectionService.all().length > 0) {
+      this.showCollectionPicker.set(true);
+    } else {
+      this.collectionService.loadForUser(userId).subscribe(() => this.showCollectionPicker.set(true));
+    }
+  }
 
   // Album reviews aggregated across band's discography
   readonly albumReviews = signal<AlbumReview[]>([]);

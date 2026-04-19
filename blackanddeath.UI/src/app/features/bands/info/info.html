@@ -35,12 +35,17 @@
             stroke-width="1.5" stroke-linejoin="round" />
         </svg>
       </button>
-      <button class="band-info__action-btn" title="Bookmark">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke-width="1.5"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
+      <div class="band-info__picker-wrap">
+        <button class="band-info__action-btn" [class.band-info__action-btn--active-no-anim]="showCollectionPicker()" title="Add to collection" (click)="openCollectionPicker()">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke-width="1.5"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+        @if (showCollectionPicker() && collectionItem() && auth.userId()) {
+          <app-collection-picker [item]="collectionItem()!" [userId]="auth.userId()!" (closed)="showCollectionPicker.set(false)" />
+        }
+      </div>
       <button class="band-info__action-btn" [class.band-info__action-btn--active-no-anim]="shared()" title="Share" (click)="share()">
         @if (shared()) {
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -277,7 +282,7 @@
 }
 
 @if (similarBands().length) {
-<app-section [sectionTitle]="titles.similarBands">
+<app-section [sectionTitle]="titles.similarBands" [arrows]="similarBands().length > 3">
   @for (band of similarBands(); track band.id) {
   <app-band-card [bandCard]="band" />
   }

@@ -23,9 +23,21 @@ export class Section implements AfterViewInit {
   dotCount = signal(0);
   activeDot = signal(0);
   dots = signal<null[]>([]);
+  canScrollLeft = signal(false);
+  canScrollRight = signal(false);
 
   private _loadMoreLocked = false;
   private _scrollEndTimer: ReturnType<typeof setTimeout> | null = null;
+  private _leaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+  onMouseEnter(): void {
+    if (this._leaveTimer) { clearTimeout(this._leaveTimer); this._leaveTimer = null; }
+    this.hovered.set(true);
+  }
+
+  onMouseLeave(): void {
+    this._leaveTimer = setTimeout(() => this.hovered.set(false), 150);
+  }
 
   scrollContent(direction: -1 | 1): void {
     const el = this.contentEl()?.nativeElement;
@@ -42,11 +54,17 @@ export class Section implements AfterViewInit {
 
   onScroll(event: Event): void {
     const el = event.target as HTMLElement;
+    this.updateScrollState(el);
     if (this._loadMoreLocked) return;
     if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
       this._loadMoreLocked = true;
       this.loadMore.emit();
     }
+  }
+
+  private updateScrollState(el: HTMLElement): void {
+    this.canScrollLeft.set(el.scrollLeft > 1);
+    this.canScrollRight.set(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
   }
 
   private getCardMetrics(el: HTMLElement): { cardWidth: number; visibleCards: number } | null {
@@ -78,7 +96,8 @@ export class Section implements AfterViewInit {
     const el = this.contentEl()?.nativeElement;
     if (!el) return;
     this.updateDots(el);
-    const ro = new ResizeObserver(() => this.updateDots(el));
+    this.updateScrollState(el);
+    const ro = new ResizeObserver(() => { this.updateDots(el); this.updateScrollState(el); });
     ro.observe(el);
   }
 

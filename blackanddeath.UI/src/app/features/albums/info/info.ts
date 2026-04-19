@@ -1,4 +1,6 @@
 import { Component, computed, effect, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
+import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -30,7 +32,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe, CollectionPicker],
   templateUrl: './info.html',
   styleUrl: './info.scss',
 })
@@ -44,6 +46,7 @@ export class Info implements OnInit {
   private toastService = inject(ToastService);
   private favoriteService = inject(FavoriteService);
   private reviewService = inject(ReviewService);
+  private collectionService = inject(CollectionService);
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly imageError = signal(false);
@@ -70,6 +73,23 @@ export class Info implements OnInit {
     [AlbumType.LiveAlbum]: 'Live Album',
     [AlbumType.Split]: 'Split',
   };
+
+  readonly showCollectionPicker = signal(false);
+
+  openCollectionPicker(): void {
+    const userId = this.auth.userId();
+    if (!userId) return;
+    if (this.showCollectionPicker()) { this.showCollectionPicker.set(false); return; }
+    if (this.collectionService.all().length > 0) {
+      this.showCollectionPicker.set(true);
+    } else {
+      this.collectionService.loadForUser(userId).subscribe(() => this.showCollectionPicker.set(true));
+    }
+  }
+  readonly collectionItem = computed<CollectionItem | null>(() => {
+    const id = this.albumData()?.id;
+    return id ? { id, type: 'album' } : null;
+  });
 
   readonly infoTabIndex = signal(0);
   readonly tracklistTabIndex = signal(0);

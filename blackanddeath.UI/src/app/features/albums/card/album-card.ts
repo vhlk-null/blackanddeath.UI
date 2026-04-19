@@ -25,6 +25,6 @@ export class AlbumCard {
   };
 
   typeLabel(): string {
-    return this.typeLabels[this.albumCard().type] ?? this.albumCard().type;
+    return this.typeLabels[this.albumCard().type] ?? '';
   }
 }
