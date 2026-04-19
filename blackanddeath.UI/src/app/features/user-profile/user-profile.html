@@ -334,7 +334,7 @@
               </div>
             } @else {
               <h2 class="profile__col-hero-name" (dblclick)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)" title="Double-click to rename">{{ selectedCollection()!.name }}</h2>
-              <p class="profile__col-hero-count">{{ (selectedCollection()!.albumCount || 0) + (selectedCollection()!.bandCount || 0) }} items</p>
+              <p class="profile__col-hero-count">{{ selectedCollection()!.albums.length + selectedCollection()!.bands.length }} items</p>
               <div class="profile__col-hero-actions">
                 <button class="profile__collections-item-btn" title="Rename" (click)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -382,6 +382,9 @@
               <span class="profile__col-row-name">{{ album.title }}</span>
               <span class="profile__col-row-band">{{ album.bands?.[0]?.name ?? '—' }}</span>
               <span class="profile__col-row-type">{{ album.type }}</span>
+              <button class="profile__col-row-remove" title="Remove" (click)="$event.preventDefault(); $event.stopPropagation(); removeFromCollection('album', album.id)">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
             </a>
           }
 
@@ -403,6 +406,9 @@
               <span class="profile__col-row-name">{{ band.name }}</span>
               <span class="profile__col-row-band">{{ band.primaryGenre?.name ?? '—' }}</span>
               <span class="profile__col-row-type">Band</span>
+              <button class="profile__col-row-remove" title="Remove" (click)="$event.preventDefault(); $event.stopPropagation(); removeFromCollection('band', band.id)">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
             </a>
           }
         }

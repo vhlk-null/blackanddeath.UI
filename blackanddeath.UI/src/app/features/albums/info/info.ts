@@ -4,7 +4,7 @@ import { CollectionItem, CollectionService } from '../../services/collection.ser
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { switchMap, filter } from 'rxjs';
+import { switchMap, filter, forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
@@ -76,16 +76,19 @@ export class Info implements OnInit {
 
   readonly showCollectionPicker = signal(false);
 
+  readonly isInAnyCollection = computed(() => {
+    const id = this.albumData()?.id;
+    if (!id) return false;
+    return this.collectionService.all().some(c => c.albums.some(a => a.id === id));
+  });
+
   openCollectionPicker(): void {
     const userId = this.auth.userId();
     if (!userId) return;
     if (this.showCollectionPicker()) { this.showCollectionPicker.set(false); return; }
-    if (this.collectionService.all().length > 0) {
-      this.showCollectionPicker.set(true);
-    } else {
-      this.collectionService.loadForUser(userId).subscribe(() => this.showCollectionPicker.set(true));
-    }
+    this.showCollectionPicker.set(true);
   }
+
   readonly collectionItem = computed<CollectionItem | null>(() => {
     const id = this.albumData()?.id;
     return id ? { id, type: 'album' } : null;
@@ -386,18 +389,20 @@ export class Info implements OnInit {
         const userId = this.auth.userId();
         this.isFavorite.set(false);
         if (userId) {
-          this.ratingService.getUserAlbumRating(album.id, userId).subscribe(r => {
-            if (r) {
-              this.userRating.set(r.userRating);
-              this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
+          forkJoin({
+            collections: this.collectionService.loadForUser(userId),
+            rating: this.ratingService.getUserAlbumRating(album.id, userId),
+            reviews: this.reviewService.getAlbumReviews(album.id, { pageIndex: 1, pageSize: 100 }),
+            favorite: this.favoriteService.checkFavoriteAlbum(album.id, userId),
+          }).subscribe(({ rating, reviews, favorite }) => {
+            if (rating) {
+              this.userRating.set(rating.userRating);
+              this.albumData.update(a => a ? { ...a, averageRating: rating.averageRating, ratingsCount: rating.ratingsCount } : a);
             }
-          });
-          this.reviewService.getAlbumReviews(album.id, { pageIndex: 1, pageSize: 100 }).subscribe(r => {
-            const mine = r.data.find(x => x.userId === userId);
+            const mine = reviews.data.find(x => x.userId === userId);
             if (mine) this.userReviewId.set(mine.id);
+            this.isFavorite.set(favorite);
           });
-          this.favoriteService.checkFavoriteAlbum(album.id, userId)
-            .subscribe(v => this.isFavorite.set(v));
         } else {
           this.ratingService.getAlbumAverage(album.id).subscribe(r => {
             if (r) this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);

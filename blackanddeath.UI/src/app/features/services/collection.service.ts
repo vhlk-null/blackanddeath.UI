@@ -14,6 +14,8 @@ export interface CollectionSummary {
   albumCount: number;
   bandCount: number;
   collectionType: 'album' | 'band';
+  albums: { id: string }[];
+  bands: { id: string }[];
 }
 
 export interface CollectionDetail extends CollectionSummary {
@@ -40,7 +42,14 @@ export class CollectionService {
 
   loadForUser(userId: string): Observable<CollectionSummary[]> {
     return this.http.get<any[]>(CollectionEndpoints.GET_BY_USER(userId)).pipe(
-      map(raws => raws.map(r => ({ ...r, collectionType: (r.type === 0 || r.type === 'Albums') ? 'album' : 'band' } as CollectionSummary))),
+      map(raws => raws.map(r => ({
+        ...r,
+        albumCount: r.albumsCount ?? r.albumCount ?? 0,
+        bandCount: r.bandsCount ?? r.bandCount ?? 0,
+        albums: r.albums ?? [],
+        bands: r.bands ?? [],
+        collectionType: (r.type === 0 || r.type === 'Albums') ? 'album' : 'band',
+      } as CollectionSummary))),
       tap(cols => this._collections.set(cols))
     );
   }

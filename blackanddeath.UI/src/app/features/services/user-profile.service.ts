@@ -41,6 +41,8 @@ export interface UserProfileCollectionDto {
   albumsCount: number;
   bandsCount: number;
   type: 0 | 1;
+  albums?: { id: string }[];
+  bands?: { id: string }[];
 }
 
 export interface UserProfileDto {
@@ -97,6 +99,8 @@ export function mapProfileCollection(dto: UserProfileCollectionDto): CollectionS
     albumCount: dto.albumsCount,
     bandCount: dto.bandsCount,
     collectionType: dto.type === 0 ? 'album' : 'band',
+    albums: dto.albums ?? [],
+    bands: dto.bands ?? [],
   };
 }
 

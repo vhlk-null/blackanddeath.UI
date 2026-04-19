@@ -197,6 +197,21 @@ export class UserProfile implements OnInit {
     this.editingCollectionCoverPreview.set(null);
   }
 
+  removeFromCollection(type: 'album' | 'band', itemId: string): void {
+    const col = this.selectedCollection();
+    if (!col) return;
+    const obs = type === 'album'
+      ? this.collectionService.removeAlbum(col.id, itemId)
+      : this.collectionService.removeBand(col.id, itemId);
+    obs.subscribe(() => {
+      this.selectedCollection.update(c => c ? {
+        ...c,
+        albums: type === 'album' ? c.albums.filter(a => a.id !== itemId) : c.albums,
+        bands: type === 'band' ? c.bands.filter(b => b.id !== itemId) : c.bands,
+      } : c);
+    });
+  }
+
   deleteCollection(id: string): void {
     this.collectionService.deleteCollection(id).subscribe(() => {
       if (this.selectedCollection()?.id === id) {

@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CollectionService, CollectionItem } from '../../../features/services/collection.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-collection-picker',
@@ -14,6 +15,7 @@ import { CollectionService, CollectionItem } from '../../../features/services/co
 export class CollectionPicker implements OnInit {
   private el = inject(ElementRef);
   readonly collectionService = inject(CollectionService);
+  private toast = inject(ToastService);
 
   readonly item = input.required<CollectionItem>();
   readonly userId = input.required<string>();
@@ -23,17 +25,21 @@ export class CollectionPicker implements OnInit {
     this.collectionService.all().filter(c => c.collectionType === this.item().type)
   );
 
-  // Tracks which collection IDs already contain this item (loaded via detail or toggled locally)
   readonly checkedIds = signal<Set<string>>(new Set());
-
   readonly newName = signal('');
   readonly creating = signal(false);
   readonly loading = signal(false);
 
   ngOnInit(): void {
-    // The collections list is already loaded by the parent (album/band info page loads on demand).
-    // We don't have a bulk "which collections contain X" endpoint, so start empty —
-    // the user sees checkboxes and checks/unchecks as desired.
+    const itemId = this.item().id;
+    const itemType = this.item().type;
+    const preChecked = new Set(
+      this.collectionService.all()
+        .filter(c => c.collectionType === itemType)
+        .filter(c => itemType === 'album' ? c.albums.some(a => a.id === itemId) : c.bands.some(b => b.id === itemId))
+        .map(c => c.id)
+    );
+    this.checkedIds.set(preChecked);
   }
 
   isChecked(id: string): boolean {
@@ -46,12 +52,14 @@ export class CollectionPicker implements OnInit {
       const obs = item.type === 'album'
         ? this.collectionService.removeAlbum(id, item.id)
         : this.collectionService.removeBand(id, item.id);
-      obs.subscribe(() => this.checkedIds.update(s => { const n = new Set(s); n.delete(id); return n; }));
+      const name = this.collections().find(c => c.id === id)?.name ?? 'collection';
+      obs.subscribe(() => { this.checkedIds.update(s => { const n = new Set(s); n.delete(id); return n; }); this.toast.info(`Removed from "${name}"`); });
     } else {
+      const name = this.collections().find(c => c.id === id)?.name ?? 'collection';
       const obs = item.type === 'album'
         ? this.collectionService.addAlbum(id, item.id)
         : this.collectionService.addBand(id, item.id);
-      obs.subscribe(() => this.checkedIds.update(s => new Set([...s, id])));
+      obs.subscribe(() => { this.checkedIds.update(s => new Set([...s, id])); this.toast.success(`Added to "${name}"`); });
     }
   }
 
@@ -70,7 +78,7 @@ export class CollectionPicker implements OnInit {
       const obs = item.type === 'album'
         ? this.collectionService.addAlbum(col.id, item.id)
         : this.collectionService.addBand(col.id, item.id);
-      obs.subscribe(() => this.checkedIds.update(s => new Set([...s, col.id])));
+      obs.subscribe(() => { this.checkedIds.update(s => new Set([...s, col.id])); this.toast.success(`Added to "${col.name}"`); });
     });
   }
 

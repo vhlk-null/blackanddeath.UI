@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { switchMap, filter } from 'rxjs';
+import { switchMap, filter, forkJoin } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
@@ -86,15 +86,17 @@ export class BandInfo implements OnInit {
     return id ? { id, type: 'band' } : null;
   });
 
+  readonly isInAnyCollection = computed(() => {
+    const id = this.bandData()?.id;
+    if (!id) return false;
+    return this.collectionService.all().some(c => c.bands.some(b => b.id === id));
+  });
+
   openCollectionPicker(): void {
     const userId = this.auth.userId();
     if (!userId) return;
     if (this.showCollectionPicker()) { this.showCollectionPicker.set(false); return; }
-    if (this.collectionService.all().length > 0) {
-      this.showCollectionPicker.set(true);
-    } else {
-      this.collectionService.loadForUser(userId).subscribe(() => this.showCollectionPicker.set(true));
-    }
+    this.showCollectionPicker.set(true);
   }
 
   // Album reviews aggregated across band's discography
@@ -224,14 +226,17 @@ export class BandInfo implements OnInit {
 
         const userId = this.auth.userId();
         if (userId) {
-          this.ratingService.getUserBandRating(band.id, userId).subscribe(r => {
-            if (r) {
-              this.userRating.set(r.userRating);
-              this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
+          forkJoin({
+            collections: this.collectionService.loadForUser(userId),
+            rating: this.ratingService.getUserBandRating(band.id, userId),
+            favorite: this.favoriteService.checkFavoriteBand(band.id, userId),
+          }).subscribe(({ rating, favorite }) => {
+            if (rating) {
+              this.userRating.set(rating.userRating);
+              this.bandData.update(b => b ? { ...b, averageRating: rating.averageRating, ratingsCount: rating.ratingsCount } : b);
             }
+            this.isFavorite.set(favorite);
           });
-          this.favoriteService.checkFavoriteBand(band.id, userId)
-            .subscribe(v => this.isFavorite.set(v));
         } else {
           this.ratingService.getBandAverage(band.id).subscribe(r => {
             if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);

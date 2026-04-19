@@ -892,7 +892,7 @@
 
   &__col-row {
     display: grid;
-    grid-template-columns: 2.25rem 3rem 1fr 1fr 6rem;
+    grid-template-columns: 2.25rem 3rem 1fr 1fr 6rem 1.5rem;
     align-items: center;
     gap: 0 0.875rem;
     padding: 0.5rem 0.75rem;
@@ -906,7 +906,27 @@
 
       .profile__col-row-num { opacity: 0; }
       .profile__col-row-play { opacity: 1; }
+      .profile__col-row-remove { opacity: 1; }
     }
+  }
+
+  &__col-row-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s, background 0.15s;
+    flex-shrink: 0;
+    svg { width: 0.75rem; height: 0.75rem; }
+
+    &:hover { color: #fff; background: rgba(200, 30, 30, 0.75); }
   }
 
   &__col-row-num {

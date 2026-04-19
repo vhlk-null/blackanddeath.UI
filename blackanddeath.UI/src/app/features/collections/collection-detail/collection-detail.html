@@ -35,7 +35,14 @@
         <h2 class="col-detail__section-title">Albums</h2>
         <div class="col-detail__grid">
           @for (album of collection()!.albums; track album.id) {
-            <app-album-card [albumCard]="album" />
+            <div class="col-detail__item">
+              <app-album-card [albumCard]="album" />
+              <button class="col-detail__remove-btn" title="Remove from collection" (click)="removeAlbum(album.id)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
           }
         </div>
       </div>
@@ -46,7 +53,14 @@
         <h2 class="col-detail__section-title">Bands</h2>
         <div class="col-detail__grid">
           @for (band of collection()!.bands; track band.id) {
-            <app-band-card [bandCard]="band" />
+            <div class="col-detail__item">
+              <app-band-card [bandCard]="band" />
+              <button class="col-detail__remove-btn" title="Remove from collection" (click)="removeBand(band.id)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
           }
         </div>
       </div>
