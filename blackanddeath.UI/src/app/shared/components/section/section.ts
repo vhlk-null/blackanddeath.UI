@@ -89,7 +89,7 @@ export class Section implements AfterViewInit {
 
   private updateActiveDot(el: HTMLElement, cardWidth: number, visibleCards: number): void {
     const scrollStep = cardWidth * visibleCards;
-    this.activeDot.set(el.scrollLeft < 8 ? 0 : Math.ceil(el.scrollLeft / scrollStep));
+    this.activeDot.set(Math.round(el.scrollLeft / scrollStep));
   }
 
   ngAfterViewInit(): void {
