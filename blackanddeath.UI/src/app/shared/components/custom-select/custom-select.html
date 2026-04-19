@@ -1,6 +1,6 @@
 <div class="custom-select" [class.custom-select--open]="isOpen()">
   <button type="button" class="custom-select__trigger" (click)="toggle()">
-    <span class="custom-select__value">{{ options().find(o => o.value === value())?.label ?? placeholder() }}</span>
+    <span class="custom-select__value">{{ selectedLabel }}</span>
     <svg class="custom-select__arrow" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -8,7 +8,7 @@
   @if (isOpen()) {
   <ul class="custom-select__dropdown">
     @for (opt of options(); track opt.value) {
-    <li class="custom-select__option" [class.custom-select__option--selected]="value() === opt.value" (click)="select(opt.value)">
+    <li class="custom-select__option" [class.custom-select__option--selected]="currentValue === opt.value" (click)="select(opt.value)">
       {{ opt.label }}
     </li>
     }
