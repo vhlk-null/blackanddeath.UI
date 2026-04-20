@@ -19,7 +19,7 @@
             @if (arrows()) {<button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" [class.section-arrow--disabled]="!canScrollRight()" [disabled]="!canScrollRight()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>}
         </div>
     </div>
-    @if (dotCount() > 1) {
+    @if (arrows() && dotCount() > 1) {
     <div class="section-dots">
       @for (d of dots(); track $index) {
         <span class="section-dots__dot" [class.section-dots__dot--active]="activeDot() === $index"></span>

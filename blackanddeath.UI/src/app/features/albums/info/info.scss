@@ -104,7 +104,7 @@
       color: var(--color-text-muted);
       padding: 0 0 0.5rem;
       border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
+      margin-bottom: -2px;
       transition: color 0.2s, border-color 0.2s;
 
       &.active {
@@ -281,7 +281,6 @@
   &__right {
     flex: 1;
     min-width: 0;
-    min-height: 0;
     display: flex;
     flex-direction: column;
   }
@@ -318,7 +317,7 @@
       color: var(--color-text-muted);
       padding: 0 0 0.75rem;
       border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
+      margin-bottom: -2px;
       transition: color 0.15s ease, border-color 0.15s ease;
 
       &.active {
@@ -340,8 +339,7 @@
     margin: 0;
     padding: 0 0.75rem 0 0;
     overflow-y: auto;
-    // cover(367px) + rating(~48px) + meta table(~160px) - tracklist header(~2.5rem)
-    max-height: calc(22.9375rem + 3rem + 10rem - 2.5rem);
+    max-height: calc(22.9375rem + 3rem + 14rem - 2.5rem);
     scrollbar-width: thin;
     scrollbar-color: var(--color-separator) transparent;
   }
@@ -350,7 +348,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem 0;
+    padding: 0.25rem 0;
     border-bottom: 1px solid var(--color-separator);
 
     &-num {

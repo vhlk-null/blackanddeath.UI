@@ -5,7 +5,8 @@ export class TitleCaseAllPipe implements PipeTransform {
   transform(value: string | null | undefined): string {
     if (!value) return '';
     return value.replace(/\S+/g, word =>
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      word.replace(/^(\W*)(\w)/, (_, pre, letter) => pre + letter.toUpperCase()) +
+      word.slice(word.search(/\w/) + 1).toLowerCase()
     );
   }
 }
