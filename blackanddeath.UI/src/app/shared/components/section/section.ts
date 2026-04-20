@@ -55,6 +55,8 @@ export class Section implements AfterViewInit {
   onScroll(event: Event): void {
     const el = event.target as HTMLElement;
     this.updateScrollState(el);
+    const metrics = this.getCardMetrics(el);
+    if (metrics) this.updateActiveDot(el, metrics.cardWidth, metrics.visibleCards);
     if (this._loadMoreLocked) return;
     if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
       this._loadMoreLocked = true;
@@ -88,6 +90,11 @@ export class Section implements AfterViewInit {
   }
 
   private updateActiveDot(el: HTMLElement, cardWidth: number, visibleCards: number): void {
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+    if (atEnd) {
+      this.activeDot.set(this.dotCount() - 1);
+      return;
+    }
     const scrollStep = cardWidth * visibleCards;
     this.activeDot.set(Math.round(el.scrollLeft / scrollStep));
   }
