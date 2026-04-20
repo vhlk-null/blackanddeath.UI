@@ -1,4 +1,5 @@
 import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { PasteImageDirective } from '../../../shared/directives/paste-image.directive';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiSelectInput, SelectOption } from '../../../shared/components/multi-select/multi-select';
 import { GenreService } from '../../services/genre.service';
@@ -17,7 +18,7 @@ export interface GenreCardData {
 
 @Component({
   selector: 'app-genre-card-editor',
-  imports: [ReactiveFormsModule, MultiSelectInput, FormsModule],
+  imports: [ReactiveFormsModule, MultiSelectInput, FormsModule, PasteImageDirective],
   templateUrl: './genre-card-editor.html',
   styleUrl: './genre-card-editor.scss',
 })
@@ -62,10 +63,12 @@ export class GenreCardEditor implements OnInit {
 
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.coverFile = file;
-      this.previewUrl.set(URL.createObjectURL(file));
-    }
+    if (file) this.onImagePasted(file);
+  }
+
+  onImagePasted(file: File): void {
+    this.coverFile = file;
+    this.previewUrl.set(URL.createObjectURL(file));
   }
 
   onDelete(): void {

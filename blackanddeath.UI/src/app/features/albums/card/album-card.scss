@@ -53,7 +53,13 @@
     aspect-ratio: 1;
     object-fit: cover;
     display: block;
-    transition: transform 0.35s ease;
+    transition: transform 0.35s ease, filter 0.35s ease;
+
+    &--explicit { filter: blur(4px); }
+  }
+
+  &:hover &__image--explicit {
+    filter: blur(0);
   }
 
   &__info {

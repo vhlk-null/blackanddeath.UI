@@ -15,7 +15,7 @@
   }
 
   @if (!notFound()) {
-  <h1 class="album-info__title">{{ albumData()?.title | titleCaseAll }}</h1>
+  <h1 class="album-info__title">{{ albumData()?.title | titleCaseAll:true }}</h1>
   <p class="album-info__band-subtitle">
     @for (band of albumData()?.bands ?? []; track band.id; let last = $last) {
       <a [routerLink]="['/bands', band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) { & }
@@ -201,7 +201,7 @@
       <div class="album-info__cover" [style.cursor]="albumData()?.coverUrl && !imageError() ? 'pointer' : 'default'"
         (click)="albumData()?.coverUrl && !imageError() && lightboxSrc.set(albumData()!.coverUrl!)">
         @if (albumData()?.coverUrl && !imageError()) {
-        <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" (error)="imageError.set(true)" />
+        <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" (error)="imageError.set(true)" [class.album-info__cover-img--explicit]="albumData()?.isExplicit" />
         } @else if (loaded()) {
 
         <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">

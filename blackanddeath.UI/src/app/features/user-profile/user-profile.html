@@ -132,7 +132,7 @@
 
       @if (creatingCollection()) {
         <div class="profile__collections-create">
-          <label class="profile__collections-cover-pick" title="Add cover">
+          <label class="profile__collections-cover-pick" title="Add cover" appPasteImage (imagePasted)="onNewCoverPasted($event)">
             @if (newCollectionCoverPreview()) {
               <img [src]="newCollectionCoverPreview()!" alt="cover" />
             } @else {
@@ -351,7 +351,7 @@
         <!-- Spotify-style hero header -->
         <div class="profile__col-hero">
           <!-- Cover -->
-          <label class="profile__col-hero-cover" title="Change cover">
+          <label class="profile__col-hero-cover" title="Change cover" appPasteImage (imagePasted)="onHeroCoverPasted($event)">
             @if (editingCollectionId() === selectedCollection()!.id && editingCollectionCoverPreview()) {
               <img [src]="editingCollectionCoverPreview()!" alt="cover" />
             } @else if (selectedCollection()!.coverUrl) {

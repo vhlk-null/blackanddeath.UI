@@ -1,6 +1,6 @@
 <div class="card-editor">
   <div class="card-editor__header">
-    <label class="card-editor__cover-btn" title="Upload cover">
+    <label class="card-editor__cover-btn" title="Upload cover" appPasteImage (imagePasted)="onImagePasted($event)">
       @if (previewUrl()) {
         <img class="card-editor__cover-img" [src]="previewUrl()!" [alt]="card().name" />
       } @else {

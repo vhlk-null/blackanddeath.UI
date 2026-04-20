@@ -1,7 +1,7 @@
 <a class="card" [routerLink]="['/albums', albumCard().slug]">
     <div class="card__cover">
         @if (albumCard().coverUrl && !imageError()) {
-        <img class="card__image" [src]="albumCard().coverUrl" [alt]="albumCard().title" (error)="imageError.set(true)" />
+        <img class="card__image" [class.card__image--explicit]="albumCard().isExplicit" [src]="albumCard().coverUrl" [alt]="albumCard().title" (error)="imageError.set(true)" />
         } @else {
         <div class="card__placeholder">
             <svg class="card__placeholder-vinyl" viewBox="0 0 171 171" fill="none"
@@ -13,7 +13,7 @@
         }
     </div>
     <div class="card__info">
-        <h3 class="card__title" [title]="albumCard().title | titleCaseAll">{{ albumCard().title | titleCaseAll }}</h3>
+        <h3 class="card__title" [title]="albumCard().title | titleCaseAll:true">{{ albumCard().title | titleCaseAll:true }}</h3>
         @if (albumCard().bands?.[0]?.name) {
         <a class="card__band" [title]="albumCard().bands?.[0]?.name ?? ''"
           (click)="$event.preventDefault(); $event.stopPropagation()"

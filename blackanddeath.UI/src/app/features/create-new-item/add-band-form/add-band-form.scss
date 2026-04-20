@@ -200,13 +200,41 @@
   }
 
   &__preview {
+    position: relative;
     width: 100%;
     aspect-ratio: 487 / 225;
     background: var(--color-input-bg);
-    border: 1px solid var(--color-border-input);
+    border: 1px dashed var(--color-border-input);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+
+    &::after {
+      content: 'Click & Ctrl+V to paste image';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.4rem;
+      font-family: var(--font-family-body);
+      font-size: 0.7rem;
+      text-align: center;
+      color: var(--color-text-placeholder);
+      background: linear-gradient(transparent, color-mix(in srgb, var(--color-input-bg) 80%, transparent));
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    &:hover, &:focus {
+      border-color: var(--color-border-input-focus);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-tab-active) 20%, transparent);
+
+      &::after { opacity: 1; }
+    }
   }
 
   &__preview-img {

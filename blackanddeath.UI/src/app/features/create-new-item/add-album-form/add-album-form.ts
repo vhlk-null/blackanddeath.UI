@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
+import { PasteImageDirective } from '../../../shared/directives/paste-image.directive';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlbumService } from '../../services/album.servics';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -22,7 +23,7 @@ import { Album } from '../../../shared/models/album';
 
 @Component({
   selector: 'app-add-album-form',
-  imports: [Section, ReactiveFormsModule, FormsModule, MultiSelectInput, CustomSelect],
+  imports: [Section, ReactiveFormsModule, FormsModule, MultiSelectInput, CustomSelect, PasteImageDirective],
   templateUrl: './add-album-form.html',
   styleUrl: './add-album-form.scss',
 })
@@ -115,6 +116,7 @@ export class AddAlbumForm implements OnInit {
     bandcamp: new FormControl('', {
       nonNullable: true,
     }),
+    isExplicit: new FormControl(false, { nonNullable: true }),
   });
 
   ngOnInit(): void {
@@ -186,6 +188,7 @@ export class AddAlbumForm implements OnInit {
       deezer: getLink(StreamingPlatform.Deezer),
       amazonMusic: getLink(StreamingPlatform.AmazonMusic),
       bandcamp: getLink(StreamingPlatform.Bandcamp),
+      isExplicit: album.isExplicit ?? false,
     });
   }
 
@@ -203,6 +206,7 @@ export class AddAlbumForm implements OnInit {
   get deezer() { return this.albumForm.get('deezer')!; }
   get amazonMusic() { return this.albumForm.get('amazonMusic')!; }
   get bandcamp() { return this.albumForm.get('bandcamp')!; }
+  get isExplicit() { return this.albumForm.get('isExplicit')!; }
 
   addTrack(): void {
     this.tracks = [...this.tracks, { title: '', duration: '' }];
@@ -220,11 +224,13 @@ export class AddAlbumForm implements OnInit {
 
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.coverFile = file;
-      this.coverError = false;
-      this.previewUrl = URL.createObjectURL(file);
-    }
+    if (file) this.onImagePasted(file);
+  }
+
+  onImagePasted(file: File): void {
+    this.coverFile = file;
+    this.coverError = false;
+    this.previewUrl = URL.createObjectURL(file);
   }
 
   onFormEnter(event: Event): void {
@@ -272,6 +278,7 @@ export class AddAlbumForm implements OnInit {
       tagIds: v.albumTags,
       streamingLinks,
       tracks,
+      isExplicit: v.isExplicit,
     };
 
     this.submitting.set(true);

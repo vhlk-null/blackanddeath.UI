@@ -1,5 +1,6 @@
 import { Component, inject, signal, computed, OnInit, HostListener, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { PasteImageDirective } from '../../shared/directives/paste-image.directive';
 import { RouterLink } from '@angular/router';
 import { NgTemplateOutlet } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
@@ -10,7 +11,7 @@ import { Band } from '../../shared/models/band';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [FormsModule, RouterLink, NgTemplateOutlet],
+  imports: [FormsModule, RouterLink, NgTemplateOutlet, PasteImageDirective],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
@@ -115,19 +116,25 @@ export class UserProfile implements OnInit {
 
   onNewCoverChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
+    if (file) this.onNewCoverPasted(file);
+  }
+
+  onNewCoverPasted(file: File): void {
     this.newCollectionCoverFile.set(file);
     this.newCollectionCoverPreview.set(URL.createObjectURL(file));
   }
 
   onHeroCoverChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.onHeroCoverPasted(file);
+  }
+
+  onHeroCoverPasted(file: File): void {
     const col = this.selectedCollection();
     if (!col) return;
     if (this.editingCollectionId() !== col.id) {
       this.startEditingCollection(col.id, col.name, col.coverUrl);
     }
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
     this.editingCollectionCoverFile.set(file);
     this.editingCollectionCoverPreview.set(URL.createObjectURL(file));
   }

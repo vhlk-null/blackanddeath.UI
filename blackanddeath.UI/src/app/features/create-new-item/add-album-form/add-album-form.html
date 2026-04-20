@@ -1,7 +1,7 @@
 <div class="add-album__top">
 
   <div class="add-album__preview-wrapper">
-    <div class="add-album__preview">
+    <div class="add-album__preview" appPasteImage (imagePasted)="onImagePasted($event)">
       @if (previewUrl) {
       <img [src]="previewUrl" alt="Album cover preview" class="add-album__preview-img" />
       } @else {
@@ -124,6 +124,19 @@
         <div class="add-album__row">
           <label class="add-album__label" for="album-type">Type:</label>
           <app-custom-select [options]="albumTypeSelectOptions" placeholder="" formControlName="albumType" />
+        </div>
+
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-explicit">Explicit:</label>
+          <div class="add-album__field add-album__field--checkbox">
+            <label class="add-album__toggle" for="album-explicit">
+              <input class="add-album__toggle-input" id="album-explicit" type="checkbox" formControlName="isExplicit" />
+              <span class="add-album__toggle-track">
+                <span class="add-album__toggle-thumb"></span>
+              </span>
+              <span class="add-album__checkbox-label">Contains explicit content</span>
+            </label>
+          </div>
         </div>
 
         <div class="add-album__row">

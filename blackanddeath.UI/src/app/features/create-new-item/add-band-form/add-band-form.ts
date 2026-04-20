@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
+import { PasteImageDirective } from '../../../shared/directives/paste-image.directive';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BandService } from '../../services/band.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -16,7 +17,7 @@ import { Band } from '../../../shared/models/band';
 
 @Component({
   selector: 'app-add-band-form',
-  imports: [Section, ReactiveFormsModule, MultiSelectInput, CustomSelect],
+  imports: [Section, ReactiveFormsModule, MultiSelectInput, CustomSelect, PasteImageDirective],
   templateUrl: './add-band-form.html',
   styleUrl: './add-band-form.scss',
 })
@@ -150,11 +151,13 @@ export class AddBandForm implements OnInit {
 
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.logoFile = file;
-      this.logoError = false;
-      this.previewUrl = URL.createObjectURL(file);
-    }
+    if (file) this.onImagePasted(file);
+  }
+
+  onImagePasted(file: File): void {
+    this.logoFile = file;
+    this.logoError = false;
+    this.previewUrl = URL.createObjectURL(file);
   }
 
   onFormEnter(event: Event): void {
