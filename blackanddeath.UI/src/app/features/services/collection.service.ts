@@ -62,7 +62,7 @@ export class CollectionService {
     const dto = { userId, name, type: collectionType === 'album' ? 0 : 1, description: description ?? null };
     const body = this.toFormData(dto, cover);
     return this.http.post<any>(CollectionEndpoints.CREATE, body).pipe(
-      map((raw: any) => ({ ...raw, collectionType: raw.type === 0 ? 'album' : 'band' } as CollectionSummary)),
+      map((raw: any) => ({ ...raw, collectionType: (raw.type === 0 || raw.type === 'Albums') ? 'album' : 'band' } as CollectionSummary)),
       tap(col => this._collections.update(cols => [...cols, col]))
     );
   }
@@ -71,7 +71,7 @@ export class CollectionService {
     const dto = { userId, name, description: description ?? null };
     const body = this.toFormData(dto, cover);
     return this.http.put<any>(CollectionEndpoints.UPDATE(id), body).pipe(
-      map((raw: any) => ({ ...raw, collectionType: raw.type === 0 ? 'album' : 'band' } as CollectionSummary)),
+      map((raw: any) => ({ ...raw, collectionType: (raw.type === 0 || raw.type === 'Albums') ? 'album' : 'band' } as CollectionSummary)),
       tap(updated => this._collections.update(cols => cols.map(c => c.id === id ? updated : c)))
     );
   }

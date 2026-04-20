@@ -38,9 +38,8 @@ export interface UserProfileCollectionDto {
   description: string | null;
   coverUrl?: string | null;
   createdAt: string;
-  albumsCount: number;
-  bandsCount: number;
-  type: 0 | 1;
+  count: number;
+  type: 0 | 1 | 'Albums' | 'Bands';
   albums?: { id: string }[];
   bands?: { id: string }[];
 }
@@ -96,9 +95,9 @@ export function mapProfileCollection(dto: UserProfileCollectionDto): CollectionS
     description: dto.description,
     coverUrl: dto.coverUrl ?? null,
     createdAt: dto.createdAt,
-    albumCount: dto.albumsCount,
-    bandCount: dto.bandsCount,
-    collectionType: dto.type === 0 ? 'album' : 'band',
+    albumCount: (dto.type === 0 || dto.type === 'Albums') ? dto.count : 0,
+    bandCount: (dto.type === 1 || dto.type === 'Bands') ? dto.count : 0,
+    collectionType: (dto.type === 0 || dto.type === 'Albums') ? 'album' : 'band',
     albums: dto.albums ?? [],
     bands: dto.bands ?? [],
   };

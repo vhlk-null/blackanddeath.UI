@@ -5,17 +5,12 @@ import { NgTemplateOutlet } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService, CollectionDetail } from '../services/collection.service';
 import { UserProfileService, UserProfileDto, mapProfileAlbum, mapProfileBand, mapProfileCollection } from '../services/user-profile.service';
-import { AlbumCard } from '../albums/card/album-card';
-import { BandCard } from '../bands/band-card/band-card';
-import { VideoCard } from '../home/video-card/video-card';
-import { Section } from '../../shared/components/section/section';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
-import { VideoBand } from '../../shared/models/video-band';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [AlbumCard, BandCard, VideoCard, Section, FormsModule, RouterLink, NgTemplateOutlet],
+  imports: [FormsModule, RouterLink, NgTemplateOutlet],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
@@ -33,7 +28,7 @@ export class UserProfile implements OnInit {
   private profileService = inject(UserProfileService);
   readonly collectionService = inject(CollectionService);
 
-  readonly mainTabs = ['Favourites', 'Playlists', 'Collections', 'Activity'];
+  readonly mainTabs = ['Collections', 'Activity'];
   readonly activeMainTab = signal(0);
 
   readonly isOnline = signal(true);
@@ -75,7 +70,8 @@ export class UserProfile implements OnInit {
   readonly favoriteBands = computed<Band[]>(() =>
     this.profileDto()?.favoriteBands.map(mapProfileBand) ?? []
   );
-  readonly favoriteVideos = signal<VideoBand[]>([]);
+
+  readonly selectedDefaultCollection = signal<'fav-albums' | 'fav-bands' | null>('fav-albums');
 
   // Collections
   readonly creatingCollection = signal(false);
@@ -103,11 +99,17 @@ export class UserProfile implements OnInit {
 
   selectCollection(id: string): void {
     if (this.selectedCollection()?.id === id) return;
+    this.selectedDefaultCollection.set(null);
     this.collectionDetailLoading.set(true);
     this.collectionService.getDetail(id).subscribe(detail => {
       this.selectedCollection.set(detail);
       this.collectionDetailLoading.set(false);
     });
+  }
+
+  selectDefaultCollection(key: 'fav-albums' | 'fav-bands'): void {
+    this.selectedCollection.set(null);
+    this.selectedDefaultCollection.set(key);
   }
 
 
