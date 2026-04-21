@@ -14,8 +14,14 @@ import { MultiSelectNames } from '../../../shared/components/multi-select-names/
 const toArray = (v: string | string[] | undefined): string[] =>
   !v ? [] : Array.isArray(v) ? v : [v];
 
-const SORT_OPTIONS = ['Newest', 'Oldest', 'Name', 'Rating'] as const;
-type SortOption = typeof SORT_OPTIONS[number];
+const SORT_OPTIONS = [
+  { value: 'FormedYear', label: 'Formation Year' },
+  { value: 'Name', label: 'Name' },
+  { value: 'Rating', label: 'Rating' },
+] as const;
+type SortOption = typeof SORT_OPTIONS[number]['value'];
+type SortDir = 'asc' | 'desc';
+
 const PAGE_SIZE = 9;
 const BAND_STATUSES = ['Active', 'Split-up', 'On hold', 'Changed name', 'Unknown'];
 
@@ -34,6 +40,7 @@ export class AllBands implements OnInit {
   private route = inject(ActivatedRoute);
 
   readonly bandStatuses = BAND_STATUSES;
+  readonly sortOptions = SORT_OPTIONS;
   readonly genres = signal<Genre[]>([]);
   readonly countries = signal<Country[]>([]);
   readonly filtersOpen = signal(false);
@@ -42,15 +49,14 @@ export class AllBands implements OnInit {
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();
 
-  // Applied filters
-  readonly activeSort = signal<SortOption>('Newest');
+  readonly activeSort = signal<SortOption>('FormedYear');
+  readonly activeSortDir = signal<SortDir>('desc');
   readonly activeGenreNames = signal<string[]>([]);
   readonly activeCountryNames = signal<string[]>([]);
   readonly activeStatuses = signal<string[]>([]);
   readonly activeYearFrom = signal<string | null>(null);
   readonly activeYearTo = signal<string | null>(null);
 
-  // Draft signals
   readonly draftGenres = signal<string[]>([]);
   readonly draftCountries = signal<string[]>([]);
   readonly draftStatuses = signal<string[]>([]);
@@ -73,9 +79,7 @@ export class AllBands implements OnInit {
   readonly draftYearFromPct = computed(() => ((this.draftYearFrom() - this.yearMin) / (this.yearMax - this.yearMin)) * 100);
   readonly draftYearToPct = computed(() => ((this.draftYearTo() - this.yearMin) / (this.yearMax - this.yearMin)) * 100);
 
-  readonly sortOptions = SORT_OPTIONS;
   readonly pageSize = PAGE_SIZE;
-
   readonly bands = signal<Band[]>([]);
   readonly total = signal(0);
   readonly loaded = signal(false);
@@ -87,7 +91,8 @@ export class AllBands implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       const sort = params['sortBy'] as SortOption;
-      this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');
+      this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'FormedYear');
+      this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
       this.currentPage.set(Number(params['pageIndex']) || 1);
       this.activeGenreNames.set(toArray(params['genreName']));
       this.activeCountryNames.set(toArray(params['countryName']));
@@ -126,17 +131,13 @@ export class AllBands implements OnInit {
     this.updateUrl();
   }
 
-  clearFilter(key: 'genre' | 'country' | 'status' | 'year', value?: string): void {
-    if (key === 'genre') { this.activeGenreNames.update(v => value ? v.filter(x => x !== value) : []); this.draftGenres.set(this.activeGenreNames()); }
-    if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }
-    if (key === 'status') { this.activeStatuses.update(v => value ? v.filter(x => x !== value) : []); this.draftStatuses.set(this.activeStatuses()); }
-    if (key === 'year') { this.activeYearFrom.set(null); this.activeYearTo.set(null); this.draftYearFrom.set(this.yearMin); this.draftYearTo.set(this.yearMax); }
-    this.currentPage.set(1);
-    this.updateUrl();
-  }
-
-  onSortChange(sort: string): void {
-    this.activeSort.set(sort as SortOption);
+  onSortChange(sort: SortOption): void {
+    if (this.activeSort() === sort) {
+      this.activeSortDir.update(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.activeSort.set(sort);
+      this.activeSortDir.set('desc');
+    }
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -145,6 +146,15 @@ export class AllBands implements OnInit {
     this.currentPage.set(page);
     this.updateUrl();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  clearFilter(key: 'genre' | 'country' | 'status' | 'year', value?: string): void {
+    if (key === 'genre') { this.activeGenreNames.update(v => value ? v.filter(x => x !== value) : []); this.draftGenres.set(this.activeGenreNames()); }
+    if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }
+    if (key === 'status') { this.activeStatuses.update(v => value ? v.filter(x => x !== value) : []); this.draftStatuses.set(this.activeStatuses()); }
+    if (key === 'year') { this.activeYearFrom.set(null); this.activeYearTo.set(null); this.draftYearFrom.set(this.yearMin); this.draftYearTo.set(this.yearMax); }
+    this.currentPage.set(1);
+    this.updateUrl();
   }
 
   private syncDraftsFromActive(): void {
@@ -160,6 +170,7 @@ export class AllBands implements OnInit {
       relativeTo: this.route,
       queryParams: {
         sortBy: this.activeSort(),
+        sortDir: this.activeSortDir(),
         pageIndex: this.currentPage(),
         genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
         countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
@@ -173,12 +184,8 @@ export class AllBands implements OnInit {
 
   private load(): void {
     if (this.activeSort() === 'Rating') {
-      this.ratingService.getTopRatedBands({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize }).subscribe({
-        next: (result) => {
-          this.bands.set(result.data);
-          this.total.set(result.count);
-          this.loaded.set(true);
-        },
+      this.ratingService.getTopRatedBands({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
+        next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); },
       });
       return;
     }
@@ -186,17 +193,14 @@ export class AllBands implements OnInit {
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
       sortBy: this.activeSort(),
+      sortDir: this.activeSortDir(),
       genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
       countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
       status: this.activeStatuses().length ? this.activeStatuses() : undefined,
       yearFrom: this.activeYearFrom() ?? undefined,
       yearTo: this.activeYearTo() ?? undefined,
     }).subscribe({
-      next: (result) => {
-        this.bands.set(result.data);
-        this.total.set(result.count);
-        this.loaded.set(true);
-      },
+      next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); },
     });
   }
 }

@@ -17,13 +17,13 @@ const toArray = (v: string | string[] | undefined): string[] =>
   !v ? [] : Array.isArray(v) ? v : [v];
 
 const SORT_OPTIONS = [
-  { value: 'Newest', label: 'Newest' },
-  { value: 'Oldest', label: 'Oldest' },
   { value: 'ReleaseDate', label: 'Release Date' },
   { value: 'Title', label: 'Title' },
   { value: 'Rating', label: 'Rating' },
 ] as const;
 type SortOption = typeof SORT_OPTIONS[number]['value'];
+type SortDir = 'asc' | 'desc';
+
 const PAGE_SIZE = 20;
 
 const ALBUM_TYPE_MAP: Record<string, string> = {
@@ -56,6 +56,7 @@ export class AllAlbums implements OnInit {
   private route = inject(ActivatedRoute);
 
   readonly albumTypes = ALBUM_TYPES;
+  readonly sortOptions = SORT_OPTIONS;
   readonly genres = signal<Genre[]>([]);
   readonly countries = signal<Country[]>([]);
   readonly labels = signal<Label[]>([]);
@@ -65,8 +66,8 @@ export class AllAlbums implements OnInit {
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();
 
-  // Applied (active) filters — drive URL & API
-  readonly activeSort = signal<SortOption>('Newest');
+  readonly activeSort = signal<SortOption>('ReleaseDate');
+  readonly activeSortDir = signal<SortDir>('desc');
   readonly activeName = signal<string | null>(null);
   readonly activeGenreNames = signal<string[]>([]);
   readonly activeCountryNames = signal<string[]>([]);
@@ -74,8 +75,8 @@ export class AllAlbums implements OnInit {
   readonly activeYearFrom = signal<string | null>(null);
   readonly activeYearTo = signal<string | null>(null);
   readonly activeLabelNames = signal<string[]>([]);
+  readonly activeUpcoming = signal<boolean>(false);
 
-  // Draft signals — local state inside the filter bar, not yet applied
   readonly draftGenres = signal<string[]>([]);
   readonly draftCountries = signal<string[]>([]);
   readonly draftLabels = signal<string[]>([]);
@@ -83,8 +84,6 @@ export class AllAlbums implements OnInit {
   readonly draftYearFrom = signal<number>(this.yearMin);
   readonly draftYearTo = signal<number>(this.yearMax);
   readonly draftUpcoming = signal<boolean>(false);
-
-  readonly activeUpcoming = signal<boolean>(false);
 
   readonly genreGroups = computed(() => {
     const all = this.genres();
@@ -103,9 +102,7 @@ export class AllAlbums implements OnInit {
   readonly draftYearFromPct = computed(() => ((this.draftYearFrom() - this.yearMin) / (this.yearMax - this.yearMin)) * 100);
   readonly draftYearToPct = computed(() => ((this.draftYearTo() - this.yearMin) / (this.yearMax - this.yearMin)) * 100);
 
-  readonly sortOptions = SORT_OPTIONS;
   readonly pageSize = PAGE_SIZE;
-
   readonly albums = signal<Album[]>([]);
   readonly total = signal(0);
   readonly loaded = signal(false);
@@ -118,8 +115,8 @@ export class AllAlbums implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       const sort = params['sortBy'] as SortOption;
-      const validSort = SORT_OPTIONS.find(o => o.value === sort);
-      this.activeSort.set(validSort ? sort : 'Newest');
+      this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'ReleaseDate');
+      this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
       this.currentPage.set(Number(params['pageIndex']) || 1);
       this.activeName.set(params['name'] ?? null);
       this.activeGenreNames.set(toArray(params['genreName']));
@@ -164,8 +161,13 @@ export class AllAlbums implements OnInit {
     this.updateUrl();
   }
 
-  onSortChange(sort: string): void {
-    this.activeSort.set(sort as SortOption);
+  onSortChange(sort: SortOption): void {
+    if (this.activeSort() === sort) {
+      this.activeSortDir.update(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.activeSort.set(sort);
+      this.activeSortDir.set('desc');
+    }
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -205,6 +207,7 @@ export class AllAlbums implements OnInit {
       relativeTo: this.route,
       queryParams: {
         sortBy: this.activeSort(),
+        sortDir: this.activeSortDir(),
         pageIndex: this.currentPage(),
         name: this.activeName() ?? undefined,
         genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
@@ -223,21 +226,13 @@ export class AllAlbums implements OnInit {
   private load(): void {
     if (this.activeUpcoming()) {
       this.albumService.getUpcoming().subscribe({
-        next: (data) => {
-          this.albums.set(data);
-          this.total.set(data.length);
-          this.loaded.set(true);
-        },
+        next: (data) => { this.albums.set(data); this.total.set(data.length); this.loaded.set(true); },
       });
       return;
     }
     if (this.activeSort() === 'Rating') {
-      this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize }).subscribe({
-        next: (result) => {
-          this.albums.set(result.data);
-          this.total.set(result.count);
-          this.loaded.set(true);
-        },
+      this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
+        next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
       });
       return;
     }
@@ -245,6 +240,7 @@ export class AllAlbums implements OnInit {
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
       sortBy: this.activeSort(),
+      sortDir: this.activeSortDir(),
       name: this.activeName() ?? undefined,
       genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
       countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
@@ -253,11 +249,7 @@ export class AllAlbums implements OnInit {
       yearTo: this.activeYearTo() ?? undefined,
       labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
     }).subscribe({
-      next: (result) => {
-        this.albums.set(result.data);
-        this.total.set(result.count);
-        this.loaded.set(true);
-      },
+      next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
     });
   }
 }
