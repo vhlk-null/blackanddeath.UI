@@ -55,11 +55,11 @@
     display: block;
     transition: transform 0.35s ease, filter 0.35s ease;
 
-    &--explicit { filter: blur(4px); }
+    &--explicit { filter: blur(2px); }
   }
 
   &:hover &__image--explicit {
-    filter: blur(0);
+    filter: blur(2px);
   }
 
   &__info {

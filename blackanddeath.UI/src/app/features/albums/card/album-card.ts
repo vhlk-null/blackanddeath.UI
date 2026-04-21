@@ -1,8 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Album } from '../../../shared/models/album';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
 import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
+import { AgeGateService } from '../../../core/services/age-gate.service';
 
 @Component({
   selector: 'app-album-card',
@@ -13,6 +14,7 @@ import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 export class AlbumCard {
   albumCard = input.required<Album>();
   readonly imageError = signal(false);
+  readonly ageGate = inject(AgeGateService);
 
   readonly typeLabels: Record<AlbumType, string> = {
     [AlbumType.FullLength]: 'Full-Length',

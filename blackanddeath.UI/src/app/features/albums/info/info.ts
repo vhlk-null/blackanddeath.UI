@@ -14,6 +14,7 @@ import { TitleCaseAllPipe } from '../../../shared/pipes/title-case.pipe';
 import { AlbumService } from '../../services/album.servics';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { AgeGateService } from '../../../core/services/age-gate.service';
 import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { ReviewService, Review } from '../../services/review.service';
@@ -41,6 +42,7 @@ export class Info implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   readonly auth = inject(AuthService);
+  readonly ageGate = inject(AgeGateService);
   private albumService = inject(AlbumService);
   private ratingService = inject(RatingService);
   private toastService = inject(ToastService);

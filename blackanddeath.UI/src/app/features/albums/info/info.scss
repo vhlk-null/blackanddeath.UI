@@ -204,16 +204,15 @@
       display: block;
       transition: filter 0.35s ease;
 
-      &.album-info__cover-img--explicit { filter: blur(8px); }
+      &.album-info__cover-img--explicit { filter: blur(4px); cursor: pointer; }
     }
-
-    &:hover img.album-info__cover-img--explicit { filter: blur(0); }
 
     svg {
       width: 60%;
       height: 60%;
     }
   }
+
 
   &__rating {
     display: flex;

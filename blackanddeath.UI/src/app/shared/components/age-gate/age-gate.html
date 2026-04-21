@@ -1,0 +1,26 @@
+@if (ageGate.open()) {
+  <div class="age-gate-overlay">
+    <div class="age-gate-modal">
+      <div class="age-gate-modal__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+      </div>
+      <h2 class="age-gate-modal__title">Age Verification</h2>
+      <p class="age-gate-modal__text">
+        This image contains explicit content intended for mature audiences.
+        You must be <strong>18 or older</strong> to view it.
+      </p>
+      <p class="age-gate-modal__question">Are you 18 years of age or older?</p>
+      <div class="age-gate-modal__actions">
+        <button class="age-gate-modal__btn age-gate-modal__btn--confirm" (click)="ageGate.confirm()">
+          Yes, I am 18+
+        </button>
+        <button class="age-gate-modal__btn age-gate-modal__btn--decline" (click)="ageGate.decline()">
+          No, I am under 18
+        </button>
+      </div>
+      <p class="age-gate-modal__note">Your choice will be remembered for this browser.</p>
+    </div>
+  </div>
+}
