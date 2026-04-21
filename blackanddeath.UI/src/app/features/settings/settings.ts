@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ThemeService, Theme } from '../../core/services/theme.service';
+import { AgeGateService } from '../../core/services/age-gate.service';
 
 @Component({
   selector: 'app-settings',
@@ -9,6 +10,7 @@ import { ThemeService, Theme } from '../../core/services/theme.service';
 })
 export class Settings {
   readonly theme = inject(ThemeService);
+  readonly ageGate = inject(AgeGateService);
 
   readonly themes: { value: Theme; label: string; description: string }[] = [
     { value: 'dark', label: 'Dark', description: 'Dark background, easy on the eyes' },

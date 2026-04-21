@@ -56,6 +56,27 @@
 
   <div class="settings__divider"></div>
 
+  <!-- Content -->
+  <section class="settings__section">
+    <h2 class="settings__section-title">Content</h2>
+    <p class="settings__section-desc">Control what content is shown to you.</p>
+
+    <div class="settings__toggles">
+      <div class="settings__toggle-row">
+        <div class="settings__toggle-info">
+          <span class="settings__toggle-label">Show explicit content</span>
+          <span class="settings__toggle-hint">Display explicit album artwork without blur. You must be 18 or older.</span>
+        </div>
+        <label class="settings__switch">
+          <input type="checkbox" [checked]="ageGate.confirmed()" (change)="ageGate.confirmed() ? ageGate.decline() : ageGate.confirm()" />
+          <span class="settings__switch-track"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <div class="settings__divider"></div>
+
   <!-- Notifications -->
   <section class="settings__section">
     <h2 class="settings__section-title">Notifications</h2>
