@@ -4,6 +4,7 @@ import { AlbumService } from '../../services/album.servics';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { LabelService } from '../../services/label.service';
+import { RatingService } from '../../services/rating.service';
 import { Album } from '../../../shared/models/album';
 import { Genre } from '../../../shared/models/genre';
 import { Country } from '../../../shared/models/country';
@@ -47,6 +48,7 @@ const ALBUM_TYPES = Object.keys(ALBUM_TYPE_MAP);
 })
 export class AllAlbums implements OnInit {
   private albumService = inject(AlbumService);
+  private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private labelService = inject(LabelService);
@@ -224,6 +226,16 @@ export class AllAlbums implements OnInit {
         next: (data) => {
           this.albums.set(data);
           this.total.set(data.length);
+          this.loaded.set(true);
+        },
+      });
+      return;
+    }
+    if (this.activeSort() === 'Rating') {
+      this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize }).subscribe({
+        next: (result) => {
+          this.albums.set(result.data);
+          this.total.set(result.count);
           this.loaded.set(true);
         },
       });

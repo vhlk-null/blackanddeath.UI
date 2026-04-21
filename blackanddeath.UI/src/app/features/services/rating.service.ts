@@ -137,15 +137,15 @@ export class RatingService {
 
   getTopRatedAlbums(params: { period?: string; pageIndex: number; pageSize: number }) {
     return this.http.get<PaginatedResult<TopRatedAlbumDto>>(RatingEndpoints.TOP_RATED_ALBUMS, params).pipe(
-      map(r => (r.data ?? []).map(mapTopRatedAlbum)),
-      catchError(() => of([])),
+      map(r => ({ data: (r.data ?? []).map(mapTopRatedAlbum), count: r.count })),
+      catchError(() => of({ data: [], count: 0 })),
     );
   }
 
   getTopRatedBands(params: { period?: string; pageIndex: number; pageSize: number }) {
     return this.http.get<PaginatedResult<TopRatedBandDto>>(RatingEndpoints.TOP_RATED_BANDS, params).pipe(
-      map(r => (r.data ?? []).map(mapTopRatedBand)),
-      catchError(() => of([])),
+      map(r => ({ data: (r.data ?? []).map(mapTopRatedBand), count: r.count })),
+      catchError(() => of({ data: [], count: 0 })),
     );
   }
 

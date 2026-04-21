@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
+import { RatingService } from '../../services/rating.service';
 import { Band } from '../../../shared/models/band';
 import { Genre } from '../../../shared/models/genre';
 import { Country } from '../../../shared/models/country';
@@ -26,6 +27,7 @@ const BAND_STATUSES = ['Active', 'Split-up', 'On hold', 'Changed name', 'Unknown
 })
 export class AllBands implements OnInit {
   private bandService = inject(BandService);
+  private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private router = inject(Router);
@@ -170,6 +172,16 @@ export class AllBands implements OnInit {
   }
 
   private load(): void {
+    if (this.activeSort() === 'Rating') {
+      this.ratingService.getTopRatedBands({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize }).subscribe({
+        next: (result) => {
+          this.bands.set(result.data);
+          this.total.set(result.count);
+          this.loaded.set(true);
+        },
+      });
+      return;
+    }
     this.bandService.getAllPaginated({
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,

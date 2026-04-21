@@ -77,8 +77,8 @@ export class Home implements OnInit {
       upcomingAlbums: this.albumService.getUpcoming({ pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
     }).subscribe({
       next: ({ topRatedAlbums, topRatedBands, albums, bands, videos, upcomingAlbums }) => {
-        this.mainTopRatedAlbums.set(topRatedAlbums);
-        this.mainPopularBands.set(topRatedBands);
+        this.mainTopRatedAlbums.set(topRatedAlbums.data);
+        this.mainPopularBands.set(topRatedBands.data);
         this.mainRecentAlbums.set(albums);
         this.mainUpcomingReleases.set(upcomingAlbums);
         this.mainRecentBands.set(bands);
@@ -91,12 +91,12 @@ export class Home implements OnInit {
 
   onTopRatedTabChange(index: number): void {
     this.ratingService.getTopRatedAlbums({ period: this.periodMap[index], pageIndex: 0, pageSize: PAGE_SIZE })
-      .subscribe(albums => this.mainTopRatedAlbums.set(albums));
+      .subscribe(r => this.mainTopRatedAlbums.set(r.data));
   }
 
   onPopularBandsTabChange(index: number): void {
     this.ratingService.getTopRatedBands({ period: this.periodMap[index], pageIndex: 0, pageSize: PAGE_SIZE })
-      .subscribe(bands => this.mainPopularBands.set(bands));
+      .subscribe(r => this.mainPopularBands.set(r.data));
   }
 
   onRecentlyAddedTabChange(index: number): void {
