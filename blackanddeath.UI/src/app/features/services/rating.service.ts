@@ -21,6 +21,7 @@ interface TopRatedAlbumDto {
   countryNames: string | null;
   averageRating: number | null;
   ratingsCount: number;
+  isExplicit?: boolean;
 }
 
 function mapTopRatedAlbum(dto: TopRatedAlbumDto): Album {
@@ -35,6 +36,7 @@ function mapTopRatedAlbum(dto: TopRatedAlbumDto): Album {
     videos: [],
     averageRating: dto.averageRating,
     ratingsCount: dto.ratingsCount,
+    isExplicit: dto.isExplicit,
     primaryGenre: dto.primaryGenreName ? { id: '', name: dto.primaryGenreName, slug: dto.primaryGenreSlug ?? '' } : null,
     bands: dto.bandNames ? [{ id: '', name: dto.bandNames, slug: dto.bandSlugs ?? '' }] : [],
     countries: dto.countryNames ? [{ id: '', name: dto.countryNames, code: '' }] : [],
