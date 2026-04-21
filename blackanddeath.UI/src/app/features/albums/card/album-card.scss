@@ -29,6 +29,7 @@
   }
 
   &__cover {
+    position: relative;
     width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
@@ -60,6 +61,23 @@
 
   &:hover &__image--explicit {
     filter: blur(2px);
+  }
+
+  &__explicit-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    pointer-events: none;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: #fff;
+    white-space: nowrap;
   }
 
   &__info {

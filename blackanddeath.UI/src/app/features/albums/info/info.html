@@ -202,6 +202,9 @@
         (click)="albumData()?.coverUrl && !imageError() && (albumData()?.isExplicit && !ageGate.confirmed() ? ageGate.requestAccess() : lightboxSrc.set(albumData()!.coverUrl!))">
         @if (albumData()?.coverUrl && !imageError()) {
         <img [src]="albumData()!.coverUrl" [alt]="albumData()?.title" (error)="imageError.set(true)" [class.album-info__cover-img--explicit]="albumData()?.isExplicit && !ageGate.confirmed()" />
+        @if (albumData()?.isExplicit && !ageGate.confirmed()) {
+        <div class="album-info__explicit-badge">18+</div>
+        }
         } @else if (loaded()) {
 
         <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -262,7 +265,7 @@
           <td>
             @if (albumData()?.label) {
             <a class="album-info__meta-link" [routerLink]="['/albums']"
-              [queryParams]="{ labelId: albumData()!.label!.id }">{{ albumData()!.label!.name }}</a>
+              [queryParams]="{ labelName: albumData()!.label!.name }">{{ albumData()!.label!.name }}</a>
             }
           </td>
         </tr>
