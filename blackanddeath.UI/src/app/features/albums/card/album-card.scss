@@ -115,6 +115,8 @@
 
     &:hover {
       color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
   }
 
@@ -124,6 +126,8 @@
 
     &:hover {
       color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
   }
 

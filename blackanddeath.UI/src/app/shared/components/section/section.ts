@@ -42,26 +42,30 @@ export class Section implements AfterViewInit {
   scrollContent(direction: -1 | 1): void {
     const el = this.contentEl()?.nativeElement;
     if (!el) return;
-    const firstChild = el.firstElementChild as HTMLElement | null;
-    if (!firstChild) return;
-    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
-    const cardWidth = firstChild.getBoundingClientRect().width + gap;
-    const visibleCards = Math.max(1, Math.round(el.clientWidth / cardWidth));
-    el.scrollBy({ left: direction * cardWidth * visibleCards, behavior: 'smooth' });
+    const metrics = this.getCardMetrics(el);
+    if (!metrics) return;
+    const { cardWidth, visibleCards } = metrics;
+    const scrollStep = cardWidth * visibleCards;
+    const currentPage = Math.round(el.scrollLeft / scrollStep);
+    const targetPage = currentPage + direction;
+    el.scrollTo({ left: targetPage * scrollStep, behavior: 'smooth' });
     if (this._scrollEndTimer) clearTimeout(this._scrollEndTimer);
-    this._scrollEndTimer = setTimeout(() => this.updateActiveDot(el, cardWidth, visibleCards), 350);
+    this._scrollEndTimer = setTimeout(() => this.syncState(el), 350);
   }
 
   onScroll(event: Event): void {
     const el = event.target as HTMLElement;
-    this.updateScrollState(el);
-    const metrics = this.getCardMetrics(el);
-    if (metrics) this.updateActiveDot(el, metrics.cardWidth, metrics.visibleCards);
+    this.syncState(el);
     if (this._loadMoreLocked) return;
     if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
       this._loadMoreLocked = true;
       this.loadMore.emit();
     }
+  }
+
+  private syncState(el: HTMLElement): void {
+    this.updateScrollState(el);
+    this.updateActiveDotFromScroll(el);
   }
 
   private updateScrollState(el: HTMLElement): void {
@@ -89,12 +93,12 @@ export class Section implements AfterViewInit {
     this.dots.set(Array(count).fill(null));
   }
 
-  private updateActiveDot(el: HTMLElement, cardWidth: number, visibleCards: number): void {
+  private updateActiveDotFromScroll(el: HTMLElement): void {
+    const metrics = this.getCardMetrics(el);
+    if (!metrics) return;
+    const { cardWidth, visibleCards } = metrics;
     const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
-    if (atEnd) {
-      this.activeDot.set(this.dotCount() - 1);
-      return;
-    }
+    if (atEnd) { this.activeDot.set(this.dotCount() - 1); return; }
     const scrollStep = cardWidth * visibleCards;
     this.activeDot.set(Math.round(el.scrollLeft / scrollStep));
   }

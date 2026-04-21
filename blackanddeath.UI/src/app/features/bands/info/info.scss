@@ -309,6 +309,8 @@
 
     &:hover {
       color: var(--color-text-heading);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
   }
 

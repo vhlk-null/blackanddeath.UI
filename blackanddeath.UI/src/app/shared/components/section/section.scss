@@ -3,6 +3,11 @@
   position: relative;
   padding-top: 2rem;
   margin-top: calc(var(--section-spacing, 4.125rem) - 2rem);
+  background: var(--section-bg, transparent);
+  border-radius: var(--section-radius, 0);
+  padding-left: var(--section-px, 0);
+  padding-right: var(--section-px, 0);
+  padding-bottom: var(--section-pb, 0);
 
   @media (max-width: 40rem) {
     margin-top: calc(2rem - 2rem);
