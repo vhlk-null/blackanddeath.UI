@@ -15,6 +15,8 @@ export interface Album {
   slug: string;
   title: string;
   releaseDate: number;
+  releaseMonth?: number | null;
+  releaseDay?: number | null;
   coverUrl: string | null;
   type: AlbumType;
   format: AlbumFormat;

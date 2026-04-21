@@ -205,7 +205,7 @@
       display: block;
       transition: filter 0.35s ease;
 
-      &.album-info__cover-img--explicit { filter: blur(4px); cursor: pointer; }
+      &.album-info__cover-img--explicit { filter: blur(16px) brightness(0.75); transform: scale(1.1); cursor: pointer; }
     }
 
   &__explicit-badge {

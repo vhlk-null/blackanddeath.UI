@@ -56,11 +56,15 @@
     display: block;
     transition: transform 0.35s ease, filter 0.35s ease;
 
-    &--explicit { filter: blur(2px); }
+    &--explicit {
+      filter: blur(16px) brightness(0.75);
+      transform: scale(1.1);
+    }
   }
 
   &:hover &__image--explicit {
-    filter: blur(2px);
+    filter: blur(16px) brightness(0.75);
+    transform: scale(1.1);
   }
 
   &__explicit-badge {

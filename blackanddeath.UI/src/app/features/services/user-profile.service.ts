@@ -12,6 +12,8 @@ export interface UserProfileFavoriteAlbumDto {
   slug: string | null;
   coverUrl: string | null;
   releaseDate: number;
+  releaseMonth?: number | null;
+  releaseDay?: number | null;
   albumType: string | null;
   bandName: string | null;
   bandSlug: string | null;

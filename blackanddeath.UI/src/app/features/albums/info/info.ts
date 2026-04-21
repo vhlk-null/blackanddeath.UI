@@ -113,6 +113,20 @@ export class Info implements OnInit {
   });
 
   readonly albumData = signal<Album | null>(null);
+
+  readonly releaseCountdown = computed(() => {
+    const album = this.albumData();
+    if (!album?.releaseMonth && !album?.releaseDay) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const release = new Date(album.releaseDate, (album.releaseMonth ?? 1) - 1, album.releaseDay ?? 1);
+    const days = Math.ceil((release.getTime() - today.getTime()) / 86400000);
+    if (days <= 0) return null;
+    if (days === 1) return 'tomorrow';
+    if (days < 30) return `in ${days} days`;
+    const months = Math.floor(days / 30);
+    return months === 1 ? 'in 1 month' : `in ${months} months`;
+  });
   readonly discographyAlbums = signal<Album[]>([]);
   readonly discographyExpanded = signal(false);
 

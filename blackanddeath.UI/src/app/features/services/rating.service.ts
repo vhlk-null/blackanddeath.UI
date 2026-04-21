@@ -12,6 +12,8 @@ interface TopRatedAlbumDto {
   slug: string | null;
   coverUrl: string | null;
   releaseDate: number;
+  releaseMonth?: number | null;
+  releaseDay?: number | null;
   format: number;
   type: number;
   primaryGenreName: string | null;

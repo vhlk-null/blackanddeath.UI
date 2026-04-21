@@ -13,6 +13,7 @@ export class AlbumEndpoints {
   public static UPDATE_COVER = (id: string) => `${base}/library/albums/${id}/cover`;
   public static DELETE = (id: string) => `${base}/library/albums/${id}`;
   public static PENDING_APPROVAL = `${base}/library/albums/pending-approval`;
+  public static GET_UPCOMING = `${base}/library/albums/upcoming`;
 }
 
 export class BandEndpoints {

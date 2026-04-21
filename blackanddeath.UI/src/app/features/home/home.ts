@@ -74,12 +74,13 @@ export class Home implements OnInit {
       albums: this.albumService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'Newest' }),
       bands: this.bandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'Newest' }),
       videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
+      upcomingAlbums: this.albumService.getUpcoming({ pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
     }).subscribe({
-      next: ({ topRatedAlbums, topRatedBands, albums, bands, videos }) => {
+      next: ({ topRatedAlbums, topRatedBands, albums, bands, videos, upcomingAlbums }) => {
         this.mainTopRatedAlbums.set(topRatedAlbums);
         this.mainPopularBands.set(topRatedBands);
         this.mainRecentAlbums.set(albums);
-        this.mainUpcomingReleases.set(albums.slice(8));
+        this.mainUpcomingReleases.set(upcomingAlbums);
         this.mainRecentBands.set(bands);
         this.mainRecentVideos.set(videos);
         this.loading.set(false);

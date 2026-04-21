@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { PasteImageDirective } from '../../../shared/directives/paste-image.directive';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AlbumService } from '../../services/album.servics';
 import { AuthService } from '../../../core/auth/auth.service';
 import { BandService } from '../../services/band.service';
@@ -40,6 +40,19 @@ export class AddAlbumForm implements OnInit {
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  private static upcomingDateValidator(control: AbstractControl): ValidationErrors | null {
+    const isUpcoming = control.get('isUpcoming')?.value;
+    if (!isUpcoming) return null;
+    const year = control.get('albumYear')?.value;
+    const month = control.get('releaseMonth')?.value;
+    const day = control.get('releaseDay')?.value;
+    if (!year) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const releaseDate = new Date(year, month != null ? month - 1 : 0, day != null ? day : 1);
+    return releaseDate < today ? { upcomingInPast: true } : null;
+  }
 
   readonly albumTypeOptions = Object.values(AlbumType);
   readonly albumTypeSelectOptions: CustomSelectOption[] = Object.values(AlbumType).map(t => ({ value: t, label: t }));
@@ -117,7 +130,14 @@ export class AddAlbumForm implements OnInit {
       nonNullable: true,
     }),
     isExplicit: new FormControl(false, { nonNullable: true }),
-  });
+    isUpcoming: new FormControl(false, { nonNullable: true }),
+    releaseMonth: new FormControl<number | null>(null, {
+      validators: [Validators.min(1), Validators.max(12)],
+    }),
+    releaseDay: new FormControl<number | null>(null, {
+      validators: [Validators.min(1), Validators.max(31)],
+    }),
+  }, { validators: AddAlbumForm.upcomingDateValidator });
 
   ngOnInit(): void {
     this.albumForm.valueChanges
@@ -189,6 +209,9 @@ export class AddAlbumForm implements OnInit {
       amazonMusic: getLink(StreamingPlatform.AmazonMusic),
       bandcamp: getLink(StreamingPlatform.Bandcamp),
       isExplicit: album.isExplicit ?? false,
+      isUpcoming: !!(album.releaseMonth || album.releaseDay),
+      releaseMonth: album.releaseMonth ?? null,
+      releaseDay: album.releaseDay ?? null,
     });
   }
 
@@ -207,6 +230,9 @@ export class AddAlbumForm implements OnInit {
   get amazonMusic() { return this.albumForm.get('amazonMusic')!; }
   get bandcamp() { return this.albumForm.get('bandcamp')!; }
   get isExplicit() { return this.albumForm.get('isExplicit')!; }
+  get isUpcoming() { return this.albumForm.get('isUpcoming')!; }
+  get releaseMonth() { return this.albumForm.get('releaseMonth')!; }
+  get releaseDay() { return this.albumForm.get('releaseDay')!; }
 
   addTrack(): void {
     this.tracks = [...this.tracks, { title: '', duration: '' }];
@@ -279,6 +305,10 @@ export class AddAlbumForm implements OnInit {
       streamingLinks,
       tracks,
       isExplicit: v.isExplicit,
+      ...(v.isUpcoming && {
+        releaseMonth: v.releaseMonth ?? null,
+        releaseDay: v.releaseDay ?? null,
+      }),
     };
 
     this.submitting.set(true);

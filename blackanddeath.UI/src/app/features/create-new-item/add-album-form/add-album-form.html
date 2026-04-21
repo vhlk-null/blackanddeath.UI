@@ -67,6 +67,49 @@
           </div>
         </div>
 
+        <div class="add-album__row">
+          <label class="add-album__label" for="album-upcoming">Upcoming:</label>
+          <div class="add-album__field add-album__field--checkbox">
+            <label class="add-album__toggle" for="album-upcoming">
+              <input class="add-album__toggle-input" id="album-upcoming" type="checkbox" formControlName="isUpcoming" />
+              <span class="add-album__toggle-track">
+                <span class="add-album__toggle-thumb"></span>
+              </span>
+              <span class="add-album__checkbox-label">This is an upcoming release</span>
+            </label>
+          </div>
+        </div>
+
+        @if (isUpcoming.value) {
+          <div class="add-album__row">
+            <label class="add-album__label" for="album-release-month">Release month:</label>
+            <div class="add-album__field">
+              <input class="add-album__input" id="album-release-month" type="number" placeholder="Month (1–12)" min="1" max="12"
+                formControlName="releaseMonth" />
+              @if (releaseMonth.invalid && releaseMonth.touched) {
+                <span class="add-album__error">Enter a valid month (1–12)</span>
+              }
+            </div>
+          </div>
+
+          <div class="add-album__row">
+            <label class="add-album__label" for="album-release-day">Release day:</label>
+            <div class="add-album__field">
+              <input class="add-album__input" id="album-release-day" type="number" placeholder="Day (1–31)" min="1" max="31"
+                formControlName="releaseDay" />
+              @if (releaseDay.invalid && releaseDay.touched) {
+                <span class="add-album__error">Enter a valid day (1–31)</span>
+              }
+            </div>
+          </div>
+          @if (albumForm.hasError('upcomingInPast') && albumForm.touched) {
+            <div class="add-album__row">
+              <span class="add-album__label"></span>
+              <span class="add-album__error">Release date cannot be in the past</span>
+            </div>
+          }
+        }
+
         <div class="add-album__row add-album__row--multiselect">
           <label class="add-album__label">Country:</label>
           <div class="add-album__field">

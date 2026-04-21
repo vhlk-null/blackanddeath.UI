@@ -18,6 +18,8 @@ export interface PendingApprovalDto {
 export interface CreateAlbumDto {
   title: string;
   releaseDate: number;
+  releaseMonth?: number | null;
+  releaseDay?: number | null;
   type: AlbumType;
   format: AlbumFormat;
   bandIds?: string[];
@@ -94,6 +96,12 @@ export class AlbumService {
   adminGetById(id: string) {
     return this.http.get<{ album: Album }>(AdminEndpoints.GET_ALBUM_BY_ID(id)).pipe(
       map(response => response.album)
+    );
+  }
+
+  getUpcoming(params?: Record<string, unknown>) {
+    return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_UPCOMING, params).pipe(
+      map(response => response.albums.data)
     );
   }
 

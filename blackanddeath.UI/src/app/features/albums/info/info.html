@@ -234,8 +234,13 @@
         </tr>
         <tr>
           <td class="label">Release:</td>
-          <td><a class="album-info__meta-link" [routerLink]="['/albums']"
-              [queryParams]="{ year: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a></td>
+          <td>
+            <a class="album-info__meta-link" [routerLink]="['/albums']"
+              [queryParams]="{ year: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a>
+            @if (releaseCountdown()) {
+              <span class="album-info__countdown"> ({{ releaseCountdown() }})</span>
+            }
+          </td>
         </tr>
         <tr>
           <td class="label">Country:</td>
