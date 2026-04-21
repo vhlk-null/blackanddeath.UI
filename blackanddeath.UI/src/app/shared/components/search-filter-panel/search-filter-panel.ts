@@ -157,9 +157,12 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
 
   searchAlbums(): void {
     const params: Record<string, string> = {};
-    if (this.selectedGenreId()) params['genreId'] = this.selectedGenreId();
-    if (this.selectedCountryId()) params['countryId'] = this.selectedCountryId();
-    if (this.selectedLabelId()) params['labelId'] = this.selectedLabelId();
+    const genreName = this.genres().find(g => g.id === this.selectedGenreId())?.name;
+    const countryName = this.countries().find(c => c.id === this.selectedCountryId())?.name;
+    const labelName = this.labels().find(l => l.id === this.selectedLabelId())?.name;
+    if (genreName) params['genreName'] = genreName;
+    if (countryName) params['countryName'] = countryName;
+    if (labelName) params['labelName'] = labelName;
     if (this.selectedType()) params['type'] = this.selectedType();
     if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
     if (this.yearTo()) params['yearTo'] = String(this.yearTo());
@@ -171,8 +174,10 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
 
   searchBands(): void {
     const params: Record<string, string> = {};
-    if (this.bandGenreId()) params['genreId'] = this.bandGenreId();
-    if (this.bandCountryId()) params['countryId'] = this.bandCountryId();
+    const genreName = this.genres().find(g => g.id === this.bandGenreId())?.name;
+    const countryName = this.countries().find(c => c.id === this.bandCountryId())?.name;
+    if (genreName) params['genreName'] = genreName;
+    if (countryName) params['countryName'] = countryName;
     if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
     if (this.yearTo()) params['yearTo'] = String(this.yearTo());
     if (this.selectedBandTagIds().length) params['tagIds'] = this.selectedBandTagIds().join(',');
