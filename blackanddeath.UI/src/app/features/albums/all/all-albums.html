@@ -64,6 +64,17 @@
           </div>
         </div>
       </div>
+      <div class="all-albums__filter-field all-albums__filter-field--toggle">
+        <span class="all-albums__filter-field-label">Upcoming</span>
+        <button
+          class="all-albums__upcoming-toggle"
+          [class.all-albums__upcoming-toggle--on]="draftUpcoming()"
+          type="button"
+          (click)="draftUpcoming.set(!draftUpcoming())"
+        >
+          <span class="all-albums__upcoming-toggle-knob"></span>
+        </button>
+      </div>
     </div>
     <div class="all-albums__filter-actions">
       <button class="all-albums__cancel-btn" type="button" (click)="toggleFilters()">Cancel</button>
@@ -72,7 +83,7 @@
   </div>
   }
 
-  @if (activeGenreNames().length || activeCountryNames().length || activeTypes().length || activeYearFrom() || activeLabelNames().length || activeName()) {
+  @if (activeGenreNames().length || activeCountryNames().length || activeTypes().length || activeYearFrom() || activeLabelNames().length || activeName() || activeUpcoming()) {
   <div class="all-albums__chips">
     @if (activeGenreNames().length) {
       <span class="all-albums__chip">
@@ -124,6 +135,14 @@
         <span class="all-albums__chip-cat">Title</span>
         <span class="all-albums__chip-val">{{ activeName() }}</span>
         <button (click)="clearFilter('name')" aria-label="Remove">
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </span>
+    }
+    @if (activeUpcoming()) {
+      <span class="all-albums__chip">
+        <span class="all-albums__chip-cat">Upcoming</span>
+        <button (click)="clearFilter('upcoming')" aria-label="Remove">
           <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </span>

@@ -1,7 +1,14 @@
 <div class="section-container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
     @if (sectionTitle()) {
     <div class="section-header">
-      <h1 class="section-title">{{ sectionTitle() }}</h1>
+      @if (titleLink()) {
+        <a class="section-title section-title--link" [routerLink]="titleLink()" [queryParams]="titleQueryParams()">
+          {{ sectionTitle() }}
+          <svg class="section-title__arrow" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      } @else {
+        <h1 class="section-title">{{ sectionTitle() }}</h1>
+      }
       <ng-content select="[sectionAction]"></ng-content>
     </div>
     }

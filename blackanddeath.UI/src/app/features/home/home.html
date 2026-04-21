@@ -1,6 +1,6 @@
 @if (!loading()) {
 @if (mainTopRatedAlbums().length) {
-<app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" (tabChange)="onTopRatedTabChange($event)">
+<app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onTopRatedTabChange($event)">
   @for (album of mainTopRatedAlbums(); track album.id) {
     <app-album-card [albumCard]="album" />
   }
@@ -8,7 +8,7 @@
 }
 
 @if (mainPopularBands().length) {
-<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" [mobileColumns]="1" (tabChange)="onPopularBandsTabChange($event)">
+<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" [mobileColumns]="1" titleLink="/bands" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onPopularBandsTabChange($event)">
   @for (band of mainPopularBands(); track band.id) {
     <app-band-card [bandCard]="band" />
   }
@@ -16,7 +16,7 @@
 }
 
 @if (mainRecentAlbums().length || mainRecentBands().length) {
-<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" [mobileColumns]="2" (tabChange)="onRecentlyAddedTabChange($event)">
+<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" [mobileColumns]="2" [titleLink]="recentlyAddedTab() === 0 ? '/albums' : '/bands'" [titleQueryParams]="{sortBy: 'Newest'}" (tabChange)="onRecentlyAddedTabChange($event)">
   @if (recentlyAddedTab() === 0) {
     @for (album of mainRecentAlbums(); track album.id) {
       <app-album-card [albumCard]="album" />
@@ -38,7 +38,7 @@
 }
 
 @if (mainUpcomingReleases().length) {
-<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" [mobileColumns]="2" (tabChange)="onUpcomingReleasesTabChange($event)">
+<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{upcoming: 'true'}" (tabChange)="onUpcomingReleasesTabChange($event)">
   @for (album of mainUpcomingReleases(); track album.id) {
     <app-album-card [albumCard]="album" />
   }

@@ -80,6 +80,9 @@ export class AllAlbums implements OnInit {
   readonly draftTypes = signal<string[]>([]);
   readonly draftYearFrom = signal<number>(this.yearMin);
   readonly draftYearTo = signal<number>(this.yearMax);
+  readonly draftUpcoming = signal<boolean>(false);
+
+  readonly activeUpcoming = signal<boolean>(false);
 
   readonly genreGroups = computed(() => {
     const all = this.genres();
@@ -124,6 +127,7 @@ export class AllAlbums implements OnInit {
       this.activeYearFrom.set(exactYear ?? params['yearFrom'] ?? null);
       this.activeYearTo.set(exactYear ?? params['yearTo'] ?? null);
       this.activeLabelNames.set(toArray(params['labelName']));
+      this.activeUpcoming.set(params['upcoming'] === 'true');
       this.syncDraftsFromActive();
       this.load();
     });
@@ -153,6 +157,7 @@ export class AllAlbums implements OnInit {
     const toChanged = this.draftYearTo() !== this.yearMax;
     this.activeYearFrom.set(fromChanged || toChanged ? String(this.draftYearFrom()) : null);
     this.activeYearTo.set(fromChanged || toChanged ? String(this.draftYearTo()) : null);
+    this.activeUpcoming.set(this.draftUpcoming());
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -171,13 +176,14 @@ export class AllAlbums implements OnInit {
 
   albumTypeLabel(value: string): string { return ALBUM_TYPE_REVERSE[value] ?? value; }
 
-  clearFilter(key: 'genre' | 'country' | 'type' | 'year' | 'label' | 'name', value?: string): void {
+  clearFilter(key: 'genre' | 'country' | 'type' | 'year' | 'label' | 'name' | 'upcoming', value?: string): void {
     if (key === 'genre') { this.activeGenreNames.update(v => value ? v.filter(x => x !== value) : []); this.draftGenres.set(this.activeGenreNames()); }
     if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }
     if (key === 'type') { this.activeTypes.update(v => value ? v.filter(x => x !== value) : []); this.draftTypes.set(this.activeTypes().map(v => ALBUM_TYPE_REVERSE[v] ?? v)); }
     if (key === 'year') { this.activeYearFrom.set(null); this.activeYearTo.set(null); this.draftYearFrom.set(this.yearMin); this.draftYearTo.set(this.yearMax); }
     if (key === 'label') { this.activeLabelNames.update(v => value ? v.filter(x => x !== value) : []); this.draftLabels.set(this.activeLabelNames()); }
     if (key === 'name') this.activeName.set(null);
+    if (key === 'upcoming') { this.activeUpcoming.set(false); this.draftUpcoming.set(false); }
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -189,6 +195,7 @@ export class AllAlbums implements OnInit {
     this.draftTypes.set(this.activeTypes().map(v => ALBUM_TYPE_REVERSE[v] ?? v));
     this.draftYearFrom.set(+(this.activeYearFrom() ?? this.yearMin));
     this.draftYearTo.set(+(this.activeYearTo() ?? this.yearMax));
+    this.draftUpcoming.set(this.activeUpcoming());
   }
 
   private updateUrl(): void {
@@ -205,12 +212,23 @@ export class AllAlbums implements OnInit {
         yearFrom: this.activeYearFrom() ?? undefined,
         yearTo: this.activeYearTo() ?? undefined,
         labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
+        upcoming: this.activeUpcoming() ? 'true' : undefined,
       },
       queryParamsHandling: 'merge',
     });
   }
 
   private load(): void {
+    if (this.activeUpcoming()) {
+      this.albumService.getUpcoming().subscribe({
+        next: (data) => {
+          this.albums.set(data);
+          this.total.set(data.length);
+          this.loaded.set(true);
+        },
+      });
+      return;
+    }
     this.albumService.getAllPaginated({
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,

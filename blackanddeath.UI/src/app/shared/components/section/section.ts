@@ -1,14 +1,17 @@
 import { AfterViewInit, Component, input, output, signal, viewChild, ElementRef } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Tabs } from '../tabs/tabs';
 
 @Component({
   selector: 'app-section',
-  imports: [Tabs],
+  imports: [Tabs, RouterLink],
   templateUrl: './section.html',
   styleUrl: './section.scss',
 })
 export class Section implements AfterViewInit {
   sectionTitle = input<string>('');
+  titleLink = input<string | null>(null);
+  titleQueryParams = input<Record<string, string>>({});
   tabs = input<string[]>();
   initialTab = input<number>(0);
   columns = input<number>(4);

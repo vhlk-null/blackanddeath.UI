@@ -135,6 +135,30 @@
   letter-spacing: 0.085em;
   color: var(--color-text-heading);
   text-transform: uppercase;
+
+  &--link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.75; }
+  }
+
+  &__arrow {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.15s, transform 0.15s;
+
+    .section-title--link:hover & {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 }
 
 .section-dots {
