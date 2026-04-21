@@ -28,6 +28,7 @@ export class Section implements AfterViewInit {
   dots = signal<null[]>([]);
   canScrollLeft = signal(false);
   canScrollRight = signal(false);
+  hasOverflow = signal(false);
 
   private _loadMoreLocked = false;
   private _scrollEndTimer: ReturnType<typeof setTimeout> | null = null;
@@ -74,6 +75,7 @@ export class Section implements AfterViewInit {
   private updateScrollState(el: HTMLElement): void {
     this.canScrollLeft.set(el.scrollLeft > 1);
     this.canScrollRight.set(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    this.hasOverflow.set(el.scrollWidth > el.clientWidth + 1);
   }
 
   private getCardMetrics(el: HTMLElement): { cardWidth: number; visibleCards: number } | null {
