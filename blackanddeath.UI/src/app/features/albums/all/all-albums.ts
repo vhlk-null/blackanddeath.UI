@@ -116,7 +116,7 @@ export class AllAlbums implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       const sort = params['sortBy'] as SortOption;
-      this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'ReleaseDate');
+      this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'CreatedAt');
       this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
       this.currentPage.set(Number(params['pageIndex']) || 1);
       this.activeName.set(params['name'] ?? null);

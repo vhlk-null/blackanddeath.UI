@@ -92,7 +92,7 @@ export class AllBands implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       const sort = params['sortBy'] as SortOption;
-      this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'FormedYear');
+      this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'CreatedAt');
       this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
       this.currentPage.set(Number(params['pageIndex']) || 1);
       this.activeGenreNames.set(toArray(params['genreName']));
