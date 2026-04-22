@@ -71,8 +71,8 @@ export class Home implements OnInit {
     forkJoin({
       topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
       topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
-      albums: this.albumService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'ReleaseDate', sortDir: 'desc' }),
-      bands: this.bandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'FormedYear', sortDir: 'desc' }),
+      albums: this.albumService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'CreatedAt', sortDir: 'desc' }),
+      bands: this.bandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'CreatedAt', sortDir: 'desc' }),
       videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
       upcomingAlbums: this.albumService.getUpcoming({ pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
     }).subscribe({
