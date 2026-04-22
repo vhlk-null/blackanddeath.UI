@@ -20,6 +20,7 @@ const SORT_OPTIONS = [
   { value: 'ReleaseDate', label: 'Release Date' },
   { value: 'Title', label: 'Title' },
   { value: 'Rating', label: 'Rating' },
+  { value: 'Newest', label: 'Recently Added' },
 ] as const;
 type SortOption = typeof SORT_OPTIONS[number]['value'];
 type SortDir = 'asc' | 'desc';

@@ -18,6 +18,7 @@ const SORT_OPTIONS = [
   { value: 'FormedYear', label: 'Formation Year' },
   { value: 'Name', label: 'Name' },
   { value: 'Rating', label: 'Rating' },
+  { value: 'Newest', label: 'Recently Added' },
 ] as const;
 type SortOption = typeof SORT_OPTIONS[number]['value'];
 type SortDir = 'asc' | 'desc';
