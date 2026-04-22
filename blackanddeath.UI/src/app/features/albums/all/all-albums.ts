@@ -17,10 +17,10 @@ const toArray = (v: string | string[] | undefined): string[] =>
   !v ? [] : Array.isArray(v) ? v : [v];
 
 const SORT_OPTIONS = [
+  { value: 'CreatedAt', label: 'Recently Added' },
   { value: 'ReleaseDate', label: 'Release Date' },
   { value: 'Title', label: 'Title' },
   { value: 'Rating', label: 'Rating' },
-  { value: 'Newest', label: 'Recently Added' },
 ] as const;
 type SortOption = typeof SORT_OPTIONS[number]['value'];
 type SortDir = 'asc' | 'desc';

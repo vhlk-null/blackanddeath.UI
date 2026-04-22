@@ -16,7 +16,7 @@
 }
 
 @if (mainRecentAlbums().length || mainRecentBands().length) {
-<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" [mobileColumns]="2" [titleLink]="recentlyAddedTab() === 0 ? '/albums' : '/bands'" [titleQueryParams]="{sortBy: 'Newest'}" (tabChange)="onRecentlyAddedTabChange($event)">
+<app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" [mobileColumns]="2" [titleLink]="recentlyAddedTab() === 0 ? '/albums' : '/bands'" [titleQueryParams]="{sortBy: 'CreatedAt'}" (tabChange)="onRecentlyAddedTabChange($event)">
   @if (recentlyAddedTab() === 0) {
     @for (album of mainRecentAlbums(); track album.id) {
       <app-album-card [albumCard]="album" />
