@@ -131,6 +131,17 @@ export class Info implements OnInit {
     this.albumData()?.discographyGroups ?? []
   );
 
+  // For a split group (bandId null, label = "Band A & Band B"), resolve each name to a band link
+  resolveSplitBands(label: string): { name: string; slug: string }[] {
+    const bands = this.albumData()?.bands ?? [];
+    return label.split('&').map(part => {
+      const name = part.trim();
+      const match = bands.find(b => b.name.toLowerCase() === name.toLowerCase());
+      const slug = match?.slug ?? name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return { name, slug };
+    });
+  }
+
   readonly totalDiscographyAlbums = computed(() =>
     this.discographyGroups().reduce((sum, g) => sum + g.albums.length, 0)
   );

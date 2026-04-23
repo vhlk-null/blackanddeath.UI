@@ -74,13 +74,15 @@
   }
 
   &__band-link {
-    color: inherit;
+    color: var(--color-text-heading);
     text-decoration: none;
-    transition: color 0.15s;
+    transition: color 0.15s, text-decoration-color 0.15s;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
 
     &:hover {
-      color: var(--color-text);
-      text-decoration: underline;
+      text-decoration-color: currentColor;
     }
   }
 
@@ -991,13 +993,14 @@ app-section:nth-of-type(2) {
 }
 
 .discography-group__band-link {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.15s;
+  color: var(--color-text-heading);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
 
   &:hover {
-    color: var(--color-text-heading);
-    text-decoration: underline;
+    text-decoration-color: currentColor;
   }
 }
 

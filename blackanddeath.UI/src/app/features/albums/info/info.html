@@ -394,7 +394,9 @@
           @if (group.bandId) {
             <a [routerLink]="['/bands', group.bandSlug]" class="discography-group__band-link">{{ group.label }}</a>
           } @else {
-            {{ group.label }}
+            @for (part of resolveSplitBands(group.label); track part.name; let last = $last) {
+              <a [routerLink]="['/bands', part.slug]" class="discography-group__band-link">{{ part.name }}</a>@if (!last) { & }
+            }
           }
         </h3>
       }
