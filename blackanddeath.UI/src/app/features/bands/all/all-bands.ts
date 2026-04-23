@@ -158,6 +158,18 @@ export class AllBands implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  setQuickStatus(status: string | null): void {
+    this.activeStatuses.set(status ? [status] : []);
+    this.draftStatuses.set(status ? [status] : []);
+    this.currentPage.set(1);
+    this.updateUrl();
+  }
+
+  activeQuickStatus(): string | null {
+    const s = this.activeStatuses();
+    return s.length === 1 ? s[0] : null;
+  }
+
   clearFilter(key: 'genre' | 'country' | 'status' | 'year', value?: string): void {
     if (key === 'genre') { this.activeGenreNames.update(v => value ? v.filter(x => x !== value) : []); this.draftGenres.set(this.activeGenreNames()); }
     if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }

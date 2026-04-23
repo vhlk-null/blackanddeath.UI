@@ -127,6 +127,40 @@
     option { background: var(--color-input-bg); color: var(--color-text); }
   }
 
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__pill {
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: none;
+    background: var(--color-card-hover-bg);
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.825rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+      background: var(--color-border-input-focus);
+      color: var(--color-text-heading);
+    }
+
+    &--active {
+      background: var(--color-text-heading);
+      color: var(--color-bg);
+
+      &:hover {
+        background: var(--color-text-heading);
+        color: var(--color-bg);
+      }
+    }
+  }
+
   &__filter-btn {
     width: 1.75rem;
     height: 1.75rem;
@@ -324,26 +358,24 @@
   &__chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    height: 1.625rem;
-    padding: 0 0.5rem 0 0;
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-card-border);
+    gap: 0.3rem;
+    height: 1.75rem;
+    padding: 0 0.35rem 0 0.6rem;
+    background: var(--color-card-hover-bg);
+    border: 1px solid var(--color-border);
     border-radius: 999px;
     font-family: var(--font-family-body);
-    overflow: hidden;
 
     &-cat {
-      font-size: 0.625rem;
+      font-size: 0.6rem;
       font-weight: 700;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      color: var(--color-bg);
-      background: var(--color-text-muted);
-      padding: 0 0.5rem;
-      height: 100%;
-      display: flex;
-      align-items: center;
+      color: var(--color-text-muted);
+      padding-right: 0.35rem;
+      border-right: 1px solid var(--color-border);
+      margin-right: 0.1rem;
+      line-height: 1;
     }
 
     &-val {
@@ -359,17 +391,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 1.25rem;
-      height: 1.25rem;
-      background: none;
+      width: 1.1rem;
+      height: 1.1rem;
+      background: var(--color-border-input);
       border: none;
+      border-radius: 50%;
       padding: 0;
       flex-shrink: 0;
       cursor: pointer;
-      color: var(--color-text);
-      transition: color 0.15s;
+      color: var(--color-text-muted);
+      transition: background 0.15s, color 0.15s;
       line-height: 1;
-      &:hover { color: var(--color-text-heading); }
+      margin-left: 0.1rem;
+      svg { width: 0.45rem; height: 0.45rem; }
+      &:hover { background: var(--color-text-muted); color: var(--color-bg); }
     }
   }
 

@@ -190,6 +190,20 @@ export class AllAlbums implements OnInit {
 
   albumTypeLabel(value: string): string { return ALBUM_TYPE_REVERSE[value] ?? value; }
 
+  setQuickType(type: string | null): void {
+    const apiType = type ? (ALBUM_TYPE_MAP[type] ?? type) : null;
+    this.activeTypes.set(apiType ? [apiType] : []);
+    this.draftTypes.set(type ? [type] : []);
+    this.currentPage.set(1);
+    this.updateUrl();
+  }
+
+  activeQuickType(): string | null {
+    const types = this.activeTypes();
+    if (types.length !== 1) return null;
+    return ALBUM_TYPE_REVERSE[types[0]] ?? types[0];
+  }
+
   clearFilter(key: 'genre' | 'country' | 'type' | 'year' | 'label' | 'name' | 'upcoming', value?: string): void {
     if (key === 'genre') { this.activeGenreNames.update(v => value ? v.filter(x => x !== value) : []); this.draftGenres.set(this.activeGenreNames()); }
     if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }

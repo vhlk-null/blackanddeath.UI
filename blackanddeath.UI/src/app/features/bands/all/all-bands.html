@@ -35,6 +35,13 @@
     </div>
   </div>
 
+  <div class="all-bands__pills">
+    <button class="all-bands__pill" [class.all-bands__pill--active]="activeQuickStatus() === null" (click)="setQuickStatus(null)">All</button>
+    @for (status of bandStatuses; track status) {
+      <button class="all-bands__pill" [class.all-bands__pill--active]="activeQuickStatus() === status" (click)="setQuickStatus(status)">{{ status }}</button>
+    }
+  </div>
+
   @if (filtersOpen()) {
   <div class="all-bands__filter-bar">
     <div class="all-bands__filter-fields">
@@ -66,53 +73,12 @@
       </div>
     </div>
     <div class="all-bands__filter-actions">
-      <button class="all-bands__cancel-btn" type="button" (click)="toggleFilters()">Cancel</button>
+      <button class="all-bands__cancel-btn" type="button" (click)="clearAllFilters(); toggleFilters()">Clear all</button>
       <button class="all-bands__apply-btn" type="button" (click)="applyFilters()">Apply Filters</button>
     </div>
   </div>
   }
 
-  @if (activeGenreNames().length || activeCountryNames().length || activeStatuses().length || activeYearFrom()) {
-  <div class="all-bands__chips">
-    @if (activeGenreNames().length) {
-      <span class="all-bands__chip">
-        <span class="all-bands__chip-cat">Genre</span>
-        <span class="all-bands__chip-val">{{ activeGenreNames().join(', ') }}</span>
-        <button (click)="clearFilter('genre')" aria-label="Remove">
-          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </button>
-      </span>
-    }
-    @if (activeCountryNames().length) {
-      <span class="all-bands__chip">
-        <span class="all-bands__chip-cat">Country</span>
-        <span class="all-bands__chip-val">{{ activeCountryNames().join(', ') }}</span>
-        <button (click)="clearFilter('country')" aria-label="Remove">
-          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </button>
-      </span>
-    }
-    @if (activeStatuses().length) {
-      <span class="all-bands__chip">
-        <span class="all-bands__chip-cat">Status</span>
-        <span class="all-bands__chip-val">{{ activeStatuses().join(', ') }}</span>
-        <button (click)="clearFilter('status')" aria-label="Remove">
-          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </button>
-      </span>
-    }
-    @if (activeYearFrom()) {
-      <span class="all-bands__chip">
-        <span class="all-bands__chip-cat">Era</span>
-        <span class="all-bands__chip-val">{{ activeYearFrom() }}{{ activeYearTo() ? '–' + activeYearTo() : '+' }}</span>
-        <button (click)="clearFilter('year')" aria-label="Remove">
-          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </button>
-      </span>
-    }
-    <button class="all-bands__clear-all-btn" (click)="clearAllFilters()">Clear all</button>
-  </div>
-  }
 
   @if (loaded() && bands().length === 0) {
     <p class="all-bands__empty">No bands found.</p>
