@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { CollectionService, CollectionDetail } from '../../services/collection.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AlbumCard } from '../../albums/card/album-card';
@@ -15,6 +16,7 @@ export class CollectionDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private collectionService = inject(CollectionService);
   private toast = inject(ToastService);
+  private titleService = inject(Title);
 
   readonly collection = signal<CollectionDetail | null>(null);
   readonly loaded = signal(false);
@@ -24,7 +26,7 @@ export class CollectionDetailPage implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) { this.notFound.set(true); this.loaded.set(true); return; }
     this.collectionService.getDetail(id).subscribe({
-      next: col => { this.collection.set(col); this.loaded.set(true); },
+      next: col => { this.collection.set(col); this.loaded.set(true); this.titleService.setTitle(`${col.name} — Black And Death`); },
       error: () => { this.notFound.set(true); this.loaded.set(true); },
     });
   }

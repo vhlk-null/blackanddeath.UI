@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { VideoBandService } from '../../services/video-band.service';
 import { VideoBand } from '../../../shared/models/video-band';
 import { VideoCard } from '../../home/video-card/video-card';
@@ -19,6 +20,7 @@ export class AllVideos implements OnInit {
   private videoBandService = inject(VideoBandService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
 
   readonly sortOptions = SORT_OPTIONS;
   readonly pageSize = PAGE_SIZE;
@@ -31,6 +33,7 @@ export class AllVideos implements OnInit {
   readonly activeVideoType = signal<string | null>(null);
 
   ngOnInit(): void {
+    this.titleService.setTitle('Videos — Black And Death');
     this.route.queryParams.subscribe(params => {
       const sort = params['sort'] as SortOption;
       this.activeSort.set(SORT_OPTIONS.includes(sort) ? sort : 'Newest');

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { switchMap, filter, forkJoin } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
@@ -14,6 +15,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { ReviewService, Review } from '../../services/review.service';
+import { CommentService, Comment } from '../../services/comment.service';
 import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
 import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { Band } from '../../../shared/models/band';
@@ -42,12 +44,14 @@ export class BandInfo implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private titleService = inject(Title);
   readonly auth = inject(AuthService);
   private bandService = inject(BandService);
   private toastService = inject(ToastService);
   private ratingService = inject(RatingService);
   private favoriteService = inject(FavoriteService);
   private reviewService = inject(ReviewService);
+  private commentService = inject(CommentService);
   private destroyRef = inject(DestroyRef);
   private collectionService = inject(CollectionService);
 
@@ -98,6 +102,19 @@ export class BandInfo implements OnInit {
     if (this.showCollectionPicker()) { this.showCollectionPicker.set(false); return; }
     this.showCollectionPicker.set(true);
   }
+
+  // Comments
+  readonly comments = signal<Comment[]>([]);
+  readonly commentsTotal = signal(0);
+  readonly commentsLoaded = signal(false);
+  readonly commentBody = signal('');
+  readonly commentSubmitting = signal(false);
+  readonly replyingToId = signal<string | null>(null);
+  readonly replyBody = signal('');
+  readonly replySubmitting = signal(false);
+  readonly editingCommentId = signal<string | null>(null);
+  readonly editCommentBody = signal('');
+  readonly editCommentSubmitting = signal(false);
 
   // Album reviews aggregated across band's discography
   readonly albumReviews = signal<AlbumReview[]>([]);
@@ -210,12 +227,20 @@ export class BandInfo implements OnInit {
         this.albumReviews.set([]);
         this.reviewsLoaded.set(false);
         this.reviewsTotal.set(0);
+        this.comments.set([]);
+        this.commentsLoaded.set(false);
+        this.commentBody.set('');
+        this.replyingToId.set(null);
+        this.replyBody.set('');
+        this.editingCommentId.set(null);
         return this.bandService.getBySlug(params.get('slug')!);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: (band) => {
         this.bandData.set(band);
+        this.titleService.setTitle(band.name ? `${band.name} — Black And Death` : 'Black And Death');
+        this.loadComments();
         this.discographyExpanded.set(false);
         this.similarAlbums.set((band.similarAlbums ?? []) as any);
         this.similarBands.set((band.similarBands ?? []) as any);
@@ -256,6 +281,9 @@ export class BandInfo implements OnInit {
     this.infoTabIndex.set(index);
     if (index === 2 && !this.reviewsLoaded()) {
       this.loadAlbumReviews();
+    }
+    if (index === 3 && !this.commentsLoaded()) {
+      this.loadComments();
     }
   }
 
@@ -313,6 +341,104 @@ export class BandInfo implements OnInit {
         });
       },
       error: () => this.toastService.error('Failed to save rating.'),
+    });
+  }
+
+  loadComments(): void {
+    const bandId = this.bandData()?.id;
+    if (!bandId) return;
+    this.commentService.getBandComments(bandId, { pageIndex: 1, pageSize: 50 }).subscribe(r => {
+      this.comments.set(r.data);
+      this.commentsTotal.set(r.count);
+      this.commentsLoaded.set(true);
+    });
+  }
+
+  submitComment(): void {
+    const userId = this.auth.userId();
+    const bandId = this.bandData()?.id;
+    if (!userId || !bandId || this.commentSubmitting()) return;
+    const body = this.commentBody().trim();
+    if (!body) return;
+    const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+    this.commentSubmitting.set(true);
+    this.commentService.createBandComment({ bandId, userId, username, body, parentCommentId: null }).subscribe({
+      next: (comment) => {
+        this.comments.update(c => [comment, ...c]);
+        this.commentsTotal.update(t => t + 1);
+        this.commentBody.set('');
+        this.commentSubmitting.set(false);
+      },
+      error: () => { this.commentSubmitting.set(false); this.toastService.error('Failed to post comment.'); },
+    });
+  }
+
+  submitReply(parentCommentId: string): void {
+    const userId = this.auth.userId();
+    const bandId = this.bandData()?.id;
+    if (!userId || !bandId || this.replySubmitting()) return;
+    const body = this.replyBody().trim();
+    if (!body) return;
+    const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+    this.replySubmitting.set(true);
+    this.commentService.createBandComment({ bandId, userId, username, body, parentCommentId }).subscribe({
+      next: (reply) => {
+        this.comments.update(cs => cs.map(c =>
+          c.id === parentCommentId ? { ...c, replies: [...c.replies, reply] } : c
+        ));
+        this.replyBody.set('');
+        this.replyingToId.set(null);
+        this.replySubmitting.set(false);
+      },
+      error: () => { this.replySubmitting.set(false); this.toastService.error('Failed to post reply.'); },
+    });
+  }
+
+  startEditComment(comment: Comment): void {
+    this.editingCommentId.set(comment.id);
+    this.editCommentBody.set(comment.body);
+  }
+
+  cancelEditComment(): void {
+    this.editingCommentId.set(null);
+    this.editCommentBody.set('');
+  }
+
+  saveEditComment(commentId: string, parentId: string | null): void {
+    const body = this.editCommentBody().trim();
+    if (!body || this.editCommentSubmitting()) return;
+    this.editCommentSubmitting.set(true);
+    this.commentService.updateBandComment(commentId, { body }).subscribe({
+      next: (updated) => {
+        if (parentId) {
+          this.comments.update(cs => cs.map(c =>
+            c.id === parentId ? { ...c, replies: c.replies.map(r => r.id === commentId ? updated : r) } : c
+          ));
+        } else {
+          this.comments.update(cs => cs.map(c => c.id === commentId ? { ...updated, replies: c.replies } : c));
+        }
+        this.editingCommentId.set(null);
+        this.editCommentBody.set('');
+        this.editCommentSubmitting.set(false);
+      },
+      error: () => { this.editCommentSubmitting.set(false); this.toastService.error('Failed to update comment.'); },
+    });
+  }
+
+  deleteComment(commentId: string, parentId: string | null): void {
+    if (!confirm('Delete this comment?')) return;
+    this.commentService.deleteBandComment(commentId).subscribe({
+      next: () => {
+        if (parentId) {
+          this.comments.update(cs => cs.map(c =>
+            c.id === parentId ? { ...c, replies: c.replies.filter(r => r.id !== commentId) } : c
+          ));
+        } else {
+          this.comments.update(cs => cs.filter(c => c.id !== commentId));
+          this.commentsTotal.update(t => t - 1);
+        }
+      },
+      error: () => this.toastService.error('Failed to delete comment.'),
     });
   }
 }

@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnInit, signal, HostListener, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
@@ -48,6 +49,7 @@ export class AllBands implements OnInit {
   private countryService = inject(CountryService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
 
   readonly bandStatuses = BAND_STATUSES;
   readonly sortOptions = SORT_OPTIONS;
@@ -96,6 +98,7 @@ export class AllBands implements OnInit {
   readonly currentPage = signal(1);
 
   ngOnInit(): void {
+    this.titleService.setTitle('Bands — Black And Death');
     this.genreService.getAll().subscribe(g => this.genres.set(g));
     this.countryService.getAll().subscribe(c => this.countries.set(c));
 

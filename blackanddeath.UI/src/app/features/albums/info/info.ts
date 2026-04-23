@@ -3,6 +3,7 @@ import { CollectionPicker } from '../../../shared/components/collection-picker/c
 import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { switchMap, filter, forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
@@ -18,6 +19,7 @@ import { AgeGateService } from '../../../core/services/age-gate.service';
 import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { ReviewService, Review } from '../../services/review.service';
+import { CommentService, Comment } from '../../services/comment.service';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -41,6 +43,7 @@ export class Info implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private titleService = inject(Title);
   readonly auth = inject(AuthService);
   readonly ageGate = inject(AgeGateService);
   private albumService = inject(AlbumService);
@@ -48,6 +51,7 @@ export class Info implements OnInit {
   private toastService = inject(ToastService);
   private favoriteService = inject(FavoriteService);
   private reviewService = inject(ReviewService);
+  private commentService = inject(CommentService);
   private collectionService = inject(CollectionService);
 
   readonly lightboxSrc = signal<string | null>(null);
@@ -175,6 +179,19 @@ export class Info implements OnInit {
   private reviewsEverLoaded = false;
 
   readonly expandedReviews = signal<Set<string>>(new Set());
+
+  // Comments
+  readonly comments = signal<Comment[]>([]);
+  readonly commentsTotal = signal(0);
+  readonly commentsLoaded = signal(false);
+  readonly commentBody = signal('');
+  readonly commentSubmitting = signal(false);
+  readonly replyingToId = signal<string | null>(null);
+  readonly replyBody = signal('');
+  readonly replySubmitting = signal(false);
+  readonly editingCommentId = signal<string | null>(null);
+  readonly editCommentBody = signal('');
+  readonly editCommentSubmitting = signal(false);
 
   toggleReviewExpanded(id: string): void {
     this.expandedReviews.update(set => {
@@ -393,7 +410,9 @@ export class Info implements OnInit {
     ).subscribe({
       next: (album) => {
         this.albumData.set(album);
+        this.titleService.setTitle(album.title ? `${album.title} — Black And Death` : 'Black And Death');
         this.loaded.set(true);
+        this.loadComments();
         this.playingVideoId.set(null);
         this.discographyExpanded.set(false);
         this.userRating.set(null);
@@ -408,6 +427,12 @@ export class Info implements OnInit {
         this.reviewsLoaded.set(false);
         this.reviewTitle.set('');
         this.reviewBody.set('');
+        this.comments.set([]);
+        this.commentsLoaded.set(false);
+        this.commentBody.set('');
+        this.replyingToId.set(null);
+        this.replyBody.set('');
+        this.editingCommentId.set(null);
         this.reviewService.getAlbumReviewsCount(album.id).subscribe(c => this.reviewsTotal.set(c));
 
         const userId = this.auth.userId();
@@ -446,6 +471,9 @@ export class Info implements OnInit {
     this.infoTabIndex.set(index);
     if (index === 1 && !this.reviewsLoaded()) {
       this.loadReviews();
+    }
+    if (index === 2 && !this.commentsLoaded()) {
+      this.loadComments();
     }
   }
 
@@ -509,6 +537,104 @@ export class Info implements OnInit {
         this.reviewsTotal.update(t => t - 1);
       },
       error: () => this.toastService.error('Failed to delete review.'),
+    });
+  }
+
+  loadComments(): void {
+    const albumId = this.albumData()?.id;
+    if (!albumId) return;
+    this.commentService.getAlbumComments(albumId, { pageIndex: 1, pageSize: 50 }).subscribe(r => {
+      this.comments.set(r.data);
+      this.commentsTotal.set(r.count);
+      this.commentsLoaded.set(true);
+    });
+  }
+
+  submitComment(): void {
+    const userId = this.auth.userId();
+    const albumId = this.albumData()?.id;
+    if (!userId || !albumId || this.commentSubmitting()) return;
+    const body = this.commentBody().trim();
+    if (!body) return;
+    const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+    this.commentSubmitting.set(true);
+    this.commentService.createAlbumComment({ albumId, userId, username, body, parentCommentId: null }).subscribe({
+      next: (comment) => {
+        this.comments.update(c => [comment, ...c]);
+        this.commentsTotal.update(t => t + 1);
+        this.commentBody.set('');
+        this.commentSubmitting.set(false);
+      },
+      error: () => { this.commentSubmitting.set(false); this.toastService.error('Failed to post comment.'); },
+    });
+  }
+
+  submitReply(parentCommentId: string): void {
+    const userId = this.auth.userId();
+    const albumId = this.albumData()?.id;
+    if (!userId || !albumId || this.replySubmitting()) return;
+    const body = this.replyBody().trim();
+    if (!body) return;
+    const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+    this.replySubmitting.set(true);
+    this.commentService.createAlbumComment({ albumId, userId, username, body, parentCommentId }).subscribe({
+      next: (reply) => {
+        this.comments.update(cs => cs.map(c =>
+          c.id === parentCommentId ? { ...c, replies: [...c.replies, reply] } : c
+        ));
+        this.replyBody.set('');
+        this.replyingToId.set(null);
+        this.replySubmitting.set(false);
+      },
+      error: () => { this.replySubmitting.set(false); this.toastService.error('Failed to post reply.'); },
+    });
+  }
+
+  startEditComment(comment: Comment): void {
+    this.editingCommentId.set(comment.id);
+    this.editCommentBody.set(comment.body);
+  }
+
+  cancelEditComment(): void {
+    this.editingCommentId.set(null);
+    this.editCommentBody.set('');
+  }
+
+  saveEditComment(commentId: string, parentId: string | null): void {
+    const body = this.editCommentBody().trim();
+    if (!body || this.editCommentSubmitting()) return;
+    this.editCommentSubmitting.set(true);
+    this.commentService.updateAlbumComment(commentId, { body }).subscribe({
+      next: (updated) => {
+        if (parentId) {
+          this.comments.update(cs => cs.map(c =>
+            c.id === parentId ? { ...c, replies: c.replies.map(r => r.id === commentId ? updated : r) } : c
+          ));
+        } else {
+          this.comments.update(cs => cs.map(c => c.id === commentId ? { ...updated, replies: c.replies } : c));
+        }
+        this.editingCommentId.set(null);
+        this.editCommentBody.set('');
+        this.editCommentSubmitting.set(false);
+      },
+      error: () => { this.editCommentSubmitting.set(false); this.toastService.error('Failed to update comment.'); },
+    });
+  }
+
+  deleteComment(commentId: string, parentId: string | null): void {
+    if (!confirm('Delete this comment?')) return;
+    this.commentService.deleteAlbumComment(commentId).subscribe({
+      next: () => {
+        if (parentId) {
+          this.comments.update(cs => cs.map(c =>
+            c.id === parentId ? { ...c, replies: c.replies.filter(r => r.id !== commentId) } : c
+          ));
+        } else {
+          this.comments.update(cs => cs.filter(c => c.id !== commentId));
+          this.commentsTotal.update(t => t - 1);
+        }
+      },
+      error: () => this.toastService.error('Failed to delete comment.'),
     });
   }
 

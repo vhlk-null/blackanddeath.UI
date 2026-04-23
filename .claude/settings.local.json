@@ -37,7 +37,8 @@
       "Bash(cmd /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :4200''\\) do taskkill /PID %a /F 2>&1\")",
       "Bash(npm run *)",
       "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
-      "PowerShell(cd \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\" && npm run build -- --configuration production 2>&1)"
+      "PowerShell(cd \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\" && npm run build -- --configuration production 2>&1)",
+      "Bash(grep -v \"import\\\\|//\")"
     ]
   }
 }

@@ -97,6 +97,18 @@ export class ReviewEndpoints {
   public static DELETE_BAND_REVIEW = (reviewId: string) => `${ReviewEndpoints.base}/band-reviews/${reviewId}`;
 }
 
+export class CommentEndpoints {
+  static readonly base = environment.usercontentUrl;
+  public static GET_ALBUM_COMMENTS = (albumId: string) => `${CommentEndpoints.base}/album-comments/${albumId}`;
+  public static CREATE_ALBUM_COMMENT = `${CommentEndpoints.base}/album-comments`;
+  public static UPDATE_ALBUM_COMMENT = (commentId: string) => `${CommentEndpoints.base}/album-comments/${commentId}`;
+  public static DELETE_ALBUM_COMMENT = (commentId: string) => `${CommentEndpoints.base}/album-comments/${commentId}`;
+  public static GET_BAND_COMMENTS = (bandId: string) => `${CommentEndpoints.base}/band-comments/${bandId}`;
+  public static CREATE_BAND_COMMENT = `${CommentEndpoints.base}/band-comments`;
+  public static UPDATE_BAND_COMMENT = (commentId: string) => `${CommentEndpoints.base}/band-comments/${commentId}`;
+  public static DELETE_BAND_COMMENT = (commentId: string) => `${CommentEndpoints.base}/band-comments/${commentId}`;
+}
+
 export class UserProfileEndpoints {
   static readonly base = environment.usercontentUrl;
   public static GET_PROFILE = (userId: string) => `${UserProfileEndpoints.base}/profile/${userId}`;

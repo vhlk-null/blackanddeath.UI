@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, OnInit, HostListener, ElementRef }
 import { FormsModule } from '@angular/forms';
 import { PasteImageDirective } from '../../shared/directives/paste-image.directive';
 import { RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { NgTemplateOutlet } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService, CollectionDetail } from '../services/collection.service';
@@ -28,6 +29,7 @@ export class UserProfile implements OnInit {
     }
   }
   private profileService = inject(UserProfileService);
+  private titleService = inject(Title);
   readonly collectionService = inject(CollectionService);
 
   readonly mainTabs = ['Collections', 'Activity'];
@@ -94,6 +96,7 @@ export class UserProfile implements OnInit {
 
     this.profileService.getProfile(userId).subscribe(dto => {
       this.profileDto.set(dto);
+      this.titleService.setTitle(`${dto.username} — Black And Death`);
       const cols = dto.collections.map(mapProfileCollection);
       this.collectionService.setCollections(cols);
     });

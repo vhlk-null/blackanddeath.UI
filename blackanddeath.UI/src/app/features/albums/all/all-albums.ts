@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnInit, signal, HostListener, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { AlbumService } from '../../services/album.servics';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
@@ -64,6 +65,7 @@ export class AllAlbums implements OnInit {
   private labelService = inject(LabelService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
 
   readonly albumTypes = ALBUM_TYPES;
   readonly sortOptions = SORT_OPTIONS;
@@ -119,6 +121,7 @@ export class AllAlbums implements OnInit {
   readonly currentPage = signal(1);
 
   ngOnInit(): void {
+    this.titleService.setTitle('Albums — Black And Death');
     this.genreService.getAll().subscribe(g => this.genres.set(g));
     this.countryService.getAll().subscribe(c => this.countries.set(c));
     this.labelService.getAll().subscribe(l => this.labels.set(l));

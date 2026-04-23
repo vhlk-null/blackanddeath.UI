@@ -1,5 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { forkJoin, of, catchError } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { Section } from '../../shared/components/section/section';
 import { AlbumCard } from '../albums/card/album-card';
 import { BandCard } from '../bands/band-card/band-card';
@@ -64,10 +65,12 @@ export class Home implements OnInit {
   private bandService = inject(BandService);
   private videoBandService = inject(VideoBandService);
   private ratingService = inject(RatingService);
+  private titleService = inject(Title);
 
   private readonly periodMap = ['All', 'Year', 'Month'];
 
   ngOnInit(): void {
+    this.titleService.setTitle('Black And Death');
     forkJoin({
       topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
       topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
