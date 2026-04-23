@@ -1,4 +1,4 @@
-<div class="all-bands" (click)="showSortMenu.set(false)">
+<div class="all-bands">
 
   <div class="all-bands__header">
     <h1 class="all-bands__title">Bands</h1>
@@ -8,7 +8,7 @@
           <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <div class="all-bands__sort-wrap" (click)="$event.stopPropagation()">
+      <div class="all-bands__sort-wrap">
         <button class="all-bands__sort-btn" [class.all-bands__sort-btn--active]="showSortMenu()" title="Sort" (click)="showSortMenu.set(!showSortMenu())">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 6H21M6 12H18M9 18H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -110,6 +110,7 @@
         </button>
       </span>
     }
+    <button class="all-bands__clear-all-btn" (click)="clearAllFilters()">Clear all</button>
   </div>
   }
 

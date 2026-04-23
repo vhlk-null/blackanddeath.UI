@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, HostListener, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlbumService } from '../../services/album.servics';
 import { GenreService } from '../../services/genre.service';
@@ -48,6 +48,15 @@ const ALBUM_TYPES = Object.keys(ALBUM_TYPE_MAP);
   imports: [AlbumCard, Pagination, MultiSelectNames],
 })
 export class AllAlbums implements OnInit {
+  private el = inject(ElementRef);
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocClick(e: MouseEvent): void {
+    if (!this.showSortMenu()) return;
+    const wrap = this.el.nativeElement.querySelector('.all-albums__sort-wrap');
+    if (wrap && !wrap.contains(e.target as Node)) this.showSortMenu.set(false);
+  }
+
   private albumService = inject(AlbumService);
   private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
@@ -189,6 +198,26 @@ export class AllAlbums implements OnInit {
     if (key === 'label') { this.activeLabelNames.update(v => value ? v.filter(x => x !== value) : []); this.draftLabels.set(this.activeLabelNames()); }
     if (key === 'name') this.activeName.set(null);
     if (key === 'upcoming') { this.activeUpcoming.set(false); this.draftUpcoming.set(false); }
+    this.currentPage.set(1);
+    this.updateUrl();
+  }
+
+  clearAllFilters(): void {
+    this.activeGenreNames.set([]);
+    this.activeCountryNames.set([]);
+    this.activeTypes.set([]);
+    this.activeLabelNames.set([]);
+    this.activeYearFrom.set(null);
+    this.activeYearTo.set(null);
+    this.activeName.set(null);
+    this.activeUpcoming.set(false);
+    this.draftGenres.set([]);
+    this.draftCountries.set([]);
+    this.draftTypes.set([]);
+    this.draftLabels.set([]);
+    this.draftYearFrom.set(this.yearMin);
+    this.draftYearTo.set(this.yearMax);
+    this.draftUpcoming.set(false);
     this.currentPage.set(1);
     this.updateUrl();
   }

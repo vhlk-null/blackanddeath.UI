@@ -21,8 +21,9 @@ export class UserProfile implements OnInit {
 
   @HostListener('document:mousedown', ['$event'])
   onDocClick(e: MouseEvent): void {
-    const menu = this.el.nativeElement.querySelector('.profile__collections-sort-menu');
-    if (menu && !menu.contains(e.target) && !(e.target as Element).closest('.profile__collections-sort-btn')) {
+    if (!this.showSortMenu()) return;
+    const wrap = this.el.nativeElement.querySelector('.profile__collections-sort-wrap');
+    if (wrap && !wrap.contains(e.target as Node)) {
       this.showSortMenu.set(false);
     }
   }

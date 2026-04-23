@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, HostListener, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BandService } from '../../services/band.service';
 import { GenreService } from '../../services/genre.service';
@@ -33,6 +33,15 @@ const BAND_STATUSES = ['Active', 'Split-up', 'On hold', 'Changed name', 'Unknown
   imports: [BandCard, Pagination, MultiSelectNames],
 })
 export class AllBands implements OnInit {
+  private el = inject(ElementRef);
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocClick(e: MouseEvent): void {
+    if (!this.showSortMenu()) return;
+    const wrap = this.el.nativeElement.querySelector('.all-bands__sort-wrap');
+    if (wrap && !wrap.contains(e.target as Node)) this.showSortMenu.set(false);
+  }
+
   private bandService = inject(BandService);
   private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
@@ -154,6 +163,21 @@ export class AllBands implements OnInit {
     if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }
     if (key === 'status') { this.activeStatuses.update(v => value ? v.filter(x => x !== value) : []); this.draftStatuses.set(this.activeStatuses()); }
     if (key === 'year') { this.activeYearFrom.set(null); this.activeYearTo.set(null); this.draftYearFrom.set(this.yearMin); this.draftYearTo.set(this.yearMax); }
+    this.currentPage.set(1);
+    this.updateUrl();
+  }
+
+  clearAllFilters(): void {
+    this.activeGenreNames.set([]);
+    this.activeCountryNames.set([]);
+    this.activeStatuses.set([]);
+    this.activeYearFrom.set(null);
+    this.activeYearTo.set(null);
+    this.draftGenres.set([]);
+    this.draftCountries.set([]);
+    this.draftStatuses.set([]);
+    this.draftYearFrom.set(this.yearMin);
+    this.draftYearTo.set(this.yearMax);
     this.currentPage.set(1);
     this.updateUrl();
   }
