@@ -187,6 +187,20 @@ export class Info implements OnInit {
   readonly commentBody = signal('');
   readonly commentSubmitting = signal(false);
   readonly replyingToId = signal<string | null>(null);
+  readonly replyingToReply = signal<{ id: string; username: string } | null>(null);
+  readonly collapsedReplies = signal<Set<string>>(new Set());
+
+  toggleReplies(commentId: string): void {
+    this.collapsedReplies.update(set => {
+      const next = new Set(set);
+      next.has(commentId) ? next.delete(commentId) : next.add(commentId);
+      return next;
+    });
+  }
+
+  areRepliesCollapsed(commentId: string): boolean {
+    return this.collapsedReplies().has(commentId);
+  }
   readonly replyBody = signal('');
   readonly replySubmitting = signal(false);
   readonly editingCommentId = signal<string | null>(null);
@@ -472,9 +486,6 @@ export class Info implements OnInit {
     if (index === 1 && !this.reviewsLoaded()) {
       this.loadReviews();
     }
-    if (index === 2 && !this.commentsLoaded()) {
-      this.loadComments();
-    }
   }
 
   private readonly orderByMap: Record<string, string> = {
@@ -569,21 +580,28 @@ export class Info implements OnInit {
     });
   }
 
-  submitReply(parentCommentId: string): void {
+  submitReply(rootCommentId: string): void {
     const userId = this.auth.userId();
     const albumId = this.albumData()?.id;
     if (!userId || !albumId || this.replySubmitting()) return;
     const body = this.replyBody().trim();
     if (!body) return;
     const username = this.auth.profile()?.preferred_username ?? this.auth.profile()?.name ?? 'User';
+    const replyTarget = this.replyingToReply();
+    const parentCommentId = replyTarget?.id ?? rootCommentId;
     this.replySubmitting.set(true);
-    this.commentService.createAlbumComment({ albumId, userId, username, body, parentCommentId }).subscribe({
+    this.commentService.createAlbumComment({
+      albumId, userId, username, body, parentCommentId,
+      replyToCommentId: replyTarget?.id ?? null,
+      replyToUsername: replyTarget?.username ?? null,
+    }).subscribe({
       next: (reply) => {
         this.comments.update(cs => cs.map(c =>
-          c.id === parentCommentId ? { ...c, replies: [...c.replies, reply] } : c
+          c.id === rootCommentId ? { ...c, replies: [...c.replies, reply] } : c
         ));
         this.replyBody.set('');
         this.replyingToId.set(null);
+        this.replyingToReply.set(null);
         this.replySubmitting.set(false);
       },
       error: () => { this.replySubmitting.set(false); this.toastService.error('Failed to post reply.'); },

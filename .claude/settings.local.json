@@ -38,7 +38,9 @@
       "Bash(npm run *)",
       "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
       "PowerShell(cd \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\" && npm run build -- --configuration production 2>&1)",
-      "Bash(grep -v \"import\\\\|//\")"
+      "Bash(grep -v \"import\\\\|//\")",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:docs.fastcomments.com)"
     ]
   }
 }

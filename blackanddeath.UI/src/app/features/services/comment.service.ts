@@ -10,7 +10,10 @@ export interface Comment {
   username: string;
   body: string;
   createdAt: string;
+  isEdited: boolean;
   parentCommentId: string | null;
+  replyToCommentId: string | null;
+  replyToUsername: string | null;
   replies: Comment[];
 }
 
@@ -20,8 +23,34 @@ interface CommentDto {
   username: string;
   body: string;
   createdAt: string;
+  updatedAt: string | null;
+  isEdited: boolean;
   parentCommentId: string | null;
+  replyToCommentId: string | null;
+  replyToUsername: string | null;
   replies: CommentDto[];
+}
+
+function flattenReplies(dtos: CommentDto[]): Comment[] {
+  const result: Comment[] = [];
+  for (const dto of dtos) {
+    result.push({
+      id: dto.id,
+      userId: dto.userId,
+      username: dto.username,
+      body: dto.body,
+      createdAt: dto.createdAt,
+      isEdited: dto.updatedAt != null || dto.isEdited === true,
+      parentCommentId: dto.parentCommentId,
+      replyToCommentId: dto.replyToCommentId ?? null,
+      replyToUsername: dto.replyToUsername ?? null,
+      replies: [],
+    });
+    if (dto.replies?.length) {
+      result.push(...flattenReplies(dto.replies));
+    }
+  }
+  return result.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 }
 
 function mapComment(dto: CommentDto): Comment {
@@ -31,9 +60,13 @@ function mapComment(dto: CommentDto): Comment {
     username: dto.username,
     body: dto.body,
     createdAt: dto.createdAt,
+    isEdited: dto.updatedAt != null || dto.isEdited === true,
     parentCommentId: dto.parentCommentId,
-    replies: (dto.replies ?? []).map(mapComment),
+    replyToCommentId: dto.replyToCommentId ?? null,
+    replyToUsername: dto.replyToUsername ?? null,
+    replies: flattenReplies(dto.replies ?? []),
   };
+
 }
 
 @Injectable({ providedIn: 'root' })
@@ -49,7 +82,7 @@ export class CommentService {
     );
   }
 
-  createAlbumComment(payload: { albumId: string; userId: string; username: string; body: string; parentCommentId?: string | null }) {
+  createAlbumComment(payload: { albumId: string; userId: string; username: string; body: string; parentCommentId?: string | null; replyToCommentId?: string | null; replyToUsername?: string | null }) {
     return this.http.post<CommentDto>(CommentEndpoints.CREATE_ALBUM_COMMENT, payload).pipe(map(mapComment));
   }
 
@@ -70,7 +103,7 @@ export class CommentService {
     );
   }
 
-  createBandComment(payload: { bandId: string; userId: string; username: string; body: string; parentCommentId?: string | null }) {
+  createBandComment(payload: { bandId: string; userId: string; username: string; body: string; parentCommentId?: string | null; replyToCommentId?: string | null; replyToUsername?: string | null }) {
     return this.http.post<CommentDto>(CommentEndpoints.CREATE_BAND_COMMENT, payload).pipe(map(mapComment));
   }
 
