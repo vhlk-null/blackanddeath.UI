@@ -1,4 +1,4 @@
-<a class="card" [routerLink]="['/albums', albumCard().slug]">
+<a class="card" [routerLink]="['/albums', albumCard().slug]" (contextmenu)="onContextMenu($event)">
     <div class="card__cover">
         @if (albumCard().coverUrl && !imageError()) {
         <img class="card__image" [class.card__image--explicit]="albumCard().isExplicit && !ageGate.confirmed()" [src]="albumCard().coverUrl" [alt]="albumCard().title" (error)="imageError.set(true)" />
@@ -41,3 +41,20 @@
         </p>
     </div>
 </a>
+
+@if (showCtx()) {
+  <app-context-menu
+    [x]="ctxX()"
+    [y]="ctxY()"
+    [items]="ctxItems"
+    (closed)="showCtx.set(false)"
+  />
+}
+
+@if (showCollectionPicker() && collectionItem() && auth.userId()) {
+  <app-collection-picker
+    [item]="collectionItem()!"
+    [userId]="auth.userId()!"
+    (closed)="showCollectionPicker.set(false)"
+  />
+}

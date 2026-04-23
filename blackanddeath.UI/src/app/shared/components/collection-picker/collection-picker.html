@@ -1,5 +1,6 @@
 <div class="col-picker">
   <div class="col-picker__header">
+    <svg class="col-picker__header-icon" viewBox="0 0 24 24" fill="none"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
     <span class="col-picker__title">Add to {{ item().type === 'album' ? 'Album' : 'Band' }} Collection</span>
   </div>
 
@@ -15,6 +16,7 @@
           [checked]="isChecked(col.id)"
           (change)="toggle(col.id)"
         />
+        <svg class="col-picker__item-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="col-picker__name">{{ col.name }}</span>
         <span class="col-picker__count">{{ (col.albumCount || 0) + (col.bandCount || 0) }}</span>
       </label>
@@ -23,19 +25,28 @@
 
   @if (creating()) {
     <div class="col-picker__create">
-      <input
-        class="col-picker__create-input"
-        type="text"
-        placeholder="Collection name…"
-        [ngModel]="newName()"
-        (ngModelChange)="newName.set($event)"
-        (keyup.enter)="confirmCreate()"
-        (keyup.escape)="cancelCreate()"
-        autofocus
-      />
+      <div class="col-picker__create-field">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input
+          class="col-picker__create-input"
+          type="text"
+          placeholder="Collection name…"
+          [ngModel]="newName()"
+          (ngModelChange)="newName.set($event)"
+          (keyup.enter)="confirmCreate()"
+          (keyup.escape)="cancelCreate()"
+          autofocus
+        />
+      </div>
       <div class="col-picker__create-actions">
-        <button class="col-picker__btn col-picker__btn--confirm" (click)="confirmCreate()">Create</button>
-        <button class="col-picker__btn col-picker__btn--cancel" (click)="cancelCreate()">Cancel</button>
+        <button class="col-picker__btn col-picker__btn--confirm" (click)="confirmCreate()">
+          <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Create
+        </button>
+        <button class="col-picker__btn col-picker__btn--cancel" (click)="cancelCreate()">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Cancel
+        </button>
       </div>
     </div>
   } @else {

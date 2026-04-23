@@ -1,4 +1,4 @@
-<a class="band-card" [routerLink]="['/bands', bandCard().slug]">
+<a class="band-card" [routerLink]="['/bands', bandCard().slug]" (contextmenu)="onContextMenu($event)">
   <div class="band-card__cover">
     @if (bandCard().logoUrl && !imageError()) {
       <img class="band-card__image" [src]="bandCard().logoUrl" [alt]="bandCard().name" (error)="imageError.set(true)" />
@@ -33,3 +33,20 @@
     </p>
   </div>
 </a>
+
+@if (showCtx()) {
+  <app-context-menu
+    [x]="ctxX()"
+    [y]="ctxY()"
+    [items]="ctxItems"
+    (closed)="showCtx.set(false)"
+  />
+}
+
+@if (showCollectionPicker() && collectionItem() && auth.userId()) {
+  <app-collection-picker
+    [item]="collectionItem()!"
+    [userId]="auth.userId()!"
+    (closed)="showCollectionPicker.set(false)"
+  />
+}

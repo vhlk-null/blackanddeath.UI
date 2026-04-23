@@ -1,0 +1,28 @@
+<div class="ctx-menu" [style.left.px]="adjustedX()" [style.top.px]="adjustedY()">
+  @for (item of items(); track item.label) {
+    <button class="ctx-menu__item" [class.ctx-menu__item--danger]="item.danger" (mousedown)="$event.stopPropagation(); run(item)">
+      @if (item.icon) {
+        <span class="ctx-menu__icon">
+          @switch (item.icon) {
+            @case ('star') {
+              <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            }
+            @case ('bookmark') {
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 3H19C19.5523 3 20 3.44772 20 4V21L12 17L4 21V4C4 3.44772 4.44772 3 5 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            }
+            @case ('band') {
+              <svg viewBox="0 0 24 24" fill="none"><path d="M17 7l-10 10M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            }
+            @case ('link') {
+              <svg viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            }
+            @case ('trash') {
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            }
+          }
+        </span>
+      }
+      {{ item.label }}
+    </button>
+  }
+</div>

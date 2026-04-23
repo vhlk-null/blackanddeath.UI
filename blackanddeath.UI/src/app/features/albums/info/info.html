@@ -392,7 +392,7 @@
       @if (discographyGroups().length > 1) {
         <h3 class="discography-group__label">
           @if (group.bandId) {
-            <a [routerLink]="['/bands', group.bandId, group.bandSlug]" class="discography-group__band-link">{{ group.label }}</a>
+            <a [routerLink]="['/bands', group.bandSlug]" class="discography-group__band-link">{{ group.label }}</a>
           } @else {
             {{ group.label }}
           }

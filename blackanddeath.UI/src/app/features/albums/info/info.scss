@@ -76,9 +76,11 @@
   &__band-link {
     color: inherit;
     text-decoration: none;
+    transition: color 0.15s;
 
     &:hover {
       color: var(--color-text);
+      text-decoration: underline;
     }
   }
 
@@ -995,6 +997,7 @@ app-section:nth-of-type(2) {
 
   &:hover {
     color: var(--color-text-heading);
+    text-decoration: underline;
   }
 }
 
