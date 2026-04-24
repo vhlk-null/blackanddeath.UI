@@ -129,6 +129,12 @@ export class BandInfo implements OnInit {
   readonly editingCommentId = signal<string | null>(null);
   readonly editCommentBody = signal('');
   readonly editCommentSubmitting = signal(false);
+  readonly composerFocused = signal(false);
+
+  autoGrow(el: HTMLTextAreaElement): void {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
 
   // Album reviews aggregated across band's discography
   readonly albumReviews = signal<AlbumReview[]>([]);
@@ -244,6 +250,7 @@ export class BandInfo implements OnInit {
         this.comments.set([]);
         this.commentsLoaded.set(false);
         this.commentBody.set('');
+        this.composerFocused.set(false);
         this.replyingToId.set(null);
         this.replyBody.set('');
         this.editingCommentId.set(null);
@@ -400,9 +407,15 @@ export class BandInfo implements OnInit {
       replyToUsername: replyTarget?.username ?? null,
     }).subscribe({
       next: (reply) => {
-        this.comments.update(cs => cs.map(c =>
-          c.id === rootCommentId ? { ...c, replies: [...c.replies, reply] } : c
-        ));
+        this.comments.update(cs => cs.map(c => {
+          if (c.id !== rootCommentId) return c;
+          if (!replyTarget) return { ...c, replies: [...c.replies, reply] };
+          const updatedReplies = c.replies.map(r =>
+            r.id === replyTarget.id ? { ...r, replies: [...r.replies, reply] } : r
+          );
+          const found = c.replies.some(r => r.id === replyTarget.id);
+          return { ...c, replies: found ? updatedReplies : [...c.replies, reply] };
+        }));
         this.replyBody.set('');
         this.replyingToId.set(null);
         this.replyingToReply.set(null);

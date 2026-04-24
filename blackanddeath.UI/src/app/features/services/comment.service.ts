@@ -31,10 +31,10 @@ interface CommentDto {
   replies: CommentDto[];
 }
 
-function flattenReplies(dtos: CommentDto[]): Comment[] {
-  const result: Comment[] = [];
-  for (const dto of dtos) {
-    result.push({
+function mapReplies(dtos: CommentDto[]): Comment[] {
+  return dtos
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+    .map(dto => ({
       id: dto.id,
       userId: dto.userId,
       username: dto.username,
@@ -44,13 +44,8 @@ function flattenReplies(dtos: CommentDto[]): Comment[] {
       parentCommentId: dto.parentCommentId,
       replyToCommentId: dto.replyToCommentId ?? null,
       replyToUsername: dto.replyToUsername ?? null,
-      replies: [],
-    });
-    if (dto.replies?.length) {
-      result.push(...flattenReplies(dto.replies));
-    }
-  }
-  return result.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+      replies: dto.replies?.length ? mapReplies(dto.replies) : [],
+    }));
 }
 
 function mapComment(dto: CommentDto): Comment {
@@ -64,9 +59,8 @@ function mapComment(dto: CommentDto): Comment {
     parentCommentId: dto.parentCommentId,
     replyToCommentId: dto.replyToCommentId ?? null,
     replyToUsername: dto.replyToUsername ?? null,
-    replies: flattenReplies(dto.replies ?? []),
+    replies: mapReplies(dto.replies ?? []),
   };
-
 }
 
 @Injectable({ providedIn: 'root' })

@@ -206,6 +206,12 @@ export class Info implements OnInit {
   readonly editingCommentId = signal<string | null>(null);
   readonly editCommentBody = signal('');
   readonly editCommentSubmitting = signal(false);
+  readonly composerFocused = signal(false);
+
+  autoGrow(el: HTMLTextAreaElement): void {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
 
   toggleReviewExpanded(id: string): void {
     this.expandedReviews.update(set => {
@@ -444,6 +450,7 @@ export class Info implements OnInit {
         this.comments.set([]);
         this.commentsLoaded.set(false);
         this.commentBody.set('');
+        this.composerFocused.set(false);
         this.replyingToId.set(null);
         this.replyBody.set('');
         this.editingCommentId.set(null);
@@ -596,9 +603,17 @@ export class Info implements OnInit {
       replyToUsername: replyTarget?.username ?? null,
     }).subscribe({
       next: (reply) => {
-        this.comments.update(cs => cs.map(c =>
-          c.id === rootCommentId ? { ...c, replies: [...c.replies, reply] } : c
-        ));
+        this.comments.update(cs => cs.map(c => {
+          if (c.id !== rootCommentId) return c;
+          if (!replyTarget) return { ...c, replies: [...c.replies, reply] };
+          // nest under the direct parent reply if it exists at depth 1
+          const updatedReplies = c.replies.map(r =>
+            r.id === replyTarget.id ? { ...r, replies: [...r.replies, reply] } : r
+          );
+          // if replyTarget is itself a depth-2 reply, just append at depth-1 level
+          const found = c.replies.some(r => r.id === replyTarget.id);
+          return { ...c, replies: found ? updatedReplies : [...c.replies, reply] };
+        }));
         this.replyBody.set('');
         this.replyingToId.set(null);
         this.replyingToReply.set(null);
@@ -644,9 +659,14 @@ export class Info implements OnInit {
     this.commentService.deleteAlbumComment(commentId).subscribe({
       next: () => {
         if (parentId) {
-          this.comments.update(cs => cs.map(c =>
-            c.id === parentId ? { ...c, replies: c.replies.filter(r => r.id !== commentId) } : c
-          ));
+          this.comments.update(cs => cs.map(c => {
+            if (c.id === parentId) return { ...c, replies: c.replies.filter(r => r.id !== commentId) };
+            // depth-2: commentId may be nested under a depth-1 reply
+            return { ...c, replies: c.replies.map(r => r.id === parentId
+              ? { ...r, replies: r.replies.filter(n => n.id !== commentId) }
+              : { ...r, replies: r.replies.filter(n => n.id !== commentId) }
+            )};
+          }));
         } else {
           this.comments.update(cs => cs.filter(c => c.id !== commentId));
           this.commentsTotal.update(t => t - 1);

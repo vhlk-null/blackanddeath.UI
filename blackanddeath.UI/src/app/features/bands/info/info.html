@@ -290,88 +290,128 @@
 }
 
 <div class="comments-section">
-  <h2 class="comments-section__title">Comments</h2>
+  <div class="comments-section__header">
+    <h2 class="comments-section__title">Comments</h2>
+    @if (commentsTotal() > 0) {
+      <span class="comments-section__count">{{ commentsTotal() }}</span>
+    }
+  </div>
+
+  <!-- Composer -->
+  @if (auth.isAuthenticated()) {
+  <div class="comment-composer">
+    <div class="comment-composer__avatar">{{ (auth.profile()?.preferred_username ?? auth.profile()?.name ?? 'U')[0].toUpperCase() }}</div>
+    <div class="comment-composer__wrap" [class.comment-composer__wrap--focused]="composerFocused()">
+      <textarea class="comment-composer__textarea" placeholder="Write your commentary…"
+        [value]="commentBody()"
+        (input)="commentBody.set($any($event.target).value); autoGrow($any($event.target))"
+        (focus)="composerFocused.set(true)"
+        (keydown.escape)="composerFocused.set(false)"
+        rows="1"></textarea>
+      @if (composerFocused()) {
+      <div class="comment-composer__actions">
+        <button class="comment-composer__cancel" (click)="composerFocused.set(false); commentBody.set('')">Cancel</button>
+        <button class="comment-composer__post" (click)="submitComment()" [disabled]="commentSubmitting() || !commentBody().trim()">
+          {{ commentSubmitting() ? 'Posting…' : 'Post' }}
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+  } @else {
+    <p class="comments-section__signin"><a [routerLink]="[]" (click)="auth.login()">Sign in</a> to join the discussion.</p>
+  }
+
+  <!-- Thread list -->
   <div class="comments-section__list">
     @if (commentsLoaded()) {
       @for (comment of comments(); track comment.id) {
-      <div class="comment-item">
-        <!-- Top spine: avatar + vertical line -->
-        <div class="comment-item__spine">
-          <div class="comment-item__avatar">
-            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
+      <div class="comment-thread">
+
+        <div class="comment-thread__top-spine">
+          <div class="comment-item__avatar">{{ comment.username[0].toUpperCase() }}</div>
           @if (comment.replies.length > 0 && !areRepliesCollapsed(comment.id)) {
             <div class="comment-item__avatar-line"></div>
           }
         </div>
-        <!-- Body -->
-        <div class="comment-item__main">
-          @if (editingCommentId() === comment.id) {
-            <textarea class="comments-section__edit-textarea" [value]="editCommentBody()" (input)="editCommentBody.set($any($event.target).value)" (keydown.escape)="cancelEditComment()"></textarea>
-            <div class="comment-item__edit-actions">
-              <button class="comments-section__send-btn" (click)="saveEditComment(comment.id, null)" [disabled]="editCommentSubmitting()">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <button class="comment-item__cancel" (click)="cancelEditComment()">Cancel</button>
-            </div>
-          } @else {
-            <div class="comment-item__header">
-              <span class="comment-item__author">{{ comment.username }}</span>
-              <span class="comment-item__date">{{ comment.createdAt | date:'d MMMM y' }}@if (comment.isEdited) {<span class="comment-item__edited">(edited)</span>}</span>
-              <div class="comment-item__actions">
-                @if (auth.userId() === comment.userId) {
-                  <button class="comment-item__icon-btn" (click)="startEditComment(comment)" title="Edit">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4C3.44772 4 3 4.44772 3 5V20C3 20.5523 3.44772 21 4 21H19C19.5523 21 20 20.5523 20 19V12" stroke-width="1.5" stroke-linecap="round"/><path d="M18.5 2.5C19.3284 1.67157 20.6716 1.67157 21.5 2.5C22.3284 3.32843 22.3284 4.67157 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="1.5" stroke-linejoin="round"/></svg>
+
+        <div class="comment-thread__right">
+          <div class="comment-item__main">
+            @if (editingCommentId() === comment.id) {
+              <textarea class="comments-section__edit-textarea" [value]="editCommentBody()" (input)="editCommentBody.set($any($event.target).value)" (keydown.escape)="cancelEditComment()"></textarea>
+              <div class="comment-item__edit-actions">
+                <button class="comments-section__send-btn" (click)="saveEditComment(comment.id, null)" [disabled]="editCommentSubmitting()">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="comment-item__cancel" (click)="cancelEditComment()">Cancel</button>
+              </div>
+            } @else {
+              <div class="comment-item__header">
+                <span class="comment-item__author">{{ comment.username }}</span>
+                <span class="comment-item__date">{{ comment.createdAt | date:'d MMM y' }}@if (comment.isEdited) {<span class="comment-item__edited"> (edited)</span>}</span>
+                <div class="comment-item__actions">
+                  @if (auth.userId() === comment.userId) {
+                    <button class="comment-item__icon-btn" (click)="startEditComment(comment)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4C3.44772 4 3 4.44772 3 5V20C3 20.5523 3.44772 21 4 21H19C19.5523 21 20 20.5523 20 19V12" stroke-width="1.5" stroke-linecap="round"/><path d="M18.5 2.5C19.3284 1.67157 20.6716 1.67157 21.5 2.5C22.3284 3.32843 22.3284 4.67157 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    </button>
+                  }
+                  @if (auth.isAdmin() || auth.userId() === comment.userId) {
+                    <button class="comment-item__icon-btn comment-item__icon-btn--danger" (click)="deleteComment(comment.id, null)" title="Delete">
+                      <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20C18 20.5523 17.5523 21 17 21H7C6.44772 21 6 20.5523 6 20L5 6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  }
+                </div>
+              </div>
+              <p class="comment-item__body">{{ comment.body }}</p>
+              <div class="comment-item__footer">
+                @if (auth.isAuthenticated()) {
+                  <button class="comment-item__reply-btn" (click)="replyingToId.set(replyingToId() === comment.id ? null : comment.id); replyingToReply.set(null)">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    Reply
                   </button>
                 }
-                @if (auth.isAdmin() || auth.userId() === comment.userId) {
-                  <button class="comment-item__icon-btn comment-item__icon-btn--danger" (click)="deleteComment(comment.id, null)" title="Delete">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20C18 20.5523 17.5523 21 17 21H7C6.44772 21 6 20.5523 6 20L5 6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                @if (comment.replies.length > 0) {
+                  <button class="comment-item__toggle-replies" (click)="toggleReplies(comment.id)">
+                    <svg viewBox="0 0 24 24" fill="none" [style.transform]="areRepliesCollapsed(comment.id) ? 'rotate(180deg)' : 'rotate(0)'">
+                      <polyline points="18 15 12 9 6 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ areRepliesCollapsed(comment.id) ? (comment.replies.length + ' repl' + (comment.replies.length === 1 ? 'y' : 'ies')) : 'Hide replies' }}
                   </button>
                 }
               </div>
-            </div>
-            <p class="comment-item__body">{{ comment.body }}</p>
-            <div class="comment-item__footer">
-              @if (auth.isAuthenticated()) {
-                <button class="comment-item__reply-btn" (click)="replyingToId.set(replyingToId() === comment.id ? null : comment.id); replyingToReply.set(null)">Reply</button>
-              }
-              @if (comment.replies.length > 0) {
-                <button class="comment-item__toggle-replies" (click)="toggleReplies(comment.id)">
-                  <svg viewBox="0 0 24 24" fill="none" [style.transform]="areRepliesCollapsed(comment.id) ? 'rotate(-90deg)' : 'rotate(0)'">
-                    <polyline points="6 9 12 15 18 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  {{ areRepliesCollapsed(comment.id) ? (comment.replies.length + ' repl' + (comment.replies.length === 1 ? 'y' : 'ies')) : 'Hide replies' }}
-                </button>
-              }
-            </div>
-          }
-          <!-- Reply form -->
+            }
+          </div>
+
           @if (replyingToId() === comment.id) {
             <div class="comments-section__reply-form">
               @if (replyingToReply()) {
                 <p class="comments-section__reply-context">Replying to <span class="comment-item__mention">&#64;{{ replyingToReply()!.username }}</span> <button class="comments-section__reply-context-clear" (click)="replyingToReply.set(null)">✕</button></p>
               }
-              <div class="comments-section__input-row">
-                <input class="comments-section__input" type="text" [placeholder]="replyingToReply() ? 'Reply to @' + replyingToReply()!.username + '…' : 'Write a reply…'" [value]="replyBody()" (input)="replyBody.set($any($event.target).value)" />
-                <button class="comments-section__send-btn" (click)="submitReply(comment.id)" [disabled]="replySubmitting() || !replyBody().trim()">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
+              <div class="comment-composer comment-composer--inline">
+                <div class="comment-composer__avatar comment-composer__avatar--sm">{{ (auth.profile()?.preferred_username ?? auth.profile()?.name ?? 'U')[0].toUpperCase() }}</div>
+                <div class="comment-composer__wrap comment-composer__wrap--focused">
+                  <textarea class="comment-composer__textarea" [placeholder]="replyingToReply() ? 'Reply to @' + replyingToReply()!.username + '…' : 'Write a reply…'"
+                    [value]="replyBody()"
+                    (input)="replyBody.set($any($event.target).value); autoGrow($any($event.target))"
+                    rows="1"></textarea>
+                  <div class="comment-composer__actions">
+                    <button class="comment-composer__cancel" (click)="replyingToId.set(null); replyBody.set('')">Cancel</button>
+                    <button class="comment-composer__post" (click)="submitReply(comment.id)" [disabled]="replySubmitting() || !replyBody().trim()">
+                      {{ replySubmitting() ? 'Posting…' : 'Reply' }}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           }
-          <!-- Replies -->
+
           @if (comment.replies.length > 0 && !areRepliesCollapsed(comment.id)) {
             <div class="comment-replies">
-              @for (reply of comment.replies; track reply.id; let last = $last) {
+              @for (reply of comment.replies; track reply.id; let lastReply = $last) {
               <div class="comment-reply-row">
-                <!-- Spine ext: vertical line + horizontal elbow -->
-                <div class="comment-reply-row__spine" [class.comment-reply-row__spine--last]="last"></div>
-                <!-- Reply content -->
+                <div class="comment-reply-row__spine" [class.comment-reply-row__spine--last]="lastReply && !reply.replies.length"></div>
                 <div class="comment-reply-row__content">
-                  <div class="comment-item__avatar comment-item__avatar--sm">
-                    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                  </div>
+                  <div class="comment-item__avatar comment-item__avatar--sm">{{ reply.username[0].toUpperCase() }}</div>
                   <div class="comment-item__main">
                     @if (editingCommentId() === reply.id) {
                       <textarea class="comments-section__edit-textarea" [value]="editCommentBody()" (input)="editCommentBody.set($any($event.target).value)" (keydown.escape)="cancelEditComment()"></textarea>
@@ -384,7 +424,7 @@
                     } @else {
                       <div class="comment-item__header">
                         <span class="comment-item__author">{{ reply.username }}</span>
-                        <span class="comment-item__date">{{ reply.createdAt | date:'d MMMM y' }}@if (reply.isEdited) {<span class="comment-item__edited">(edited)</span>}</span>
+                        <span class="comment-item__date">{{ reply.createdAt | date:'d MMM y' }}@if (reply.isEdited) {<span class="comment-item__edited"> (edited)</span>}</span>
                         <div class="comment-item__actions">
                           @if (auth.userId() === reply.userId) {
                             <button class="comment-item__icon-btn" (click)="startEditComment(reply)" title="Edit">
@@ -398,10 +438,68 @@
                           }
                         </div>
                       </div>
+                      @if (reply.replyToUsername) {
+                        <p class="comment-item__reply-to"><span class="comment-item__mention">&#64;{{ reply.replyToUsername }}</span></p>
+                      }
                       <p class="comment-item__body">{{ reply.body }}</p>
                       <div class="comment-item__footer">
                         @if (auth.isAuthenticated()) {
-                          <button class="comment-item__reply-btn" (click)="replyingToId.set(comment.id); replyingToReply.set({ id: reply.id, username: reply.username })">Reply</button>
+                          <button class="comment-item__reply-btn" (click)="replyingToId.set(comment.id); replyingToReply.set({ id: reply.id, username: reply.username })">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                            Reply
+                          </button>
+                        }
+                      </div>
+                    }
+                    @if (reply.replies.length > 0) {
+                      <div class="comment-replies">
+                        @for (nested of reply.replies; track nested.id; let lastNested = $last) {
+                        <div class="comment-reply-row">
+                          <div class="comment-reply-row__spine" [class.comment-reply-row__spine--last]="lastNested"></div>
+                          <div class="comment-reply-row__content">
+                            <div class="comment-item__avatar comment-item__avatar--sm">{{ nested.username[0].toUpperCase() }}</div>
+                            <div class="comment-item__main">
+                              @if (editingCommentId() === nested.id) {
+                                <textarea class="comments-section__edit-textarea" [value]="editCommentBody()" (input)="editCommentBody.set($any($event.target).value)" (keydown.escape)="cancelEditComment()"></textarea>
+                                <div class="comment-item__edit-actions">
+                                  <button class="comments-section__send-btn" (click)="saveEditComment(nested.id, comment.id)" [disabled]="editCommentSubmitting()">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                  </button>
+                                  <button class="comment-item__cancel" (click)="cancelEditComment()">Cancel</button>
+                                </div>
+                              } @else {
+                                <div class="comment-item__header">
+                                  <span class="comment-item__author">{{ nested.username }}</span>
+                                  <span class="comment-item__date">{{ nested.createdAt | date:'d MMM y' }}@if (nested.isEdited) {<span class="comment-item__edited"> (edited)</span>}</span>
+                                  <div class="comment-item__actions">
+                                    @if (auth.userId() === nested.userId) {
+                                      <button class="comment-item__icon-btn" (click)="startEditComment(nested)" title="Edit">
+                                        <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4C3.44772 4 3 4.44772 3 5V20C3 20.5523 3.44772 21 4 21H19C19.5523 21 20 20.5523 20 19V12" stroke-width="1.5" stroke-linecap="round"/><path d="M18.5 2.5C19.3284 1.67157 20.6716 1.67157 21.5 2.5C22.3284 3.32843 22.3284 4.67157 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                                      </button>
+                                    }
+                                    @if (auth.isAdmin() || auth.userId() === nested.userId) {
+                                      <button class="comment-item__icon-btn comment-item__icon-btn--danger" (click)="deleteComment(nested.id, comment.id)" title="Delete">
+                                        <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20C18 20.5523 17.5523 21 17 21H7C6.44772 21 6 20.5523 6 20L5 6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                      </button>
+                                    }
+                                  </div>
+                                </div>
+                                @if (nested.replyToUsername) {
+                                  <p class="comment-item__reply-to"><span class="comment-item__mention">&#64;{{ nested.replyToUsername }}</span></p>
+                                }
+                                <p class="comment-item__body">{{ nested.body }}</p>
+                                <div class="comment-item__footer">
+                                  @if (auth.isAuthenticated()) {
+                                    <button class="comment-item__reply-btn" (click)="replyingToId.set(comment.id); replyingToReply.set({ id: nested.id, username: nested.username })">
+                                      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                                      Reply
+                                    </button>
+                                  }
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        </div>
                         }
                       </div>
                     }
@@ -417,18 +515,6 @@
       @if (!comments().length) {
         <p class="comments-section__empty">No comments yet. Be the first!</p>
       }
-    }
-  </div>
-  <div class="comments-section__footer">
-    @if (auth.isAuthenticated()) {
-      <div class="comments-section__input-row">
-        <input class="comments-section__input" type="text" placeholder="Write your commentary…" [value]="commentBody()" (input)="commentBody.set($any($event.target).value)" />
-        <button class="comments-section__send-btn" (click)="submitComment()" [disabled]="commentSubmitting() || !commentBody().trim()">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-    } @else {
-      <p class="comments-section__signin"><a [routerLink]="[]" (click)="auth.login()">Sign in</a> to join the discussion.</p>
     }
   </div>
 </div>
