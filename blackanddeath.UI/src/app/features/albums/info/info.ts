@@ -186,9 +186,12 @@ export class Info implements OnInit {
 
   // Comments
   readonly comments = signal<Comment[]>([]);
-  readonly commentsTotal = signal(0);
   readonly commentsLoaded = signal(false);
   readonly commentSort = signal<'newest' | 'oldest' | 'top'>('newest');
+  readonly commentsTotal = computed(() => {
+    const count = (list: Comment[]): number => list.reduce((s, c) => s + 1 + count(c.replies), 0);
+    return count(this.comments());
+  });
   readonly sortedComments = computed(() => {
     const list = [...this.comments()];
     const sort = this.commentSort();
@@ -593,7 +596,6 @@ export class Info implements OnInit {
     const userId = this.auth.userId() ?? undefined;
     this.commentService.getAlbumComments(albumId, { pageIndex: 1, pageSize: 50, userId }).subscribe(r => {
       this.comments.set(r.data);
-      this.commentsTotal.set(r.count);
       this.commentsLoaded.set(true);
     });
   }
@@ -609,7 +611,6 @@ export class Info implements OnInit {
     this.commentService.createAlbumComment({ albumId, userId, username, body, parentCommentId: null }).subscribe({
       next: (comment) => {
         this.comments.update(c => [comment, ...c]);
-        this.commentsTotal.update(t => t + 1);
         this.commentBody.set('');
         this.commentSubmitting.set(false);
       },
@@ -720,7 +721,6 @@ export class Info implements OnInit {
           }));
         } else {
           this.comments.update(cs => cs.filter(c => c.id !== commentId));
-          this.commentsTotal.update(t => t - 1);
         }
       },
       error: () => this.toastService.error('Failed to delete comment.'),
