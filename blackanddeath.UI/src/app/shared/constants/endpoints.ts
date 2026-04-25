@@ -103,10 +103,14 @@ export class CommentEndpoints {
   public static CREATE_ALBUM_COMMENT = `${CommentEndpoints.base}/album-comments`;
   public static UPDATE_ALBUM_COMMENT = (commentId: string) => `${CommentEndpoints.base}/album-comments/${commentId}`;
   public static DELETE_ALBUM_COMMENT = (commentId: string) => `${CommentEndpoints.base}/album-comments/${commentId}`;
+  public static REACT_ALBUM_COMMENT = (commentId: string) => `${CommentEndpoints.base}/album-comments/${commentId}/reactions`;
+  public static DELETE_ALBUM_COMMENT_REACTION = (commentId: string, userId: string) => `${CommentEndpoints.base}/album-comments/${commentId}/reactions/${userId}`;
   public static GET_BAND_COMMENTS = (bandId: string) => `${CommentEndpoints.base}/band-comments/${bandId}`;
   public static CREATE_BAND_COMMENT = `${CommentEndpoints.base}/band-comments`;
   public static UPDATE_BAND_COMMENT = (commentId: string) => `${CommentEndpoints.base}/band-comments/${commentId}`;
   public static DELETE_BAND_COMMENT = (commentId: string) => `${CommentEndpoints.base}/band-comments/${commentId}`;
+  public static REACT_BAND_COMMENT = (commentId: string) => `${CommentEndpoints.base}/band-comments/${commentId}/reactions`;
+  public static DELETE_BAND_COMMENT_REACTION = (commentId: string, userId: string) => `${CommentEndpoints.base}/band-comments/${commentId}/reactions/${userId}`;
 }
 
 export class UserProfileEndpoints {

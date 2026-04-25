@@ -20,6 +20,8 @@ import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
 import { ReviewService, Review } from '../../services/review.service';
 import { CommentService, Comment } from '../../services/comment.service';
+import { CommentNode } from '../../../shared/components/comment-node/comment-node';
+import { CommentNodeContext } from '../../../shared/components/comment-node/comment-node.context';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -35,9 +37,10 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe, CollectionPicker],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe, CollectionPicker, CommentNode],
   templateUrl: './info.html',
   styleUrl: './info.scss',
+  providers: [CommentNodeContext],
 })
 export class Info implements OnInit {
 
@@ -53,6 +56,7 @@ export class Info implements OnInit {
   private reviewService = inject(ReviewService);
   private commentService = inject(CommentService);
   private collectionService = inject(CollectionService);
+  private commentNodeCtx = inject(CommentNodeContext);
 
   readonly lightboxSrc = signal<string | null>(null);
   readonly imageError = signal(false);
@@ -184,6 +188,14 @@ export class Info implements OnInit {
   readonly comments = signal<Comment[]>([]);
   readonly commentsTotal = signal(0);
   readonly commentsLoaded = signal(false);
+  readonly commentSort = signal<'newest' | 'oldest' | 'top'>('newest');
+  readonly sortedComments = computed(() => {
+    const list = [...this.comments()];
+    const sort = this.commentSort();
+    if (sort === 'oldest') return list.reverse();
+    if (sort === 'top') return list.slice().sort((a, b) => b.likes - a.likes);
+    return list;
+  });
   readonly commentBody = signal('');
   readonly commentSubmitting = signal(false);
   readonly replyingToId = signal<string | null>(null);
@@ -416,6 +428,23 @@ export class Info implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
+    const ctx = this.commentNodeCtx;
+    ctx.auth = this.auth;
+    ctx.replyingToId = this.replyingToId;
+    ctx.replyingToReply = this.replyingToReply;
+    ctx.replyBody = this.replyBody;
+    ctx.replySubmitting = this.replySubmitting;
+    ctx.editingCommentId = this.editingCommentId;
+    ctx.editCommentBody = this.editCommentBody;
+    ctx.editCommentSubmitting = this.editCommentSubmitting;
+    ctx.submitReply = (rootId) => this.submitReply(rootId);
+    ctx.reactToComment = (id, isLike) => this.reactToComment(id, isLike);
+    ctx.startEditComment = (c) => this.startEditComment(c);
+    ctx.cancelEditComment = () => this.cancelEditComment();
+    ctx.saveEditComment = (id, parentId) => this.saveEditComment(id, parentId);
+    ctx.deleteComment = (id, parentId) => this.deleteComment(id, parentId);
+    ctx.autoGrow = (el) => this.autoGrow(el);
+
     this.route.paramMap.pipe(
       filter(params => !!params.get('slug')),
       switchMap(params => {
@@ -561,7 +590,8 @@ export class Info implements OnInit {
   loadComments(): void {
     const albumId = this.albumData()?.id;
     if (!albumId) return;
-    this.commentService.getAlbumComments(albumId, { pageIndex: 1, pageSize: 50 }).subscribe(r => {
+    const userId = this.auth.userId() ?? undefined;
+    this.commentService.getAlbumComments(albumId, { pageIndex: 1, pageSize: 50, userId }).subscribe(r => {
       this.comments.set(r.data);
       this.commentsTotal.set(r.count);
       this.commentsLoaded.set(true);
@@ -602,18 +632,14 @@ export class Info implements OnInit {
       replyToCommentId: replyTarget?.id ?? null,
       replyToUsername: replyTarget?.username ?? null,
     }).subscribe({
-      next: (reply) => {
-        this.comments.update(cs => cs.map(c => {
-          if (c.id !== rootCommentId) return c;
-          if (!replyTarget) return { ...c, replies: [...c.replies, reply] };
-          // nest under the direct parent reply if it exists at depth 1
-          const updatedReplies = c.replies.map(r =>
-            r.id === replyTarget.id ? { ...r, replies: [...r.replies, reply] } : r
-          );
-          // if replyTarget is itself a depth-2 reply, just append at depth-1 level
-          const found = c.replies.some(r => r.id === replyTarget.id);
-          return { ...c, replies: found ? updatedReplies : [...c.replies, reply] };
-        }));
+      next: (newReply) => {
+        const insertReply = (c: Comment): Comment => {
+          if (c.id === (replyTarget?.id ?? rootCommentId)) {
+            return { ...c, replies: [...c.replies, newReply] };
+          }
+          return { ...c, replies: c.replies.map(r => insertReply(r)) };
+        };
+        this.comments.update(cs => cs.map(c => c.id === rootCommentId ? insertReply(c) : c));
         this.replyBody.set('');
         this.replyingToId.set(null);
         this.replyingToReply.set(null);
@@ -621,6 +647,31 @@ export class Info implements OnInit {
       },
       error: () => { this.replySubmitting.set(false); this.toastService.error('Failed to post reply.'); },
     });
+  }
+
+  reactToComment(commentId: string, isLike: boolean): void {
+    const userId = this.auth.userId();
+    if (!userId) return;
+
+    const updateReaction = (c: Comment): Comment => {
+      if (c.id !== commentId) return { ...c, replies: c.replies.map(r => updateReaction(r)) };
+      const prev = c.userReaction;
+      if (prev === isLike) {
+        // toggle off
+        this.commentService.removeAlbumCommentReaction(commentId, userId).subscribe();
+        return { ...c, userReaction: null, likes: isLike ? c.likes - 1 : c.likes, dislikes: !isLike ? c.dislikes - 1 : c.dislikes };
+      } else {
+        this.commentService.reactAlbumComment(commentId, { userId, isLike }).subscribe();
+        return {
+          ...c,
+          userReaction: isLike,
+          likes: isLike ? c.likes + 1 : (prev === true ? c.likes - 1 : c.likes),
+          dislikes: !isLike ? c.dislikes + 1 : (prev === false ? c.dislikes - 1 : c.dislikes),
+        };
+      }
+    };
+
+    this.comments.update(cs => cs.map(c => updateReaction(c)));
   }
 
   startEditComment(comment: Comment): void {
