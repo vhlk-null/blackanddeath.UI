@@ -292,7 +292,7 @@
 <div class="comments-section">
   <div class="comments-section__header">
     <h2 class="comments-section__title">Comments</h2>
-    <span class="comments-section__count">{{ commentsTotal() }}</span>
+    <span class="comments-section__count">{{ commentsTotalServer() }}</span>
     <select class="comments-sort-select" [value]="commentSort()" (change)="commentSort.set($any($event.target).value)">
       <option value="newest">Newest</option>
       <option value="oldest">Oldest</option>
@@ -395,6 +395,13 @@
       }
       @if (!comments().length) {
         <p class="comments-section__empty">No comments yet. Be the first!</p>
+      }
+      @if (commentsHasMore()) {
+        <div class="comment-load-more">
+          <button type="button" class="comment-load-more__btn" (click)="loadMoreComments()" [disabled]="commentsLoadingMore()">
+            {{ commentsLoadingMore() ? 'Loading…' : 'Show more comments (' + (commentsTotalServer() - commentsTotal()) + ' remaining)' }}
+          </button>
+        </div>
       }
     }
   </div>

@@ -107,9 +107,15 @@ export class BandInfo implements OnInit {
     this.showCollectionPicker.set(true);
   }
 
+  private static readonly COMMENTS_PAGE_SIZE = 20;
+
   // Comments
   readonly comments = signal<Comment[]>([]);
   readonly commentSort = signal<'newest' | 'oldest' | 'top'>('newest');
+  readonly commentsTotalServer = signal(0);
+  readonly commentsPageIndex = signal(1);
+  readonly commentsLoadingMore = signal(false);
+  readonly commentsHasMore = computed(() => this.commentsTotal() < this.commentsTotalServer());
   readonly commentsTotal = computed(() => {
     const count = (list: Comment[]): number => list.reduce((s, c) => s + 1 + count(c.replies), 0);
     return count(this.comments());
@@ -398,9 +404,25 @@ export class BandInfo implements OnInit {
     const bandId = this.bandData()?.id;
     if (!bandId) return;
     const userId = this.auth.userId() ?? undefined;
-    this.commentService.getBandComments(bandId, { pageIndex: 1, pageSize: 50, userId }).subscribe(r => {
+    this.commentsPageIndex.set(1);
+    this.commentService.getBandComments(bandId, { pageIndex: 1, pageSize: BandInfo.COMMENTS_PAGE_SIZE, userId }).subscribe(r => {
       this.comments.set(r.data);
+      this.commentsTotalServer.set(r.count);
       this.commentsLoaded.set(true);
+    });
+  }
+
+  loadMoreComments(): void {
+    const bandId = this.bandData()?.id;
+    if (!bandId || this.commentsLoadingMore()) return;
+    const userId = this.auth.userId() ?? undefined;
+    const nextPage = this.commentsPageIndex() + 1;
+    this.commentsLoadingMore.set(true);
+    this.commentService.getBandComments(bandId, { pageIndex: nextPage, pageSize: BandInfo.COMMENTS_PAGE_SIZE, userId }).subscribe(r => {
+      this.comments.update(c => [...c, ...r.data]);
+      this.commentsTotalServer.set(r.count);
+      this.commentsPageIndex.set(nextPage);
+      this.commentsLoadingMore.set(false);
     });
   }
 

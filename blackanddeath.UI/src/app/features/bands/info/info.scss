@@ -1096,6 +1096,34 @@ app-section:nth-of-type(3) {
   }
 }
 
+.comment-load-more {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 0.5rem;
+
+  &__btn {
+    font-family: var(--font-family-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--color-tab-active) 40%, transparent);
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-tab-active);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+    &:hover:not(:disabled) {
+      background: var(--color-tab-active);
+      color: var(--color-card-bg);
+      border-color: var(--color-tab-active);
+    }
+    &:disabled { opacity: 0.4; cursor: not-allowed; }
+  }
+}
+
 .comments-sort-select {
   margin-left: auto;
   background: var(--color-input-bg);
