@@ -20,7 +20,7 @@
         }
         <div class="section-content-wrapper">
             @if (arrows() && hasOverflow()) {<button class="section-arrow section-arrow--prev" [class.section-arrow--visible]="hovered()" [class.section-arrow--disabled]="!canScrollLeft()" [disabled]="!canScrollLeft()" aria-label="Previous" (click)="scrollContent(-1)">&#8249;</button>}
-            <div class="section-content" [class.section-content--scroll]="scroll()" [class.section-content--wrap]="!scroll()" [style.--columns]="columns()" [style.--mobile-columns]="mobileColumns()" #contentEl (scroll)="onScroll($event)">
+            <div class="section-content" [class.section-content--scroll]="scroll()" [class.section-content--wrap]="!scroll()" [style.--columns]="columns()" [style.--mobile-columns]="mobileColumns()" #contentEl (scroll)="onScroll($event)" [appDragScroll]="arrows() ? 'x' : 'none'">
                 <ng-content></ng-content>
             </div>
             @if (arrows() && hasOverflow()) {<button class="section-arrow section-arrow--next" [class.section-arrow--visible]="hovered()" [class.section-arrow--disabled]="!canScrollRight()" [disabled]="!canScrollRight()" aria-label="Next" (click)="scrollContent(1)">&#8250;</button>}

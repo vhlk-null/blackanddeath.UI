@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, input, output, signal, viewChild, ElementRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Tabs } from '../tabs/tabs';
+import { DragScrollDirective } from '../../directives/drag-scroll.directive';
 
 @Component({
   selector: 'app-section',
-  imports: [Tabs, RouterLink],
+  imports: [Tabs, RouterLink, DragScrollDirective],
   templateUrl: './section.html',
   styleUrl: './section.scss',
 })
