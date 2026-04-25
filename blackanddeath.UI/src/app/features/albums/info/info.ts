@@ -659,10 +659,10 @@ export class Info implements OnInit {
       const prev = c.userReaction;
       if (prev === isLike) {
         // toggle off
-        this.commentService.removeAlbumCommentReaction(commentId, userId).subscribe();
+        this.commentService.removeAlbumCommentReaction(commentId, userId).subscribe({ error: () => {} });
         return { ...c, userReaction: null, likes: isLike ? c.likes - 1 : c.likes, dislikes: !isLike ? c.dislikes - 1 : c.dislikes };
       } else {
-        this.commentService.reactAlbumComment(commentId, { userId, isLike }).subscribe();
+        this.commentService.reactAlbumComment(commentId, { userId, isLike }).subscribe({ error: () => {} });
         return {
           ...c,
           userReaction: isLike,

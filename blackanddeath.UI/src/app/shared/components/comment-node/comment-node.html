@@ -4,8 +4,8 @@
     @if (ctx.editingCommentId() === comment().id) {
       <textarea class="comment-edit-textarea" [value]="ctx.editCommentBody()" (input)="ctx.editCommentBody.set($any($event.target).value)" (keydown.escape)="ctx.cancelEditComment()"></textarea>
       <div class="comment-edit-actions">
-        <button class="comment-composer__cancel" (click)="ctx.cancelEditComment()">Cancel</button>
-        <button class="comment-composer__post" (click)="ctx.saveEditComment(comment().id, comment().parentCommentId)" [disabled]="ctx.editCommentSubmitting()">Save</button>
+        <button type="button" class="comment-composer__cancel" (click)="ctx.cancelEditComment()">Cancel</button>
+        <button type="button" class="comment-composer__post" (click)="ctx.saveEditComment(comment().id, comment().parentCommentId)" [disabled]="ctx.editCommentSubmitting()">Save</button>
       </div>
     } @else {
       <div class="comment-item__meta">
@@ -13,12 +13,12 @@
         <span class="comment-item__date">{{ comment().createdAt | date:'d MMM y' }}@if (comment().isEdited) {<span class="comment-item__edited"> (edited)</span>}</span>
         <div class="comment-item__mod">
           @if (ctx.auth.userId() === comment().userId) {
-            <button class="comment-mod-btn" (click)="ctx.startEditComment(comment())" title="Edit">
+            <button type="button" class="comment-mod-btn" (click)="ctx.startEditComment(comment())" title="Edit">
               <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4C3.45 4 3 4.45 3 5V20C3 20.55 3.45 21 4 21H19C19.55 21 20 20.55 20 19V12" stroke-width="1.5" stroke-linecap="round"/><path d="M18.5 2.5C19.33 1.67 20.67 1.67 21.5 2.5C22.33 3.33 22.33 4.67 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="1.5" stroke-linejoin="round"/></svg>
             </button>
           }
           @if (ctx.auth.isAdmin() || ctx.auth.userId() === comment().userId) {
-            <button class="comment-mod-btn comment-mod-btn--danger" (click)="ctx.deleteComment(comment().id, comment().parentCommentId)" title="Delete">
+            <button type="button" class="comment-mod-btn comment-mod-btn--danger" (click)="ctx.deleteComment(comment().id, comment().parentCommentId)" title="Delete">
               <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20C18 20.55 17.55 21 17 21H7C6.45 21 6 20.55 6 20L5 6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           }
@@ -26,18 +26,18 @@
       </div>
       <p class="comment-item__text">{{ comment().body }}</p>
       <div class="comment-item__actions">
-        <button class="comment-reaction" [class.comment-reaction--on]="comment().userReaction === true" (click)="ctx.reactToComment(comment().id, true)">
+        <button type="button" class="comment-reaction" [class.comment-reaction--on]="comment().userReaction === true" (click)="ctx.reactToComment(comment().id, true)">
           <svg viewBox="0 0 24 24" fill="none"><path d="M7 22V11M2 13v7a2 2 0 0 0 2 2h11.5a2 2 0 0 0 1.97-1.63l1.5-7A2 2 0 0 0 17 11H13V5a2 2 0 0 0-2-2h-1L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>{{ comment().likes }}</span>
         </button>
-        <button class="comment-reaction comment-reaction--down" [class.comment-reaction--on]="comment().userReaction === false" (click)="ctx.reactToComment(comment().id, false)">
+        <button type="button" class="comment-reaction comment-reaction--down" [class.comment-reaction--on]="comment().userReaction === false" (click)="ctx.reactToComment(comment().id, false)">
           <svg viewBox="0 0 24 24" fill="none"><path d="M17 2v11M22 11V4a2 2 0 0 0-2-2H8.5A2 2 0 0 0 6.53 3.63l-1.5 7A2 2 0 0 0 7 13h4v6a2 2 0 0 0 2 2h1l3-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         @if (ctx.auth.isAuthenticated()) {
-          <button class="comment-reply-btn" (click)="toggleReply()">Reply</button>
+          <button type="button" class="comment-reply-btn" (click)="toggleReply()">Reply</button>
         }
         @if (comment().replies.length > 0) {
-          <button class="comment-toggle-replies" (click)="toggleRepliesCollapsed()" [title]="repliesCollapsed() ? 'Show replies' : 'Hide replies'">
+          <button type="button" class="comment-toggle-replies" (click)="toggleRepliesCollapsed()" [title]="repliesCollapsed() ? 'Show replies' : 'Hide replies'">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             {{ repliesCollapsed() ? comment().replies.length : '' }}
           </button>
@@ -52,8 +52,8 @@
         <div class="comment-composer__wrap comment-composer__wrap--focused">
           <textarea class="comment-composer__textarea" placeholder="Write a reply…" [value]="ctx.replyBody()" (input)="ctx.replyBody.set($any($event.target).value); ctx.autoGrow($any($event.target))" rows="1"></textarea>
           <div class="comment-composer__actions">
-            <button class="comment-composer__cancel" (click)="ctx.replyingToId.set(null); ctx.replyingToReply.set(null); ctx.replyBody.set('')">Cancel</button>
-            <button class="comment-composer__post" (click)="ctx.submitReply(rootCommentId())" [disabled]="ctx.replySubmitting() || !ctx.replyBody().trim()">{{ ctx.replySubmitting() ? 'Posting…' : 'Reply' }}</button>
+            <button type="button" class="comment-composer__cancel" (click)="ctx.replyingToId.set(null); ctx.replyingToReply.set(null); ctx.replyBody.set('')">Cancel</button>
+            <button type="button" class="comment-composer__post" (click)="ctx.submitReply(rootCommentId())" [disabled]="ctx.replySubmitting() || !ctx.replyBody().trim()">{{ ctx.replySubmitting() ? 'Posting…' : 'Reply' }}</button>
           </div>
         </div>
       </div>

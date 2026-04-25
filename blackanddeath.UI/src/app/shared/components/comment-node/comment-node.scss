@@ -58,7 +58,6 @@
     font-family: var(--font-family-body);
     font-size: 0.775rem;
     color: var(--color-text-muted);
-    flex: 1;
   }
 
   &__edited {
@@ -192,7 +191,7 @@
 
 .comment-replies {
   margin-top: 0.25rem;
-  padding-left: 0.5rem;
+  padding-left: 0;
   padding-top: 0;
   padding-bottom: 0.25rem;
 }

@@ -1238,9 +1238,6 @@ app-section:nth-of-type(3) {
   display: flex;
   gap: 0.875rem;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--color-separator);
-
-  &:last-child { border-bottom: none; }
 
   &--reply {
     padding: 0.625rem 0 0;
@@ -1271,7 +1268,6 @@ app-section:nth-of-type(3) {
     font-family: var(--font-family-body);
     font-size: 0.775rem;
     color: var(--color-text-muted);
-    flex: 1;
   }
 
   &__edited {
@@ -1288,7 +1284,7 @@ app-section:nth-of-type(3) {
     transition: opacity 0.15s;
   }
 
-  .yt-comment:hover &__mod { opacity: 1; }
+  &:hover &__mod { opacity: 1; }
 
   &__text {
     font-family: var(--font-family-body);
@@ -1405,7 +1401,7 @@ app-section:nth-of-type(3) {
 // ─── Replies block ────────────────────────────────────────────────────────────
 .comment-replies {
   margin-top: 0.25rem;
-  padding-left: 0.5rem;
+  padding-left: 0;
   padding-top: 0;
   padding-bottom: 0.25rem;
 }

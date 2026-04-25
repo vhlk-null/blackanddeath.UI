@@ -462,10 +462,10 @@ export class BandInfo implements OnInit {
       if (c.id !== commentId) return { ...c, replies: c.replies.map(r => updateReaction(r)) };
       const prev = c.userReaction;
       if (prev === isLike) {
-        this.commentService.removeBandCommentReaction(commentId, userId).subscribe();
+        this.commentService.removeBandCommentReaction(commentId, userId).subscribe({ error: () => {} });
         return { ...c, userReaction: null, likes: isLike ? c.likes - 1 : c.likes, dislikes: !isLike ? c.dislikes - 1 : c.dislikes };
       } else {
-        this.commentService.reactBandComment(commentId, { userId, isLike }).subscribe();
+        this.commentService.reactBandComment(commentId, { userId, isLike }).subscribe({ error: () => {} });
         return {
           ...c,
           userReaction: isLike,
