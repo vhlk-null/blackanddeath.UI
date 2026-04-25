@@ -14,11 +14,4 @@ export const authConfig: AuthConfig = {
   strictDiscoveryDocumentValidation: false,
   timeoutFactor: 0.75,
   oidc: true,
-
-  // Hardcode endpoints to skip discovery document request on startup
-  loginUrl: `${environment.issuer}/connect/authorize`,
-  tokenEndpoint: `${environment.issuer}/connect/token`,
-  userinfoEndpoint: `${environment.issuer}/connect/userinfo`,
-  logoutUrl: `${environment.issuer}/connect/endsession`,
-  skipIssuerCheck: true,
 };

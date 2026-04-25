@@ -40,7 +40,7 @@ export class AuthService {
     this.oauth.setStorage(localStorage);
 
     try {
-      await this.oauth.tryLogin();
+      await this.oauth.loadDiscoveryDocumentAndTryLogin();
 
       this._isAuthenticated.set(this.oauth.hasValidAccessToken());
 
