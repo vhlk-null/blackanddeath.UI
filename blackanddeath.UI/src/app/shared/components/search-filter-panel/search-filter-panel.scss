@@ -285,6 +285,35 @@
   }
 }
 
+.filter-panel__pill-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-panel__pill {
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-full);
+  background: transparent;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--color-border-input-focus);
+    color: var(--color-text);
+  }
+
+  &--active {
+    border-color: var(--color-tab-active);
+    color: var(--color-tab-active);
+    background: color-mix(in srgb, var(--color-tab-active) 10%, transparent);
+  }
+}
+
 @keyframes filter-fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }

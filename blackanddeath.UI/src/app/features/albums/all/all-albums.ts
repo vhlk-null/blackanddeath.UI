@@ -88,6 +88,8 @@ export class AllAlbums implements OnInit {
   readonly activeYearTo = signal<string | null>(null);
   readonly activeLabelNames = signal<string[]>([]);
   readonly activeUpcoming = signal<boolean>(false);
+  readonly activeRatingFrom = signal<number | null>(null);
+  readonly activeRatingTo = signal<number | null>(null);
 
   readonly draftGenres = signal<string[]>([]);
   readonly draftCountries = signal<string[]>([]);
@@ -96,6 +98,12 @@ export class AllAlbums implements OnInit {
   readonly draftYearFrom = signal<number>(this.yearMin);
   readonly draftYearTo = signal<number>(this.yearMax);
   readonly draftUpcoming = signal<boolean>(false);
+  readonly ratingMin = 1;
+  readonly ratingMax = 10;
+  readonly draftRatingFrom = signal<number>(1);
+  readonly draftRatingTo = signal<number>(10);
+  readonly draftRatingFromPct = computed(() => ((this.draftRatingFrom() - this.ratingMin) / (this.ratingMax - this.ratingMin)) * 100);
+  readonly draftRatingToPct = computed(() => ((this.draftRatingTo() - this.ratingMin) / (this.ratingMax - this.ratingMin)) * 100);
 
   readonly genreGroups = computed(() => {
     const all = this.genres();
@@ -140,6 +148,8 @@ export class AllAlbums implements OnInit {
       this.activeYearTo.set(exactYear ?? params['yearTo'] ?? null);
       this.activeLabelNames.set(toArray(params['labelName']));
       this.activeUpcoming.set(params['upcoming'] === 'true');
+      this.activeRatingFrom.set(params['ratingFrom'] ? +params['ratingFrom'] : null);
+      this.activeRatingTo.set(params['ratingTo'] ? +params['ratingTo'] : null);
       this.syncDraftsFromActive();
       this.load();
     });
@@ -148,6 +158,16 @@ export class AllAlbums implements OnInit {
   toggleFilters(): void {
     if (!this.filtersOpen()) this.syncDraftsFromActive();
     this.filtersOpen.update(v => !v);
+  }
+
+  onDraftRatingFrom(value: string): void {
+    const v = +value;
+    this.draftRatingFrom.set(v >= this.draftRatingTo() ? this.draftRatingTo() - 1 : v);
+  }
+
+  onDraftRatingTo(value: string): void {
+    const v = +value;
+    this.draftRatingTo.set(v <= this.draftRatingFrom() ? this.draftRatingFrom() + 1 : v);
   }
 
   onDraftYearFrom(value: string): void {
@@ -170,6 +190,10 @@ export class AllAlbums implements OnInit {
     this.activeYearFrom.set(fromChanged || toChanged ? String(this.draftYearFrom()) : null);
     this.activeYearTo.set(fromChanged || toChanged ? String(this.draftYearTo()) : null);
     this.activeUpcoming.set(this.draftUpcoming());
+    const ratingFromChanged = this.draftRatingFrom() !== this.ratingMin;
+    const ratingToChanged = this.draftRatingTo() !== this.ratingMax;
+    this.activeRatingFrom.set(ratingFromChanged || ratingToChanged ? this.draftRatingFrom() : null);
+    this.activeRatingTo.set(ratingFromChanged || ratingToChanged ? this.draftRatingTo() : null);
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -235,6 +259,10 @@ export class AllAlbums implements OnInit {
     this.draftYearFrom.set(this.yearMin);
     this.draftYearTo.set(this.yearMax);
     this.draftUpcoming.set(false);
+    this.activeRatingFrom.set(null);
+    this.activeRatingTo.set(null);
+    this.draftRatingFrom.set(this.ratingMin);
+    this.draftRatingTo.set(this.ratingMax);
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -247,6 +275,8 @@ export class AllAlbums implements OnInit {
     this.draftYearFrom.set(+(this.activeYearFrom() ?? this.yearMin));
     this.draftYearTo.set(+(this.activeYearTo() ?? this.yearMax));
     this.draftUpcoming.set(this.activeUpcoming());
+    this.draftRatingFrom.set(this.activeRatingFrom() ?? this.ratingMin);
+    this.draftRatingTo.set(this.activeRatingTo() ?? this.ratingMax);
   }
 
   private updateUrl(): void {
@@ -265,6 +295,8 @@ export class AllAlbums implements OnInit {
         yearTo: this.activeYearTo() ?? undefined,
         labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
         upcoming: this.activeUpcoming() ? 'true' : undefined,
+        ratingFrom: this.activeRatingFrom() ?? undefined,
+        ratingTo: this.activeRatingTo() ?? undefined,
       },
       queryParamsHandling: 'merge',
     });
@@ -295,6 +327,8 @@ export class AllAlbums implements OnInit {
       yearFrom: this.activeYearFrom() ?? undefined,
       yearTo: this.activeYearTo() ?? undefined,
       labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
+      ratingFrom: this.activeRatingFrom() ?? undefined,
+      ratingTo: this.activeRatingTo() ?? undefined,
     }).subscribe({
       next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
     });

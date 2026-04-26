@@ -62,8 +62,8 @@ export class BandService {
     );
   }
 
-  getBySlug(slug: string) {
-    return this.http.get<{ band: Band }>(BandEndpoints.GET_BY_SLUG(slug)).pipe(
+  getBySlug(slug: string, skipLoader = false) {
+    return this.http.get<{ band: Band }>(BandEndpoints.GET_BY_SLUG(slug), undefined, skipLoader).pipe(
       map(response => response.band)
     );
   }

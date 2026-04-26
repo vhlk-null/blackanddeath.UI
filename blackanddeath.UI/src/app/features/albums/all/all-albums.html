@@ -44,56 +44,109 @@
 
   @if (filtersOpen()) {
   <div class="all-albums__filter-bar">
-    <div class="all-albums__filter-fields">
-      <div class="all-albums__filter-field">
-        <span class="all-albums__filter-field-label">Genre</span>
+
+    <div class="all-albums__filter-grid">
+
+      <!-- Genre -->
+      <div class="all-albums__ff">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          Genre
+        </div>
         <app-multi-select-names [groups]="genreGroups()" placeholder="Any genre" [(selected)]="draftGenres" />
       </div>
-      <div class="all-albums__filter-field">
-        <span class="all-albums__filter-field-label">Country</span>
+
+      <!-- Country -->
+      <div class="all-albums__ff">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Country
+        </div>
         <app-multi-select-names [options]="countryNames()" placeholder="Any country" [(selected)]="draftCountries" />
       </div>
-      <div class="all-albums__filter-field">
-        <span class="all-albums__filter-field-label">Label</span>
+
+      <!-- Label -->
+      <div class="all-albums__ff">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Label
+        </div>
         <app-multi-select-names [options]="labelNames()" placeholder="Any label" [(selected)]="draftLabels" />
       </div>
-      <div class="all-albums__filter-field">
-        <span class="all-albums__filter-field-label">Type</span>
-        <app-multi-select-names [options]="albumTypes" placeholder="Any type" [(selected)]="draftTypes" />
+
+      <!-- Type pills -->
+      <div class="all-albums__ff all-albums__ff--wide">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Type
+        </div>
+        <div class="all-albums__ff-pills">
+          @for (type of albumTypes; track type) {
+            <button class="all-albums__ff-pill" [class.all-albums__ff-pill--active]="draftTypes().includes(type)"
+              (click)="draftTypes.set(draftTypes().includes(type) ? draftTypes().filter(t => t !== type) : [...draftTypes(), type])">
+              {{ type }}
+            </button>
+          }
+        </div>
       </div>
-      <div class="all-albums__filter-field all-albums__filter-field--year">
-        <span class="all-albums__filter-field-label">Time period</span>
-        <div class="all-albums__year-slider">
-          <div class="all-albums__year-slider-track">
-            <div class="all-albums__year-slider-fill" [style.left.%]="draftYearFromPct()" [style.width.%]="draftYearToPct() - draftYearFromPct()"></div>
-            <input class="all-albums__year-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearFrom()" (input)="onDraftYearFrom($any($event.target).value)" />
-            <input class="all-albums__year-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearTo()" (input)="onDraftYearTo($any($event.target).value)" />
+
+      <!-- Rating slider -->
+      <div class="all-albums__ff all-albums__ff--slider">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Rating
+        </div>
+        <div class="all-albums__ff-slider">
+          <div class="all-albums__ff-slider-track">
+            <div class="all-albums__ff-slider-fill" [style.left.%]="draftRatingFromPct()" [style.width.%]="draftRatingToPct() - draftRatingFromPct()"></div>
+            <input class="all-albums__ff-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingFrom()" (input)="onDraftRatingFrom($any($event.target).value)" />
+            <input class="all-albums__ff-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingTo()" (input)="onDraftRatingTo($any($event.target).value)" />
           </div>
-          <div class="all-albums__year-slider-labels">
+          <div class="all-albums__ff-slider-labels">
+            <span>{{ draftRatingFrom() }} ★</span>
+            <span>{{ draftRatingTo() }} ★</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Year slider -->
+      <div class="all-albums__ff all-albums__ff--slider">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Year
+        </div>
+        <div class="all-albums__ff-slider">
+          <div class="all-albums__ff-slider-track">
+            <div class="all-albums__ff-slider-fill" [style.left.%]="draftYearFromPct()" [style.width.%]="draftYearToPct() - draftYearFromPct()"></div>
+            <input class="all-albums__ff-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearFrom()" (input)="onDraftYearFrom($any($event.target).value)" />
+            <input class="all-albums__ff-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearTo()" (input)="onDraftYearTo($any($event.target).value)" />
+          </div>
+          <div class="all-albums__ff-slider-labels">
             <span>{{ draftYearFrom() }}</span>
             <span>{{ draftYearTo() }}</span>
           </div>
         </div>
       </div>
-      <div class="all-albums__filter-field all-albums__filter-field--toggle">
-        <span class="all-albums__filter-field-label">Upcoming</span>
-        <button
-          class="all-albums__upcoming-toggle"
-          [class.all-albums__upcoming-toggle--on]="draftUpcoming()"
-          type="button"
-          (click)="draftUpcoming.set(!draftUpcoming())"
-        >
+
+      <!-- Upcoming -->
+      <div class="all-albums__ff all-albums__ff--toggle">
+        <div class="all-albums__ff-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Upcoming
+        </div>
+        <button class="all-albums__upcoming-toggle" [class.all-albums__upcoming-toggle--on]="draftUpcoming()" type="button" (click)="draftUpcoming.set(!draftUpcoming())">
           <span class="all-albums__upcoming-toggle-knob"></span>
         </button>
       </div>
+
     </div>
+
     <div class="all-albums__filter-actions">
       <button class="all-albums__cancel-btn" type="button" (click)="clearAllFilters(); toggleFilters()">Clear all</button>
       <button class="all-albums__apply-btn" type="button" (click)="applyFilters()">Apply Filters</button>
     </div>
   </div>
   }
-
 
   @if (loaded() && albums().length === 0) {
     <p class="all-albums__empty">No albums found.</p>

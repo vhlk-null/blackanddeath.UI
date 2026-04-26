@@ -1,0 +1,22 @@
+.archive-intro {
+  max-width: 71.25rem;
+  margin: 0 auto;
+  padding: 2rem 0 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &__title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  &__sub {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+}

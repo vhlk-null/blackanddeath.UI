@@ -1,3 +1,10 @@
+<!-- ARCHIVE INTRO -->
+<section class="archive-intro">
+  <h1 class="archive-intro__title">Blackened Death Metal Archive</h1>
+  <p class="archive-intro__sub">{{ totalAlbums() | number }} albums · {{ totalBands() | number }} bands · black, death &amp; everything in between</p>
+</section>
+
+
 @if (!loading()) {
 @if (mainTopRatedAlbums().length) {
 <app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onTopRatedTabChange($event)">
@@ -44,4 +51,5 @@
   }
 </app-section>
 }
+
 }

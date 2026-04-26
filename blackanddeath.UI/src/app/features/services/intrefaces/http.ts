@@ -1,12 +1,13 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SKIP_LOADER } from '../../../core/interceptors/loader.interceptor';
 
 @Injectable({ providedIn: 'root' })
 export class BaseHttpService {
   private http = inject(HttpClient);
 
-  get<T = any>(url: string, params?: Record<string, unknown>): Observable<T> {
+  get<T = any>(url: string, params?: Record<string, unknown>, skipLoader = false): Observable<T> {
     let httpParams = new HttpParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -18,7 +19,8 @@ export class BaseHttpService {
         }
       });
     }
-    return this.http.get<T>(url, { params: httpParams });
+    const context = skipLoader ? new HttpContext().set(SKIP_LOADER, true) : undefined;
+    return this.http.get<T>(url, { params: httpParams, context });
   }
 
   post<T>(url: string, payload: unknown): Observable<T> {

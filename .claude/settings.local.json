@@ -40,7 +40,11 @@
       "PowerShell(cd \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\" && npm run build -- --configuration production 2>&1)",
       "Bash(grep -v \"import\\\\|//\")",
       "WebFetch(domain:www.npmjs.com)",
-      "WebFetch(domain:docs.fastcomments.com)"
+      "WebFetch(domain:docs.fastcomments.com)",
+      "Bash(python -m json.tool)"
+    ],
+    "additionalDirectories": [
+      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover"
     ]
   }
 }

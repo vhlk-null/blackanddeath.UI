@@ -1,6 +1,7 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { forkJoin, of, catchError } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { DecimalPipe } from '@angular/common';
 import { Section } from '../../shared/components/section/section';
 import { AlbumCard } from '../albums/card/album-card';
 import { BandCard } from '../bands/band-card/band-card';
@@ -29,7 +30,7 @@ const PAGE_SIZE = 20;
 
 @Component({
   selector: 'app-home',
-  imports: [Section, AlbumCard, BandCard, VideoCard],
+  imports: [Section, AlbumCard, BandCard, VideoCard, DecimalPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -67,10 +68,19 @@ export class Home implements OnInit {
   private ratingService = inject(RatingService);
   private titleService = inject(Title);
 
+  totalAlbums = signal(0);
+  totalBands  = signal(0);
+
   private readonly periodMap = ['All', 'Year', 'Month'];
 
   ngOnInit(): void {
     this.titleService.setTitle('Black And Death');
+
+    this.albumService.getAllPaginated({ pageIndex: 0, pageSize: 1 })
+      .subscribe(r => this.totalAlbums.set(r.count));
+    this.bandService.getAllPaginated({ pageIndex: 0, pageSize: 1 })
+      .subscribe(r => this.totalBands.set(r.count));
+
     forkJoin({
       topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
       topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),

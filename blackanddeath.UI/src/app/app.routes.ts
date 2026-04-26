@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
+import { Copyright } from './features/copyright/copyright';
 import { AuthCallback } from './features/auth-callback/auth-callback';
 import { Subgenres } from './features/albums/subgenres/subgenres';
 import { Info } from './features/albums/info/info';
@@ -39,5 +40,6 @@ export const routes: Routes = [
     { path: 'genres/:id', component: GenreDetail },
     { path: 'create', component: CreateNewItem, canDeactivate: [unsavedChangesGuard] },
     { path: 'admin', component: Admin, canActivate: [adminGuard] },
-    { path: 'auth/callback', component: AuthCallback }
+    { path: 'auth/callback', component: AuthCallback },
+    { path: 'copyright', component: Copyright }
 ];

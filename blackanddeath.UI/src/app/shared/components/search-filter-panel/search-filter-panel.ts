@@ -167,7 +167,6 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
     if (this.yearTo()) params['yearTo'] = String(this.yearTo());
     if (this.selectedTagIds().length) params['tagIds'] = this.selectedTagIds().join(',');
-
     this.router.navigate(['/albums'], { queryParams: params });
     this.closed.emit();
   }
