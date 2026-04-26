@@ -1,17 +1,23 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, signal, ElementRef, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
   templateUrl: './pagination.html',
   styleUrl: './pagination.scss',
 })
-export class Pagination {
+export class Pagination implements AfterViewInit, OnDestroy {
   readonly total = input.required<number>();
   readonly pageSize = input<number>(20);
   readonly currentPage = input<number>(1);
   readonly loadedPage = input<number>(1);
   readonly pageChange = output<number>();
   readonly loadMore = output<void>();
+
+  readonly isFixed = signal(true);
+
+  @ViewChild('sentinel') sentinelRef!: ElementRef;
+
+  private observer?: IntersectionObserver;
 
   readonly totalPages = computed(() => Math.ceil(this.total() / this.pageSize()));
   readonly hasMore = computed(() => this.loadedPage() < this.totalPages());
@@ -34,6 +40,18 @@ export class Pagination {
 
     return pages;
   });
+
+  ngAfterViewInit(): void {
+    this.observer = new IntersectionObserver(
+      ([entry]) => this.isFixed.set(!entry.isIntersecting),
+      { threshold: 0.5 }
+    );
+    this.observer.observe(this.sentinelRef.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+  }
 
   goTo(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;

@@ -1,14 +1,6 @@
 :host {
   display: block;
-  position: sticky;
-  bottom: 1.25rem;
-  z-index: 50;
   margin-top: 2.5rem;
-  pointer-events: none;
-
-  & > * {
-    pointer-events: auto;
-  }
 }
 
 .pagination {
@@ -16,7 +8,30 @@
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  margin-top: 0.75rem;
+  background: color-mix(in srgb, var(--color-card-hover-bg) 70%, transparent);
+  backdrop-filter: blur(24px);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  width: fit-content;
+  margin: 0 auto;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
+
+  &--fixed {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    margin: 0;
+  }
+
+  &__sentinel {
+    height: 1px;
+  }
 
   &__load-more {
     display: flex;
@@ -35,6 +50,7 @@
     cursor: pointer;
     transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
     margin-bottom: 0.5rem;
+    pointer-events: auto;
 
     svg {
       width: 1rem;
@@ -56,15 +72,14 @@
     min-width: 2.25rem;
     height: 2.25rem;
     padding: 0 0.5rem;
-    border: 1px solid var(--color-border-input);
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
-    background: color-mix(in srgb, var(--color-bg) 80%, transparent);
-    backdrop-filter: blur(8px);
+    background: transparent;
     color: var(--color-text);
     font-family: var(--font-family-body);
     font-size: 0.875rem;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease;
 
     &:hover:not(:disabled):not(.active) {
       background: var(--color-border-input);
