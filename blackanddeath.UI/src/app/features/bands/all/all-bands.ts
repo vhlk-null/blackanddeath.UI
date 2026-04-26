@@ -57,12 +57,15 @@ export class AllBands implements OnInit {
   readonly countries = signal<Country[]>([]);
   readonly filtersOpen = signal(false);
   readonly showSortMenu = signal(false);
+  readonly searchQuery = signal('');
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();
 
   readonly activeSort = signal<SortOption>('FormedYear');
   readonly activeSortDir = signal<SortDir>('desc');
+  readonly activeName = signal<string | null>(null);
   readonly activeGenreNames = signal<string[]>([]);
   readonly activeCountryNames = signal<string[]>([]);
   readonly activeStatuses = signal<string[]>([]);
@@ -117,6 +120,8 @@ export class AllBands implements OnInit {
       this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'CreatedAt');
       this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
       this.currentPage.set(Number(params['pageIndex']) || 1);
+      this.activeName.set(params['name'] ?? null);
+      this.searchQuery.set(params['name'] ?? '');
       this.activeGenreNames.set(toArray(params['genreName']));
       this.activeCountryNames.set(toArray(params['countryName']));
       this.activeStatuses.set(toArray(params['status']));
@@ -129,6 +134,16 @@ export class AllBands implements OnInit {
       this.loadedPage.set(this.currentPage());
       this.load();
     });
+  }
+
+  onSearch(value: string): void {
+    this.searchQuery.set(value);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => {
+      this.activeName.set(value.trim() || null);
+      this.currentPage.set(1);
+      this.updateUrl();
+    }, 400);
   }
 
   toggleFilters(): void {
@@ -253,6 +268,7 @@ export class AllBands implements OnInit {
         sortBy: this.activeSort(),
         sortDir: this.activeSortDir(),
         pageIndex: this.currentPage(),
+        name: this.activeName() ?? undefined,
         genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
         countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
         status: this.activeStatuses().length ? this.activeStatuses() : undefined,
@@ -289,6 +305,7 @@ export class AllBands implements OnInit {
       pageSize: this.pageSize,
       sortBy: this.activeSort(),
       sortDir: this.activeSortDir(),
+      name: this.activeName() ?? undefined,
       genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
       countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
       status: this.activeStatuses().length ? this.activeStatuses() : undefined,

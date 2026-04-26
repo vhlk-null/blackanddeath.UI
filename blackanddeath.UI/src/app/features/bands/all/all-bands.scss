@@ -6,10 +6,57 @@
   &__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 1rem;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--color-separator);
     margin-bottom: 1.5rem;
+  }
+
+  &__search {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    svg:first-child {
+      position: absolute;
+      left: 0.625rem;
+      width: 0.875rem;
+      height: 0.875rem;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 0.4rem 2rem 0.4rem 2rem;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-family: var(--font-family-body);
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.15s;
+
+    &:focus { border-color: var(--color-border-input-focus); }
+    &::placeholder { color: var(--color-text-placeholder); }
+  }
+
+  &__search-clear {
+    position: absolute;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    padding: 0;
+
+    svg { width: 0.875rem; height: 0.875rem; }
+    &:hover { color: var(--color-text); }
   }
 
   &__title {

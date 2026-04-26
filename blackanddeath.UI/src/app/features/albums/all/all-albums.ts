@@ -74,6 +74,8 @@ export class AllAlbums implements OnInit {
   readonly labels = signal<Label[]>([]);
   readonly filtersOpen = signal(false);
   readonly showSortMenu = signal(false);
+  readonly searchQuery = signal('');
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();
@@ -142,6 +144,7 @@ export class AllAlbums implements OnInit {
       this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
       this.currentPage.set(Number(params['pageIndex']) || 1);
       this.activeName.set(params['name'] ?? null);
+      this.searchQuery.set(params['name'] ?? '');
       this.activeGenreNames.set(toArray(params['genreName']));
       this.activeCountryNames.set(toArray(params['countryName']));
       this.activeTypes.set(toArray(params['type']));
@@ -157,6 +160,16 @@ export class AllAlbums implements OnInit {
       this.loadedPage.set(this.currentPage());
       this.load();
     });
+  }
+
+  onSearch(value: string): void {
+    this.searchQuery.set(value);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => {
+      this.activeName.set(value.trim() || null);
+      this.currentPage.set(1);
+      this.updateUrl();
+    }, 400);
   }
 
   toggleFilters(): void {
