@@ -35,12 +35,9 @@
     </div>
   </div>
 
-  <div class="all-bands__pills">
-    <button class="all-bands__pill" [class.all-bands__pill--active]="activeQuickStatus() === null" (click)="setQuickStatus(null)">All</button>
-    @for (status of bandStatuses; track status) {
-      <button class="all-bands__pill" [class.all-bands__pill--active]="activeQuickStatus() === status" (click)="setQuickStatus(status)">{{ status }}</button>
-    }
-  </div>
+  @if (loaded()) {
+    <p class="all-bands__count">{{ total() }} {{ total() === 1 ? 'band' : 'bands' }} found</p>
+  }
 
   @if (filtersOpen()) {
   <div class="all-bands__filter-bar">
@@ -57,6 +54,22 @@
         <span class="all-bands__filter-field-label">Status</span>
         <app-multi-select-names [options]="bandStatuses" placeholder="Any status" [(selected)]="draftStatuses" />
       </div>
+      <!-- Rating slider -->
+      <div class="all-bands__filter-field all-bands__filter-field--slider">
+        <span class="all-bands__filter-field-label">Rating</span>
+        <div class="all-bands__year-slider">
+          <div class="all-bands__year-slider-track">
+            <div class="all-bands__year-slider-fill" [style.left.%]="draftRatingFromPct()" [style.width.%]="draftRatingToPct() - draftRatingFromPct()"></div>
+            <input class="all-bands__year-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingFrom()" (input)="onDraftRatingFrom($any($event.target).value)" />
+            <input class="all-bands__year-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingTo()" (input)="onDraftRatingTo($any($event.target).value)" />
+          </div>
+          <div class="all-bands__year-slider-labels">
+            <span>{{ draftRatingFrom() }} ★</span>
+            <span>{{ draftRatingTo() }} ★</span>
+          </div>
+        </div>
+      </div>
+
       <div class="all-bands__filter-field all-bands__filter-field--year">
         <span class="all-bands__filter-field-label">Time period</span>
         <div class="all-bands__year-slider">
@@ -95,7 +108,9 @@
       [total]="total()"
       [pageSize]="pageSize"
       [currentPage]="currentPage()"
+      [loadedPage]="loadedPage()"
       (pageChange)="onPageChange($event)"
+      (loadMore)="onLoadMore()"
     />
   }
 

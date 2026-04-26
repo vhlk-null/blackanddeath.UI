@@ -35,12 +35,9 @@
     </div>
   </div>
 
-  <div class="all-albums__pills">
-    <button class="all-albums__pill" [class.all-albums__pill--active]="activeQuickType() === null" (click)="setQuickType(null)">All</button>
-    @for (type of albumTypes; track type) {
-      <button class="all-albums__pill" [class.all-albums__pill--active]="activeQuickType() === type" (click)="setQuickType(type)">{{ type }}</button>
-    }
-  </div>
+  @if (loaded()) {
+    <p class="all-albums__count">{{ total() }} {{ total() === 1 ? 'album' : 'albums' }} found</p>
+  }
 
   @if (filtersOpen()) {
   <div class="all-albums__filter-bar">
@@ -163,7 +160,9 @@
       [total]="total()"
       [pageSize]="pageSize"
       [currentPage]="currentPage()"
+      [loadedPage]="loadedPage()"
       (pageChange)="onPageChange($event)"
+      (loadMore)="onLoadMore()"
     />
   }
 

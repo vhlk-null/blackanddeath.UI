@@ -68,12 +68,20 @@ export class AllBands implements OnInit {
   readonly activeStatuses = signal<string[]>([]);
   readonly activeYearFrom = signal<string | null>(null);
   readonly activeYearTo = signal<string | null>(null);
+  readonly activeRatingFrom = signal<number | null>(null);
+  readonly activeRatingTo = signal<number | null>(null);
 
   readonly draftGenres = signal<string[]>([]);
   readonly draftCountries = signal<string[]>([]);
   readonly draftStatuses = signal<string[]>([]);
   readonly draftYearFrom = signal<number>(this.yearMin);
   readonly draftYearTo = signal<number>(this.yearMax);
+  readonly ratingMin = 1;
+  readonly ratingMax = 10;
+  readonly draftRatingFrom = signal<number>(1);
+  readonly draftRatingTo = signal<number>(10);
+  readonly draftRatingFromPct = computed(() => ((this.draftRatingFrom() - this.ratingMin) / (this.ratingMax - this.ratingMin)) * 100);
+  readonly draftRatingToPct = computed(() => ((this.draftRatingTo() - this.ratingMin) / (this.ratingMax - this.ratingMin)) * 100);
 
   readonly genreGroups = computed(() => {
     const all = this.genres();
@@ -96,6 +104,8 @@ export class AllBands implements OnInit {
   readonly total = signal(0);
   readonly loaded = signal(false);
   readonly currentPage = signal(1);
+  private appendPage = 1;
+  readonly loadedPage = signal(1);
 
   ngOnInit(): void {
     this.titleService.setTitle('Bands — Black And Death');
@@ -112,7 +122,11 @@ export class AllBands implements OnInit {
       this.activeStatuses.set(toArray(params['status']));
       this.activeYearFrom.set(params['yearFrom'] ?? null);
       this.activeYearTo.set(params['yearTo'] ?? null);
+      this.activeRatingFrom.set(params['ratingFrom'] ? +params['ratingFrom'] : null);
+      this.activeRatingTo.set(params['ratingTo'] ? +params['ratingTo'] : null);
       this.syncDraftsFromActive();
+      this.appendPage = this.currentPage();
+      this.loadedPage.set(this.currentPage());
       this.load();
     });
   }
@@ -132,6 +146,16 @@ export class AllBands implements OnInit {
     this.draftYearTo.set(v <= this.draftYearFrom() ? this.draftYearFrom() + 1 : v);
   }
 
+  onDraftRatingFrom(value: string): void {
+    const v = +value;
+    this.draftRatingFrom.set(v >= this.draftRatingTo() ? this.draftRatingTo() - 1 : v);
+  }
+
+  onDraftRatingTo(value: string): void {
+    const v = +value;
+    this.draftRatingTo.set(v <= this.draftRatingFrom() ? this.draftRatingFrom() + 1 : v);
+  }
+
   applyFilters(): void {
     this.activeGenreNames.set(this.draftGenres());
     this.activeCountryNames.set(this.draftCountries());
@@ -140,6 +164,10 @@ export class AllBands implements OnInit {
     const toChanged = this.draftYearTo() !== this.yearMax;
     this.activeYearFrom.set(fromChanged || toChanged ? String(this.draftYearFrom()) : null);
     this.activeYearTo.set(fromChanged || toChanged ? String(this.draftYearTo()) : null);
+    const ratingFromChanged = this.draftRatingFrom() !== this.ratingMin;
+    const ratingToChanged = this.draftRatingTo() !== this.ratingMax;
+    this.activeRatingFrom.set(ratingFromChanged || ratingToChanged ? this.draftRatingFrom() : null);
+    this.activeRatingTo.set(ratingFromChanged || ratingToChanged ? this.draftRatingTo() : null);
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -159,6 +187,13 @@ export class AllBands implements OnInit {
     this.currentPage.set(page);
     this.updateUrl();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onLoadMore(): void {
+    this.appendPage += 1;
+    this.loadedPage.set(this.appendPage);
+    this.currentPage.set(this.appendPage);
+    this.loadAppend();
   }
 
   setQuickStatus(status: string | null): void {
@@ -188,11 +223,15 @@ export class AllBands implements OnInit {
     this.activeStatuses.set([]);
     this.activeYearFrom.set(null);
     this.activeYearTo.set(null);
+    this.activeRatingFrom.set(null);
+    this.activeRatingTo.set(null);
     this.draftGenres.set([]);
     this.draftCountries.set([]);
     this.draftStatuses.set([]);
     this.draftYearFrom.set(this.yearMin);
     this.draftYearTo.set(this.yearMax);
+    this.draftRatingFrom.set(this.ratingMin);
+    this.draftRatingTo.set(this.ratingMax);
     this.currentPage.set(1);
     this.updateUrl();
   }
@@ -203,6 +242,8 @@ export class AllBands implements OnInit {
     this.draftStatuses.set([...this.activeStatuses()]);
     this.draftYearFrom.set(+(this.activeYearFrom() ?? this.yearMin));
     this.draftYearTo.set(+(this.activeYearTo() ?? this.yearMax));
+    this.draftRatingFrom.set(this.activeRatingFrom() ?? this.ratingMin);
+    this.draftRatingTo.set(this.activeRatingTo() ?? this.ratingMax);
   }
 
   private updateUrl(): void {
@@ -217,6 +258,8 @@ export class AllBands implements OnInit {
         status: this.activeStatuses().length ? this.activeStatuses() : undefined,
         yearFrom: this.activeYearFrom() ?? undefined,
         yearTo: this.activeYearTo() ?? undefined,
+        ratingFrom: this.activeRatingFrom() ?? undefined,
+        ratingTo: this.activeRatingTo() ?? undefined,
       },
       queryParamsHandling: 'merge',
     });
@@ -229,7 +272,19 @@ export class AllBands implements OnInit {
       });
       return;
     }
-    this.bandService.getAllPaginated({
+    this.bandService.getAllPaginated(this.buildParams()).subscribe({
+      next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); },
+    });
+  }
+
+  private loadAppend(): void {
+    this.bandService.getAllPaginated({ ...this.buildParams(), pageIndex: this.appendPage - 1 }).subscribe({
+      next: (result) => { this.bands.update(prev => [...prev, ...result.data]); this.total.set(result.count); },
+    });
+  }
+
+  private buildParams() {
+    return {
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
       sortBy: this.activeSort(),
@@ -239,8 +294,8 @@ export class AllBands implements OnInit {
       status: this.activeStatuses().length ? this.activeStatuses() : undefined,
       yearFrom: this.activeYearFrom() ?? undefined,
       yearTo: this.activeYearTo() ?? undefined,
-    }).subscribe({
-      next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); },
-    });
+      ratingFrom: this.activeRatingFrom() ?? undefined,
+      ratingTo: this.activeRatingTo() ?? undefined,
+    };
   }
 }

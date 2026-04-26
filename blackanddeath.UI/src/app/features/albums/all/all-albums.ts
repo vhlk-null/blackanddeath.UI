@@ -127,6 +127,8 @@ export class AllAlbums implements OnInit {
   readonly total = signal(0);
   readonly loaded = signal(false);
   readonly currentPage = signal(1);
+  private appendPage = 1;
+  readonly loadedPage = signal(1);
 
   ngOnInit(): void {
     this.titleService.setTitle('Albums — Black And Death');
@@ -151,6 +153,8 @@ export class AllAlbums implements OnInit {
       this.activeRatingFrom.set(params['ratingFrom'] ? +params['ratingFrom'] : null);
       this.activeRatingTo.set(params['ratingTo'] ? +params['ratingTo'] : null);
       this.syncDraftsFromActive();
+      this.appendPage = this.currentPage();
+      this.loadedPage.set(this.currentPage());
       this.load();
     });
   }
@@ -213,6 +217,13 @@ export class AllAlbums implements OnInit {
     this.currentPage.set(page);
     this.updateUrl();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onLoadMore(): void {
+    this.appendPage += 1;
+    this.loadedPage.set(this.appendPage);
+    this.currentPage.set(this.appendPage);
+    this.loadAppend();
   }
 
   albumTypeLabel(value: string): string { return ALBUM_TYPE_REVERSE[value] ?? value; }
@@ -315,7 +326,19 @@ export class AllAlbums implements OnInit {
       });
       return;
     }
-    this.albumService.getAllPaginated({
+    this.albumService.getAllPaginated(this.buildParams()).subscribe({
+      next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
+    });
+  }
+
+  private loadAppend(): void {
+    this.albumService.getAllPaginated({ ...this.buildParams(), pageIndex: this.appendPage - 1 }).subscribe({
+      next: (result) => { this.albums.update(prev => [...prev, ...result.data]); this.total.set(result.count); },
+    });
+  }
+
+  private buildParams() {
+    return {
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
       sortBy: this.activeSort(),
@@ -329,8 +352,6 @@ export class AllAlbums implements OnInit {
       labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
       ratingFrom: this.activeRatingFrom() ?? undefined,
       ratingTo: this.activeRatingTo() ?? undefined,
-    }).subscribe({
-      next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
-    });
+    };
   }
 }

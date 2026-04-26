@@ -9,9 +9,12 @@ export class Pagination {
   readonly total = input.required<number>();
   readonly pageSize = input<number>(20);
   readonly currentPage = input<number>(1);
+  readonly loadedPage = input<number>(1);
   readonly pageChange = output<number>();
+  readonly loadMore = output<void>();
 
   readonly totalPages = computed(() => Math.ceil(this.total() / this.pageSize()));
+  readonly hasMore = computed(() => this.loadedPage() < this.totalPages());
 
   readonly pages = computed(() => {
     const total = this.totalPages();

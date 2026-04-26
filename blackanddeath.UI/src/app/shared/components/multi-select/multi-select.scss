@@ -89,9 +89,14 @@
     border-radius: var(--radius-md);
     list-style: none;
     margin: 0;
-    padding: 0.25rem 0;
+    padding: 0.25rem 0 0.5rem;
     max-height: 12rem;
     overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &__option {
