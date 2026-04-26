@@ -32,8 +32,9 @@ export class UserProfile implements OnInit {
   private titleService = inject(Title);
   readonly collectionService = inject(CollectionService);
 
-  readonly mainTabs = ['Collections', 'Activity'];
+  readonly mainTabs = ['Overview', 'Collections', 'Favorites'];
   readonly activeMainTab = signal(0);
+  readonly activeFavTab = signal<'albums' | 'bands'>('albums');
 
   readonly isOnline = signal(true);
   readonly profileDto = signal<UserProfileDto | null>(null);

@@ -303,21 +303,14 @@
   @if (auth.isAuthenticated()) {
   <div class="comment-composer">
     <div class="comment-avatar">{{ (auth.profile()?.preferred_username ?? auth.profile()?.name ?? 'U')[0].toUpperCase() }}</div>
-    <div class="comment-composer__wrap" [class.comment-composer__wrap--focused]="composerFocused()">
-      <textarea class="comment-composer__textarea" placeholder="Write your commentary…"
-        [value]="commentBody()"
-        (input)="commentBody.set($any($event.target).value); autoGrow($any($event.target))"
-        (focus)="composerFocused.set(true)"
-        (keydown.escape)="composerFocused.set(false)"
-        rows="1"></textarea>
-      @if (composerFocused()) {
-      <div class="comment-composer__actions">
-        <button type="button" class="comment-composer__cancel" (click)="composerFocused.set(false); commentBody.set('')">Cancel</button>
-        <button type="button" class="comment-composer__post" (click)="submitComment()" [disabled]="commentSubmitting() || !commentBody().trim()">
+    <div class="comment-composer__wrap">
+      <app-rich-editor #commentEditor placeholder="Write your commentary…" [compact]="true" (focusin)="composerFocused.set(true)" />
+      <div class="comment-composer__actions" [style.visibility]="composerFocused() ? 'visible' : 'hidden'">
+        <button type="button" class="comment-composer__cancel" (click)="composerFocused.set(false); commentEditor.clear()">Cancel</button>
+        <button type="button" class="comment-composer__post" (click)="commentBody.set(commentEditor.getHTML()); submitComment(); commentEditor.clear()" [disabled]="commentSubmitting() || commentEditor.isEmpty()">
           {{ commentSubmitting() ? 'Posting…' : 'Post' }}
         </button>
       </div>
-      }
     </div>
   </div>
   } @else {
@@ -373,11 +366,11 @@
           @if (replyingToId() === comment.id && !replyingToReply()) {
             <div class="comment-reply-form">
               <div class="comment-avatar comment-avatar--sm">{{ (auth.profile()?.preferred_username ?? auth.profile()?.name ?? 'U')[0].toUpperCase() }}</div>
-              <div class="comment-composer__wrap comment-composer__wrap--focused">
-                <textarea class="comment-composer__textarea" placeholder="Write a reply…" [value]="replyBody()" (input)="replyBody.set($any($event.target).value); autoGrow($any($event.target))" rows="1"></textarea>
+              <div class="comment-composer__wrap">
+                <app-rich-editor #replyEditor placeholder="Write a reply…" [compact]="true" />
                 <div class="comment-composer__actions">
-                  <button type="button" class="comment-composer__cancel" (click)="replyingToId.set(null); replyBody.set('')">Cancel</button>
-                  <button type="button" class="comment-composer__post" (click)="submitReply(comment.id)" [disabled]="replySubmitting() || !replyBody().trim()">{{ replySubmitting() ? 'Posting…' : 'Reply' }}</button>
+                  <button type="button" class="comment-composer__cancel" (click)="replyingToId.set(null); replyEditor.clear()">Cancel</button>
+                  <button type="button" class="comment-composer__post" (click)="replyBody.set(replyEditor.getHTML()); submitReply(comment.id); replyEditor.clear()" [disabled]="replySubmitting() || replyEditor.isEmpty()">{{ replySubmitting() ? 'Posting…' : 'Reply' }}</button>
                 </div>
               </div>
             </div>

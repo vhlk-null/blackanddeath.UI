@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, DestroyRef, ViewChild } from '@angular/core';
 import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
 import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,6 +22,7 @@ import { ReviewService, Review } from '../../services/review.service';
 import { CommentService, Comment } from '../../services/comment.service';
 import { CommentNode } from '../../../shared/components/comment-node/comment-node';
 import { CommentNodeContext } from '../../../shared/components/comment-node/comment-node.context';
+import { RichEditor } from '../../../shared/components/rich-editor/rich-editor';
 import { Album } from '../../../shared/models/album';
 import { Band } from '../../../shared/models/band';
 import { VideoBand } from '../../../shared/models/video-band';
@@ -37,7 +38,7 @@ import {
 
 @Component({
   selector: 'app-info',
-  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe, CollectionPicker, CommentNode],
+  imports: [Section, AlbumCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, TitleCaseAllPipe, DatePipe, CollectionPicker, CommentNode, RichEditor],
   templateUrl: './info.html',
   styleUrl: './info.scss',
   providers: [CommentNodeContext],
@@ -229,6 +230,9 @@ export class Info implements OnInit {
   readonly editCommentSubmitting = signal(false);
   readonly composerFocused = signal(false);
 
+  @ViewChild('reviewEditor') reviewEditor!: RichEditor;
+  @ViewChild('editReviewEditor') editReviewEditor!: RichEditor;
+
   autoGrow(el: HTMLTextAreaElement): void {
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
@@ -255,8 +259,8 @@ export class Info implements OnInit {
   startEditReview(review: { id: string; title: string; body: string; userRating: number | null }): void {
     this.editingReviewId.set(review.id);
     this.editTitle.set(review.title);
-    this.editBody.set(review.body);
     this.editUserRating.set(review.userRating ?? 0);
+    setTimeout(() => this.editReviewEditor?.writeValue(review.body));
   }
 
   cancelEditReview(): void {
@@ -267,14 +271,15 @@ export class Info implements OnInit {
     const id = this.editingReviewId();
     if (!id || this.editSubmitting()) return;
     const title = this.editTitle().trim();
-    const body = this.editBody().trim();
-    if (!title || !body) { this.toastService.info('Please fill in title and review text.'); return; }
+    const body = this.editReviewEditor?.getHTML() ?? '';
+    if (!title || this.editReviewEditor?.isEmpty()) { this.toastService.info('Please fill in title and review text.'); return; }
     this.editSubmitting.set(true);
     const userRating = this.editUserRating();
     this.reviewService.updateAlbumReview(id, { title, body, userRating }).subscribe({
       next: (updated) => {
         this.reviews.update(r => r.map(x => x.id === id ? updated : x));
         this.userRating.set(updated.userRating);
+        this.editReviewEditor?.clear();
         this.editingReviewId.set(null);
         this.editSubmitting.set(false);
         this.toastService.success('Review updated.');
@@ -558,8 +563,8 @@ export class Info implements OnInit {
     if (!userId || !albumId || this.reviewSubmitting()) return;
 
     const title = this.reviewTitle().trim();
-    const body = this.reviewBody().trim();
-    if (!title || !body) {
+    const body = this.reviewEditor?.getHTML() ?? '';
+    if (!title || this.reviewEditor?.isEmpty()) {
       this.toastService.info('Please fill in title and review text.');
       return;
     }
@@ -574,7 +579,7 @@ export class Info implements OnInit {
         this.userRating.set(review.userRating);
         this.userReviewId.set(review.id);
         this.reviewTitle.set('');
-        this.reviewBody.set('');
+        this.reviewEditor?.clear();
         this.reviewSubmitting.set(false);
         this.toastService.success('Review submitted.');
       },

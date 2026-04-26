@@ -49,11 +49,11 @@
     @if (ctx.replyingToReply()?.id === comment().id) {
       <div class="comment-reply-form comment-reply-form--indent">
         <div class="comment-avatar comment-avatar--sm">{{ (ctx.auth.profile()?.preferred_username ?? ctx.auth.profile()?.name ?? 'U')[0].toUpperCase() }}</div>
-        <div class="comment-composer__wrap comment-composer__wrap--focused">
-          <textarea class="comment-composer__textarea" placeholder="Write a reply…" [value]="ctx.replyBody()" (input)="ctx.replyBody.set($any($event.target).value); ctx.autoGrow($any($event.target))" rows="1"></textarea>
+        <div class="comment-composer__wrap">
+          <app-rich-editor #nodeReplyEditor placeholder="Write a reply…" [compact]="true" />
           <div class="comment-composer__actions">
-            <button type="button" class="comment-composer__cancel" (click)="ctx.replyingToId.set(null); ctx.replyingToReply.set(null); ctx.replyBody.set('')">Cancel</button>
-            <button type="button" class="comment-composer__post" (click)="ctx.submitReply(rootCommentId())" [disabled]="ctx.replySubmitting() || !ctx.replyBody().trim()">{{ ctx.replySubmitting() ? 'Posting…' : 'Reply' }}</button>
+            <button type="button" class="comment-composer__cancel" (click)="ctx.replyingToId.set(null); ctx.replyingToReply.set(null); nodeReplyEditor.clear()">Cancel</button>
+            <button type="button" class="comment-composer__post" (click)="ctx.replyBody.set(nodeReplyEditor.getHTML()); ctx.submitReply(rootCommentId()); nodeReplyEditor.clear()" [disabled]="ctx.replySubmitting() || nodeReplyEditor.isEmpty()">{{ ctx.replySubmitting() ? 'Posting…' : 'Reply' }}</button>
           </div>
         </div>
       </div>

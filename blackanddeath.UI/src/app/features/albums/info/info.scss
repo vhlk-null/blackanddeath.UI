@@ -561,16 +561,17 @@
   &__input {
     width: 100%;
     padding: 0.625rem 0.875rem;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
     color: var(--color-text);
     font-family: var(--font-family-body);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     outline: none;
     box-sizing: border-box;
-    transition: border-color 0.2s;
+    transition: border-color 0.15s;
 
-    &:focus { border-color: var(--color-tab-active); }
+    &:focus { border-color: var(--color-border-input-focus); }
     &::placeholder { color: var(--color-text-placeholder); }
   }
 
@@ -1337,46 +1338,15 @@ app-section:nth-of-type(2) {
 
   &__wrap {
     flex: 1;
-    background: color-mix(in srgb, var(--color-tab-active) 4%, var(--color-card-bg));
-    border: none;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-tab-active) 35%, transparent);
-    border-radius: 0;
     overflow: hidden;
-    transition: border-color 0.2s, background 0.2s;
-
-    &--focused {
-      border-color: var(--color-tab-active);
-      background: color-mix(in srgb, var(--color-tab-active) 7%, var(--color-card-bg));
-    }
-  }
-
-  &__textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--color-text);
-    font-family: var(--font-family-body);
-    font-size: 0.875rem;
-    padding: 0.625rem 0.75rem 0.375rem;
-    resize: none;
-    min-height: 2.25rem;
-    line-height: 1.6;
-    box-sizing: border-box;
-    letter-spacing: 0.01em;
-    &::placeholder {
-      color: color-mix(in srgb, var(--color-tab-active) 40%, transparent);
-      font-style: italic;
-    }
   }
 
   &__actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 0.25rem 0.5rem 0.4rem;
+    padding: 0.25rem 0;
     gap: 0.5rem;
-    border-top: 1px solid color-mix(in srgb, var(--color-tab-active) 10%, transparent);
   }
 
   &__cancel {
@@ -1614,12 +1584,7 @@ app-comment-node {
 
   .comment-composer__wrap {
     flex: 1;
-    background: color-mix(in srgb, var(--color-tab-active) 4%, var(--color-card-bg));
-    border: none;
-    border-bottom: 1px solid var(--color-tab-active);
-    border-radius: 0;
     overflow: hidden;
-    box-shadow: none;
   }
 }
 

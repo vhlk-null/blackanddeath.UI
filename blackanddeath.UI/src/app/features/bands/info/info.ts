@@ -18,6 +18,7 @@ import { ReviewService, Review } from '../../services/review.service';
 import { CommentService, Comment } from '../../services/comment.service';
 import { CommentNode } from '../../../shared/components/comment-node/comment-node';
 import { CommentNodeContext } from '../../../shared/components/comment-node/comment-node.context';
+import { RichEditor } from '../../../shared/components/rich-editor/rich-editor';
 import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
 import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { Band } from '../../../shared/models/band';
@@ -38,7 +39,7 @@ export interface AlbumReview extends Review {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, DatePipe, CollectionPicker, CommentNode],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, DatePipe, CollectionPicker, CommentNode, RichEditor],
   templateUrl: './info.html',
   styleUrl: './info.scss',
   providers: [CommentNodeContext],

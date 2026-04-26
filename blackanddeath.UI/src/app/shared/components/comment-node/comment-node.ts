@@ -1,11 +1,12 @@
-import { Component, inject, input, forwardRef, HostBinding, computed, signal } from '@angular/core';
+import { Component, inject, input, forwardRef, HostBinding, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Comment } from '../../../features/services/comment.service';
 import { CommentNodeContext } from './comment-node.context';
+import { RichEditor } from '../rich-editor/rich-editor';
 
 @Component({
   selector: 'app-comment-node',
-  imports: [DatePipe, forwardRef(() => CommentNode)],
+  imports: [DatePipe, forwardRef(() => CommentNode), RichEditor],
   templateUrl: './comment-node.html',
   styleUrl: './comment-node.scss',
 })

@@ -42,7 +42,8 @@
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:docs.fastcomments.com)",
       "Bash(python -m json.tool)",
-      "Bash(grep -E \"\\\\.ts$\")"
+      "Bash(grep -E \"\\\\.ts$\")",
+      "Bash(find \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\src\\\\app\\\\features\\\\user-profile\\\\\" -type f -name \"*\" | head -50)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover"

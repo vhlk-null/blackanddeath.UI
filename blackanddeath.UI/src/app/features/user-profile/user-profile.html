@@ -1,75 +1,89 @@
 <div class="profile">
 
-  <!-- Header card -->
-  <div class="profile__card">
-    <div class="profile__card-top">
+  <!-- Header -->
+  <div class="profile__header">
+    <div class="profile__header-left">
       <div class="profile__avatar">
-        <svg class="profile__avatar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="profile__avatar-icon" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
           <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <span class="profile__avatar-status" [class.profile__avatar-status--online]="isOnline()"></span>
       </div>
-
       <div class="profile__identity">
         <h1 class="profile__username">{{ username() }}</h1>
-        <div class="profile__meta">
-          <span class="profile__rank">Azaghal</span>
-          <span class="profile__separator">·</span>
-          <span class="profile__location">Switzerland</span>
-        </div>
         <span class="profile__online-label" [class.profile__online-label--online]="isOnline()">
           {{ isOnline() ? 'Online' : 'Offline' }}
         </span>
       </div>
-
-      <div class="profile__actions">
-        <button class="profile__action-btn" title="Favourite">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-              stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <button class="profile__action-btn" title="Share">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </button>
-        <button class="profile__action-btn" title="Message">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"
-              stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
     </div>
 
-    <!-- Stats -->
-    <div class="profile__stats">
-      @for (stat of stats(); track stat.label) {
-      <div class="profile__stat">
-        <span class="profile__stat-label">{{ stat.label }}</span>
-        <span class="profile__stat-value">{{ stat.value }}</span>
-      </div>
-      }
-    </div>
-
-    <!-- Main tabs -->
-    <div class="profile__tabs">
-      @for (tab of mainTabs; track tab; let i = $index) {
-      <button class="profile__tab" [class.profile__tab--active]="activeMainTab() === i" (click)="activeMainTab.set(i)">
-        {{ tab }}
+    <div class="profile__header-right">
+      <button class="profile__action-btn" title="Favourite">
+        <svg viewBox="0 0 24 24" fill="none">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
       </button>
-      }
+      <button class="profile__action-btn" title="Share">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
     </div>
   </div>
 
-  <!-- Collections tab -->
+  <!-- Stats -->
+  <div class="profile__stats">
+    @for (stat of stats(); track stat.label) {
+      <div class="profile__stat">
+        <span class="profile__stat-value">{{ stat.value }}</span>
+        <span class="profile__stat-label">{{ stat.label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <div class="profile__tabs">
+    @for (tab of mainTabs; track tab; let i = $index) {
+      <button class="profile__tab" [class.profile__tab--active]="activeMainTab() === i" (click)="activeMainTab.set(i)">
+        {{ tab }}
+      </button>
+    }
+  </div>
+
+  <!-- ── OVERVIEW TAB ── -->
   @if (activeMainTab() === 0) {
+    <div class="profile__overview">
+      <div class="profile__section">
+        <h2 class="profile__section-title">Recent Activity</h2>
+        <div class="profile__activity">
+          @for (item of activities; track item.time) {
+            <div class="profile__activity-item">
+              <div class="profile__activity-avatar">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="profile__activity-body">
+                <span class="profile__activity-user">{{ item.user }}</span>
+                <span class="profile__activity-action"> {{ item.action }} </span>
+                <span class="profile__activity-target">{{ item.target }}</span>
+              </div>
+              <span class="profile__activity-time">{{ item.time }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── COLLECTIONS TAB ── -->
+  @if (activeMainTab() === 1) {
   <div class="profile__collections-layout">
 
     <!-- Left sidebar -->
@@ -77,10 +91,9 @@
       <div class="profile__collections-sidebar-header">
         <span class="profile__collections-sidebar-title">Collections</span>
         <div class="profile__collections-sidebar-actions">
-          <!-- Sort -->
           <div class="profile__collections-sort-wrap">
             <button class="profile__collections-sort-btn" [class.profile__collections-sort-btn--active]="showSortMenu()" title="Sort" (click)="showSortMenu.set(!showSortMenu())">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 6H21M6 12H18M9 18H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </button>
@@ -99,10 +112,9 @@
               </div>
             }
           </div>
-          <!-- New -->
           @if (!creatingCollection()) {
             <button class="profile__collections-new-btn" title="New collection" (click)="startCreatingCollection()">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </button>
@@ -110,19 +122,13 @@
         </div>
       </div>
 
-      <!-- Search -->
       <div class="profile__collections-search">
-        <svg class="profile__collections-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="profile__collections-search-icon" viewBox="0 0 24 24" fill="none">
           <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
           <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
-        <input
-          class="profile__collections-search-input"
-          type="text"
-          placeholder="Search collections…"
-          [ngModel]="collectionSearch()"
-          (ngModelChange)="collectionSearch.set($event)"
-        />
+        <input class="profile__collections-search-input" type="text" placeholder="Search collections…"
+          [ngModel]="collectionSearch()" (ngModelChange)="collectionSearch.set($event)" />
         @if (collectionSearch()) {
           <button class="profile__collections-search-clear" (click)="collectionSearch.set('')">
             <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -136,23 +142,16 @@
             @if (newCollectionCoverPreview()) {
               <img [src]="newCollectionCoverPreview()!" alt="cover" />
             } @else {
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" fill="none">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             }
             <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onNewCoverChange($event)" />
           </label>
           <div class="profile__collections-create-fields">
-            <input
-              class="profile__collections-create-input"
-              type="text"
-              placeholder="Collection name…"
-              [ngModel]="newCollectionName()"
-              (ngModelChange)="newCollectionName.set($event)"
-              (keyup.enter)="confirmCreateCollection()"
-              (keyup.escape)="cancelCreateCollection()"
-              autofocus
-            />
+            <input class="profile__collections-create-input" type="text" placeholder="Collection name…"
+              [ngModel]="newCollectionName()" (ngModelChange)="newCollectionName.set($event)"
+              (keyup.enter)="confirmCreateCollection()" (keyup.escape)="cancelCreateCollection()" autofocus />
             <div class="profile__collections-type-toggle">
               <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'album'" (click)="newCollectionType.set('album')">Albums</button>
               <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'band'" (click)="newCollectionType.set('band')">Bands</button>
@@ -166,43 +165,15 @@
       }
 
       <div class="profile__collections-list">
-        <!-- Default: Favourite Albums -->
-        <div class="profile__collections-item profile__collections-item--default" [class.profile__collections-item--active]="selectedDefaultCollection() === 'fav-albums'" (click)="selectDefaultCollection('fav-albums')">
-          <div class="profile__collections-item-thumb">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="profile__collections-item-info">
-            <span class="profile__collections-item-name">Favourite Albums</span>
-            <span class="profile__collections-item-meta">{{ favoriteAlbums().length }} items</span>
-          </div>
-        </div>
-
-        <!-- Default: Favourite Bands -->
-        <div class="profile__collections-item profile__collections-item--default" [class.profile__collections-item--active]="selectedDefaultCollection() === 'fav-bands'" (click)="selectDefaultCollection('fav-bands')">
-          <div class="profile__collections-item-thumb">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="profile__collections-item-info">
-            <span class="profile__collections-item-name">Favourite Bands</span>
-            <span class="profile__collections-item-meta">{{ favoriteBands().length }} items</span>
-          </div>
-        </div>
-
         @if (collectionService.all().length === 0 && !creatingCollection()) {
           <p class="profile__collections-empty">No collections yet.</p>
         }
-
         @if (albumCollections().length > 0) {
           <p class="profile__collections-group-label">Albums</p>
         }
         @for (col of albumCollections(); track col.id) {
           <ng-container *ngTemplateOutlet="collectionItem; context: { col: col }" />
         }
-
         @if (bandCollections().length > 0) {
           <p class="profile__collections-group-label">Bands</p>
         }
@@ -217,7 +188,7 @@
             @if (col.coverUrl) {
               <img [src]="col.coverUrl" alt="cover" />
             } @else {
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" fill="none">
                 <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
                 <path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/>
               </svg>
@@ -225,16 +196,10 @@
           </div>
           <div class="profile__collections-item-info">
             @if (editingCollectionId() === col.id) {
-              <input
-                class="profile__collections-rename-input"
-                type="text"
-                [ngModel]="editingCollectionName()"
-                (ngModelChange)="editingCollectionName.set($event)"
-                (keyup.enter)="confirmEditCollection()"
-                (keyup.escape)="cancelEditCollection()"
-                (click)="$event.stopPropagation()"
-                autofocus
-              />
+              <input class="profile__collections-rename-input" type="text"
+                [ngModel]="editingCollectionName()" (ngModelChange)="editingCollectionName.set($event)"
+                (keyup.enter)="confirmEditCollection()" (keyup.escape)="cancelEditCollection()"
+                (click)="$event.stopPropagation()" autofocus />
             } @else {
               <span class="profile__collections-item-name">{{ col.name }}</span>
             }
@@ -244,23 +209,121 @@
       </ng-template>
     </div>
 
-    <!-- Right content panel -->
+    <!-- Right panel -->
     <div class="profile__collections-panel">
-
-      <!-- Default: Favourite Albums panel -->
-      @if (selectedDefaultCollection() === 'fav-albums') {
+      @if (collectionService.all().length === 0) {
+        <div class="profile__collections-panel-empty"><p>Create a collection to get started.</p></div>
+      } @else if (collectionDetailLoading()) {
+        <div class="profile__collections-panel-empty"><p>Loading…</p></div>
+      } @else if (selectedCollection()) {
         <div class="profile__col-hero">
-          <div class="profile__col-hero-cover">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-          </div>
+          <label class="profile__col-hero-cover" title="Change cover" appPasteImage (imagePasted)="onHeroCoverPasted($event)">
+            @if (editingCollectionId() === selectedCollection()!.id && editingCollectionCoverPreview()) {
+              <img [src]="editingCollectionCoverPreview()!" alt="cover" />
+            } @else if (selectedCollection()!.coverUrl) {
+              <img [src]="selectedCollection()!.coverUrl" alt="cover" />
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            }
+            <div class="profile__col-hero-cover-overlay">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onHeroCoverChange($event)" />
+          </label>
           <div class="profile__col-hero-meta">
-            <span class="profile__col-hero-label">Default Collection</span>
-            <h2 class="profile__col-hero-name">Favourite Albums</h2>
-            <p class="profile__col-hero-count">{{ favoriteAlbums().length }} items</p>
+            <span class="profile__col-hero-label">Collection</span>
+            @if (editingCollectionId() === selectedCollection()!.id) {
+              <input class="profile__col-hero-name-input" type="text"
+                [ngModel]="editingCollectionName()" (ngModelChange)="editingCollectionName.set($event)"
+                (keyup.enter)="confirmEditCollection()" (keyup.escape)="cancelEditCollection()"
+                (click)="$event.stopPropagation()" autofocus />
+              <div class="profile__col-hero-actions">
+                <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmEditCollection()">Save</button>
+                <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelEditCollection()">Cancel</button>
+              </div>
+            } @else {
+              <h2 class="profile__col-hero-name" (dblclick)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)" title="Double-click to rename">{{ selectedCollection()!.name }}</h2>
+              <p class="profile__col-hero-count">{{ (selectedCollection()!.collectionType === 'album' ? selectedCollection()!.albums.length : selectedCollection()!.bands.length) }} items</p>
+              <div class="profile__col-hero-actions">
+                <button class="profile__collections-item-btn" title="Rename" (click)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="profile__collections-item-btn profile__collections-item-btn--danger" title="Delete" (click)="deleteCollection(selectedCollection()!.id)">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            }
           </div>
         </div>
+
+        @if (selectedCollection()!.albums.length === 0 && selectedCollection()!.bands.length === 0) {
+          <p class="profile__collections-panel-hint">No items yet. Use the bookmark icon on album or band pages to add them here.</p>
+        }
+
+        @if (selectedCollection()!.albums.length > 0 || selectedCollection()!.bands.length > 0) {
+          <div class="profile__col-table-header profile__col-table-header--with-remove">
+            <span class="profile__col-table-num">#</span>
+            <span></span>
+            <span class="profile__col-table-title">{{ selectedCollection()!.collectionType === 'album' ? 'Title' : 'Name' }}</span>
+            <span class="profile__col-table-band">{{ selectedCollection()!.collectionType === 'album' ? 'Band' : 'Genre' }}</span>
+            <span class="profile__col-table-type">{{ selectedCollection()!.collectionType === 'album' ? 'Type' : 'Country' }}</span>
+          </div>
+          @for (album of selectedCollection()!.albums; track album.id; let i = $index) {
+            <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/albums', album.slug]">
+              <span class="profile__col-row-num">{{ i + 1 }}</span>
+              <div class="profile__col-row-thumb">
+                @if (album.coverUrl) { <img [src]="album.coverUrl" [alt]="album.title" /> }
+                @else { <svg viewBox="0 0 171 171" fill="none"><circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/><path d="M85.5 0C132.72 0 171 38.28 171 85.5C171 132.72 132.72 171 85.5 171C38.28 171 0 132.72 0 85.5C0 38.28 38.28 0 85.5 0ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5Z" fill="#606162"/></svg> }
+              </div>
+              <span class="profile__col-row-name">{{ album.title }}</span>
+              <span class="profile__col-row-band">{{ album.bands?.[0]?.name ?? '—' }}</span>
+              <span class="profile__col-row-type">{{ album.type }}</span>
+              <button class="profile__col-row-remove" title="Remove" (click)="$event.preventDefault(); $event.stopPropagation(); removeFromCollection('album', album.id)">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </a>
+          }
+          @for (band of selectedCollection()!.bands; track band.id; let i = $index) {
+            <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/bands', band.slug]">
+              <span class="profile__col-row-num">{{ selectedCollection()!.albums.length + i + 1 }}</span>
+              <div class="profile__col-row-thumb profile__col-row-thumb--band">
+                @if (band.logoUrl) { <img [src]="band.logoUrl" [alt]="band.name" /> }
+                @else { <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> }
+              </div>
+              <span class="profile__col-row-name">{{ band.name }}</span>
+              <span class="profile__col-row-band">{{ band.primaryGenre?.name ?? '—' }}</span>
+              <span class="profile__col-row-type">Band</span>
+              <button class="profile__col-row-remove" title="Remove" (click)="$event.preventDefault(); $event.stopPropagation(); removeFromCollection('band', band.id)">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </a>
+          }
+        }
+      } @else {
+        <div class="profile__collections-panel-empty"><p>Select a collection to view its contents.</p></div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- ── FAVORITES TAB ── -->
+  @if (activeMainTab() === 2) {
+    <div class="profile__favorites">
+      <div class="profile__fav-tabs">
+        <button class="profile__fav-tab" [class.profile__fav-tab--active]="activeFavTab() === 'albums'" (click)="activeFavTab.set('albums')">
+          Albums <span class="profile__fav-tab-count">{{ favoriteAlbums().length }}</span>
+        </button>
+        <button class="profile__fav-tab" [class.profile__fav-tab--active]="activeFavTab() === 'bands'" (click)="activeFavTab.set('bands')">
+          Bands <span class="profile__fav-tab-count">{{ favoriteBands().length }}</span>
+        </button>
+      </div>
+
+      @if (activeFavTab() === 'albums') {
         @if (favoriteAlbums().length === 0) {
           <p class="profile__collections-panel-hint">No favourite albums yet.</p>
         } @else {
@@ -275,14 +338,8 @@
             <a class="profile__col-row" [routerLink]="['/albums', album.slug]">
               <span class="profile__col-row-num">{{ i + 1 }}</span>
               <div class="profile__col-row-thumb">
-                @if (album.coverUrl) {
-                  <img [src]="album.coverUrl" [alt]="album.title" />
-                } @else {
-                  <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
-                    <path d="M85.5 0C132.72 0 171 38.28 171 85.5C171 132.72 132.72 171 85.5 171C38.28 171 0 132.72 0 85.5C0 38.28 38.28 0 85.5 0ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5Z" fill="#606162"/>
-                  </svg>
-                }
+                @if (album.coverUrl) { <img [src]="album.coverUrl" [alt]="album.title" /> }
+                @else { <svg viewBox="0 0 171 171" fill="none"><circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/><path d="M85.5 0C132.72 0 171 38.28 171 85.5C171 132.72 132.72 171 85.5 171C38.28 171 0 132.72 0 85.5C0 38.28 38.28 0 85.5 0ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5Z" fill="#606162"/></svg> }
               </div>
               <span class="profile__col-row-name">{{ album.title }}</span>
               <span class="profile__col-row-band">{{ album.bands?.[0]?.name ?? '—' }}</span>
@@ -292,20 +349,7 @@
         }
       }
 
-      <!-- Default: Favourite Bands panel -->
-      @else if (selectedDefaultCollection() === 'fav-bands') {
-        <div class="profile__col-hero">
-          <div class="profile__col-hero-cover">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="profile__col-hero-meta">
-            <span class="profile__col-hero-label">Default Collection</span>
-            <h2 class="profile__col-hero-name">Favourite Bands</h2>
-            <p class="profile__col-hero-count">{{ favoriteBands().length }} items</p>
-          </div>
-        </div>
+      @if (activeFavTab() === 'bands') {
         @if (favoriteBands().length === 0) {
           <p class="profile__collections-panel-hint">No favourite bands yet.</p>
         } @else {
@@ -320,15 +364,8 @@
             <a class="profile__col-row" [routerLink]="['/bands', band.slug]">
               <span class="profile__col-row-num">{{ i + 1 }}</span>
               <div class="profile__col-row-thumb profile__col-row-thumb--band">
-                @if (band.logoUrl) {
-                  <img [src]="band.logoUrl" [alt]="band.name" />
-                } @else {
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                }
+                @if (band.logoUrl) { <img [src]="band.logoUrl" [alt]="band.name" /> }
+                @else { <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> }
               </div>
               <span class="profile__col-row-name">{{ band.name }}</span>
               <span class="profile__col-row-band">{{ band.primaryGenre?.name ?? '—' }}</span>
@@ -337,173 +374,7 @@
           }
         }
       }
-
-      @else if (collectionService.all().length === 0) {
-        <div class="profile__collections-panel-empty">
-          <p>Create a collection to get started.</p>
-        </div>
-      } @else if (collectionDetailLoading()) {
-        <div class="profile__collections-panel-empty">
-          <p>Loading…</p>
-        </div>
-      } @else if (selectedCollection()) {
-
-        <!-- Spotify-style hero header -->
-        <div class="profile__col-hero">
-          <!-- Cover -->
-          <label class="profile__col-hero-cover" title="Change cover" appPasteImage (imagePasted)="onHeroCoverPasted($event)">
-            @if (editingCollectionId() === selectedCollection()!.id && editingCollectionCoverPreview()) {
-              <img [src]="editingCollectionCoverPreview()!" alt="cover" />
-            } @else if (selectedCollection()!.coverUrl) {
-              <img [src]="selectedCollection()!.coverUrl" alt="cover" />
-            } @else {
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-            }
-            <div class="profile__col-hero-cover-overlay">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onHeroCoverChange($event)" />
-          </label>
-
-          <!-- Meta -->
-          <div class="profile__col-hero-meta">
-            <span class="profile__col-hero-label">Collection</span>
-            @if (editingCollectionId() === selectedCollection()!.id) {
-              <input
-                class="profile__col-hero-name-input"
-                type="text"
-                [ngModel]="editingCollectionName()"
-                (ngModelChange)="editingCollectionName.set($event)"
-                (keyup.enter)="confirmEditCollection()"
-                (keyup.escape)="cancelEditCollection()"
-                (click)="$event.stopPropagation()"
-                autofocus
-              />
-              <div class="profile__col-hero-actions">
-                <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmEditCollection()">Save</button>
-                <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelEditCollection()">Cancel</button>
-              </div>
-            } @else {
-              <h2 class="profile__col-hero-name" (dblclick)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)" title="Double-click to rename">{{ selectedCollection()!.name }}</h2>
-              <p class="profile__col-hero-count">{{ (selectedCollection()!.collectionType === 'album' ? selectedCollection()!.albums.length : selectedCollection()!.bands.length) }} items</p>
-              <div class="profile__col-hero-actions">
-                <button class="profile__collections-item-btn" title="Rename" (click)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <button class="profile__collections-item-btn profile__collections-item-btn--danger" title="Delete" (click)="deleteCollection(selectedCollection()!.id)">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-            }
-          </div>
-        </div>
-
-        @if (selectedCollection()!.albums.length === 0 && selectedCollection()!.bands.length === 0) {
-          <p class="profile__collections-panel-hint">No items yet. Use the bookmark icon on album or band pages to add them here.</p>
-        }
-
-        @if (selectedCollection()!.albums.length > 0 || selectedCollection()!.bands.length > 0) {
-          <!-- Table header -->
-          <div class="profile__col-table-header">
-            <span class="profile__col-table-num">#</span>
-            <span></span>
-            <span class="profile__col-table-title">{{ selectedCollection()!.collectionType === 'album' ? 'Title' : 'Name' }}</span>
-            <span class="profile__col-table-band">{{ selectedCollection()!.collectionType === 'album' ? 'Band' : 'Genre' }}</span>
-            <span class="profile__col-table-type">{{ selectedCollection()!.collectionType === 'album' ? 'Type' : 'Country' }}</span>
-          </div>
-
-          <!-- Albums -->
-          @for (album of selectedCollection()!.albums; track album.id; let i = $index) {
-            <a class="profile__col-row" [routerLink]="['/albums', album.slug]">
-              <span class="profile__col-row-num">{{ i + 1 }}</span>
-              <div class="profile__col-row-thumb">
-                @if (album.coverUrl) {
-                  <img [src]="album.coverUrl" [alt]="album.title" />
-                } @else {
-                  <svg viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="85.5" cy="85.5" r="14.5" fill="#606162"/>
-                    <path d="M85.5 0C132.72 0 171 38.28 171 85.5C171 132.72 132.72 171 85.5 171C38.28 171 0 132.72 0 85.5C0 38.28 38.28 0 85.5 0ZM85.5 50.5C66.17 50.5 50.5 66.17 50.5 85.5C50.5 104.83 66.17 120.5 85.5 120.5C104.83 120.5 120.5 104.83 120.5 85.5C120.5 66.17 104.83 50.5 85.5 50.5Z" fill="#606162"/>
-                  </svg>
-                }
-              </div>
-              <span class="profile__col-row-name">{{ album.title }}</span>
-              <span class="profile__col-row-band">{{ album.bands?.[0]?.name ?? '—' }}</span>
-              <span class="profile__col-row-type">{{ album.type }}</span>
-              <button class="profile__col-row-remove" title="Remove" (click)="$event.preventDefault(); $event.stopPropagation(); removeFromCollection('album', album.id)">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </button>
-            </a>
-          }
-
-          <!-- Bands -->
-          @for (band of selectedCollection()!.bands; track band.id; let i = $index) {
-            <a class="profile__col-row" [routerLink]="['/bands', band.slug]">
-              <span class="profile__col-row-num">{{ selectedCollection()!.albums.length + i + 1 }}</span>
-              <div class="profile__col-row-thumb profile__col-row-thumb--band">
-                @if (band.logoUrl) {
-                  <img [src]="band.logoUrl" [alt]="band.name" />
-                } @else {
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                }
-              </div>
-              <span class="profile__col-row-name">{{ band.name }}</span>
-              <span class="profile__col-row-band">{{ band.primaryGenre?.name ?? '—' }}</span>
-              <span class="profile__col-row-type">Band</span>
-              <button class="profile__col-row-remove" title="Remove" (click)="$event.preventDefault(); $event.stopPropagation(); removeFromCollection('band', band.id)">
-                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              </button>
-            </a>
-          }
-        }
-      } @else {
-        <div class="profile__collections-panel-empty">
-          <p>Select a collection to view its contents.</p>
-        </div>
-      }
     </div>
-
-  </div>
-  }
-
-  <!-- Activity tab -->
-  @if (activeMainTab() === 1) {
-  <div class="profile__content">
-    <div class="profile__section">
-      <h2 class="profile__section-title">Recent Activity</h2>
-      <div class="profile__activity">
-        @for (item of activities; track item.time) {
-        <div class="profile__activity-item">
-          <div class="profile__activity-avatar">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="profile__activity-body">
-            <span class="profile__activity-user">{{ item.user }}</span>
-            <span class="profile__activity-action"> {{ item.action }} </span>
-            <span class="profile__activity-target">{{ item.target }}</span>
-          </div>
-          <span class="profile__activity-time">{{ item.time }}</span>
-        </div>
-        }
-      </div>
-    </div>
-  </div>
   }
 
 </div>
