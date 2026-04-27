@@ -101,16 +101,38 @@
   </div>
   }
 
-
-  @if (loaded() && bands().length === 0) {
-    <p class="all-bands__empty">No bands found.</p>
-  } @else {
-    <div class="all-bands__grid">
-      @for (band of bands(); track band.id) {
-        <app-band-card [bandCard]="band" />
+  @if (activeName() || activeGenreNames().length || activeCountryNames().length || activeStatuses().length || activeYearFrom() || activeYearTo() || activeRatingFrom() || activeRatingTo()) {
+    <div class="all-bands__chips">
+      @if (activeName()) {
+        <span class="all-bands__chip">Search: {{ activeName() }}<button type="button" (click)="onSearch('')">×</button></span>
       }
+      @for (g of activeGenreNames(); track g) {
+        <span class="all-bands__chip">{{ g }}<button type="button" (click)="clearFilter('genre', g)">×</button></span>
+      }
+      @for (c of activeCountryNames(); track c) {
+        <span class="all-bands__chip">{{ c }}<button type="button" (click)="clearFilter('country', c)">×</button></span>
+      }
+      @for (s of activeStatuses(); track s) {
+        <span class="all-bands__chip">{{ s }}<button type="button" (click)="clearFilter('status', s)">×</button></span>
+      }
+      @if (activeYearFrom() || activeYearTo()) {
+        <span class="all-bands__chip">{{ activeYearFrom() }}–{{ activeYearTo() }}<button type="button" (click)="clearFilter('year')">×</button></span>
+      }
+      @if (activeRatingFrom() || activeRatingTo()) {
+        <span class="all-bands__chip">★ {{ activeRatingFrom() }}–{{ activeRatingTo() }}<button type="button" (click)="clearAllFilters()">×</button></span>
+      }
+      <button class="all-bands__chips-clear" type="button" (click)="clearAllFilters()">Clear all</button>
     </div>
   }
+
+  @if (!loading() && loaded() && bands().length === 0) {
+    <p class="all-bands__empty">No bands found.</p>
+  }
+  <div class="all-bands__grid" [class.all-bands__grid--loading]="loading()">
+    @for (band of bands(); track band.id) {
+      <app-band-card [bandCard]="band" />
+    }
+  </div>
 
   @if (total() > pageSize) {
     <app-pagination

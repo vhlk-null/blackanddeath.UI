@@ -59,7 +59,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           Genre
         </div>
-        <app-multi-select-names [groups]="genreGroups()" placeholder="Any genre" [(selected)]="draftGenres" />
+        <app-multi-select-names [groups]="genreGroups()" placeholder="Any genre" [(selected)]="draftGenres" (selectedChange)="scheduleApply()" />
       </div>
 
       <!-- Country -->
@@ -68,7 +68,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           Country
         </div>
-        <app-multi-select-names [options]="countryNames()" placeholder="Any country" [(selected)]="draftCountries" />
+        <app-multi-select-names [options]="countryNames()" placeholder="Any country" [(selected)]="draftCountries" (selectedChange)="scheduleApply()" />
       </div>
 
       <!-- Label -->
@@ -77,7 +77,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
           Label
         </div>
-        <app-multi-select-names [options]="labelNames()" placeholder="Any label" [(selected)]="draftLabels" />
+        <app-multi-select-names [options]="labelNames()" placeholder="Any label" [(selected)]="draftLabels" (selectedChange)="scheduleApply()" />
       </div>
 
       <!-- Type pills -->
@@ -89,7 +89,7 @@
         <div class="all-albums__ff-pills">
           @for (type of albumTypes; track type) {
             <button class="all-albums__ff-pill" [class.all-albums__ff-pill--active]="draftTypes().includes(type)"
-              (click)="draftTypes.set(draftTypes().includes(type) ? draftTypes().filter(t => t !== type) : [...draftTypes(), type])">
+              (click)="draftTypes.set(draftTypes().includes(type) ? draftTypes().filter(t => t !== type) : [...draftTypes(), type]); scheduleApply()">
               {{ type }}
             </button>
           }
@@ -105,8 +105,8 @@
         <div class="all-albums__ff-slider">
           <div class="all-albums__ff-slider-track">
             <div class="all-albums__ff-slider-fill" [style.left.%]="draftRatingFromPct()" [style.width.%]="draftRatingToPct() - draftRatingFromPct()"></div>
-            <input class="all-albums__ff-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingFrom()" (input)="onDraftRatingFrom($any($event.target).value)" />
-            <input class="all-albums__ff-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingTo()" (input)="onDraftRatingTo($any($event.target).value)" />
+            <input class="all-albums__ff-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingFrom()" (input)="onDraftRatingFrom($any($event.target).value)" (change)="scheduleApply()" />
+            <input class="all-albums__ff-slider-input" type="range" [min]="ratingMin" [max]="ratingMax" [value]="draftRatingTo()" (input)="onDraftRatingTo($any($event.target).value)" (change)="scheduleApply()" />
           </div>
           <div class="all-albums__ff-slider-labels">
             <span>{{ draftRatingFrom() }} ★</span>
@@ -124,8 +124,8 @@
         <div class="all-albums__ff-slider">
           <div class="all-albums__ff-slider-track">
             <div class="all-albums__ff-slider-fill" [style.left.%]="draftYearFromPct()" [style.width.%]="draftYearToPct() - draftYearFromPct()"></div>
-            <input class="all-albums__ff-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearFrom()" (input)="onDraftYearFrom($any($event.target).value)" />
-            <input class="all-albums__ff-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearTo()" (input)="onDraftYearTo($any($event.target).value)" />
+            <input class="all-albums__ff-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearFrom()" (input)="onDraftYearFrom($any($event.target).value)" (change)="scheduleApply()" />
+            <input class="all-albums__ff-slider-input" type="range" [min]="yearMin" [max]="yearMax" [value]="draftYearTo()" (input)="onDraftYearTo($any($event.target).value)" (change)="scheduleApply()" />
           </div>
           <div class="all-albums__ff-slider-labels">
             <span>{{ draftYearFrom() }}</span>
@@ -140,29 +140,54 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Upcoming
         </div>
-        <button class="all-albums__upcoming-toggle" [class.all-albums__upcoming-toggle--on]="draftUpcoming()" type="button" (click)="draftUpcoming.set(!draftUpcoming())">
+        <button class="all-albums__upcoming-toggle" [class.all-albums__upcoming-toggle--on]="draftUpcoming()" type="button" (click)="draftUpcoming.set(!draftUpcoming()); scheduleApply()">
           <span class="all-albums__upcoming-toggle-knob"></span>
         </button>
       </div>
 
     </div>
 
-    <div class="all-albums__filter-actions">
-      <button class="all-albums__cancel-btn" type="button" (click)="clearAllFilters(); toggleFilters()">Clear all</button>
-      <button class="all-albums__apply-btn" type="button" (click)="applyFilters()">Apply Filters</button>
-    </div>
   </div>
   }
 
-  @if (loaded() && albums().length === 0) {
-    <p class="all-albums__empty">No albums found.</p>
-  } @else {
-    <div class="all-albums__grid">
-      @for (album of albums(); track album.id) {
-        <app-album-card [albumCard]="album" />
+  @if (activeName() || activeGenreNames().length || activeCountryNames().length || activeTypes().length || activeYearFrom() || activeYearTo() || activeLabelNames().length || activeRatingFrom() || activeRatingTo() || activeUpcoming()) {
+    <div class="all-albums__chips">
+      @if (activeName()) {
+        <span class="all-albums__chip">Search: {{ activeName() }}<button type="button" (click)="clearFilter('name')">×</button></span>
       }
+      @for (g of activeGenreNames(); track g) {
+        <span class="all-albums__chip">{{ g }}<button type="button" (click)="clearFilter('genre', g)">×</button></span>
+      }
+      @for (c of activeCountryNames(); track c) {
+        <span class="all-albums__chip">{{ c }}<button type="button" (click)="clearFilter('country', c)">×</button></span>
+      }
+      @for (t of activeTypes(); track t) {
+        <span class="all-albums__chip">{{ albumTypeLabel(t) }}<button type="button" (click)="clearFilter('type', t)">×</button></span>
+      }
+      @if (activeYearFrom() || activeYearTo()) {
+        <span class="all-albums__chip">{{ activeYearFrom() }}–{{ activeYearTo() }}<button type="button" (click)="clearFilter('year')">×</button></span>
+      }
+      @for (l of activeLabelNames(); track l) {
+        <span class="all-albums__chip">{{ l }}<button type="button" (click)="clearFilter('label', l)">×</button></span>
+      }
+      @if (activeRatingFrom() || activeRatingTo()) {
+        <span class="all-albums__chip">★ {{ activeRatingFrom() }}–{{ activeRatingTo() }}<button type="button" (click)="clearAllFilters()">×</button></span>
+      }
+      @if (activeUpcoming()) {
+        <span class="all-albums__chip">Upcoming<button type="button" (click)="clearFilter('upcoming')">×</button></span>
+      }
+      <button class="all-albums__chips-clear" type="button" (click)="clearAllFilters()">Clear all</button>
     </div>
   }
+
+  @if (!loading() && loaded() && albums().length === 0) {
+    <p class="all-albums__empty">No albums found.</p>
+  }
+  <div class="all-albums__grid" [class.all-albums__grid--loading]="loading()">
+    @for (album of albums(); track album.id) {
+      <app-album-card [albumCard]="album" />
+    }
+  </div>
 
   @if (total() > pageSize) {
     <app-pagination

@@ -14,6 +14,7 @@ export class AlbumEndpoints {
   public static DELETE = (id: string) => `${base}/library/albums/${id}`;
   public static PENDING_APPROVAL = `${base}/library/albums/pending-approval`;
   public static GET_UPCOMING = `${base}/library/albums/upcoming`;
+  public static SEARCH = `${base}/library/albums/search`;
 }
 
 export class BandEndpoints {
@@ -27,6 +28,7 @@ export class BandEndpoints {
   public static UPDATE_LOGO = (id: string) => `${base}/library/bands/${id}/logo`;
   public static DELETE = (id: string) => `${base}/library/bands/${id}`;
   public static PENDING_APPROVAL = `${base}/library/bands/pending-approval`;
+  public static SEARCH = `${base}/library/bands/search`;
 }
 
 export class VideoBandEndpoints {

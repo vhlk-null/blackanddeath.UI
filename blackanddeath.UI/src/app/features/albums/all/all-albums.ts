@@ -1,7 +1,13 @@
 import { Component, computed, inject, OnInit, signal, HostListener, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
+import { take } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { AlbumService } from '../../services/album.servics';
+import { SearchService } from '../../services/search.service';
+import { AlbumSearchDocument } from '../../../shared/models/album-search-document';
+import { AlbumType } from '../../../shared/models/enums/album-type.enum';
+import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { LabelService } from '../../services/label.service';
@@ -59,12 +65,13 @@ export class AllAlbums implements OnInit {
   }
 
   private albumService = inject(AlbumService);
+  private searchService = inject(SearchService);
   private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private labelService = inject(LabelService);
-  private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private location = inject(Location);
   private titleService = inject(Title);
 
   readonly albumTypes = ALBUM_TYPES;
@@ -76,6 +83,7 @@ export class AllAlbums implements OnInit {
   readonly showSortMenu = signal(false);
   readonly searchQuery = signal('');
   private searchTimer: ReturnType<typeof setTimeout> | null = null;
+  private filterTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly yearMin = 1950;
   readonly yearMax = new Date().getFullYear();
@@ -128,6 +136,8 @@ export class AllAlbums implements OnInit {
   readonly albums = signal<Album[]>([]);
   readonly total = signal(0);
   readonly loaded = signal(false);
+  readonly loading = signal(false);
+  readonly skeletonItems = Array(20).fill(0);
   readonly currentPage = signal(1);
   private appendPage = 1;
   readonly loadedPage = signal(1);
@@ -138,7 +148,7 @@ export class AllAlbums implements OnInit {
     this.countryService.getAll().subscribe(c => this.countries.set(c));
     this.labelService.getAll().subscribe(l => this.labels.set(l));
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(take(1)).subscribe((params: Params) => {
       const sort = params['sortBy'] as SortOption;
       this.activeSort.set(SORT_OPTIONS.find(o => o.value === sort) ? sort : 'CreatedAt');
       this.activeSortDir.set(params['sortDir'] === 'asc' ? 'asc' : 'desc');
@@ -164,17 +174,26 @@ export class AllAlbums implements OnInit {
 
   onSearch(value: string): void {
     this.searchQuery.set(value);
+
+    console.log('Search query changed:', value);
+    
     if (this.searchTimer) clearTimeout(this.searchTimer);
     this.searchTimer = setTimeout(() => {
       this.activeName.set(value.trim() || null);
       this.currentPage.set(1);
       this.updateUrl();
+      this.load();
     }, 400);
   }
 
   toggleFilters(): void {
     if (!this.filtersOpen()) this.syncDraftsFromActive();
     this.filtersOpen.update(v => !v);
+  }
+
+  scheduleApply(): void {
+    if (this.filterTimer) clearTimeout(this.filterTimer);
+    this.filterTimer = setTimeout(() => this.applyFilters(), 400);
   }
 
   onDraftRatingFrom(value: string): void {
@@ -213,6 +232,7 @@ export class AllAlbums implements OnInit {
     this.activeRatingTo.set(ratingFromChanged || ratingToChanged ? this.draftRatingTo() : null);
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   onSortChange(sort: SortOption): void {
@@ -224,11 +244,13 @@ export class AllAlbums implements OnInit {
     }
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
     this.updateUrl();
+    this.load();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -247,6 +269,7 @@ export class AllAlbums implements OnInit {
     this.draftTypes.set(type ? [type] : []);
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   activeQuickType(): string | null {
@@ -265,6 +288,7 @@ export class AllAlbums implements OnInit {
     if (key === 'upcoming') { this.activeUpcoming.set(false); this.draftUpcoming.set(false); }
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   clearAllFilters(): void {
@@ -289,6 +313,7 @@ export class AllAlbums implements OnInit {
     this.draftRatingTo.set(this.ratingMax);
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   private syncDraftsFromActive(): void {
@@ -304,67 +329,85 @@ export class AllAlbums implements OnInit {
   }
 
   private updateUrl(): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        sortBy: this.activeSort(),
-        sortDir: this.activeSortDir(),
-        pageIndex: this.currentPage(),
-        name: this.activeName() ?? undefined,
-        genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
-        countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
-        type: this.activeTypes().length ? this.activeTypes() : undefined,
-        year: null,
-        yearFrom: this.activeYearFrom() ?? undefined,
-        yearTo: this.activeYearTo() ?? undefined,
-        labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
-        upcoming: this.activeUpcoming() ? 'true' : undefined,
-        ratingFrom: this.activeRatingFrom() ?? undefined,
-        ratingTo: this.activeRatingTo() ?? undefined,
-      },
-      queryParamsHandling: 'merge',
-    });
+    const params: Record<string, string | string[]> = {
+      sortBy: this.activeSort(),
+      sortDir: this.activeSortDir(),
+      pageIndex: String(this.currentPage()),
+    };
+    if (this.activeName()) params['name'] = this.activeName()!;
+    if (this.activeGenreNames().length) params['genreName'] = this.activeGenreNames();
+    if (this.activeCountryNames().length) params['countryName'] = this.activeCountryNames();
+    if (this.activeTypes().length) params['type'] = this.activeTypes();
+    if (this.activeYearFrom()) params['yearFrom'] = this.activeYearFrom()!;
+    if (this.activeYearTo()) params['yearTo'] = this.activeYearTo()!;
+    if (this.activeLabelNames().length) params['labelName'] = this.activeLabelNames();
+    if (this.activeUpcoming()) params['upcoming'] = 'true';
+    if (this.activeRatingFrom()) params['ratingFrom'] = String(this.activeRatingFrom());
+    if (this.activeRatingTo()) params['ratingTo'] = String(this.activeRatingTo());
+
+    const query = Object.entries(params)
+      .flatMap(([k, v]) => Array.isArray(v) ? v.map(val => `${k}=${encodeURIComponent(val)}`) : [`${k}=${encodeURIComponent(v)}`])
+      .join('&');
+    this.location.replaceState('/albums', query);
   }
 
   private load(): void {
+    this.loading.set(true);
     if (this.activeUpcoming()) {
       this.albumService.getUpcoming().subscribe({
-        next: (data) => { this.albums.set(data); this.total.set(data.length); this.loaded.set(true); },
+        next: (data) => { this.albums.set(data); this.total.set(data.length); this.loaded.set(true); this.loading.set(false); },
       });
       return;
     }
     if (this.activeSort() === 'Rating') {
       this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
-        next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
+        next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); this.loading.set(false); },
       });
       return;
     }
-    this.albumService.getAllPaginated(this.buildParams()).subscribe({
-      next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); },
+    this.searchService.searchAlbums(this.buildSearchParams()).subscribe({
+      next: (result) => {
+        this.albums.set(result.data.map(this.mapToAlbum));
+        this.total.set(result.count); this.loaded.set(true); this.loading.set(false);
+      }
     });
   }
 
   private loadAppend(): void {
-    this.albumService.getAllPaginated({ ...this.buildParams(), pageIndex: this.appendPage - 1 }).subscribe({
-      next: (result) => { this.albums.update(prev => [...prev, ...result.data]); this.total.set(result.count); },
+    this.searchService.searchAlbums({ ...this.buildSearchParams(), pageIndex: this.appendPage - 1 }).subscribe({
+      next: (result) => { this.albums.update(prev => [...prev, ...result.data.map(this.mapToAlbum)]); this.total.set(result.count); },
     });
   }
 
-  private buildParams() {
+  private buildSearchParams() {
     return {
+      q: this.activeName() ?? '',
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
-      sortBy: this.activeSort(),
-      sortDir: this.activeSortDir(),
-      name: this.activeName() ?? undefined,
-      genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
-      countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
-      type: this.activeTypes().length ? this.activeTypes() : undefined,
-      yearFrom: this.activeYearFrom() ?? undefined,
-      yearTo: this.activeYearTo() ?? undefined,
-      labelName: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
-      ratingFrom: this.activeRatingFrom() ?? undefined,
-      ratingTo: this.activeRatingTo() ?? undefined,
+      sortBy: this.activeSort() === 'ReleaseDate' ? 'releaseYear' : this.activeSort() === 'CreatedAt' ? 'createdAt' : 'title' as 'createdAt' | 'title' | 'releaseYear',
+      sortDir: this.activeSortDir() === 'asc' ? 'Asc' : 'Desc' as 'Asc' | 'Desc',
+      type: this.activeTypes()[0] ?? undefined,
+      releaseYearFrom: this.activeYearFrom() ? +this.activeYearFrom()! : undefined,
+      releaseYearTo: this.activeYearTo() ? +this.activeYearTo()! : undefined,
+      genre: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
+      country: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
+    };
+  }
+
+  private mapToAlbum(doc: AlbumSearchDocument): any {
+    return {
+      id: doc.id,
+      slug: doc.slug,
+      title: doc.title,
+      coverUrl: doc.coverUrl,
+      releaseDate: doc.releaseYear,
+      type: doc.type as AlbumType,
+      format: doc.format as unknown as AlbumFormat,
+      bands: doc.bands.map(name => ({ id: null, name, slug: null })),
+      genres: doc.genres.map(name => ({ id: null, name })),
+      countries: doc.countries.map(name => ({ id: null, name })),
+      tags: doc.tags.map(name => ({ id: null, name })),
+      videos: [],
     };
   }
 }

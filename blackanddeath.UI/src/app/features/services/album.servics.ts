@@ -100,7 +100,7 @@ export class AlbumService {
   }
 
   getUpcoming(params?: Record<string, unknown>) {
-    return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_UPCOMING, params).pipe(
+    return this.http.get<{ albums: PaginatedResult<Album> }>(AlbumEndpoints.GET_UPCOMING, params, true).pipe(
       map(response => response.albums.data)
     );
   }

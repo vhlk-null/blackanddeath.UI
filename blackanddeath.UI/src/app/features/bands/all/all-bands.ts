@@ -2,6 +2,8 @@ import { Component, computed, inject, OnInit, signal, HostListener, ElementRef }
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { BandService } from '../../services/band.service';
+import { SearchService } from '../../services/search.service';
+import { BandSearchDocument } from '../../../shared/models/band-search-document';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { RatingService } from '../../services/rating.service';
@@ -44,6 +46,7 @@ export class AllBands implements OnInit {
   }
 
   private bandService = inject(BandService);
+  private searchService = inject(SearchService);
   private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
@@ -106,6 +109,8 @@ export class AllBands implements OnInit {
   readonly bands = signal<Band[]>([]);
   readonly total = signal(0);
   readonly loaded = signal(false);
+  readonly loading = signal(false);
+  readonly skeletonItems = Array(9).fill(0);
   readonly currentPage = signal(1);
   private appendPage = 1;
   readonly loadedPage = signal(1);
@@ -282,37 +287,50 @@ export class AllBands implements OnInit {
   }
 
   private load(): void {
+    this.loading.set(true);
     if (this.activeSort() === 'Rating') {
       this.ratingService.getTopRatedBands({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
-        next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); },
+        next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); this.loading.set(false); },
       });
       return;
     }
-    this.bandService.getAllPaginated(this.buildParams()).subscribe({
-      next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); },
+    this.searchService.searchBands(this.buildSearchParams()).subscribe({
+      next: (result) => { this.bands.set(result.data.map(this.mapToBand)); this.total.set(result.count); this.loaded.set(true); this.loading.set(false); },
     });
   }
 
   private loadAppend(): void {
-    this.bandService.getAllPaginated({ ...this.buildParams(), pageIndex: this.appendPage - 1 }).subscribe({
-      next: (result) => { this.bands.update(prev => [...prev, ...result.data]); this.total.set(result.count); },
+    this.searchService.searchBands({ ...this.buildSearchParams(), pageIndex: this.appendPage - 1 }).subscribe({
+      next: (result) => { this.bands.update(prev => [...prev, ...result.data.map(this.mapToBand)]); this.total.set(result.count); },
     });
   }
 
-  private buildParams() {
+  private buildSearchParams() {
     return {
+      q: this.activeName() ?? '',
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
-      sortBy: this.activeSort(),
-      sortDir: this.activeSortDir(),
-      name: this.activeName() ?? undefined,
-      genreName: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
-      countryName: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
-      status: this.activeStatuses().length ? this.activeStatuses() : undefined,
-      yearFrom: this.activeYearFrom() ?? undefined,
-      yearTo: this.activeYearTo() ?? undefined,
-      ratingFrom: this.activeRatingFrom() ?? undefined,
-      ratingTo: this.activeRatingTo() ?? undefined,
+      sortBy: this.activeSort() === 'Name' ? 'name' : this.activeSort() === 'FormedYear' ? 'formedYear' : 'createdAt' as 'createdAt' | 'name' | 'formedYear',
+      sortDir: this.activeSortDir() === 'asc' ? 'Asc' : 'Desc' as 'Asc' | 'Desc',
+      status: this.activeStatuses()[0] ?? undefined,
+      formedYearFrom: this.activeYearFrom() ? +this.activeYearFrom()! : undefined,
+      formedYearTo: this.activeYearTo() ? +this.activeYearTo()! : undefined,
+      genre: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
+      country: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
+    };
+  }
+
+  private mapToBand(doc: BandSearchDocument): any {
+    return {
+      id: doc.id,
+      slug: doc.slug,
+      name: doc.name,
+      logoUrl: doc.logoUrl,
+      formedYear: doc.formedYear,
+      disbandedYear: doc.disbandedYear,
+      status: doc.status,
+      genres: doc.genres.map(name => ({ id: null, name, slug: null, isPrimary: false })),
+      countries: doc.countries.map(name => ({ id: null, name, code: null })),
     };
   }
 }

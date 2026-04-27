@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  min-width: 0;
+  width: calc(33.333% - 0.417rem);
+  flex-shrink: 0;
+
+  @media (max-width: 40rem) {
+    width: 100%;
+  }
+
+  @media (max-height: 31.25rem) and (orientation: landscape) {
+    width: calc(33.333% - 0.42rem);
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+%shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-card-bg) 25%,
+    var(--color-skeleton-shimmer, rgba(255, 255, 255, 0.06)) 50%,
+    var(--color-card-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton {
+  &__cover {
+    @extend %shimmer;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 5px;
+  }
+
+  &__line {
+    @extend %shimmer;
+    height: 0.75rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+
+    &--name { width: 70%; height: 0.875rem; margin-top: 0.625rem; }
+    &--meta { width: 85%; }
+  }
+}
