@@ -68,6 +68,44 @@
     width: clamp(12rem, 28vw, 25rem); // 400px at 1440px
   }
 
+  &__search-trigger {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0.4rem;
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-lg);
+    padding: 0 0.6rem;
+    height: 2.25rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    text-align: left;
+
+    &:hover {
+      border-color: var(--color-border-input-focus);
+    }
+
+    .header__search-icon {
+      flex-shrink: 0;
+      width: 1rem;
+      height: 1rem;
+      color: var(--color-text-placeholder);
+      pointer-events: none;
+    }
+  }
+
+  &__search-placeholder {
+    flex: 1;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-placeholder);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   &__search {
     display: flex;
     align-items: center;

@@ -174,9 +174,6 @@ export class AllAlbums implements OnInit {
 
   onSearch(value: string): void {
     this.searchQuery.set(value);
-
-    console.log('Search query changed:', value);
-    
     if (this.searchTimer) clearTimeout(this.searchTimer);
     this.searchTimer = setTimeout(() => {
       this.activeName.set(value.trim() || null);

@@ -1,0 +1,68 @@
+<div class="gs-overlay" (click)="close()"></div>
+
+<div class="gs-modal">
+  <div class="gs-input-wrap">
+    <svg class="gs-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      #inputRef
+      class="gs-input"
+      type="text"
+      placeholder="Search albums, bands…"
+      [value]="query()"
+      (input)="onInput($any($event.target).value)"
+      (keydown.escape)="close()" />
+    @if (query()) {
+      <button class="gs-clear" type="button" (click)="onInput('')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    }
+  </div>
+
+  <div class="gs-results">
+    @if (searching()) {
+      <p class="gs-hint">Searching…</p>
+    } @else if (!query().trim()) {
+      <p class="gs-hint">Start typing to search albums and bands</p>
+    } @else if (hasSearched() && albumResults().length === 0 && bandResults().length === 0) {
+      <p class="gs-hint">No results found for "{{ query() }}"</p>
+    } @else {
+
+      @if (albumResults().length) {
+        <p class="gs-section-label">Albums</p>
+        @for (album of albumResults(); track album.id) {
+          <button class="gs-item" type="button" (click)="goToAlbum(album.slug)">
+            @if (album.coverUrl) {
+              <img class="gs-item__cover" [src]="album.coverUrl" [alt]="album.title" />
+            } @else {
+              <div class="gs-item__cover gs-item__cover--empty"></div>
+            }
+            <span class="gs-item__info">
+              <span class="gs-item__title">{{ album.title }}</span>
+              <span class="gs-item__meta">{{ album.bands[0] }} · {{ album.releaseYear }} · {{ album.type }}</span>
+            </span>
+          </button>
+        }
+      }
+
+      @if (bandResults().length) {
+        <p class="gs-section-label">Bands</p>
+        @for (band of bandResults(); track band.id) {
+          <button class="gs-item" type="button" (click)="goToBand(band.slug)">
+            @if (band.logoUrl) {
+              <img class="gs-item__cover" [src]="band.logoUrl" [alt]="band.name" />
+            } @else {
+              <div class="gs-item__cover gs-item__cover--empty"></div>
+            }
+            <span class="gs-item__info">
+              <span class="gs-item__title">{{ band.name }}</span>
+              <span class="gs-item__meta">{{ band.genres[0] }} · {{ band.formedYear }}</span>
+            </span>
+          </button>
+        }
+      }
+
+    }
+  </div>
+</div>
