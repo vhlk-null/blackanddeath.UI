@@ -1,21 +1,13 @@
-import { Component, computed, inject, OnInit, signal, HostListener, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { BandService } from '../../services/band.service';
 import { SearchService } from '../../services/search.service';
 import { BandSearchDocument } from '../../../shared/models/band-search-document';
-import { GenreService } from '../../services/genre.service';
-import { CountryService } from '../../services/country.service';
 import { Band } from '../../../shared/models/band';
-import { Genre } from '../../../shared/models/genre';
-import { Country } from '../../../shared/models/country';
 import { BandCard } from '../band-card/band-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { MultiSelectNames } from '../../../shared/components/multi-select-names/multi-select-names';
-import { FILTER_DEBOUNCE_MS } from '../../../shared/constants/constants';
-
-const toArray = (v: string | string[] | undefined): string[] =>
-  !v ? [] : Array.isArray(v) ? v : [v];
+import { FilterableListBase, toArray } from '../../../shared/base/filterable-list.base';
 
 const SORT_OPTIONS = [
   { value: 'CreatedAt', label: 'Recently Added' },
@@ -24,7 +16,6 @@ const SORT_OPTIONS = [
   { value: 'Rating', label: 'Rating' },
 ] as const;
 type SortOption = typeof SORT_OPTIONS[number]['value'];
-type SortDir = 'asc' | 'desc';
 
 const PAGE_SIZE = 9;
 const BAND_STATUSES = ['Active', 'Split-up', 'On hold', 'Changed name', 'Unknown'];
@@ -35,90 +26,25 @@ const BAND_STATUSES = ['Active', 'Split-up', 'On hold', 'Changed name', 'Unknown
   styleUrl: './all-bands.scss',
   imports: [BandCard, Pagination, MultiSelectNames],
 })
-export class AllBands implements OnInit {
-  private el = inject(ElementRef);
+export class AllBands extends FilterableListBase<SortOption> implements OnInit {
+  protected override sortMenuClass = '.all-bands__sort-wrap';
 
-  @HostListener('document:mousedown', ['$event'])
-  onDocClick(e: MouseEvent): void {
-    if (!this.showSortMenu()) return;
-    const wrap = this.el.nativeElement.querySelector('.all-bands__sort-wrap');
-    if (wrap && !wrap.contains(e.target as Node)) this.showSortMenu.set(false);
-  }
-
-  private bandService = inject(BandService);
   private searchService = inject(SearchService);
-  private genreService = inject(GenreService);
-  private countryService = inject(CountryService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private titleService = inject(Title);
 
   readonly bandStatuses = BAND_STATUSES;
   readonly sortOptions = SORT_OPTIONS;
-  readonly genres = signal<Genre[]>([]);
-  readonly countries = signal<Country[]>([]);
-  readonly filtersOpen = signal(false);
-  readonly showSortMenu = signal(false);
-  readonly searchQuery = signal('');
-  readonly searchOpen = signal(false);
-  private searchTimer: ReturnType<typeof setTimeout> | null = null;
-
-  readonly yearMin = 1950;
-  readonly yearMax = new Date().getFullYear();
-
-  readonly activeSort = signal<SortOption>('FormedYear');
-  readonly activeSortDir = signal<SortDir>('desc');
-  readonly activeName = signal<string | null>(null);
-  readonly activeGenreNames = signal<string[]>([]);
-  readonly activeCountryNames = signal<string[]>([]);
   readonly activeStatuses = signal<string[]>([]);
-  readonly activeYearFrom = signal<string | null>(null);
-  readonly activeYearTo = signal<string | null>(null);
-  readonly activeRatingFrom = signal<number | null>(null);
-  readonly activeRatingTo = signal<number | null>(null);
-
-  readonly draftGenres = signal<string[]>([]);
-  readonly draftCountries = signal<string[]>([]);
   readonly draftStatuses = signal<string[]>([]);
-  readonly draftYearFrom = signal<number>(this.yearMin);
-  readonly draftYearTo = signal<number>(this.yearMax);
-  readonly ratingMin = 1;
-  readonly ratingMax = 10;
-  readonly draftRatingFrom = signal<number>(1);
-  readonly draftRatingTo = signal<number>(10);
-  readonly draftRatingFromPct = computed(() => ((this.draftRatingFrom() - this.ratingMin) / (this.ratingMax - this.ratingMin)) * 100);
-  readonly draftRatingToPct = computed(() => ((this.draftRatingTo() - this.ratingMin) / (this.ratingMax - this.ratingMin)) * 100);
-
-  readonly genreGroups = computed(() => {
-    const all = this.genres();
-    const parents = all.filter(g => !g.parentGenreId);
-    const groups = parents.map(p => ({
-      label: p.name,
-      items: all.filter(g => g.parentGenreId === p.id).map(g => g.name),
-    })).filter(g => g.items.length > 0);
-    const ungrouped = all.filter(g => !g.parentGenreId && !all.some(c => c.parentGenreId === g.id)).map(g => g.name);
-    if (ungrouped.length) groups.push({ label: 'Other', items: ungrouped });
-    return groups;
-  });
-  readonly countryNames = computed(() => this.countries().map(c => c.name));
-
-  readonly draftYearFromPct = computed(() => ((this.draftYearFrom() - this.yearMin) / (this.yearMax - this.yearMin)) * 100);
-  readonly draftYearToPct = computed(() => ((this.draftYearTo() - this.yearMin) / (this.yearMax - this.yearMin)) * 100);
-
-  readonly pageSize = PAGE_SIZE;
   readonly bands = signal<Band[]>([]);
-  readonly total = signal(0);
-  readonly loaded = signal(false);
-  readonly loading = signal(false);
-  readonly skeletonItems = Array(9).fill(0);
-  readonly currentPage = signal(1);
-  private appendPage = 1;
-  readonly loadedPage = signal(1);
+  readonly pageSize = PAGE_SIZE;
+  readonly skeletonItems = Array(PAGE_SIZE).fill(0);
 
   ngOnInit(): void {
     this.titleService.setTitle('Bands — Black And Death');
-    this.genreService.getAll().subscribe(g => this.genres.set(g));
-    this.countryService.getAll().subscribe(c => this.countries.set(c));
+    this.loadReferenceData();
 
     this.route.queryParams.subscribe(params => {
       const sort = params['sortBy'] as SortOption;
@@ -144,102 +70,12 @@ export class AllBands implements OnInit {
   applyFilterFromCard(key: 'genre' | 'country' | 'year', value: string | number): void {
     this.currentPage.set(1);
     switch (key) {
-      case 'genre':
-        this.activeGenreNames.set([value as string]);
-        break;
-      case 'country':
-        this.activeCountryNames.set([value as string]);
-        break;
-      case 'year':
-        this.activeYearFrom.set(String(value));
-        this.activeYearTo.set(String(value));
-        break;
+      case 'genre': this.activeGenreNames.set([value as string]); break;
+      case 'country': this.activeCountryNames.set([value as string]); break;
+      case 'year': this.activeYearFrom.set(String(value)); this.activeYearTo.set(String(value)); break;
     }
     this.updateUrl();
     this.load();
-  }
-
-  toggleSearch(): void {
-    this.searchOpen.update(v => !v);
-    if (!this.searchOpen()) this.onSearch('');
-  }
-
-  onSearch(value: string): void {
-    this.searchQuery.set(value);
-    if (this.searchTimer) clearTimeout(this.searchTimer);
-    this.searchTimer = setTimeout(() => {
-      this.activeName.set(value.trim() || null);
-      this.currentPage.set(1);
-      this.updateUrl();
-    }, FILTER_DEBOUNCE_MS);
-  }
-
-  toggleFilters(): void {
-    if (!this.filtersOpen()) this.syncDraftsFromActive();
-    this.filtersOpen.update(v => !v);
-  }
-
-  onDraftYearFrom(value: string): void {
-    const v = +value;
-    this.draftYearFrom.set(v >= this.draftYearTo() ? this.draftYearTo() - 1 : v);
-  }
-
-  onDraftYearTo(value: string): void {
-    const v = +value;
-    this.draftYearTo.set(v <= this.draftYearFrom() ? this.draftYearFrom() + 1 : v);
-  }
-
-  onDraftRatingFrom(value: string): void {
-    const v = +value;
-    this.draftRatingFrom.set(v >= this.draftRatingTo() ? this.draftRatingTo() - 1 : v);
-  }
-
-  onDraftRatingTo(value: string): void {
-    const v = +value;
-    this.draftRatingTo.set(v <= this.draftRatingFrom() ? this.draftRatingFrom() + 1 : v);
-  }
-
-  applyFilters(): void {
-    this.activeGenreNames.set(this.draftGenres());
-    this.activeCountryNames.set(this.draftCountries());
-    this.activeStatuses.set(this.draftStatuses());
-    const fromChanged = this.draftYearFrom() !== this.yearMin;
-    const toChanged = this.draftYearTo() !== this.yearMax;
-    this.activeYearFrom.set(fromChanged || toChanged ? String(this.draftYearFrom()) : null);
-    this.activeYearTo.set(fromChanged || toChanged ? String(this.draftYearTo()) : null);
-    const ratingFromChanged = this.draftRatingFrom() !== this.ratingMin;
-    const ratingToChanged = this.draftRatingTo() !== this.ratingMax;
-    this.activeRatingFrom.set(ratingFromChanged || ratingToChanged ? this.draftRatingFrom() : null);
-    this.activeRatingTo.set(ratingFromChanged || ratingToChanged ? this.draftRatingTo() : null);
-    this.currentPage.set(1);
-    this.updateUrl();
-    this.load();
-  }
-
-  onSortChange(sort: SortOption): void {
-    if (this.activeSort() === sort) {
-      this.activeSortDir.update(d => d === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.activeSort.set(sort);
-      this.activeSortDir.set('desc');
-    }
-    this.currentPage.set(1);
-    this.updateUrl();
-    this.load();
-  }
-
-  onPageChange(page: number): void {
-    this.currentPage.set(page);
-    this.updateUrl();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.load();
-  }
-
-  onLoadMore(): void {
-    this.appendPage += 1;
-    this.loadedPage.set(this.appendPage);
-    this.currentPage.set(this.appendPage);
-    this.loadAppend();
   }
 
   setQuickStatus(status: string | null): void {
@@ -284,17 +120,29 @@ export class AllBands implements OnInit {
     this.load();
   }
 
-  private syncDraftsFromActive(): void {
-    this.draftGenres.set([...this.activeGenreNames()]);
-    this.draftCountries.set([...this.activeCountryNames()]);
+  protected override syncDraftsFromActive(): void {
+    super.syncDraftsFromActive();
     this.draftStatuses.set([...this.activeStatuses()]);
-    this.draftYearFrom.set(+(this.activeYearFrom() ?? this.yearMin));
-    this.draftYearTo.set(+(this.activeYearTo() ?? this.yearMax));
-    this.draftRatingFrom.set(this.activeRatingFrom() ?? this.ratingMin);
-    this.draftRatingTo.set(this.activeRatingTo() ?? this.ratingMax);
   }
 
-  private updateUrl(): void {
+  protected override applyFilters(): void {
+    this.activeGenreNames.set(this.draftGenres());
+    this.activeCountryNames.set(this.draftCountries());
+    this.activeStatuses.set(this.draftStatuses());
+    const fromChanged = this.draftYearFrom() !== this.yearMin;
+    const toChanged = this.draftYearTo() !== this.yearMax;
+    this.activeYearFrom.set(fromChanged || toChanged ? String(this.draftYearFrom()) : null);
+    this.activeYearTo.set(fromChanged || toChanged ? String(this.draftYearTo()) : null);
+    const ratingFromChanged = this.draftRatingFrom() !== this.ratingMin;
+    const ratingToChanged = this.draftRatingTo() !== this.ratingMax;
+    this.activeRatingFrom.set(ratingFromChanged || ratingToChanged ? this.draftRatingFrom() : null);
+    this.activeRatingTo.set(ratingFromChanged || ratingToChanged ? this.draftRatingTo() : null);
+    this.currentPage.set(1);
+    this.updateUrl();
+    this.load();
+  }
+
+  protected override updateUrl(): void {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -314,7 +162,7 @@ export class AllBands implements OnInit {
     });
   }
 
-  private load(): void {
+  protected override load(): void {
     this.loading.set(true);
     const done = () => this.loading.set(false);
     this.searchService.searchBands(this.buildSearchParams()).subscribe({
@@ -323,7 +171,7 @@ export class AllBands implements OnInit {
     });
   }
 
-  private loadAppend(): void {
+  protected override loadAppend(): void {
     this.searchService.searchBands({ ...this.buildSearchParams(), pageIndex: this.appendPage - 1 }).subscribe({
       next: (result) => { this.bands.update(prev => [...prev, ...result.data.map(this.mapToBand)]); this.total.set(result.count); },
     });

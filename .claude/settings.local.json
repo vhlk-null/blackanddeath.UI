@@ -44,7 +44,8 @@
       "Bash(python -m json.tool)",
       "Bash(grep -E \"\\\\.ts$\")",
       "Bash(find \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\src\\\\app\\\\features\\\\user-profile\\\\\" -type f -name \"*\" | head -50)",
-      "Read(//d/d/Projects/blackenddeath.UI/blackanddeath.UI/src/**)"
+      "Read(//d/d/Projects/blackenddeath.UI/blackanddeath.UI/src/**)",
+      "Bash(echo \"EXIT:$?\")"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover"
