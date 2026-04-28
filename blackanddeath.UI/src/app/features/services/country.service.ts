@@ -15,10 +15,6 @@ export class CountryService {
     );
   }
 
-  getById(id: string) {
-    return this.http.get<Country>(CountryEndpoints.GET_BY_ID(id));
-  }
-
   create(payload: Omit<Country, 'id'>) {
     return this.http.post<Country>(CountryEndpoints.CREATE, payload);
   }

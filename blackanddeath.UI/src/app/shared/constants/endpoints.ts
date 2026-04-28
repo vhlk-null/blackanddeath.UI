@@ -15,6 +15,7 @@ export class AlbumEndpoints {
   public static PENDING_APPROVAL = `${base}/library/albums/pending-approval`;
   public static GET_UPCOMING = `${base}/library/albums/upcoming`;
   public static SEARCH = `${base}/library/albums/search`;
+  public static TOP_RATED = `${base}/library/albums/top-rated`;
 }
 
 export class BandEndpoints {
@@ -29,11 +30,11 @@ export class BandEndpoints {
   public static DELETE = (id: string) => `${base}/library/bands/${id}`;
   public static PENDING_APPROVAL = `${base}/library/bands/pending-approval`;
   public static SEARCH = `${base}/library/bands/search`;
+  public static TOP_RATED = `${base}/library/bands/top-rated`;
 }
 
 export class VideoBandEndpoints {
   public static GET_ALL = `${base}/library/videos`;
-  public static GET_BY_BAND = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
   public static CREATE = (bandId: string) => `${base}/library/bands/${bandId}/videos`;
   public static UPDATE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
   public static DELETE = (bandId: string, id: string) => `${base}/library/bands/${bandId}/videos/${id}`;
@@ -54,7 +55,6 @@ export class GenreEndpoints {
   public static REMOVE_GENRE_FROM_CARD = (id: string, genreId: string) => `${base}/library/genre-cards/${id}/genres/${genreId}`;
   public static ADD_TAG_TO_CARD = (id: string, tagId: string) => `${base}/library/genre-cards/${id}/tags/${tagId}`;
   public static REMOVE_TAG_FROM_CARD = (id: string, tagId: string) => `${base}/library/genre-cards/${id}/tags/${tagId}`;
-  public static GET_BY_ID = (id: string) => `${base}/library/genres/${id}`;
   public static CREATE = `${base}/library/genres`;
   public static UPDATE = (id: string) => `${base}/library/genres/${id}`;
   public static DELETE = (id: string) => `${base}/library/genres/${id}`;
@@ -66,7 +66,6 @@ export class AdminEndpoints {
   public static GET_ALL_BANDS = `${base}/library/admin/bands`;
   public static GET_BAND_BY_ID = (id: string) => `${base}/library/admin/bands/${id}`;
   public static GET_ALL_VIDEOS = `${base}/library/admin/videos`;
-  public static GET_VIDEOS_BY_BAND = (bandId: string) => `${base}/library/admin/bands/${bandId}/videos`;
 }
 
 export class FavoriteEndpoints {
@@ -134,20 +133,16 @@ export class CollectionEndpoints {
 }
 
 export class RatingEndpoints {
-  static readonly base = environment.usercontentUrl;
-  public static RATE_ALBUM = `${RatingEndpoints.base}/albumRatings`;
-  public static RATE_BAND = `${RatingEndpoints.base}/bandRatings`;
-  public static GET_ALBUM_RATING = (albumId: string) => `${RatingEndpoints.base}/albumRatings/${albumId}`;
-  public static GET_ALBUM_AVERAGE = (albumId: string) => `${RatingEndpoints.base}/albumRatings/${albumId}/average`;
-  public static GET_BAND_RATING = (bandId: string) => `${RatingEndpoints.base}/bandRatings/${bandId}`;
-  public static GET_BAND_AVERAGE = (bandId: string) => `${RatingEndpoints.base}/bandRatings/${bandId}/average`;
-  public static TOP_RATED_ALBUMS = `${RatingEndpoints.base}/top-rated/albums`;
-  public static TOP_RATED_BANDS = `${RatingEndpoints.base}/top-rated/bands`;
+  public static RATE_ALBUM = (albumId: string) => `${base}/library/albums/${albumId}/rating`;
+  public static RATE_BAND = (bandId: string) => `${base}/library/bands/${bandId}/rating`;
+  public static GET_ALBUM_RATING = (albumId: string) => `${base}/library/albums/${albumId}/rating`;
+  public static GET_ALBUM_AVERAGE = (albumId: string) => `${base}/library/albums/${albumId}/rating`;
+  public static GET_BAND_RATING = (bandId: string) => `${base}/library/bands/${bandId}/rating`;
+  public static GET_BAND_AVERAGE = (bandId: string) => `${base}/library/bands/${bandId}/rating`;
 }
 
 export class CountryEndpoints {
   public static GET_ALL = `${base}/library/countries`;
-  public static GET_BY_ID = (id: string) => `${base}/library/countries/${id}`;
   public static CREATE = `${base}/library/countries`;
   public static UPDATE = (id: string) => `${base}/library/countries/${id}`;
   public static DELETE = (id: string) => `${base}/library/countries/${id}`;
@@ -155,7 +150,6 @@ export class CountryEndpoints {
 
 export class TagEndpoints {
   public static GET_ALL = `${base}/library/tags`;
-  public static GET_BY_ID = (id: string) => `${base}/library/tags/${id}`;
   public static CREATE = `${base}/library/tags`;
   public static UPDATE = (id: string) => `${base}/library/tags/${id}`;
   public static DELETE = (id: string) => `${base}/library/tags/${id}`;
@@ -163,7 +157,6 @@ export class TagEndpoints {
 
 export class LabelEndpoints {
   public static GET_ALL = `${base}/library/labels`;
-  public static GET_BY_ID = (id: string) => `${base}/library/labels/${id}`;
   public static CREATE = `${base}/library/labels`;
   public static UPDATE = (id: string) => `${base}/library/labels/${id}`;
   public static DELETE = (id: string) => `${base}/library/labels/${id}`;

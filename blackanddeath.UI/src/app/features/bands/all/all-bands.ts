@@ -6,13 +6,13 @@ import { SearchService } from '../../services/search.service';
 import { BandSearchDocument } from '../../../shared/models/band-search-document';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
-import { RatingService } from '../../services/rating.service';
 import { Band } from '../../../shared/models/band';
 import { Genre } from '../../../shared/models/genre';
 import { Country } from '../../../shared/models/country';
 import { BandCard } from '../band-card/band-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { MultiSelectNames } from '../../../shared/components/multi-select-names/multi-select-names';
+import { FILTER_DEBOUNCE_MS } from '../../../shared/constants/constants';
 
 const toArray = (v: string | string[] | undefined): string[] =>
   !v ? [] : Array.isArray(v) ? v : [v];
@@ -47,7 +47,6 @@ export class AllBands implements OnInit {
 
   private bandService = inject(BandService);
   private searchService = inject(SearchService);
-  private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private router = inject(Router);
@@ -142,6 +141,24 @@ export class AllBands implements OnInit {
     });
   }
 
+  applyFilterFromCard(key: 'genre' | 'country' | 'year', value: string | number): void {
+    this.currentPage.set(1);
+    switch (key) {
+      case 'genre':
+        this.activeGenreNames.set([value as string]);
+        break;
+      case 'country':
+        this.activeCountryNames.set([value as string]);
+        break;
+      case 'year':
+        this.activeYearFrom.set(String(value));
+        this.activeYearTo.set(String(value));
+        break;
+    }
+    this.updateUrl();
+    this.load();
+  }
+
   toggleSearch(): void {
     this.searchOpen.update(v => !v);
     if (!this.searchOpen()) this.onSearch('');
@@ -154,7 +171,7 @@ export class AllBands implements OnInit {
       this.activeName.set(value.trim() || null);
       this.currentPage.set(1);
       this.updateUrl();
-    }, 400);
+    }, FILTER_DEBOUNCE_MS);
   }
 
   toggleFilters(): void {
@@ -196,6 +213,7 @@ export class AllBands implements OnInit {
     this.activeRatingTo.set(ratingFromChanged || ratingToChanged ? this.draftRatingTo() : null);
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   onSortChange(sort: SortOption): void {
@@ -207,12 +225,14 @@ export class AllBands implements OnInit {
     }
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
     this.updateUrl();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.load();
   }
 
   onLoadMore(): void {
@@ -241,6 +261,7 @@ export class AllBands implements OnInit {
     if (key === 'year') { this.activeYearFrom.set(null); this.activeYearTo.set(null); this.draftYearFrom.set(this.yearMin); this.draftYearTo.set(this.yearMax); }
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   clearAllFilters(): void {
@@ -260,6 +281,7 @@ export class AllBands implements OnInit {
     this.draftRatingTo.set(this.ratingMax);
     this.currentPage.set(1);
     this.updateUrl();
+    this.load();
   }
 
   private syncDraftsFromActive(): void {
@@ -295,13 +317,6 @@ export class AllBands implements OnInit {
   private load(): void {
     this.loading.set(true);
     const done = () => this.loading.set(false);
-    if (this.activeSort() === 'Rating') {
-      this.ratingService.getTopRatedBands({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
-        next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); done(); },
-        error: done,
-      });
-      return;
-    }
     this.searchService.searchBands(this.buildSearchParams()).subscribe({
       next: (result) => { this.bands.set(result.data.map(this.mapToBand)); this.total.set(result.count); this.loaded.set(true); done(); },
       error: done,
@@ -319,7 +334,7 @@ export class AllBands implements OnInit {
       q: this.activeName() ?? '',
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
-      sortBy: this.activeSort() === 'Name' ? 'name' : this.activeSort() === 'FormedYear' ? 'formedYear' : 'createdAt' as 'createdAt' | 'name' | 'formedYear',
+      sortBy: this.activeSort() === 'Name' ? 'name' : this.activeSort() === 'FormedYear' ? 'formedYear' : this.activeSort() === 'Rating' ? 'averageRating' : 'createdAt' as 'createdAt' | 'name' | 'formedYear' | 'averageRating',
       sortDir: this.activeSortDir() === 'asc' ? 'Asc' : 'Desc' as 'Asc' | 'Desc',
       status: this.activeStatuses()[0] ?? undefined,
       formedYearFrom: this.activeYearFrom() ? +this.activeYearFrom()! : undefined,

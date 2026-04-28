@@ -10,7 +10,7 @@ export interface AlbumSearchParams {
   q: string;
   pageIndex?: number;
   pageSize?: number;
-  sortBy?: 'createdAt' | 'title' | 'releaseYear';
+  sortBy?: 'createdAt' | 'title' | 'releaseYear' | 'averageRating';
   sortDir?: 'Asc' | 'Desc';
   type?: string;
   releaseYearFrom?: number;
@@ -24,7 +24,7 @@ export interface BandSearchParams {
   q: string;
   pageIndex?: number;
   pageSize?: number;
-  sortBy?: 'createdAt' | 'name' | 'formedYear';
+  sortBy?: 'createdAt' | 'name' | 'formedYear' | 'averageRating';
   sortDir?: 'Asc' | 'Desc';
   status?: string;
   formedYearFrom?: number;

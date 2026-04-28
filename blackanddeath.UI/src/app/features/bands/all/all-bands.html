@@ -136,7 +136,10 @@
   }
   <div class="all-bands__grid" [class.all-bands__grid--loading]="loading()">
     @for (band of bands(); track band.id) {
-      <app-band-card [bandCard]="band" />
+      <app-band-card [bandCard]="band"
+        (filterByGenre)="applyFilterFromCard('genre', $event)"
+        (filterByCountry)="applyFilterFromCard('country', $event)"
+        (filterByYear)="applyFilterFromCard('year', $event)" />
     }
   </div>
 

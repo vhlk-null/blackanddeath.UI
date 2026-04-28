@@ -43,7 +43,8 @@
       "WebFetch(domain:docs.fastcomments.com)",
       "Bash(python -m json.tool)",
       "Bash(grep -E \"\\\\.ts$\")",
-      "Bash(find \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\src\\\\app\\\\features\\\\user-profile\\\\\" -type f -name \"*\" | head -50)"
+      "Bash(find \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\src\\\\app\\\\features\\\\user-profile\\\\\" -type f -name \"*\" | head -50)",
+      "Read(//d/d/Projects/blackenddeath.UI/blackanddeath.UI/src/**)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover"

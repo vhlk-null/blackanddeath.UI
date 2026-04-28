@@ -15,10 +15,6 @@ export class TagService {
     );
   }
 
-  getById(id: string) {
-    return this.http.get<Tag>(TagEndpoints.GET_BY_ID(id));
-  }
-
   create(payload: Omit<Tag, 'id'>) {
     return this.http.post<Tag>(TagEndpoints.CREATE, payload);
   }

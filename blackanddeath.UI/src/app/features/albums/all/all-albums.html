@@ -202,7 +202,11 @@
   }
   <div class="all-albums__grid" [class.all-albums__grid--loading]="loading()">
     @for (album of albums(); track album.id) {
-      <app-album-card [albumCard]="album" />
+      <app-album-card [albumCard]="album"
+        (filterByGenre)="applyFilterFromCard('genre', $event)"
+        (filterByCountry)="applyFilterFromCard('country', $event)"
+        (filterByType)="applyFilterFromCard('type', $event)"
+        (filterByYear)="applyFilterFromCard('year', $event)" />
     }
   </div>
 

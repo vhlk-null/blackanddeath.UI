@@ -1,3 +1,5 @@
+export const FILTER_DEBOUNCE_MS = 100;
+
 //Home page
 export const TOP_RATED_TITLE = 'Top Rated';
 export const POPULAR_BANDS_TITLE = 'Popular Bands';

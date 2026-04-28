@@ -78,10 +78,6 @@ export class GenreService {
     );
   }
 
-  getById(id: string) {
-    return this.http.get<Genre>(GenreEndpoints.GET_BY_ID(id));
-  }
-
   create(payload: Omit<Genre, 'id'>) {
     return this.http.post<Genre>(GenreEndpoints.CREATE, payload);
   }

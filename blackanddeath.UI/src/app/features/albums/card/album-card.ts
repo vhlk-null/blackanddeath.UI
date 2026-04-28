@@ -1,4 +1,4 @@
-import { Component, inject, input, signal, computed } from '@angular/core';
+import { Component, inject, input, output, signal, computed } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { Album } from '../../../shared/models/album';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
@@ -19,6 +19,10 @@ import { CollectionPicker } from '../../../shared/components/collection-picker/c
 })
 export class AlbumCard {
   albumCard = input.required<Album>();
+  readonly filterByGenre = output<string>();
+  readonly filterByCountry = output<string>();
+  readonly filterByType = output<string>();
+  readonly filterByYear = output<number>();
   readonly imageError = signal(false);
   readonly ageGate = inject(AgeGateService);
 

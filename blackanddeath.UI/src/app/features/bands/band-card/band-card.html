@@ -15,21 +15,18 @@
     <h3 class="band-card__name" [title]="bandCard().name">{{ bandCard().name }}</h3>
     <p class="band-card__meta">
       @if ((bandCard().primaryGenre ?? bandCard().parentGenre)?.name) {
-      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-        [routerLink]="['/bands']" [queryParams]="{ genreName: (bandCard().primaryGenre ?? bandCard().parentGenre)?.name }">{{ (bandCard().primaryGenre ?? bandCard().parentGenre)?.name }}</span>
+      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByGenre.emit((bandCard().primaryGenre ?? bandCard().parentGenre)!.name)">{{ (bandCard().primaryGenre ?? bandCard().parentGenre)?.name }}</span>
       } @else {
       <span>{{ (bandCard().primaryGenre ?? bandCard().parentGenre)?.name }}</span>
       }
       ·
       @if (bandCard().countries?.[0]?.name) {
-      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-        [routerLink]="['/bands']" [queryParams]="{ countryName: bandCard().countries?.[0]?.name }">{{ bandCard().countries?.[0]?.name }}</span>
+      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByCountry.emit(bandCard().countries![0].name)">{{ bandCard().countries?.[0]?.name }}</span>
       } @else {
       <span>{{ bandCard().countries?.[0]?.name }}</span>
       }
       ·
-      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-        [routerLink]="['/bands']" [queryParams]="{ formedYear: bandCard().formedYear }">{{ bandCard().formedYear }}</span>
+      <span class="band-card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByYear.emit(bandCard().formedYear)">{{ bandCard().formedYear }}</span>
     </p>
   </div>
 </a>

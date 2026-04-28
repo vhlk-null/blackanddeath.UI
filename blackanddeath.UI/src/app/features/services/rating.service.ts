@@ -1,67 +1,62 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, of } from 'rxjs';
 import { BaseHttpService } from './intrefaces/http';
-import { RatingEndpoints } from '../../shared/constants/endpoints';
+import { AlbumEndpoints, BandEndpoints, RatingEndpoints } from '../../shared/constants/endpoints';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
 import { PaginatedResult } from '../../shared/models/paginated-result';
 
-interface TopRatedAlbumDto {
+interface AlbumCardDto {
   id: string;
   title: string;
-  slug: string | null;
+  slug: string;
   coverUrl: string | null;
-  releaseDate: number;
-  releaseMonth?: number | null;
-  releaseDay?: number | null;
-  format: number;
-  type: number;
-  primaryGenreName: string | null;
-  primaryGenreSlug: string | null;
-  bandNames: string | null;
-  bandSlugs: string | null;
-  countryNames: string | null;
+  releaseYear: number;
+  format: string;
+  type: string;
+  bands: string[];
+  genres: string[];
+  countries: string[];
+  tags: string[];
   averageRating: number | null;
   ratingsCount: number;
   isExplicit?: boolean;
 }
 
-function mapTopRatedAlbum(dto: TopRatedAlbumDto): Album {
+function mapAlbumCard(dto: AlbumCardDto): Album {
   return {
     id: dto.id,
     title: dto.title,
-    slug: dto.slug ?? '',
+    slug: dto.slug,
     coverUrl: dto.coverUrl,
-    releaseDate: dto.releaseDate,
+    releaseDate: dto.releaseYear,
     format: dto.format as any,
     type: dto.type as any,
     videos: [],
     averageRating: dto.averageRating,
     ratingsCount: dto.ratingsCount,
     isExplicit: dto.isExplicit,
-    primaryGenre: dto.primaryGenreName ? { id: '', name: dto.primaryGenreName, slug: dto.primaryGenreSlug ?? '' } : null,
-    bands: dto.bandNames ? [{ id: '', name: dto.bandNames, slug: dto.bandSlugs ?? '' }] : [],
-    countries: dto.countryNames ? [{ id: '', name: dto.countryNames, code: '' }] : [],
+    bands: dto.bands.map(name => ({ id: '', name, slug: '' })),
+    genres: dto.genres.map(name => ({ id: '', name })),
+    countries: dto.countries.map(name => ({ id: '', name, code: '' })),
   };
 }
 
-interface TopRatedBandDto {
+interface BandCardDto {
   id: string;
   name: string;
   slug: string;
   logoUrl: string | null;
   formedYear: number;
   disbandedYear: number | null;
-  status: number;
-  primaryGenreName: string | null;
-  primaryGenreSlug: string | null;
-  countryNames: string | null;
-  countryCodes: string | null;
+  status: string;
+  genres: string[];
+  countries: string[];
   averageRating: number | null;
   ratingsCount: number;
 }
 
-function mapTopRatedBand(dto: TopRatedBandDto): Band {
+function mapBandCard(dto: BandCardDto): Band {
   return {
     id: dto.id,
     name: dto.name,
@@ -71,8 +66,8 @@ function mapTopRatedBand(dto: TopRatedBandDto): Band {
     disbandedYear: dto.disbandedYear,
     averageRating: dto.averageRating,
     ratingsCount: dto.ratingsCount,
-    primaryGenre: dto.primaryGenreName ? { id: '', name: dto.primaryGenreName, slug: dto.primaryGenreSlug ?? '' } : null,
-    countries: dto.countryNames ? [{ id: '', name: dto.countryNames, code: dto.countryCodes ?? '' }] : [],
+    genres: dto.genres.map(name => ({ id: '', name, slug: '', isPrimary: false })),
+    countries: dto.countries.map(name => ({ id: '', name, code: '' })),
   };
 }
 
@@ -129,29 +124,29 @@ export class RatingService {
 
   rateAlbum(userId: string, albumId: string, rating: number) {
     return this.http.post<{ albumId: string; userRating: number; averageRating: number; ratingsCount: number }>(
-      RatingEndpoints.RATE_ALBUM, { userId, albumId, rating }
+      RatingEndpoints.RATE_ALBUM(albumId), { userId, rating }
     ).pipe(
       map(r => ({ userRating: r.userRating, averageRating: r.averageRating, ratingsCount: r.ratingsCount }) as AlbumRatingResult),
     );
   }
 
   getTopRatedAlbums(params: { period?: string; pageIndex: number; pageSize: number; sortDir?: string }) {
-    return this.http.get<PaginatedResult<TopRatedAlbumDto>>(RatingEndpoints.TOP_RATED_ALBUMS, params, true).pipe(
-      map(r => ({ data: (r.data ?? []).map(mapTopRatedAlbum), count: r.count })),
+    return this.http.get<{ albums: PaginatedResult<AlbumCardDto> }>(AlbumEndpoints.TOP_RATED, params, true).pipe(
+      map(r => ({ data: (r.albums?.data ?? []).map(mapAlbumCard), count: r.albums?.count ?? 0 })),
       catchError(() => of({ data: [], count: 0 })),
     );
   }
 
   getTopRatedBands(params: { period?: string; pageIndex: number; pageSize: number; sortDir?: string }) {
-    return this.http.get<PaginatedResult<TopRatedBandDto>>(RatingEndpoints.TOP_RATED_BANDS, params, true).pipe(
-      map(r => ({ data: (r.data ?? []).map(mapTopRatedBand), count: r.count })),
+    return this.http.get<{ bands: PaginatedResult<BandCardDto> }>(BandEndpoints.TOP_RATED, params, true).pipe(
+      map(r => ({ data: (r.bands?.data ?? []).map(mapBandCard), count: r.bands?.count ?? 0 })),
       catchError(() => of({ data: [], count: 0 })),
     );
   }
 
   rateBand(userId: string, bandId: string, rating: number) {
     return this.http.post<{ bandId: string; userRating: number; averageRating: number; ratingsCount: number }>(
-      RatingEndpoints.RATE_BAND, { userId, bandId, rating }
+      RatingEndpoints.RATE_BAND(bandId), { userId, rating }
     ).pipe(
       map(r => ({ userRating: r.userRating, averageRating: r.averageRating, ratingsCount: r.ratingsCount }) as AlbumRatingResult),
     );

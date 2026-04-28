@@ -1,4 +1,4 @@
-import { Component, inject, input, signal, computed } from '@angular/core';
+import { Component, inject, input, output, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Band } from '../../../shared/models/band';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -16,6 +16,9 @@ import { CollectionPicker } from '../../../shared/components/collection-picker/c
 })
 export class BandCard {
   bandCard = input.required<Band>();
+  readonly filterByGenre = output<string>();
+  readonly filterByCountry = output<string>();
+  readonly filterByYear = output<number>();
   readonly imageError = signal(false);
 
   readonly auth = inject(AuthService);

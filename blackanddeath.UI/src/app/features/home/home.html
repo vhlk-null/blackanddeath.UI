@@ -9,7 +9,11 @@
 @if (mainTopRatedAlbums().length) {
 <app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onTopRatedTabChange($event)">
   @for (album of mainTopRatedAlbums(); track album.id) {
-    <app-album-card [albumCard]="album" />
+    <app-album-card [albumCard]="album"
+      (filterByGenre)="goToAlbums('genreName', $event)"
+      (filterByCountry)="goToAlbums('countryName', $event)"
+      (filterByType)="goToAlbums('type', $event)"
+      (filterByYear)="goToAlbums('yearFrom', $event)" />
   }
 </app-section>
 }
@@ -17,7 +21,10 @@
 @if (mainPopularBands().length) {
 <app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" [mobileColumns]="1" titleLink="/bands" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onPopularBandsTabChange($event)">
   @for (band of mainPopularBands(); track band.id) {
-    <app-band-card [bandCard]="band" />
+    <app-band-card [bandCard]="band"
+      (filterByGenre)="goToBands('genreName', $event)"
+      (filterByCountry)="goToBands('countryName', $event)"
+      (filterByYear)="goToBands('yearFrom', $event)" />
   }
 </app-section>
 }
@@ -26,23 +33,23 @@
 <app-section [sectionTitle]="titles.recentlyAdded" [tabs]="tabs.recentlyAdded" [mobileColumns]="2" [titleLink]="recentlyAddedTab() === 0 ? '/albums' : '/bands'" [titleQueryParams]="{sortBy: 'CreatedAt'}" (tabChange)="onRecentlyAddedTabChange($event)">
   @if (recentlyAddedTab() === 0) {
     @for (album of mainRecentAlbums(); track album.id) {
-      <app-album-card [albumCard]="album" />
+      <app-album-card [albumCard]="album"
+        (filterByGenre)="goToAlbums('genreName', $event)"
+        (filterByCountry)="goToAlbums('countryName', $event)"
+        (filterByType)="goToAlbums('type', $event)"
+        (filterByYear)="goToAlbums('yearFrom', $event)" />
     }
   } @else {
     @for (band of mainRecentBands(); track band.id) {
-      <app-band-card [bandCard]="band" />
+      <app-band-card [bandCard]="band"
+        (filterByGenre)="goToBands('genreName', $event)"
+        (filterByCountry)="goToBands('countryName', $event)"
+        (filterByYear)="goToBands('yearFrom', $event)" />
     }
   }
 </app-section>
 }
 
-@if (mainRecentVideos().length) {
-<app-section [sectionTitle]="titles.metalVideos" [tabs]="tabs.metalVideos" [mobileColumns]="1" (tabChange)="onMetalVideosTabChange($event)">
-  @for (video of mainRecentVideos(); track video.id) {
-    <app-video-card [videoCard]="video" />
-  }
-</app-section>
-}
 
 @if (mainUpcomingReleases().length) {
 <app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{upcoming: 'true'}" (tabChange)="onUpcomingReleasesTabChange($event)">

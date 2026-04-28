@@ -1,5 +1,5 @@
-<div class="filter-overlay" (click)="onOverlayClick($event)">
-  <div class="filter-panel" role="dialog" aria-modal="true" aria-label="Search filters">
+<div class="filter-overlay" (click)="closed.emit()"></div>
+<div class="filter-panel" role="dialog" aria-modal="true" aria-label="Search filters">
 
     <div class="filter-panel__tabs">
       <button class="filter-panel__tab"
@@ -162,5 +162,4 @@
     </div>
     }
 
-  </div>
 </div>

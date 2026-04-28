@@ -21,20 +21,16 @@
         }
         <p class="card__meta">
           @if (typeLabel()) {
-          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ type: albumCard().type }">{{ typeLabel() }}</span>
+          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByType.emit(albumCard().type)">{{ typeLabel() }}</span>
           · }
-          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ year: albumCard().releaseDate }">{{ albumCard().releaseDate }}</span>
+          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByYear.emit(albumCard().releaseDate)">{{ albumCard().releaseDate }}</span>
           @if (albumCard().countries?.[0]?.name) { ·
-          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ countryName: albumCard().countries?.[0]?.name }">{{ albumCard().countries?.[0]?.name }}</span>
+          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByCountry.emit(albumCard().countries![0].name)">{{ albumCard().countries?.[0]?.name }}</span>
           }
         </p>
         <p class="card__genre">
           @if ((albumCard().primaryGenre ?? albumCard().genres?.[0])?.name) {
-          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation()"
-            [routerLink]="['/albums']" [queryParams]="{ genreName: (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }">{{ (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }}</span>
+          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByGenre.emit((albumCard().primaryGenre ?? albumCard().genres![0]).name)">{{ (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }}</span>
           } @else {
           <span>{{ (albumCard().primaryGenre ?? albumCard().genres?.[0])?.name }}</span>
           }

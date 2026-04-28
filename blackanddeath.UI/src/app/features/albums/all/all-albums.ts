@@ -11,7 +11,6 @@ import { AlbumFormat } from '../../../shared/models/enums/album-format.enum';
 import { GenreService } from '../../services/genre.service';
 import { CountryService } from '../../services/country.service';
 import { LabelService } from '../../services/label.service';
-import { RatingService } from '../../services/rating.service';
 import { Album } from '../../../shared/models/album';
 import { Genre } from '../../../shared/models/genre';
 import { Country } from '../../../shared/models/country';
@@ -19,6 +18,7 @@ import { Label } from '../../../shared/models/label';
 import { AlbumCard } from '../card/album-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { MultiSelectNames } from '../../../shared/components/multi-select-names/multi-select-names';
+import { FILTER_DEBOUNCE_MS } from '../../../shared/constants/constants';
 
 const toArray = (v: string | string[] | undefined): string[] =>
   !v ? [] : Array.isArray(v) ? v : [v];
@@ -66,7 +66,6 @@ export class AllAlbums implements OnInit {
 
   private albumService = inject(AlbumService);
   private searchService = inject(SearchService);
-  private ratingService = inject(RatingService);
   private genreService = inject(GenreService);
   private countryService = inject(CountryService);
   private labelService = inject(LabelService);
@@ -174,6 +173,27 @@ export class AllAlbums implements OnInit {
     });
   }
 
+  applyFilterFromCard(key: 'genre' | 'country' | 'type' | 'year', value: string | number): void {
+    this.currentPage.set(1);
+    switch (key) {
+      case 'genre':
+        this.activeGenreNames.set([value as string]);
+        break;
+      case 'country':
+        this.activeCountryNames.set([value as string]);
+        break;
+      case 'type':
+        this.activeTypes.set([value as string]);
+        break;
+      case 'year':
+        this.activeYearFrom.set(String(value));
+        this.activeYearTo.set(String(value));
+        break;
+    }
+    this.updateUrl();
+    this.load();
+  }
+
   toggleSearch(): void {
     this.searchOpen.update(v => !v);
     if (!this.searchOpen()) this.onSearch('');
@@ -203,7 +223,7 @@ export class AllAlbums implements OnInit {
 
   scheduleApply(): void {
     if (this.filterTimer) clearTimeout(this.filterTimer);
-    this.filterTimer = setTimeout(() => this.applyFilters(), 400);
+    this.filterTimer = setTimeout(() => this.applyFilters(), FILTER_DEBOUNCE_MS);
   }
 
   onDraftRatingFrom(value: string): void {
@@ -371,13 +391,6 @@ export class AllAlbums implements OnInit {
       });
       return;
     }
-    if (this.activeSort() === 'Rating') {
-      this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
-        next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); done(); },
-        error: done,
-      });
-      return;
-    }
     this.searchService.searchAlbums(this.buildSearchParams()).subscribe({
       next: (result) => {
         this.albums.set(result.data.map(this.mapToAlbum));
@@ -398,7 +411,7 @@ export class AllAlbums implements OnInit {
       q: this.activeName() ?? '',
       pageIndex: this.currentPage() - 1,
       pageSize: this.pageSize,
-      sortBy: this.activeSort() === 'ReleaseDate' ? 'releaseYear' : this.activeSort() === 'CreatedAt' ? 'createdAt' : 'title' as 'createdAt' | 'title' | 'releaseYear',
+      sortBy: this.activeSort() === 'ReleaseDate' ? 'releaseYear' : this.activeSort() === 'CreatedAt' ? 'createdAt' : this.activeSort() === 'Rating' ? 'averageRating' : 'title' as 'createdAt' | 'title' | 'releaseYear' | 'averageRating',
       sortDir: this.activeSortDir() === 'asc' ? 'Asc' : 'Desc' as 'Asc' | 'Desc',
       type: this.activeTypes()[0] ?? undefined,
       releaseYearFrom: this.activeYearFrom() ? +this.activeYearFrom()! : undefined,

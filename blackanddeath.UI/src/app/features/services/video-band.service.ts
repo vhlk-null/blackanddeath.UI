@@ -23,12 +23,6 @@ export class VideoBandService {
     );
   }
 
-  getByBand(bandId: string, params?: { pageIndex?: number; pageSize?: number }) {
-    return this.http.get<{ videoBands: PaginatedResult<VideoBand> }>(VideoBandEndpoints.GET_BY_BAND(bandId), params).pipe(
-      map(response => response.videoBands.data)
-    );
-  }
-
   create(bandId: string, dto: CreateVideoBandDto) {
     return this.http.post<VideoBand>(VideoBandEndpoints.CREATE(bandId), dto);
   }

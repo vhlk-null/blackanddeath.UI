@@ -1,4 +1,5 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin, of, catchError } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { DecimalPipe } from '@angular/common';
@@ -11,26 +12,24 @@ import {
   TOP_RATED_TITLE,
   POPULAR_BANDS_TITLE,
   RECENTLY_ADDED_TITLE,
-  METAL_VIDEOS_TITLE,
   UPCOMING_RELEASES_TITLE,
   TOP_RATED_TABS,
   POPULAR_BANDS_TABS,
   RECENTLY_ADDED_TABS,
-  METAL_VIDEOS_TABS,
   UPCOMING_RELEASES_TABS,
 } from '../../shared/constants/constants';
 import { AlbumService } from '../services/album.servics';
-import { BandService } from '../services/band.service';
-import { VideoBandService } from '../services/video-band.service';
-import { RatingService } from '../services/rating.service';
-import { VideoBand } from '../../shared/models/video-band';
-import { VideoCard } from './video-card/video-card';
+import { SearchService } from '../services/search.service';
+import { AlbumSearchDocument } from '../../shared/models/album-search-document';
+import { BandSearchDocument } from '../../shared/models/band-search-document';
+import { AlbumType } from '../../shared/models/enums/album-type.enum';
+import { AlbumFormat } from '../../shared/models/enums/album-format.enum';
 
 const PAGE_SIZE = 20;
 
 @Component({
   selector: 'app-home',
-  imports: [Section, AlbumCard, BandCard, VideoCard, DecimalPipe],
+  imports: [Section, AlbumCard, BandCard, DecimalPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -40,7 +39,7 @@ export class Home implements OnInit {
     topRated: TOP_RATED_TITLE,
     popularBands: POPULAR_BANDS_TITLE,
     recentlyAdded: RECENTLY_ADDED_TITLE,
-    metalVideos: METAL_VIDEOS_TITLE,
+
     upcomingReleases: UPCOMING_RELEASES_TITLE,
   };
 
@@ -48,7 +47,7 @@ export class Home implements OnInit {
     topRated: TOP_RATED_TABS,
     popularBands: POPULAR_BANDS_TABS,
     recentlyAdded: RECENTLY_ADDED_TABS,
-    metalVideos: METAL_VIDEOS_TABS,
+
     upcomingReleases: UPCOMING_RELEASES_TABS,
   };
 
@@ -59,68 +58,86 @@ export class Home implements OnInit {
   mainRecentAlbums = signal<Album[]>([]);
   mainRecentBands = signal<Band[]>([]);
   recentlyAddedTab = signal(0);
-  mainRecentVideos = signal<VideoBand[]>([]);
   mainUpcomingReleases = signal<Album[]>([]);
 
   private albumService = inject(AlbumService);
-  private bandService = inject(BandService);
-  private videoBandService = inject(VideoBandService);
-  private ratingService = inject(RatingService);
+  private searchService = inject(SearchService);
+  private router = inject(Router);
   private titleService = inject(Title);
 
   totalAlbums = signal(0);
   totalBands  = signal(0);
 
-  private readonly periodMap = ['All', 'Year', 'Month'];
-
   ngOnInit(): void {
     this.titleService.setTitle('Black And Death');
 
-    this.albumService.getAllPaginated({ pageIndex: 0, pageSize: 1 })
-      .subscribe(r => this.totalAlbums.set(r.count));
-    this.bandService.getAllPaginated({ pageIndex: 0, pageSize: 1 })
-      .subscribe(r => this.totalBands.set(r.count));
-
     forkJoin({
-      topRatedAlbums: this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
-      topRatedBands: this.ratingService.getTopRatedBands({ period: 'All', pageIndex: 0, pageSize: PAGE_SIZE }),
-      albums: this.albumService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'CreatedAt', sortDir: 'desc' }),
-      bands: this.bandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'CreatedAt', sortDir: 'desc' }),
-      videos: this.videoBandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
+      topRatedAlbums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'averageRating', sortDir: 'Desc' }),
+      topRatedBands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'averageRating', sortDir: 'Desc' }),
+      albums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
+      bands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
       upcomingAlbums: this.albumService.getUpcoming({ pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
     }).subscribe({
-      next: ({ topRatedAlbums, topRatedBands, albums, bands, videos, upcomingAlbums }) => {
-        this.mainTopRatedAlbums.set(topRatedAlbums.data);
-        this.mainPopularBands.set(topRatedBands.data);
-        this.mainRecentAlbums.set(albums);
+      next: ({ topRatedAlbums, topRatedBands, albums, bands, upcomingAlbums }) => {
+        this.mainTopRatedAlbums.set(topRatedAlbums.data.map(this.mapToAlbum));
+        this.mainPopularBands.set(topRatedBands.data.map(this.mapToBand));
+        this.mainRecentAlbums.set(albums.data.map(this.mapToAlbum));
         this.mainUpcomingReleases.set(upcomingAlbums);
-        this.mainRecentBands.set(bands);
-        this.mainRecentVideos.set(videos);
+        this.mainRecentBands.set(bands.data.map(this.mapToBand));
+        this.totalAlbums.set(albums.count);
+        this.totalBands.set(bands.count);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
     });
   }
 
-  onTopRatedTabChange(index: number): void {
-    this.ratingService.getTopRatedAlbums({ period: this.periodMap[index], pageIndex: 0, pageSize: PAGE_SIZE })
-      .subscribe(r => this.mainTopRatedAlbums.set(r.data));
-  }
+  onTopRatedTabChange(_index: number): void {}
 
-  onPopularBandsTabChange(index: number): void {
-    this.ratingService.getTopRatedBands({ period: this.periodMap[index], pageIndex: 0, pageSize: PAGE_SIZE })
-      .subscribe(r => this.mainPopularBands.set(r.data));
-  }
+  onPopularBandsTabChange(_index: number): void {}
 
   onRecentlyAddedTabChange(index: number): void {
     this.recentlyAddedTab.set(index);
   }
 
-  onMetalVideosTabChange(_index: number): void {
-    this.videoBandService.getAll({ pageIndex: 0, pageSize: PAGE_SIZE })
-      .pipe(catchError(() => of([])))
-      .subscribe(videos => this.mainRecentVideos.set(videos));
+  onUpcomingReleasesTabChange(_index: number): void {}
+
+  goToAlbums(key: string, value: string | number): void {
+    this.router.navigate(['/albums'], { queryParams: { [key]: value } });
   }
 
-  onUpcomingReleasesTabChange(_index: number): void {}
+  goToBands(key: string, value: string | number): void {
+    this.router.navigate(['/bands'], { queryParams: { [key]: value } });
+  }
+
+  private mapToAlbum(doc: AlbumSearchDocument): Album {
+    return {
+      id: doc.id,
+      slug: doc.slug,
+      title: doc.title,
+      coverUrl: doc.coverUrl,
+      releaseDate: doc.releaseYear,
+      type: doc.type as AlbumType,
+      format: doc.format as unknown as AlbumFormat,
+      bands: doc.bands.map(name => ({ id: null, name, slug: null }) as any),
+      genres: doc.genres.map(name => ({ id: null, name }) as any),
+      countries: doc.countries.map(name => ({ id: null, name }) as any),
+      tags: doc.tags.map(name => ({ id: null, name }) as any),
+      videos: [],
+    } as any;
+  }
+
+  private mapToBand(doc: BandSearchDocument): Band {
+    return {
+      id: doc.id,
+      slug: doc.slug,
+      name: doc.name,
+      logoUrl: doc.logoUrl,
+      formedYear: doc.formedYear,
+      disbandedYear: doc.disbandedYear,
+      status: doc.status,
+      genres: doc.genres.map(name => ({ id: null, name, slug: null, isPrimary: false }) as any),
+      countries: doc.countries.map(name => ({ id: null, name, code: null }) as any),
+    } as any;
+  }
 }

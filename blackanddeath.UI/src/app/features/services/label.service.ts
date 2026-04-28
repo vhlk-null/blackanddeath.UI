@@ -15,10 +15,6 @@ export class LabelService {
     );
   }
 
-  getById(id: string) {
-    return this.http.get<Label>(LabelEndpoints.GET_BY_ID(id));
-  }
-
   create(payload: Omit<Label, 'id'>) {
     return this.http.post<Label>(LabelEndpoints.CREATE, payload);
   }
