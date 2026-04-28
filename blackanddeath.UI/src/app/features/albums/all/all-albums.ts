@@ -82,6 +82,7 @@ export class AllAlbums implements OnInit {
   readonly filtersOpen = signal(false);
   readonly showSortMenu = signal(false);
   readonly searchQuery = signal('');
+  readonly searchOpen = signal(false);
   private searchTimer: ReturnType<typeof setTimeout> | null = null;
   private filterTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -91,6 +92,7 @@ export class AllAlbums implements OnInit {
   readonly activeSort = signal<SortOption>('ReleaseDate');
   readonly activeSortDir = signal<SortDir>('desc');
   readonly activeName = signal<string | null>(null);
+  readonly includeTracksEnabled = signal(false);
   readonly activeGenreNames = signal<string[]>([]);
   readonly activeCountryNames = signal<string[]>([]);
   readonly activeTypes = signal<string[]>([]);
@@ -170,6 +172,17 @@ export class AllAlbums implements OnInit {
       this.loadedPage.set(this.currentPage());
       this.load();
     });
+  }
+
+  toggleSearch(): void {
+    this.searchOpen.update(v => !v);
+    if (!this.searchOpen()) this.onSearch('');
+  }
+
+  toggleIncludeTracks(): void {
+    this.includeTracksEnabled.update(v => !v);
+    this.currentPage.set(1);
+    this.load();
   }
 
   onSearch(value: string): void {
@@ -350,23 +363,27 @@ export class AllAlbums implements OnInit {
 
   private load(): void {
     this.loading.set(true);
+    const done = () => this.loading.set(false);
     if (this.activeUpcoming()) {
       this.albumService.getUpcoming().subscribe({
-        next: (data) => { this.albums.set(data); this.total.set(data.length); this.loaded.set(true); this.loading.set(false); },
+        next: (data) => { this.albums.set(data); this.total.set(data.length); this.loaded.set(true); done(); },
+        error: done,
       });
       return;
     }
     if (this.activeSort() === 'Rating') {
       this.ratingService.getTopRatedAlbums({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
-        next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); this.loading.set(false); },
+        next: (result) => { this.albums.set(result.data); this.total.set(result.count); this.loaded.set(true); done(); },
+        error: done,
       });
       return;
     }
     this.searchService.searchAlbums(this.buildSearchParams()).subscribe({
       next: (result) => {
         this.albums.set(result.data.map(this.mapToAlbum));
-        this.total.set(result.count); this.loaded.set(true); this.loading.set(false);
-      }
+        this.total.set(result.count); this.loaded.set(true); done();
+      },
+      error: done,
     });
   }
 
@@ -388,6 +405,7 @@ export class AllAlbums implements OnInit {
       releaseYearTo: this.activeYearTo() ? +this.activeYearTo()! : undefined,
       genre: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
       country: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
+      includeTracks: this.includeTracksEnabled() ? true : undefined,
     };
   }
 

@@ -61,6 +61,7 @@ export class AllBands implements OnInit {
   readonly filtersOpen = signal(false);
   readonly showSortMenu = signal(false);
   readonly searchQuery = signal('');
+  readonly searchOpen = signal(false);
   private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly yearMin = 1950;
@@ -139,6 +140,11 @@ export class AllBands implements OnInit {
       this.loadedPage.set(this.currentPage());
       this.load();
     });
+  }
+
+  toggleSearch(): void {
+    this.searchOpen.update(v => !v);
+    if (!this.searchOpen()) this.onSearch('');
   }
 
   onSearch(value: string): void {
@@ -288,14 +294,17 @@ export class AllBands implements OnInit {
 
   private load(): void {
     this.loading.set(true);
+    const done = () => this.loading.set(false);
     if (this.activeSort() === 'Rating') {
       this.ratingService.getTopRatedBands({ period: 'All', pageIndex: this.currentPage() - 1, pageSize: this.pageSize, sortDir: this.activeSortDir() }).subscribe({
-        next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); this.loading.set(false); },
+        next: (result) => { this.bands.set(result.data); this.total.set(result.count); this.loaded.set(true); done(); },
+        error: done,
       });
       return;
     }
     this.searchService.searchBands(this.buildSearchParams()).subscribe({
-      next: (result) => { this.bands.set(result.data.map(this.mapToBand)); this.total.set(result.count); this.loaded.set(true); this.loading.set(false); },
+      next: (result) => { this.bands.set(result.data.map(this.mapToBand)); this.total.set(result.count); this.loaded.set(true); done(); },
+      error: done,
     });
   }
 

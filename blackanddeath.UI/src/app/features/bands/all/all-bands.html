@@ -2,9 +2,20 @@
 
   <div class="all-bands__header">
     <h1 class="all-bands__title">Bands</h1>
-    <div class="all-bands__search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input class="all-bands__search-input" type="text" placeholder="Search bands…" [value]="searchQuery()" (input)="onSearch($any($event.target).value)" />
+    <div class="all-bands__search" [class.all-bands__search--open]="searchOpen()">
+      <button class="all-bands__search-icon-btn" type="button" (click)="toggleSearch()" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      @if (searchOpen()) {
+        <input
+          autofocus
+          class="all-bands__search-input"
+          type="text"
+          placeholder="Search bands…"
+          [value]="searchQuery()"
+          (input)="onSearch($any($event.target).value)"
+          (keydown.escape)="searchOpen.set(false); onSearch('')" />
+      }
     </div>
     <div class="all-bands__controls">
       <button class="all-bands__filter-btn" [class.all-bands__filter-btn--active]="filtersOpen()" (click)="toggleFilters()" type="button" title="Filters">

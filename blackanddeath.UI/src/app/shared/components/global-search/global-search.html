@@ -18,6 +18,17 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     }
+    <button
+      class="gs-tracks-toggle"
+      [class.gs-tracks-toggle--active]="includeTracksEnabled()"
+      type="button"
+      (click)="toggleIncludeTracks()"
+      title="Include tracks in search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+      </svg>
+      <span>{{ includeTracksEnabled() ? 'Including tracks' : 'Search in tracks' }}</span>
+    </button>
   </div>
 
   <div class="gs-results">
@@ -25,9 +36,26 @@
       <p class="gs-hint">Searching…</p>
     } @else if (!query().trim()) {
       <p class="gs-hint">Start typing to search albums and bands</p>
-    } @else if (hasSearched() && albumResults().length === 0 && bandResults().length === 0) {
+    } @else if (hasSearched() && albumResults().length === 0 && trackResults().length === 0 && bandResults().length === 0) {
       <p class="gs-hint">No results found for "{{ query() }}"</p>
     } @else {
+
+      @if (bandResults().length) {
+        <p class="gs-section-label">Bands</p>
+        @for (band of bandResults(); track band.id) {
+          <button class="gs-item" type="button" (click)="goToBand(band.slug)">
+            @if (band.logoUrl) {
+              <img class="gs-item__cover" [src]="band.logoUrl" [alt]="band.name" />
+            } @else {
+              <div class="gs-item__cover gs-item__cover--empty"></div>
+            }
+            <span class="gs-item__info">
+              <span class="gs-item__title">{{ band.name }}</span>
+              <span class="gs-item__meta">{{ band.genres[0] }} · {{ band.formedYear }}</span>
+            </span>
+          </button>
+        }
+      }
 
       @if (albumResults().length) {
         <p class="gs-section-label">Albums</p>
@@ -46,18 +74,18 @@
         }
       }
 
-      @if (bandResults().length) {
-        <p class="gs-section-label">Bands</p>
-        @for (band of bandResults(); track band.id) {
-          <button class="gs-item" type="button" (click)="goToBand(band.slug)">
-            @if (band.logoUrl) {
-              <img class="gs-item__cover" [src]="band.logoUrl" [alt]="band.name" />
+      @if (trackResults().length) {
+        <p class="gs-section-label">Tracks</p>
+        @for (album of trackResults(); track album.id) {
+          <button class="gs-item" type="button" (click)="goToAlbum(album.slug)">
+            @if (album.coverUrl) {
+              <img class="gs-item__cover" [src]="album.coverUrl" [alt]="album.title" />
             } @else {
               <div class="gs-item__cover gs-item__cover--empty"></div>
             }
             <span class="gs-item__info">
-              <span class="gs-item__title">{{ band.name }}</span>
-              <span class="gs-item__meta">{{ band.genres[0] }} · {{ band.formedYear }}</span>
+              <span class="gs-item__title">{{ album.title }}</span>
+              <span class="gs-item__meta">{{ album.bands[0] }} · {{ album.releaseYear }} · {{ album.type }}</span>
             </span>
           </button>
         }

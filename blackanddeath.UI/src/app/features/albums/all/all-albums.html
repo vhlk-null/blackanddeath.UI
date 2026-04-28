@@ -2,9 +2,31 @@
 
   <div class="all-albums__header">
     <h1 class="all-albums__title">Albums</h1>
-    <div class="all-albums__search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input class="all-albums__search-input" type="text" placeholder="Search albums…" [value]="searchQuery()" (input)="onSearch($any($event.target).value)" />
+    <div class="all-albums__search" [class.all-albums__search--open]="searchOpen()">
+      <button class="all-albums__search-icon-btn" type="button" (click)="toggleSearch()" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+      @if (searchOpen()) {
+        <input
+          autofocus
+          class="all-albums__search-input"
+          type="text"
+          placeholder="Search albums…"
+          [value]="searchQuery()"
+          (input)="onSearch($any($event.target).value)"
+          (keydown.escape)="searchOpen.set(false); onSearch('')" />
+        <button
+          class="all-albums__tracks-toggle"
+          [class.all-albums__tracks-toggle--active]="includeTracksEnabled()"
+          type="button"
+          (click)="toggleIncludeTracks()"
+          title="Search in tracks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+          <span>{{ includeTracksEnabled() ? 'Including tracks' : 'Search in tracks' }}</span>
+        </button>
+      }
     </div>
     <div class="all-albums__controls">
       <button class="all-albums__filter-btn" [class.all-albums__filter-btn--active]="filtersOpen()" (click)="toggleFilters()" type="button" title="Filters">

@@ -17,6 +17,7 @@ export interface AlbumSearchParams {
   releaseYearTo?: number;
   genre?: string[];
   country?: string[];
+  includeTracks?: boolean;
 }
 
 export interface BandSearchParams {
@@ -47,6 +48,7 @@ export class SearchService {
     if (params.releaseYearTo !== undefined) p['releaseYearTo'] = params.releaseYearTo;
     if (params.genre?.length) p['genre'] = params.genre;
     if (params.country?.length) p['country'] = params.country;
+    if (params.includeTracks) p['includeTracks'] = true;
 
     console.log('[SearchService] searchAlbums params:', p);
     return this.http.get<{ albums: PaginatedResult<AlbumSearchDocument> }>(AlbumEndpoints.SEARCH, p, true)
