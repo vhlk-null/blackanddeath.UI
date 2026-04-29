@@ -88,18 +88,19 @@
   }
 
   &__candidates-hint {
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
-    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+    font-weight: 500;
   }
 
   &__candidate {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
-    padding: 0.5rem 0.75rem;
+    padding: 0.6rem 0.75rem;
     background: transparent;
-    border: 1px solid transparent;
+    border: 1px solid var(--color-border-input);
     border-radius: var(--radius-md);
     text-align: left;
     cursor: pointer;
@@ -107,17 +108,18 @@
 
     &:hover {
       background: var(--color-input-bg);
-      border-color: var(--color-border-input);
+      border-color: var(--color-border-input-focus);
     }
   }
 
   &__candidate-name {
-    font-size: 0.875rem;
+    font-size: 0.925rem;
+    font-weight: 600;
     color: var(--color-text);
   }
 
   &__candidate-meta {
-    font-size: 0.775rem;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
 
     em { font-style: italic; }
@@ -155,12 +157,12 @@
     font-size: 0.75rem;
     padding: 0.1rem 0.4rem;
     border-radius: 3px;
-    background: color-mix(in srgb, #8b1a1a 20%, transparent);
-    color: #e07070;
+    background: color-mix(in srgb, var(--color-primary, #8b1a1a) 20%, transparent);
+    color: var(--color-text-muted);
 
     &--active {
-      background: color-mix(in srgb, #2d6a2d 20%, transparent);
-      color: #7ecb7e;
+      background: color-mix(in srgb, green 15%, transparent);
+      color: var(--color-text);
     }
   }
 
@@ -194,12 +196,12 @@
     cursor: pointer;
     width: 1rem;
     height: 1rem;
-    accent-color: #fff;
+    accent-color: var(--color-text);
     appearance: auto;
   }
 
   &__album-summary {
-    &--new { color: #7ecb7e; }
+    &--new { color: var(--color-text); font-weight: 500; }
     &--existing { color: var(--color-text-muted); }
   }
 
@@ -213,7 +215,7 @@
     text-underline-offset: 3px;
     text-decoration-color: var(--color-text-muted);
 
-    &:hover { color: #fff; text-decoration-color: #fff; }
+    &:hover { color: var(--color-text-heading); text-decoration-color: var(--color-text-heading); }
   }
 
   &__album-title {
@@ -298,33 +300,33 @@
     margin-top: 0.5rem;
 
     &--success {
-      background: color-mix(in srgb, #2d6a2d 15%, transparent);
-      border: 1px solid #2d6a2d;
-      color: #7ecb7e;
+      background: color-mix(in srgb, green 10%, transparent);
+      border: 1px solid color-mix(in srgb, green 40%, transparent);
+      color: var(--color-text);
     }
 
     &--info {
-      background: color-mix(in srgb, #1a4a6b 20%, transparent);
-      border: 1px solid #2a6a9b;
-      color: #7ec8e3;
+      background: color-mix(in srgb, steelblue 10%, transparent);
+      border: 1px solid color-mix(in srgb, steelblue 40%, transparent);
+      color: var(--color-text);
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
     }
 
     &--warning {
-      background: color-mix(in srgb, #7a5c00 20%, transparent);
-      border: 1px solid #a07800;
-      color: #d4a843;
+      background: color-mix(in srgb, orange 10%, transparent);
+      border: 1px solid color-mix(in srgb, orange 40%, transparent);
+      color: var(--color-text);
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
     }
 
     &--error {
-      background: color-mix(in srgb, #8b1a1a 15%, transparent);
-      border: 1px solid #8b1a1a;
-      color: #e07070;
+      background: color-mix(in srgb, var(--color-primary, #8b1a1a) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-primary, #8b1a1a) 40%, transparent);
+      color: var(--color-text);
     }
   }
 }
