@@ -7,18 +7,107 @@
       type="text"
       placeholder="Band name (e.g. Metallica)"
       [(ngModel)]="bandName"
-      (keydown.enter)="import()"
-      [disabled]="loading()"
+      (keydown.enter)="search()"
+      [disabled]="loading() || searching() || previewing()"
     />
 
     <button
       class="import-band__btn"
-      (click)="import()"
-      [disabled]="!bandName.trim() || loading()"
+      (click)="search()"
+      [disabled]="!bandName.trim() || loading() || searching() || previewing() || !!candidates() || !!preview()"
     >
-      @if (loading()) { Importing… } @else { Import }
+      @if (searching()) { Searching… } @else { Search }
     </button>
+
+    @if (candidates() || preview()) {
+      <button class="import-band__btn import-band__btn--cancel" type="button" (click)="resetSearch()">
+        Reset
+      </button>
+    }
+
+    @if (loading()) {
+      <button class="import-band__btn import-band__btn--cancel" type="button" (click)="cancel()">
+        Cancel
+      </button>
+    }
   </div>
+
+  @if (previewing()) {
+    <p class="gs-hint">Loading preview…</p>
+  }
+
+  @if (candidates(); as list) {
+    <div class="import-band__candidates">
+      <p class="import-band__candidates-hint">
+        @if (list.length) { Multiple bands found — pick the right one: } @else { No bands found for "{{ bandName }}" }
+      </p>
+      @for (c of list; track c.mbId) {
+        <button class="import-band__candidate" type="button" (click)="selectCandidate(c)">
+          <span class="import-band__candidate-name">{{ c.name }}</span>
+          <span class="import-band__candidate-meta">
+            @if (c.disambiguation) { <em>{{ c.disambiguation }}</em> · }
+            @if (c.country) { {{ c.country }} · }
+            @if (c.formedYear) { {{ c.formedYear }} }
+          </span>
+        </button>
+      }
+    </div>
+  }
+
+  @if (preview(); as p) {
+    <div class="import-band__preview">
+      <div class="import-band__preview-row">
+        <span class="import-band__preview-label">Name</span>
+        <span class="import-band__preview-value">{{ p.name }}</span>
+      </div>
+      @if (p.country) {
+        <div class="import-band__preview-row">
+          <span class="import-band__preview-label">Country</span>
+          <span class="import-band__preview-value">{{ p.country }}</span>
+        </div>
+      }
+      @if (p.formedYear) {
+        <div class="import-band__preview-row">
+          <span class="import-band__preview-label">Years</span>
+          <span class="import-band__preview-value">
+            {{ p.formedYear }}{{ p.disbandedYear ? ' – ' + p.disbandedYear : '' }}
+            <span class="import-band__preview-status" [class.import-band__preview-status--active]="p.isActive">
+              {{ p.isActive ? 'Active' : 'Disbanded' }}
+            </span>
+          </span>
+        </div>
+      }
+      @if (p.tags.length) {
+        <div class="import-band__preview-row">
+          <span class="import-band__preview-label">Tags</span>
+          <span class="import-band__preview-value">{{ p.tags.join(', ') }}</span>
+        </div>
+      }
+      <div class="import-band__preview-row import-band__preview-row--top">
+        <span class="import-band__preview-label">Albums</span>
+        <span class="import-band__preview-value">{{ p.albumCount }} to import</span>
+      </div>
+      @if (p.albums.length) {
+        <div class="import-band__album-list">
+          @for (album of p.albums; track album.title) {
+            <div class="import-band__album-item">
+              <span class="import-band__album-title">{{ album.title }}</span>
+              <span class="import-band__album-meta">{{ album.year ?? '?' }} · {{ album.type }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="import-band__preview-actions">
+        <button class="import-band__btn" type="button" (click)="confirmImport()" [disabled]="loading()">
+          Confirm Import
+        </button>
+        <button class="import-band__btn import-band__btn--cancel" type="button" (click)="backToCandidates()">
+          Back
+        </button>
+      </div>
+    </div>
+  }
 
   @if (loading()) {
     <div class="import-band__progress">

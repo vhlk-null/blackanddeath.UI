@@ -66,6 +66,145 @@
 
     &:hover:not(:disabled) { opacity: 0.85; }
     &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    &--cancel {
+      background: transparent;
+      border: 1px solid var(--color-border-input);
+      color: var(--color-text-muted);
+
+      &:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+    }
+  }
+
+  &__candidates {
+    padding: 0.75rem 1rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__candidates-hint {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.5rem;
+  }
+
+  &__candidate {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+      background: var(--color-input-bg);
+      border-color: var(--color-border-input);
+    }
+  }
+
+  &__candidate-name {
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+
+  &__candidate-meta {
+    font-size: 0.775rem;
+    color: var(--color-text-muted);
+
+    em { font-style: italic; }
+  }
+
+  &__preview {
+    padding: 1rem 1.25rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border-input);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__preview-row {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+  }
+
+  &__preview-label {
+    width: 5rem;
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__preview-value {
+    color: var(--color-text);
+  }
+
+  &__preview-status {
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    background: color-mix(in srgb, #8b1a1a 20%, transparent);
+    color: #e07070;
+
+    &--active {
+      background: color-mix(in srgb, #2d6a2d 20%, transparent);
+      color: #7ecb7e;
+    }
+  }
+
+  &__preview-row--top {
+    align-items: baseline;
+  }
+
+  &__album-list {
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 0.25rem;
+  }
+
+  &__album-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    gap: 1rem;
+
+    &:nth-child(odd) { background: var(--color-input-bg); }
+  }
+
+  &__album-title {
+    color: var(--color-text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__album-meta {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__preview-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
   }
 
   &__progress {

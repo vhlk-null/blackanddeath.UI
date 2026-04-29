@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ImportService } from '../../services/import.service';
+import { ImportService, BandCandidate, BandPreview } from '../../services/import.service';
 
 @Component({
   selector: 'app-import-band',
@@ -12,6 +12,12 @@ export class ImportBand implements OnInit {
   private importService = inject(ImportService);
 
   bandName = '';
+
+  readonly searching = signal(false);
+  readonly candidates = signal<BandCandidate[] | null>(null);
+
+  readonly previewing = signal(false);
+  readonly preview = signal<BandPreview | null>(null);
 
   readonly loading = signal(false);
   readonly statusMessage = signal('');
@@ -38,10 +44,73 @@ export class ImportBand implements OnInit {
     });
   }
 
-  async import(): Promise<void> {
+  search(): void {
     const name = this.bandName.trim();
-    if (!name || this.loading()) return;
+    if (!name || this.searching()) return;
 
+    this.candidates.set(null);
+    this.preview.set(null);
+    this.error.set(null);
+    this.doneMessage.set(null);
+    this.warnings.set([]);
+    this.infos.set([]);
+    this.searching.set(true);
+
+    this.importService.searchBands(name).subscribe({
+      next: (results) => {
+        this.searching.set(false);
+        if (results.length === 1) {
+          this.fetchPreview(results[0].mbId);
+        } else {
+          this.candidates.set(results);
+        }
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message ?? err?.message ?? 'Search failed');
+        this.searching.set(false);
+      },
+    });
+  }
+
+  selectCandidate(candidate: BandCandidate): void {
+    this.candidates.set(null);
+    this.fetchPreview(candidate.mbId);
+  }
+
+  private fetchPreview(mbid: string): void {
+    this.preview.set(null);
+    this.error.set(null);
+    this.previewing.set(true);
+
+    this.importService.previewBand(mbid).subscribe({
+      next: (data) => {
+        this.preview.set(data);
+        this.previewing.set(false);
+      },
+      error: (err) => {
+        this.error.set(err?.error?.message ?? err?.message ?? 'Failed to fetch preview');
+        this.previewing.set(false);
+      },
+    });
+  }
+
+  backToCandidates(): void {
+    this.preview.set(null);
+    this.error.set(null);
+    this.search();
+  }
+
+  resetSearch(): void {
+    this.candidates.set(null);
+    this.preview.set(null);
+    this.error.set(null);
+  }
+
+  async confirmImport(): Promise<void> {
+    const p = this.preview();
+    if (!p || this.loading()) return;
+
+    this.preview.set(null);
     this.loading.set(true);
     this.doneMessage.set(null);
     this.error.set(null);
@@ -51,19 +120,18 @@ export class ImportBand implements OnInit {
     this.total.set(0);
     this.statusMessage.set('');
 
-    await this.runStream(name);
+    await this.runStream(p.mbId, p.name);
   }
 
   private async resumeStream(bandName: string): Promise<void> {
     this.doneMessage.set(null);
     this.error.set(null);
-    await this.runStream(bandName);
+    await this.runStream('', bandName);
   }
 
-  private async runStream(name: string): Promise<void> {
+  private async runStream(mbid: string, bandName: string): Promise<void> {
     try {
-      for await (const event of this.importService.streamImport(name)) {
-        console.log('[SSE]', event.stage, event.message);
+      for await (const event of this.importService.streamImport(mbid, bandName)) {
         this.statusMessage.set(event.message);
         if (event.total > 0) this.total.set(event.total);
         if (event.current > 0) this.progress.set(event.current);
@@ -77,7 +145,9 @@ export class ImportBand implements OnInit {
         }
       }
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Unexpected error');
+      if (err?.name !== 'AbortError') {
+        this.error.set(err?.message ?? 'Unexpected error');
+      }
     } finally {
       this.loading.set(false);
     }
@@ -94,6 +164,10 @@ export class ImportBand implements OnInit {
     }
     this.warnings.update(w => [...w, ...warnings]);
     this.infos.set(infos);
+  }
+
+  cancel(): void {
+    this.importService.cancelImport();
   }
 
   get progressPercent(): number {

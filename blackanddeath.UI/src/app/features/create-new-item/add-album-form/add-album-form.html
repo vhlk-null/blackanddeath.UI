@@ -3,7 +3,7 @@
   <div class="add-album__preview-wrapper">
     <div class="add-album__preview" appPasteImage (imagePasted)="onImagePasted($event)">
       @if (previewUrl) {
-      <img [src]="previewUrl" alt="Album cover preview" class="add-album__preview-img" />
+      <img [src]="previewUrl" alt="Album cover preview" class="add-album__preview-img" [class.add-album__preview-img--explicit]="albumForm.get('isExplicit')?.value" />
       } @else {
       <div class="add-album__preview-empty">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
@@ -15,6 +15,16 @@
       </div>
       }
     </div>
+    <label class="add-album__explicit-toggle" for="album-explicit">
+      <input class="add-album__toggle-input" id="album-explicit" type="checkbox"
+        [checked]="albumForm.get('isExplicit')?.value"
+        (change)="albumForm.get('isExplicit')?.setValue($any($event.target).checked)" />
+      <span class="add-album__toggle-track">
+        <span class="add-album__toggle-thumb"></span>
+      </span>
+      <span class="add-album__checkbox-label">Explicit</span>
+    </label>
+    <p class="add-album__explicit-desc">Mark this release as containing explicit lyrics or content. The cover will be blurred for other users.</p>
   </div>
 
   <app-section sectionTitle="Add Form" class="add-album__form-section" [arrows]="false" [scroll]="false">
@@ -67,18 +77,20 @@
           </div>
         </div>
 
-        <div class="add-album__row">
-          <label class="add-album__label" for="album-upcoming">Upcoming:</label>
-          <div class="add-album__field add-album__field--checkbox">
-            <label class="add-album__toggle" for="album-upcoming">
-              <input class="add-album__toggle-input" id="album-upcoming" type="checkbox" formControlName="isUpcoming" />
-              <span class="add-album__toggle-track">
-                <span class="add-album__toggle-thumb"></span>
-              </span>
-              <span class="add-album__checkbox-label">This is an upcoming release</span>
-            </label>
+        @if (showUpcoming) {
+          <div class="add-album__row">
+            <label class="add-album__label" for="album-upcoming">Upcoming:</label>
+            <div class="add-album__field add-album__field--checkbox">
+              <label class="add-album__toggle" for="album-upcoming">
+                <input class="add-album__toggle-input" id="album-upcoming" type="checkbox" formControlName="isUpcoming" />
+                <span class="add-album__toggle-track">
+                  <span class="add-album__toggle-thumb"></span>
+                </span>
+                <span class="add-album__checkbox-label">This is an upcoming release</span>
+              </label>
+            </div>
           </div>
-        </div>
+        }
 
         @if (isUpcoming.value) {
           <div class="add-album__row">
@@ -169,18 +181,6 @@
           <app-custom-select [options]="albumTypeSelectOptions" placeholder="" formControlName="albumType" />
         </div>
 
-        <div class="add-album__row">
-          <label class="add-album__label" for="album-explicit">Explicit:</label>
-          <div class="add-album__field add-album__field--checkbox">
-            <label class="add-album__toggle" for="album-explicit">
-              <input class="add-album__toggle-input" id="album-explicit" type="checkbox" formControlName="isExplicit" />
-              <span class="add-album__toggle-track">
-                <span class="add-album__toggle-thumb"></span>
-              </span>
-              <span class="add-album__checkbox-label">Contains explicit content</span>
-            </label>
-          </div>
-        </div>
 
         <div class="add-album__row">
           <label class="add-album__label" for="album-spotify">Spotify:</label>

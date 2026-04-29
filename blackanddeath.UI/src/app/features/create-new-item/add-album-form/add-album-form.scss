@@ -21,6 +21,21 @@
   }
 }
 
+.add-album__explicit-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  cursor: pointer;
+}
+
+.add-album__explicit-desc {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  margin: 0.35rem 0 0;
+  line-height: 1.4;
+}
+
 .add-album__preview-wrapper {
   flex: 1 1 25rem;
   max-width: 35rem;
@@ -297,6 +312,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: filter 0.2s;
+
+  &--explicit {
+    filter: blur(12px);
+  }
 }
 
 .add-album__preview-empty {

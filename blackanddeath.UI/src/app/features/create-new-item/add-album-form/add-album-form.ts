@@ -209,7 +209,7 @@ export class AddAlbumForm implements OnInit {
       amazonMusic: getLink(StreamingPlatform.AmazonMusic),
       bandcamp: getLink(StreamingPlatform.Bandcamp),
       isExplicit: album.isExplicit ?? false,
-      isUpcoming: !!(album.releaseMonth || album.releaseDay),
+      isUpcoming: album.releaseDate > Date.now(),
       releaseMonth: album.releaseMonth ?? null,
       releaseDay: album.releaseDay ?? null,
     });
@@ -218,6 +218,10 @@ export class AddAlbumForm implements OnInit {
   get albumName() { return this.albumForm.get('albumName')!; }
   get albumBands() { return this.albumForm.get('albumBands')!; }
   get albumYear() { return this.albumForm.get('albumYear')!; }
+  get showUpcoming(): boolean {
+    const year = this.albumYear.value;
+    return !!year && year >= new Date().getFullYear();
+  }
   get albumType() { return this.albumForm.get('albumType')!; }
   get albumCountries() { return this.albumForm.get('albumCountries')!; }
   get albumGenres() { return this.albumForm.get('albumGenres')!; }

@@ -68,7 +68,7 @@
             }
             <span class="gs-item__info">
               <span class="gs-item__title">{{ album.title }}</span>
-              <span class="gs-item__meta">{{ album.bands[0] }} · {{ album.releaseYear }} · {{ album.type }}</span>
+              <span class="gs-item__meta">{{ $any(album.bands[0])?.name ?? album.bands[0] }} · {{ album.releaseYear }} · {{ album.type }}</span>
             </span>
           </button>
         }
@@ -85,7 +85,7 @@
             }
             <span class="gs-item__info">
               <span class="gs-item__title">{{ album.title }}</span>
-              <span class="gs-item__meta">{{ album.bands[0] }} · {{ album.releaseYear }} · {{ album.type }}</span>
+              <span class="gs-item__meta">{{ $any(album.bands[0])?.name ?? album.bands[0] }} · {{ album.releaseYear }} · {{ album.type }}</span>
             </span>
           </button>
         }

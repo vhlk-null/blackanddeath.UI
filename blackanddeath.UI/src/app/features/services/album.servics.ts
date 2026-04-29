@@ -15,6 +15,13 @@ export interface PendingApprovalDto {
   createdBy: string;
 }
 
+export interface PendingApprovalGroup {
+  bandId: string;
+  bandName: string;
+  bandSlug: string;
+  albums: PendingApprovalDto[];
+}
+
 export interface CreateAlbumDto {
   title: string;
   releaseDate: number;
@@ -106,8 +113,8 @@ export class AlbumService {
   }
 
   getPendingApproval() {
-    return this.http.get<{ albums: PendingApprovalDto[] }>(AlbumEndpoints.PENDING_APPROVAL).pipe(
-      map(response => response.albums)
+    return this.http.get<{ groups: PendingApprovalGroup[] }>(AlbumEndpoints.PENDING_APPROVAL).pipe(
+      map(response => response.groups)
     );
   }
 }

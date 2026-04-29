@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlbumService, PendingApprovalDto } from '../../services/album.servics';
+import { AlbumService, PendingApprovalDto, PendingApprovalGroup } from '../../services/album.servics';
 import { BandService } from '../../services/band.service';
 import { VideoBandService } from '../../services/video-band.service';
 import { Tabs } from '../../../shared/components/tabs/tabs';
@@ -21,8 +21,27 @@ export class ApproveData implements OnInit {
 
   readonly tabs: ApproveTab[] = ['Albums', 'Bands', 'Videos'];
   readonly activeTab = signal<ApproveTab>('Albums');
+
+  readonly albumGroups = signal<PendingApprovalGroup[]>([]);
   readonly items = signal<PendingApprovalDto[]>([]);
   readonly loading = signal(false);
+  readonly collapsedGroups = signal<Set<string>>(new Set());
+
+  toggleGroup(bandId: string): void {
+    this.collapsedGroups.update(set => {
+      const next = new Set(set);
+      next.has(bandId) ? next.delete(bandId) : next.add(bandId);
+      return next;
+    });
+  }
+
+  isCollapsed(bandId: string): boolean {
+    return this.collapsedGroups().has(bandId);
+  }
+
+  get totalAlbumCount(): number {
+    return this.albumGroups().reduce((sum, g) => sum + g.albums.length, 0);
+  }
 
   ngOnInit(): void {
     this.loadTab('Albums');
@@ -47,7 +66,17 @@ export class ApproveData implements OnInit {
     if (!request$) return;
 
     request$.subscribe({
-      next: () => this.items.update(list => list.filter(i => i.id !== item.id)),
+      next: () => {
+        if (tab === 'Albums') {
+          this.albumGroups.update(groups =>
+            groups
+              .map(g => ({ ...g, albums: g.albums.filter(a => a.id !== item.id) }))
+              .filter(g => g.albums.length > 0)
+          );
+        } else {
+          this.items.update(list => list.filter(i => i.id !== item.id));
+        }
+      },
       error: () => {},
     });
   }
@@ -63,18 +92,29 @@ export class ApproveData implements OnInit {
 
   private loadTab(tab: ApproveTab): void {
     this.loading.set(true);
-    const request$ = tab === 'Albums'
-      ? this.albumService.getPendingApproval()
-      : tab === 'Bands'
+    this.albumGroups.set([]);
+    this.items.set([]);
+
+    if (tab === 'Albums') {
+      this.albumService.getPendingApproval().subscribe({
+        next: (groups) => {
+          this.albumGroups.set(groups);
+          this.loading.set(false);
+        },
+        error: () => { this.loading.set(false); },
+      });
+    } else {
+      const request$ = tab === 'Bands'
         ? this.bandService.getPendingApproval()
         : this.videoBandService.getPendingApproval();
 
-    request$.subscribe({
-      next: (data) => {
-        this.items.set(data);
-        this.loading.set(false);
-      },
-      error: () => { this.loading.set(false); },
-    });
+      request$.subscribe({
+        next: (data) => {
+          this.items.set(data);
+          this.loading.set(false);
+        },
+        error: () => { this.loading.set(false); },
+      });
+    }
   }
 }

@@ -67,6 +67,8 @@ export class AdminEndpoints {
   public static GET_BAND_BY_ID = (id: string) => `${base}/library/admin/bands/${id}`;
   public static GET_ALL_VIDEOS = `${base}/library/admin/videos`;
   public static IMPORT_BAND = `${base}/library/admin/import/band`;
+  public static IMPORT_BAND_SEARCH = `${base}/library/admin/import/band/search`;
+  public static IMPORT_BAND_PREVIEW = `${base}/library/admin/import/band/preview`;
   public static IMPORT_BAND_STREAM = `${base}/library/admin/import/band/stream`;
   public static IMPORT_BAND_STATUS = `${base}/library/admin/import/band/status`;
 }

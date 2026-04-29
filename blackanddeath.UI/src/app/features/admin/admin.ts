@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GenreService } from '../services/genre.service';
 import { GenreCardEditor, GenreCardData } from './genre-card-editor/genre-card-editor';
 import { TagService } from '../services/tag.service';
@@ -14,9 +15,11 @@ import { ImportBand } from './import-band/import-band';
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
-export class Admin {
+export class Admin implements OnInit {
   private genreService = inject(GenreService);
   private tagService = inject(TagService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   readonly tabs = ['Add Metadata', 'Genres to Explore', 'Approve Data', 'Import Band'];
   readonly activeTab = signal(0);
@@ -25,8 +28,24 @@ export class Admin {
   readonly genreOptions = signal<SelectOption[]>([]);
   readonly tagOptions = signal<SelectOption[]>([]);
 
-  onTabChange(index: number): void {
+  ngOnInit(): void {
+    const tab = this.route.snapshot.queryParamMap.get('tab');
+    const index = tab ? this.tabs.findIndex(t => t === tab) : -1;
+    if (index > 0) {
+      this.activeTab.set(index);
+      this.onTabChange(index, false);
+    }
+  }
+
+  onTabChange(index: number, updateUrl = true): void {
     this.activeTab.set(index);
+    if (updateUrl) {
+      this.router.navigate([], {
+        queryParams: { tab: index > 0 ? this.tabs[index] : null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
+    }
     if (index === 1) {
       this.genreService.getCardsDetails().subscribe({
         next: (cards) => this.genreCards.set(cards),
