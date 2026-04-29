@@ -85,22 +85,37 @@
       }
       <div class="import-band__preview-row import-band__preview-row--top">
         <span class="import-band__preview-label">Albums</span>
-        <span class="import-band__preview-value">{{ p.albumCount }} to import</span>
+        <span class="import-band__preview-value">
+          {{ p.albums.length }} total · <span class="import-band__album-summary--new">{{ selectedCount }} selected</span>
+        </span>
       </div>
       @if (p.albums.length) {
         <div class="import-band__album-list">
           @for (album of p.albums; track album.title) {
-            <div class="import-band__album-item">
-              <span class="import-band__album-title">{{ album.title }}</span>
-              <span class="import-band__album-meta">{{ album.year ?? '?' }} · {{ album.type }}</span>
+            <div class="import-band__album-item" [class.import-band__album-item--exists]="album.existsInDb"
+              (click)="!album.existsInDb && toggleAlbum(album.mbUrl)">
+              <input class="import-band__album-check" type="checkbox"
+                [checked]="isSelected(album.mbUrl)"
+                [disabled]="album.existsInDb"
+                (click)="$event.stopPropagation()"
+                (change)="toggleAlbum(album.mbUrl)" />
+              @if (album.mbUrl) {
+                <a class="import-band__album-title import-band__album-title--link" [href]="album.mbUrl" target="_blank" rel="noopener" (click)="$event.stopPropagation()">{{ album.title }}</a>
+              } @else {
+                <span class="import-band__album-title">{{ album.title }}</span>
+              }
+              <span class="import-band__album-meta">
+                {{ album.year ?? '?' }} · {{ album.type }}
+                @if (album.existsInDb) { · <em>already in DB</em> }
+              </span>
             </div>
           }
         </div>
       }
 
       <div class="import-band__preview-actions">
-        <button class="import-band__btn" type="button" (click)="confirmImport()" [disabled]="loading()">
-          Confirm Import
+        <button class="import-band__btn" type="button" (click)="confirmImport()" [disabled]="loading() || selectedCount === 0">
+          Import {{ selectedCount }} album{{ selectedCount !== 1 ? 's' : '' }}
         </button>
         <button class="import-band__btn import-band__btn--cancel" type="button" (click)="backToCandidates()">
           Back

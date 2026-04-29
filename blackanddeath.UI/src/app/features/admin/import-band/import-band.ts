@@ -18,6 +18,7 @@ export class ImportBand implements OnInit {
 
   readonly previewing = signal(false);
   readonly preview = signal<BandPreview | null>(null);
+  readonly selectedMbIds = signal<Set<string>>(new Set());
 
   readonly loading = signal(false);
   readonly statusMessage = signal('');
@@ -27,6 +28,31 @@ export class ImportBand implements OnInit {
   readonly warnings = signal<string[]>([]);
   readonly infos = signal<string[]>([]);
   readonly error = signal<string | null>(null);
+
+  private mbIdFromUrl(mbUrl: string | null): string | null {
+    if (!mbUrl) return null;
+    const match = mbUrl.match(/release-group\/([a-f0-9-]+)/);
+    return match ? match[1] : null;
+  }
+
+  isSelected(mbUrl: string | null): boolean {
+    const id = this.mbIdFromUrl(mbUrl);
+    return !!id && this.selectedMbIds().has(id);
+  }
+
+  toggleAlbum(mbUrl: string | null): void {
+    const id = this.mbIdFromUrl(mbUrl);
+    if (!id) return;
+    this.selectedMbIds.update(set => {
+      const next = new Set(set);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  get selectedCount(): number {
+    return this.selectedMbIds().size;
+  }
 
   ngOnInit(): void {
     this.importService.getStatus().subscribe({
@@ -85,6 +111,14 @@ export class ImportBand implements OnInit {
     this.importService.previewBand(mbid).subscribe({
       next: (data) => {
         this.preview.set(data);
+        const preSelected = new Set<string>();
+        for (const album of data.albums) {
+          if (!album.existsInDb) {
+            const id = this.mbIdFromUrl(album.mbUrl);
+            if (id) preSelected.add(id);
+          }
+        }
+        this.selectedMbIds.set(preSelected);
         this.previewing.set(false);
       },
       error: (err) => {
@@ -108,9 +142,12 @@ export class ImportBand implements OnInit {
 
   async confirmImport(): Promise<void> {
     const p = this.preview();
-    if (!p || this.loading()) return;
+    if (!p || this.loading() || this.selectedCount === 0) return;
+
+    const selectedIds = [...this.selectedMbIds()];
 
     this.preview.set(null);
+    this.selectedMbIds.set(new Set());
     this.loading.set(true);
     this.doneMessage.set(null);
     this.error.set(null);
@@ -120,18 +157,18 @@ export class ImportBand implements OnInit {
     this.total.set(0);
     this.statusMessage.set('');
 
-    await this.runStream(p.mbId, p.name);
+    await this.runStream(p.mbId, p.name, selectedIds);
   }
 
   private async resumeStream(bandName: string): Promise<void> {
     this.doneMessage.set(null);
     this.error.set(null);
-    await this.runStream('', bandName);
+    await this.runStream('', bandName, []);
   }
 
-  private async runStream(mbid: string, bandName: string): Promise<void> {
+  private async runStream(mbid: string, bandName: string, selectedAlbumMbIds: string[]): Promise<void> {
     try {
-      for await (const event of this.importService.streamImport(mbid, bandName)) {
+      for await (const event of this.importService.streamImport(mbid, bandName, selectedAlbumMbIds)) {
         this.statusMessage.set(event.message);
         if (event.total > 0) this.total.set(event.total);
         if (event.current > 0) this.progress.set(event.current);

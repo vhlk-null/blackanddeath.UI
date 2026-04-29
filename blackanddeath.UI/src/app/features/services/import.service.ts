@@ -15,6 +15,9 @@ export interface BandPreviewAlbum {
   title: string;
   year: number | null;
   type: string;
+  existsInDb: boolean;
+  slug: string | null;
+  mbUrl: string | null;
 }
 
 export interface BandPreview {
@@ -67,8 +70,10 @@ export class ImportService {
     this.abortController = null;
   }
 
-  async *streamImport(mbid: string, bandName: string): AsyncGenerator<ImportProgressEvent> {
-    const url = `${AdminEndpoints.IMPORT_BAND_STREAM}?mbId=${encodeURIComponent(mbid)}&bandName=${encodeURIComponent(bandName)}`;
+  async *streamImport(mbid: string, bandName: string, selectedAlbumMbIds: string[]): AsyncGenerator<ImportProgressEvent> {
+    const params = new URLSearchParams({ mbId: mbid, bandName });
+    selectedAlbumMbIds.forEach(id => params.append('albumMbIds', id));
+    const url = `${AdminEndpoints.IMPORT_BAND_STREAM}?${params}`;
     const token = this.auth.getAccessToken();
 
     this.abortController = new AbortController();

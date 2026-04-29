@@ -1,5 +1,4 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AlbumService, PendingApprovalDto, PendingApprovalGroup } from '../../services/album.servics';
 import { BandService } from '../../services/band.service';
 import { VideoBandService } from '../../services/video-band.service';
@@ -17,7 +16,6 @@ export class ApproveData implements OnInit {
   private albumService = inject(AlbumService);
   private bandService = inject(BandService);
   private videoBandService = inject(VideoBandService);
-  private router = inject(Router);
 
   readonly tabs: ApproveTab[] = ['Albums', 'Bands', 'Videos'];
   readonly activeTab = signal<ApproveTab>('Albums');
@@ -81,13 +79,11 @@ export class ApproveData implements OnInit {
     });
   }
 
-  navigateToEdit(item: PendingApprovalDto): void {
+  editUrl(item: PendingApprovalDto): string | null {
     const tab = this.activeTab();
-    if (tab === 'Albums') {
-      this.router.navigate(['/albums', item.id, 'edit']);
-    } else if (tab === 'Bands') {
-      this.router.navigate(['/bands', item.id, 'edit']);
-    }
+    if (tab === 'Albums') return `/albums/${item.id}/edit`;
+    if (tab === 'Bands') return `/bands/${item.id}/edit`;
+    return null;
   }
 
   private loadTab(tab: ApproveTab): void {

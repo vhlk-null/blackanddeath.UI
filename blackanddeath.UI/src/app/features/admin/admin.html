@@ -2,7 +2,7 @@
   <h1 class="admin__title">Admin Panel</h1>
 
   <div class="admin__tabs">
-    <app-tabs [tabs]="tabs" (tabChange)="onTabChange($event)" />
+    <app-tabs [tabs]="tabs" [initialIndex]="activeTab()" (tabChange)="onTabChange($event)" />
   </div>
 
   @switch (activeTab()) {

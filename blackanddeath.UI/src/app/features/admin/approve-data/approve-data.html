@@ -39,9 +39,9 @@
             </thead>
             <tbody>
               @for (item of group.albums; track item.id) {
-                <tr class="approve-data__row--clickable" (click)="navigateToEdit(item)">
+                <tr>
                   <td class="approve-data__id">{{ item.id }}</td>
-                  <td>{{ item.name }}</td>
+                  <td><a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a></td>
                   <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
                   <td class="approve-data__created-by">{{ item.createdBy }}</td>
                   <td class="approve-data__actions" (click)="$event.stopPropagation()">
@@ -81,12 +81,15 @@
         </thead>
         <tbody>
           @for (item of items(); track item.id) {
-            <tr
-              [class.approve-data__row--clickable]="activeTab() !== 'Videos'"
-              (click)="navigateToEdit(item)"
-            >
+            <tr>
               <td class="approve-data__id">{{ item.id }}</td>
-              <td>{{ item.name }}</td>
+              <td>
+                @if (editUrl(item)) {
+                  <a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a>
+                } @else {
+                  {{ item.name }}
+                }
+              </td>
               @if (activeTab() !== 'Videos') {
                 <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
               }
