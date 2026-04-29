@@ -119,9 +119,9 @@ export class Home implements OnInit {
       releaseDate: doc.releaseYear,
       type: doc.type as AlbumType,
       format: doc.format as unknown as AlbumFormat,
-      bands: doc.bands.map(name => ({ id: null, name, slug: null }) as any),
+      bands: doc.bands.map(b => typeof b === 'string' ? { id: null, name: b, slug: null } : b) as any,
       genres: doc.genres.map(name => ({ id: null, name }) as any),
-      countries: doc.countries.map(name => ({ id: null, name }) as any),
+      countries: doc.countries.map(c => typeof c === 'string' ? { id: null, name: c } : { id: null, name: (c as any).name }) as any,
       tags: doc.tags.map(name => ({ id: null, name }) as any),
       videos: [],
     } as any;
@@ -137,6 +137,7 @@ export class Home implements OnInit {
       disbandedYear: doc.disbandedYear,
       status: doc.status,
       genres: doc.genres.map(name => ({ id: null, name, slug: null, isPrimary: false }) as any),
+      primaryGenre: doc.genres[0] ? { id: null, name: doc.genres[0], slug: null } : null,
       countries: doc.countries.map(name => ({ id: null, name, code: null }) as any),
     } as any;
   }

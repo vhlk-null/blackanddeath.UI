@@ -6,10 +6,11 @@ import { SelectOption } from '../../shared/components/multi-select/multi-select'
 import { AddMetadataForm } from '../create-new-item/add-metadata-form/add-metadata-form';
 import { Tabs } from '../../shared/components/tabs/tabs';
 import { ApproveData } from './approve-data/approve-data';
+import { ImportBand } from './import-band/import-band';
 
 @Component({
   selector: 'app-admin',
-  imports: [GenreCardEditor, AddMetadataForm, Tabs, ApproveData],
+  imports: [GenreCardEditor, AddMetadataForm, Tabs, ApproveData, ImportBand],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
@@ -17,7 +18,7 @@ export class Admin {
   private genreService = inject(GenreService);
   private tagService = inject(TagService);
 
-  readonly tabs = ['Add Metadata', 'Genres to Explore', 'Approve Data'];
+  readonly tabs = ['Add Metadata', 'Genres to Explore', 'Approve Data', 'Import Band'];
   readonly activeTab = signal(0);
 
   readonly genreCards = signal<GenreCardData[]>([]);

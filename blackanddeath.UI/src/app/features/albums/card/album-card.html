@@ -23,7 +23,7 @@
           @if (typeLabel()) {
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByType.emit(albumCard().type)">{{ typeLabel() }}</span>
           · }
-          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByYear.emit(albumCard().releaseDate)">{{ albumCard().releaseDate }}</span>
+          <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByYear.emit(albumCard().releaseYear ?? albumCard().releaseDate)">{{ albumCard().releaseYear ?? albumCard().releaseDate }}</span>
           @if (albumCard().countries?.[0]?.name) { ·
           <span class="card__meta-link" (click)="$event.preventDefault(); $event.stopPropagation(); filterByCountry.emit(albumCard().countries![0].name)">{{ albumCard().countries?.[0]?.name }}</span>
           }

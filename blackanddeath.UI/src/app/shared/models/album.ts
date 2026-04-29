@@ -15,6 +15,7 @@ export interface Album {
   slug: string;
   title: string;
   releaseDate: number;
+  releaseYear?: number;
   releaseMonth?: number | null;
   releaseDay?: number | null;
   coverUrl: string | null;

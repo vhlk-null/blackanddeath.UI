@@ -202,6 +202,7 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
       disbandedYear: doc.disbandedYear,
       status: doc.status,
       genres: doc.genres.map(name => ({ id: null, name, slug: null, isPrimary: false })),
+      primaryGenre: doc.genres[0] ? { id: null, name: doc.genres[0], slug: null } : null,
       countries: doc.countries.map(name => ({ id: null, name, code: null })),
     };
   }

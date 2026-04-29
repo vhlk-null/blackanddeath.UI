@@ -1,0 +1,64 @@
+<section class="import-band">
+  <h2 class="import-band__title">Import Band from MusicBrainz</h2>
+
+  <div class="import-band__form">
+    <input
+      class="import-band__input"
+      type="text"
+      placeholder="Band name (e.g. Metallica)"
+      [(ngModel)]="bandName"
+      (keydown.enter)="import()"
+      [disabled]="loading()"
+    />
+
+    <button
+      class="import-band__btn"
+      (click)="import()"
+      [disabled]="!bandName.trim() || loading()"
+    >
+      @if (loading()) { Importing… } @else { Import }
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="import-band__progress">
+      <div class="import-band__progress-header">
+        <span class="import-band__status">{{ statusMessage() }}</span>
+        @if (total() > 0) {
+          <span class="import-band__progress-count">{{ progress() }} / {{ total() }}</span>
+        }
+      </div>
+      <div class="import-band__bar">
+        <div
+          class="import-band__bar-fill"
+          [style.width.%]="total() > 0 ? progressPercent : 0"
+          [class.import-band__bar-fill--indeterminate]="total() === 0"
+        ></div>
+      </div>
+    </div>
+  }
+
+  @if (doneMessage(); as msg) {
+    <div class="import-band__result import-band__result--success">✓ {{ msg }}</div>
+  }
+
+  @if (infos().length) {
+    <div class="import-band__result import-band__result--info">
+      @for (info of infos(); track info) {
+        <div>✓ {{ info }}</div>
+      }
+    </div>
+  }
+
+  @if (warnings().length) {
+    <div class="import-band__result import-band__result--warning">
+      @for (w of warnings(); track w) {
+        <div>⚠ {{ w }}</div>
+      }
+    </div>
+  }
+
+  @if (error(); as err) {
+    <div class="import-band__result import-band__result--error">✗ {{ err }}</div>
+  }
+</section>

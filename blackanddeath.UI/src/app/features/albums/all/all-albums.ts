@@ -269,11 +269,13 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       releaseDate: doc.releaseYear,
       type: doc.type as AlbumType,
       format: doc.format as unknown as AlbumFormat,
-      bands: doc.bands.map(name => ({ id: null, name, slug: null })),
+      bands: doc.bands.map(b => typeof b === 'string' ? { id: null, name: b, slug: null } : b),
       genres: doc.genres.map(name => ({ id: null, name })),
-      countries: doc.countries.map(name => ({ id: null, name })),
+      countries: doc.countries.map(c => typeof c === 'string' ? { id: null, name: c } : { id: null, name: (c as any).name }),
       tags: doc.tags.map(name => ({ id: null, name })),
       videos: [],
+      averageRating: doc.averageRating,
+      ratingsCount: doc.ratingsCount,
     };
   }
 }
