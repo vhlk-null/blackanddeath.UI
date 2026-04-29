@@ -11,104 +11,104 @@
     }
   }
 
-  @if (loading()) {
-    <p class="approve-data__empty">Loading...</p>
-  } @else if (activeTab() === 'Albums') {
+  <div class="approve-data__content" [class.approve-data__content--loading]="loading()">
+    @if (activeTab() === 'Albums') {
 
-    @if (albumGroups().length === 0) {
-      <p class="approve-data__empty">No pending items.</p>
-    } @else {
-      @for (group of albumGroups(); track group.bandId) {
-        <div class="approve-data__group">
-          <button class="approve-data__group-band" type="button" (click)="toggleGroup(group.bandId)">
-            <span>{{ group.bandName }}</span>
-            <svg class="approve-data__group-chevron" [class.approve-data__group-chevron--collapsed]="isCollapsed(group.bandId)"
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
-          <table class="approve-data__table" [class.approve-data__table--hidden]="isCollapsed(group.bandId)">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Slug</th>
-                <th>Created by</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of group.albums; track item.id) {
+      @if (albumGroups().length === 0 && !loading()) {
+        <p class="approve-data__empty">No pending items.</p>
+      } @else {
+        @for (group of albumGroups(); track group.bandId) {
+          <div class="approve-data__group">
+            <button class="approve-data__group-band" type="button" (click)="toggleGroup(group.bandId)">
+              <span>{{ group.bandName }}</span>
+              <svg class="approve-data__group-chevron" [class.approve-data__group-chevron--collapsed]="isCollapsed(group.bandId)"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+            <table class="approve-data__table" [class.approve-data__table--hidden]="isCollapsed(group.bandId)">
+              <thead>
                 <tr>
-                  <td class="approve-data__id">{{ item.id }}</td>
-                  <td><a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a></td>
-                  <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
-                  <td class="approve-data__created-by">{{ item.createdBy }}</td>
-                  <td class="approve-data__actions" (click)="$event.stopPropagation()">
-                    <button class="approve-data__action-btn approve-data__action-btn--delete" title="Delete" (click)="delete(item)">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                        <path d="M10 11v6M14 11v6"/>
-                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                      </svg>
-                    </button>
-                  </td>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Slug</th>
+                  <th>Created by</th>
+                  <th></th>
                 </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
-    }
-
-  } @else {
-
-    @if (items().length === 0) {
-      <p class="approve-data__empty">No pending items.</p>
-    } @else {
-      <table class="approve-data__table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            @if (activeTab() !== 'Videos') {
-              <th>Slug</th>
-            }
-            <th>Created by</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of items(); track item.id) {
-            <tr>
-              <td class="approve-data__id">{{ item.id }}</td>
-              <td>
-                @if (editUrl(item)) {
-                  <a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a>
-                } @else {
-                  {{ item.name }}
+              </thead>
+              <tbody>
+                @for (item of group.albums; track item.id) {
+                  <tr>
+                    <td class="approve-data__id">{{ item.id }}</td>
+                    <td><a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a></td>
+                    <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
+                    <td class="approve-data__created-by">{{ item.createdBy }}</td>
+                    <td class="approve-data__actions" (click)="$event.stopPropagation()">
+                      <button class="approve-data__action-btn approve-data__action-btn--delete" title="Delete" (click)="delete(item)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                          <path d="M10 11v6M14 11v6"/>
+                          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
                 }
-              </td>
-              @if (activeTab() !== 'Videos') {
-                <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
-              }
-              <td class="approve-data__created-by">{{ item.createdBy }}</td>
-              <td class="approve-data__actions" (click)="$event.stopPropagation()">
-                <button class="approve-data__action-btn approve-data__action-btn--delete" title="Delete" (click)="delete(item)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                    <path d="M10 11v6M14 11v6"/>
-                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
 
-  }
+    } @else {
+
+      @if (items().length === 0 && !loading()) {
+        <p class="approve-data__empty">No pending items.</p>
+      } @else {
+        <table class="approve-data__table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              @if (activeTab() !== 'Videos') {
+                <th>Slug</th>
+              }
+              <th>Created by</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item.id) {
+              <tr>
+                <td class="approve-data__id">{{ item.id }}</td>
+                <td>
+                  @if (editUrl(item)) {
+                    <a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a>
+                  } @else {
+                    {{ item.name }}
+                  }
+                </td>
+                @if (activeTab() !== 'Videos') {
+                  <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
+                }
+                <td class="approve-data__created-by">{{ item.createdBy }}</td>
+                <td class="approve-data__actions" (click)="$event.stopPropagation()">
+                  <button class="approve-data__action-btn approve-data__action-btn--delete" title="Delete" (click)="delete(item)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                      <path d="M10 11v6M14 11v6"/>
+                      <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+    }
+  </div>
 </div>

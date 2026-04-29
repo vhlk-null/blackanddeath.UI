@@ -20,3 +20,13 @@
     color: var(--color-text-muted);
   }
 }
+
+.home__sections {
+  transition: opacity 0.15s ease, filter 0.15s ease;
+
+  &--loading {
+    opacity: 0.3;
+    filter: blur(3px);
+    pointer-events: none;
+  }
+}

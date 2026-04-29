@@ -3,6 +3,16 @@
     margin-bottom: 1.5rem;
   }
 
+  &__content {
+    transition: opacity 0.15s ease, filter 0.15s ease;
+
+    &--loading {
+      opacity: 0.3;
+      filter: blur(3px);
+      pointer-events: none;
+    }
+  }
+
   &__count {
     font-size: 0.8rem;
     color: var(--color-text-muted);

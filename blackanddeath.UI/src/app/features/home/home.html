@@ -4,8 +4,7 @@
   <p class="archive-intro__sub">{{ totalAlbums() | number }} albums · {{ totalBands() | number }} bands · black, death &amp; everything in between</p>
 </section>
 
-
-@if (!loading()) {
+<div class="home__sections" [class.home__sections--loading]="loading()">
 @if (mainTopRatedAlbums().length) {
 <app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onTopRatedTabChange($event)">
   @for (album of mainTopRatedAlbums(); track album.id) {
@@ -58,5 +57,4 @@
   }
 </app-section>
 }
-
-}
+</div>
