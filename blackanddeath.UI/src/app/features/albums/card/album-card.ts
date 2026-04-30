@@ -86,7 +86,7 @@ export class AlbumCard {
       });
     }
 
-    if (album.bands?.[0]?.slug) {
+    if (album.bands?.[0]?.slug && album.bands[0].isApproved !== false) {
       items.push({
         label: 'Open Band Page',
         icon: 'band',

@@ -14,6 +14,7 @@ export interface BandSummary {
   name: string;
   slug: string;
   status?: string;
+  isApproved?: boolean;
   discography?: Album[];
   videos?: VideoBand[];
 }

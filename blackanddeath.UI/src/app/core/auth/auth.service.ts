@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs';
-import { authConfig } from './auth.config';
+import { AppConfigService } from '../services/app-config.service';
 
 export interface UserProfile {
   sub: string;
@@ -14,6 +14,7 @@ export interface UserProfile {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly oauth = inject(OAuthService);
+  private readonly appConfig = inject(AppConfigService);
 
   private readonly _isAuthenticated = signal(false);
   readonly isAuthenticated = this._isAuthenticated.asReadonly();
@@ -35,7 +36,20 @@ export class AuthService {
   });
 
   async init(): Promise<void> {
-    this.oauth.configure(authConfig);
+    this.oauth.configure({
+      issuer: this.appConfig.issuer,
+      redirectUri: `${window.location.origin}/auth/callback`,
+      postLogoutRedirectUri: window.location.origin,
+      clientId: 'angular',
+      responseType: 'code',
+      scope: 'openid profile email roles blackeneddeath.api offline_access',
+      useSilentRefresh: false,
+      sessionChecksEnabled: false,
+      showDebugInformation: false,
+      strictDiscoveryDocumentValidation: false,
+      timeoutFactor: 0.75,
+      oidc: true,
+    });
     this.oauth.strictDiscoveryDocumentValidation = false;
     this.oauth.setStorage(localStorage);
 

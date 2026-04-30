@@ -7,6 +7,8 @@ import { routes } from './app.routes';
 import { loaderInterceptor } from './core/interceptors/loader.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { AuthService } from './core/auth/auth.service';
+import { AppConfigService } from './core/services/app-config.service';
+import { initEndpoints } from './shared/constants/endpoints';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +16,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     provideHttpClient(withInterceptors([authInterceptor, loaderInterceptor])),
     provideOAuthClient(),
-    provideAppInitializer(() => {
+    provideAppInitializer(async () => {
+      const config = inject(AppConfigService);
+      await config.load();
+      initEndpoints(config);
+
       const auth = inject(AuthService);
       return auth.init();
     }),
