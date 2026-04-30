@@ -90,7 +90,8 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
     return s.length === 1 ? s[0] : null;
   }
 
-  clearFilter(key: 'genre' | 'country' | 'status' | 'year', value?: string): void {
+  clearFilter(key: 'genre' | 'country' | 'status' | 'year' | 'name', value?: string): void {
+    if (key === 'name') { this.activeName.set(null); this.searchQuery.set(''); }
     if (key === 'genre') { this.activeGenreNames.update(v => value ? v.filter(x => x !== value) : []); this.draftGenres.set(this.activeGenreNames()); }
     if (key === 'country') { this.activeCountryNames.update(v => value ? v.filter(x => x !== value) : []); this.draftCountries.set(this.activeCountryNames()); }
     if (key === 'status') { this.activeStatuses.update(v => value ? v.filter(x => x !== value) : []); this.draftStatuses.set(this.activeStatuses()); }

@@ -217,148 +217,156 @@
 
   // Filter bar
   &__filter-bar {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    overflow: visible;
+    animation: fb-in 0.15s ease;
+    @keyframes fb-in {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   }
 
-  &__filter-fields {
+  &__filter-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
-  &__filter-field {
+  &__ff {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    flex: 1;
-    min-width: 10rem;
+    gap: 0.625rem;
+    padding: 1rem 1.125rem;
     background: var(--color-card-bg, rgba(255,255,255,0.04));
     border: 1px solid var(--color-border, rgba(255,255,255,0.08));
     border-radius: var(--radius-md);
-    padding: 0.875rem 1rem;
+    flex: 1 1 14rem;
 
-    &--year, &--slider {
-      flex: 2;
-      min-width: 14rem;
+    &--wide {
+      flex: 1 1 14rem;
+    }
+
+    &--slider {
+      flex: 1 1 12rem;
     }
 
     &-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
       font-family: var(--font-family-body);
       font-size: 0.6875rem;
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--color-text-muted);
-    }
-  }
 
-  &__filter-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0.625rem;
-    padding: 0.75rem 1.25rem;
-    border-top: 1px solid var(--color-separator);
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-  }
-
-  &__cancel-btn {
-    height: 2rem;
-    padding: 0 1.125rem;
-    background: none;
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border-input);
-    border-radius: var(--radius-md);
-    font-family: var(--font-family-body);
-    font-size: 0.8125rem;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-    &:hover { color: var(--color-text); border-color: var(--color-border-input-focus); }
-  }
-
-  &__apply-btn {
-    height: 2rem;
-    padding: 0 1.375rem;
-    background: var(--color-text-heading);
-    color: var(--color-bg);
-    border: none;
-    border-radius: var(--radius-md);
-    font-family: 'Cinzel', serif;
-    font-size: 0.8125rem;
-    letter-spacing: 0.07em;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    &:hover { opacity: 0.85; }
-  }
-
-  // Year slider
-  &__year-slider {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    width: 100%;
-
-    &-track {
-      position: relative;
-      height: 0.25rem;
-      background: var(--color-border-input);
-      border-radius: 99px;
-      margin: 0.6rem 0 0.25rem;
-    }
-
-    &-fill {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      background: var(--color-text-muted);
-      border-radius: 99px;
-      pointer-events: none;
-    }
-
-    &-input {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      transform: translateY(-50%);
-      appearance: none;
-      background: transparent;
-      pointer-events: none;
-      margin: 0;
-      height: 0;
-
-      &::-webkit-slider-thumb {
-        appearance: none;
-        pointer-events: all;
-        width: 1rem;
-        height: 1rem;
-        border-radius: 50%;
-        background: var(--color-text-muted);
-        border: 2px solid var(--color-bg);
-        cursor: pointer;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-        transition: background 0.15s;
-        &:hover { background: var(--color-text-heading); }
-      }
-
-      &::-moz-range-thumb {
-        pointer-events: all;
-        width: 1rem;
-        height: 1rem;
-        border-radius: 50%;
-        background: var(--color-text-muted);
-        border: 2px solid var(--color-bg);
-        cursor: pointer;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      svg {
+        width: 0.85rem;
+        height: 0.85rem;
+        flex-shrink: 0;
+        opacity: 0.7;
       }
     }
 
-    &-labels {
+    &-pills {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    &-pill {
+      padding: 0.2rem 0.65rem;
+      border: 1px solid var(--color-border-input);
+      border-radius: 999px;
+      background: transparent;
       font-family: var(--font-family-body);
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       color: var(--color-text-muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+
+      &:hover {
+        border-color: var(--color-border-input-focus);
+        color: var(--color-text);
+      }
+
+      &--active {
+        border-color: var(--color-text-heading);
+        color: var(--color-text-heading);
+        background: color-mix(in srgb, var(--color-text-heading) 8%, transparent);
+      }
+    }
+
+    &-slider {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+
+      &-track {
+        position: relative;
+        height: 2px;
+        background: var(--color-border-input);
+        border-radius: 99px;
+        margin: 0.4rem 0;
+      }
+
+      &-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        background: var(--color-text-heading);
+        border-radius: 99px;
+        pointer-events: none;
+      }
+
+      &-input {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        transform: translateY(-50%);
+        appearance: none;
+        background: transparent;
+        pointer-events: none;
+        margin: 0;
+        height: 0;
+
+        &::-webkit-slider-thumb {
+          appearance: none;
+          pointer-events: all;
+          width: 0.875rem;
+          height: 0.875rem;
+          border-radius: 50%;
+          background: var(--color-text-heading);
+          border: 2px solid var(--color-bg);
+          cursor: pointer;
+          box-shadow: 0 1px 6px rgba(0,0,0,0.5);
+          transition: transform 0.15s;
+          &:hover { transform: scale(1.15); }
+        }
+
+        &::-moz-range-thumb {
+          pointer-events: all;
+          width: 0.875rem;
+          height: 0.875rem;
+          border-radius: 50%;
+          background: var(--color-text-heading);
+          border: 2px solid var(--color-bg);
+          cursor: pointer;
+          box-shadow: 0 1px 6px rgba(0,0,0,0.5);
+        }
+      }
+
+      &-labels {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-family-body);
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+      }
     }
   }
 
