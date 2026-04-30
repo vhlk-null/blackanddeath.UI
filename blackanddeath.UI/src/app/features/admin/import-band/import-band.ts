@@ -54,6 +54,31 @@ export class ImportBand implements OnInit {
     return this.selectedMbIds().size;
   }
 
+  get selectableCount(): number {
+    return this.preview()?.albums.filter(a => !a.existsInDb && a.mbUrl).length ?? 0;
+  }
+
+  get allSelected(): boolean {
+    return this.selectableCount > 0 && this.selectedCount === this.selectableCount;
+  }
+
+  toggleAll(): void {
+    const p = this.preview();
+    if (!p) return;
+    if (this.allSelected) {
+      this.selectedMbIds.set(new Set());
+    } else {
+      const allIds = new Set<string>();
+      for (const album of p.albums) {
+        if (!album.existsInDb) {
+          const id = this.mbIdFromUrl(album.mbUrl);
+          if (id) allIds.add(id);
+        }
+      }
+      this.selectedMbIds.set(allIds);
+    }
+  }
+
   ngOnInit(): void {
     this.importService.getStatus().subscribe({
       next: (status) => {

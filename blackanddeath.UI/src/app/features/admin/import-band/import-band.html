@@ -14,16 +14,10 @@
     <button
       class="import-band__btn"
       (click)="search()"
-      [disabled]="!bandName.trim() || loading() || searching() || previewing() || !!candidates() || !!preview()"
+      [disabled]="!bandName.trim() || loading() || searching() || previewing()"
     >
       @if (searching()) { Searching… } @else { Search }
     </button>
-
-    @if (candidates() || preview()) {
-      <button class="import-band__btn import-band__btn--cancel" type="button" (click)="resetSearch()">
-        Reset
-      </button>
-    }
 
     @if (loading()) {
       <button class="import-band__btn import-band__btn--cancel" type="button" (click)="cancel()">
@@ -90,6 +84,11 @@
         </span>
       </div>
       @if (p.albums.length) {
+        <div class="import-band__album-list-header">
+          <button class="import-band__toggle-all" type="button" (click)="toggleAll()">
+            {{ allSelected ? 'Deselect all' : 'Select all' }}
+          </button>
+        </div>
         <div class="import-band__album-list">
           @for (album of p.albums; track album.title) {
             <div class="import-band__album-item" [class.import-band__album-item--exists]="album.existsInDb"
