@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpBackend } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 interface AppConfig {
@@ -11,8 +11,11 @@ interface AppConfig {
 @Injectable({ providedIn: 'root' })
 export class AppConfigService {
   private config!: AppConfig;
+  private http: HttpClient;
 
-  constructor(private http: HttpClient) {}
+  constructor(handler: HttpBackend) {
+    this.http = new HttpClient(handler);
+  }
 
   async load(): Promise<void> {
     this.config = await firstValueFrom(

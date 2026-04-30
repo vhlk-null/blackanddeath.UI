@@ -18,10 +18,9 @@ export const appConfig: ApplicationConfig = {
     provideOAuthClient(),
     provideAppInitializer(async () => {
       const config = inject(AppConfigService);
+      const auth = inject(AuthService);
       await config.load();
       initEndpoints(config);
-
-      const auth = inject(AuthService);
       return auth.init();
     }),
   ]

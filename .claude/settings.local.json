@@ -50,10 +50,13 @@
       "Bash(cd d:\\\\\\\\Projects\\\\\\\\blackenddeath.UI)",
       "PowerShell(Get-ChildItem -Path \"d:\\\\Projects\\\\blackenddeath.UI\" -Recurse -Depth 3 -Directory | ForEach-Object { $_.FullName.Substring\\(28\\) } | Sort-Object)",
       "Bash(grep -E \"\\\\\\\\.cs|sln|csproj\")",
-      "Read(//d/Projects/**)"
+      "Read(//d/Projects/**)",
+      "Bash(mkdir -p \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets\")",
+      "Bash(cp \"d:/Projects/blackenddeath.UI/blackanddeath.UI/src/assets/config.json\" \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets/config.json\")"
     ],
     "additionalDirectories": [
-      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover"
+      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover",
+      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\assets"
     ]
   }
 }
