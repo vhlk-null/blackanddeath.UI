@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+mkdir -p /usr/share/nginx/html/assets
+
 cat > /usr/share/nginx/html/assets/config.json <<EOF
 {
   "apiUrl": "${API_URL:-https://api.blackened-death.com}",
