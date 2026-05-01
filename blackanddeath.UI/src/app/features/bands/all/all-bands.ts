@@ -167,7 +167,7 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
     this.loading.set(true);
     const done = () => this.loading.set(false);
     this.searchService.searchBands(this.buildSearchParams()).subscribe({
-      next: (result) => { this.bands.set(result.data.filter(b => b.isApproved !== false).map(this.mapToBand)); this.total.set(result.count); this.loaded.set(true); done(); },
+      next: (result) => { const filtered = result.data.filter(b => b.isApproved !== false); this.bands.set(filtered.map(this.mapToBand)); this.total.set(filtered.length); this.loaded.set(true); done(); },
       error: done,
     });
   }
