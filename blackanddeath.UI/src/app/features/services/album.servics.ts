@@ -15,7 +15,6 @@ export interface PendingApprovalDto {
   createdBy: string;
   createdAt: string | null;
   releaseYear: number | null;
-  formedYear: number | null;
 }
 
 export interface PendingApprovalGroup {
