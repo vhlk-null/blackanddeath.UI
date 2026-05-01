@@ -13,6 +13,8 @@ export interface PendingApprovalDto {
   name: string;
   slug: string | null;
   createdBy: string;
+  createdAt: string | null;
+  releaseYear: number | null;
 }
 
 export interface PendingApprovalGroup {

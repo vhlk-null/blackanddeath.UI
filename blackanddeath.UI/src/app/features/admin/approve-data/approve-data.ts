@@ -1,4 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { AlbumService, PendingApprovalDto, PendingApprovalGroup } from '../../services/album.servics';
 import { BandService } from '../../services/band.service';
 import { VideoBandService } from '../../services/video-band.service';
@@ -8,7 +9,7 @@ type ApproveTab = 'Albums' | 'Bands' | 'Videos';
 
 @Component({
   selector: 'app-approve-data',
-  imports: [Tabs],
+  imports: [Tabs, DatePipe],
   templateUrl: './approve-data.html',
   styleUrl: './approve-data.scss',
 })
