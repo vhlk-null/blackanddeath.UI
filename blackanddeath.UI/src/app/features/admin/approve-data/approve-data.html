@@ -78,6 +78,10 @@
               @if (activeTab() !== 'Videos') {
                 <th>Slug</th>
               }
+              @if (activeTab() === 'Bands') {
+                <th>Formed</th>
+              }
+              <th>Created at</th>
               <th>Created by</th>
               <th></th>
             </tr>
@@ -96,6 +100,10 @@
                 @if (activeTab() !== 'Videos') {
                   <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
                 }
+                @if (activeTab() === 'Bands') {
+                  <td>{{ item.formedYear ?? '—' }}</td>
+                }
+                <td>{{ item.createdAt ? (item.createdAt | date:'dd MMM yyyy HH:mm:ss') : '—' }}</td>
                 <td class="approve-data__created-by">{{ item.createdBy }}</td>
                 <td class="approve-data__actions" (click)="$event.stopPropagation()">
                   <button class="approve-data__action-btn approve-data__action-btn--delete" title="Delete" (click)="delete(item)">
