@@ -12,7 +12,7 @@ export interface DiscographyGroup {
 export interface BandSummary {
   id: string | null;
   name: string;
-  slug: string;
+  slug: string | null;
   status?: string;
   isApproved?: boolean;
   discography?: Album[];

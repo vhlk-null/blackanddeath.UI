@@ -76,13 +76,17 @@
   &__band-link {
     color: var(--color-text-heading);
     text-decoration: none;
-    transition: color 0.15s, text-decoration-color 0.15s;
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 3px;
 
-    &:hover {
-      text-decoration-color: currentColor;
+    &:is(a) {
+      transition: color 0.15s, text-decoration-color 0.15s;
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      text-underline-offset: 3px;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration-color: currentColor;
+      }
     }
   }
 
@@ -1186,13 +1190,18 @@ app-section:nth-of-type(2) {
 
 .discography-group__band-link {
   color: var(--color-text-heading);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s;
+  text-decoration: none;
 
-  &:hover {
-    text-decoration-color: currentColor;
+  &:is(a) {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
   }
 }
 

@@ -18,7 +18,12 @@
   <h1 class="album-info__title">{{ albumData()?.title | titleCaseAll:true }}</h1>
   <p class="album-info__band-subtitle">
     @for (band of albumData()?.bands ?? []; track band.id; let last = $last) {
-      <a [routerLink]="['/bands', band.slug]" class="album-info__band-link">{{ band.name }}</a>@if (!last) { & }
+      @if (band.slug) {
+        <a [routerLink]="['/bands', band.slug]" class="album-info__band-link">{{ band.name }}</a>
+      } @else {
+        <span class="album-info__band-link">{{ band.name }}</span>
+      }
+      @if (!last) { & }
     }
   </p>
 
@@ -392,10 +397,19 @@
       @if (discographyGroups().length > 1) {
         <h3 class="discography-group__label">
           @if (group.bandId) {
-            <a [routerLink]="['/bands', group.bandSlug]" class="discography-group__band-link">{{ group.label }}</a>
+            @if (isBandApproved(group.bandId)) {
+              <a [routerLink]="['/bands', group.bandSlug]" class="discography-group__band-link">{{ group.label }}</a>
+            } @else {
+              <span class="discography-group__band-link">{{ group.label }}</span>
+            }
           } @else {
             @for (part of resolveSplitBands(group.label); track part.name; let last = $last) {
-              <a [routerLink]="['/bands', part.slug]" class="discography-group__band-link">{{ part.name }}</a>@if (!last) { & }
+              @if (part.isApproved) {
+                <a [routerLink]="['/bands', part.slug]" class="discography-group__band-link">{{ part.name }}</a>
+              } @else {
+                <span class="discography-group__band-link">{{ part.name }}</span>
+              }
+              @if (!last) { & }
             }
           }
         </h3>

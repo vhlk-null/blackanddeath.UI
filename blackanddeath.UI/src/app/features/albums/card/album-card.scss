@@ -114,13 +114,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-decoration: none;
-    cursor: pointer;
-    transition: color 0.15s;
+    cursor: default;
 
-    &:hover {
-      color: var(--color-text);
-      text-decoration: underline;
-      text-underline-offset: 2px;
+    &:is(a) {
+      cursor: pointer;
+      transition: color 0.15s;
+
+      &:hover {
+        color: var(--color-text);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
     }
   }
 

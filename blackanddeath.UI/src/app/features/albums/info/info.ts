@@ -141,13 +141,18 @@ export class Info implements OnInit {
   );
 
   // For a split group (bandId null, label = "Band A & Band B"), resolve each name to a band link
-  resolveSplitBands(label: string): { name: string; slug: string }[] {
+  isBandApproved(bandId: string): boolean {
+    const band = this.albumData()?.bands?.find(b => b.id === bandId);
+    return !!band?.slug;
+  }
+
+  resolveSplitBands(label: string): { name: string; slug: string; isApproved: boolean }[] {
     const bands = this.albumData()?.bands ?? [];
     return label.split('&').map(part => {
       const name = part.trim();
       const match = bands.find(b => b.name.toLowerCase() === name.toLowerCase());
       const slug = match?.slug ?? name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return { name, slug };
+      return { name, slug, isApproved: !!match?.slug };
     });
   }
 
