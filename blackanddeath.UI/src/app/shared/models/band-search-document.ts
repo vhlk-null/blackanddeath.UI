@@ -9,4 +9,5 @@ export interface BandSearchDocument {
   genres: string[];
   countries: string[];
   createdAt: number;
+  isApproved: boolean;
 }
