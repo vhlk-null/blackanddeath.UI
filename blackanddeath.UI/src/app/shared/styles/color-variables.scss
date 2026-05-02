@@ -2,6 +2,8 @@ $color-bg-dark: #060708;
 $color-bg-light: #E6E6F2;
 
 :root[data-theme="dark"] {
+    --color-header-backdrop: none;
+    --color-header-bg-actual: #161616;
     --color-drawer-bg: #161616;
     --color-drawer-border: rgba(255, 255, 255, 0.07);
     --color-drawer-link: rgba(255, 255, 255, 0.55);
@@ -43,6 +45,8 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="light"] {
+    --color-header-backdrop: none;
+    --color-header-bg-actual: #F1F1FF;
     --color-drawer-bg: #F1F1FF;
     --color-drawer-border: rgba(0, 0, 0, 0.08);
     --color-drawer-link: rgba(0, 0, 0, 0.5);
@@ -84,6 +88,8 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="pink"] {
+    --color-header-backdrop: none;
+    --color-header-bg-actual: #FFD7EF;
     --color-drawer-bg: #FFD7EF;
     --color-drawer-border: rgba(0, 0, 0, 0.08);
     --color-drawer-link: rgba(60, 20, 40, 0.55);
@@ -125,6 +131,8 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="dark-gradient"] {
+    --color-header-backdrop: blur(16px) saturate(1.4);
+    --color-header-bg-actual: rgba(10, 10, 12, 0.72);
     --color-drawer-bg: #161616;
     --color-drawer-border: rgba(255, 255, 255, 0.07);
     --color-drawer-link: rgba(255, 255, 255, 0.55);
@@ -166,6 +174,8 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="light-gradient"] {
+    --color-header-backdrop: blur(16px) saturate(1.4);
+    --color-header-bg-actual: rgba(230, 230, 242, 0.72);
     --color-drawer-bg: #F1F1FF;
     --color-drawer-border: rgba(0, 0, 0, 0.08);
     --color-drawer-link: rgba(0, 0, 0, 0.5);
@@ -207,6 +217,8 @@ $color-bg-light: #E6E6F2;
 }
 
 :root[data-theme="pink-gradient"] {
+    --color-header-backdrop: blur(16px) saturate(1.4);
+    --color-header-bg-actual: rgba(255, 215, 239, 0.72);
     --color-drawer-bg: #FFD7EF;
     --color-drawer-border: rgba(0, 0, 0, 0.08);
     --color-drawer-link: rgba(60, 20, 40, 0.55);

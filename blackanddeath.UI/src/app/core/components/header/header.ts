@@ -20,19 +20,14 @@ export class Header {
   readonly userMenuOpen = signal(false);
   readonly hidden = signal(false);
   readonly searchOpen = signal(false);
+  readonly scrolled = signal(false);
 
   private lastScrollY = 0;
 
   @HostListener('window:scroll')
   onScroll(): void {
     const currentY = window.scrollY;
-    if (currentY > this.lastScrollY && currentY > 64) {
-      this.hidden.set(true);
-      this.menuOpen.set(false);
-      this.userMenuOpen.set(false);
-    } else {
-      this.hidden.set(false);
-    }
+    this.scrolled.set(currentY > 16);
     this.lastScrollY = currentY;
   }
 }

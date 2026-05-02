@@ -4,9 +4,18 @@
   left: 0;
   right: 0;
   z-index: 300;
-  background-color: var(--color-header-bg);
-  border-bottom: 1px solid var(--color-border);
-  transition: transform 0.3s ease;
+  background-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+
+  &--scrolled {
+    background-color: var(--color-header-bg-actual, var(--color-header-bg));
+    backdrop-filter: var(--color-header-backdrop, none);
+    -webkit-backdrop-filter: var(--color-header-backdrop, none);
+    border-bottom-color: var(--color-border);
+  }
 
   &--hidden {
     transform: translateY(-100%);
@@ -74,16 +83,17 @@
     align-items: center;
     width: 100%;
     gap: 0.4rem;
-    background: var(--color-input-bg);
-    border: 1px solid var(--color-border-input);
+    background: color-mix(in srgb, var(--color-input-bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-border-input) 60%, transparent);
     border-radius: var(--radius-md);
     padding: 0 0.6rem;
     height: 2.25rem;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: background 0.2s, border-color 0.2s;
     text-align: left;
 
     &:hover {
+      background: var(--color-input-bg);
       border-color: var(--color-border-input-focus);
     }
 
