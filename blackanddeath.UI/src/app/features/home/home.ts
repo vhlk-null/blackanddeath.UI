@@ -124,6 +124,7 @@ export class Home implements OnInit {
       countries: doc.countries.map(c => typeof c === 'string' ? { id: null, name: c } : { id: null, name: (c as any).name }) as any,
       tags: doc.tags.map(name => ({ id: null, name }) as any),
       videos: [],
+      isExplicit: doc.isExplicit,
     } as any;
   }
 
