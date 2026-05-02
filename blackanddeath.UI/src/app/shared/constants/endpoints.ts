@@ -90,6 +90,8 @@ export class FavoriteEndpoints {
   static get CHECK_FAVORITE_BAND() { return `${uc()}/favoriteBands/check`; }
   static DELETE_FAVORITE_ALBUM = (albumId: string, userId: string) => `${uc()}/favoriteAlbums?userId=${userId}&albumId=${albumId}`;
   static DELETE_FAVORITE_BAND = (bandId: string, userId: string) => `${uc()}/favoriteBands?userId=${userId}&bandId=${bandId}`;
+  static get REORDER_FAVORITE_ALBUMS() { return `${uc()}/favoriteAlbums/reorder`; }
+  static get REORDER_FAVORITE_BANDS() { return `${uc()}/favoriteBands/reorder`; }
   static GET_FAVORITE_VIDEOS = (userId: string) => `${uc()}/favoriteVideos/${userId}`;
   static get CHECK_FAVORITE_VIDEO() { return `${uc()}/favoriteVideos/check`; }
   static get FAVORITE_VIDEOS() { return `${uc()}/favoriteVideos`; }
@@ -138,6 +140,8 @@ export class CollectionEndpoints {
   static REMOVE_ALBUM = (id: string, albumId: string) => `${uc()}/collections/${id}/albums/${albumId}`;
   static ADD_BAND = (id: string) => `${uc()}/collections/${id}/bands`;
   static REMOVE_BAND = (id: string, bandId: string) => `${uc()}/collections/${id}/bands/${bandId}`;
+  static REORDER_ALBUMS = (id: string) => `${uc()}/collections/${id}/albums/reorder`;
+  static REORDER_BANDS = (id: string) => `${uc()}/collections/${id}/bands/reorder`;
 }
 
 export class RatingEndpoints {

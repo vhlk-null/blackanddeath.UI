@@ -10,6 +10,7 @@ import { FavoriteService } from '../services/favorite.service';
 import { UserProfileService, UserProfileDto, mapProfileAlbum, mapProfileBand, mapProfileCollection } from '../services/user-profile.service';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 type SidebarEntry =
   | { kind: 'fav-albums' }
@@ -18,7 +19,7 @@ type SidebarEntry =
 
 @Component({
   selector: 'app-user-profile',
-  imports: [FormsModule, RouterLink, NgTemplateOutlet, PasteImageDirective],
+  imports: [FormsModule, RouterLink, NgTemplateOutlet, PasteImageDirective, DragDropModule],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
@@ -218,6 +219,44 @@ export class UserProfile implements OnInit {
     this.editingCollectionName.set('');
     this.editingCollectionCoverFile.set(null);
     this.editingCollectionCoverPreview.set(null);
+  }
+
+  dropFavoriteAlbum(event: CdkDragDrop<Album[]>): void {
+    const dto = this.profileDto();
+    const userId = this.auth.userId();
+    if (!dto || !userId || event.previousIndex === event.currentIndex) return;
+    const albums = [...dto.favoriteAlbums];
+    moveItemInArray(albums, event.previousIndex, event.currentIndex);
+    this.profileDto.set({ ...dto, favoriteAlbums: albums });
+    this.favoriteService.reorderFavoriteAlbums(userId, albums.map(a => a.albumId)).subscribe();
+  }
+
+  dropFavoriteBand(event: CdkDragDrop<Band[]>): void {
+    const dto = this.profileDto();
+    const userId = this.auth.userId();
+    if (!dto || !userId || event.previousIndex === event.currentIndex) return;
+    const bands = [...dto.favoriteBands];
+    moveItemInArray(bands, event.previousIndex, event.currentIndex);
+    this.profileDto.set({ ...dto, favoriteBands: bands });
+    this.favoriteService.reorderFavoriteBands(userId, bands.map(b => b.bandId)).subscribe();
+  }
+
+  dropCollectionAlbum(event: CdkDragDrop<Album[]>): void {
+    const col = this.selectedCollection();
+    if (!col || event.previousIndex === event.currentIndex) return;
+    const albums = [...col.albums];
+    moveItemInArray(albums, event.previousIndex, event.currentIndex);
+    this.selectedCollection.set({ ...col, albums });
+    this.collectionService.reorderAlbums(col.id, albums.map(a => a.id)).subscribe();
+  }
+
+  dropCollectionBand(event: CdkDragDrop<Band[]>): void {
+    const col = this.selectedCollection();
+    if (!col || event.previousIndex === event.currentIndex) return;
+    const bands = [...col.bands];
+    moveItemInArray(bands, event.previousIndex, event.currentIndex);
+    this.selectedCollection.set({ ...col, bands });
+    this.collectionService.reorderBands(col.id, bands.map(b => b.id)).subscribe();
   }
 
   removeFavoriteAlbum(albumId: string, title: string): void {

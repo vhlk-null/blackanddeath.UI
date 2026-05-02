@@ -696,6 +696,8 @@
 
   &__col-row {
     display: grid;
+    box-sizing: border-box;
+    cursor: grab;
     grid-template-columns: 2.25rem 3rem 2fr 1fr 5rem;
     align-items: center;
     gap: 0 0.875rem;
@@ -711,7 +713,11 @@
       .profile__col-row-num { opacity: 0; }
       .profile__col-row-remove { opacity: 1; }
     }
+
+    &.cdk-drag-placeholder { opacity: 1; }
+    &.cdk-drag-animating { transition: transform 250ms ease; }
   }
+
 
   &__col-row-remove {
     display: flex;

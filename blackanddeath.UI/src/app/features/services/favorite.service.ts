@@ -129,6 +129,14 @@ export class FavoriteService {
     return this.http.delete<void>(FavoriteEndpoints.DELETE_FAVORITE_BAND(bandId, userId));
   }
 
+  reorderFavoriteAlbums(userId: string, orderedAlbumIds: string[]) {
+    return this.http.put<void>(FavoriteEndpoints.REORDER_FAVORITE_ALBUMS, { userId, orderedAlbumIds });
+  }
+
+  reorderFavoriteBands(userId: string, orderedBandIds: string[]) {
+    return this.http.put<void>(FavoriteEndpoints.REORDER_FAVORITE_BANDS, { userId, orderedBandIds });
+  }
+
   getFavoriteVideos(userId: string, params: { pageIndex: number; pageSize: number }) {
     return this.http.get<PaginatedResult<FavoriteVideoDto>>(
       FavoriteEndpoints.GET_FAVORITE_VIDEOS(userId), params

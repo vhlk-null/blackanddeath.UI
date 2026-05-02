@@ -19,6 +19,8 @@ select {
 
 body {
   background-color: var(--color-bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
   font-family: var(--font-family-base);
   font-size: var(--font-size-md);
   line-height: var(--line-height-base);
@@ -47,6 +49,36 @@ html.scroll-locked,
 html.scroll-locked body {
   overflow: hidden;
   touch-action: none;
+}
+
+.cdk-drop-list-dragging .col-detail__item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms ease;
+}
+
+.cdk-drop-list-dragging .profile__col-row:not(.cdk-drag-placeholder) {
+  transition: transform 250ms ease;
+}
+
+.profile__col-row.cdk-drag-placeholder {
+  opacity: 0;
+  border-top: 2px solid var(--color-tab-active);
+  opacity: 1 !important;
+  background: transparent !important;
+  pointer-events: none;
+
+  * { visibility: hidden; }
+}
+
+.cdk-drag-preview {
+  opacity: 0.85;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.cdk-drag-preview.profile__col-row {
+  background: var(--color-card-hover-bg, #1a1a1a);
+  border-radius: 6px;
 }
 
 .container {

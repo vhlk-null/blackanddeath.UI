@@ -218,8 +218,9 @@
             <span class="profile__col-table-band">Band</span>
             <span class="profile__col-table-type">Type</span>
           </div>
+          <div cdkDropList (cdkDropListDropped)="dropFavoriteAlbum($event)">
           @for (album of favoriteAlbums(); track album.id; let i = $index) {
-            <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/albums', album.slug]">
+            <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/albums', album.slug]" cdkDrag cdkDragLockAxis="y">
               <span class="profile__col-row-num">{{ i + 1 }}</span>
               <div class="profile__col-row-thumb">
                 @if (album.coverUrl) { <img [src]="album.coverUrl" [alt]="album.title" /> }
@@ -233,6 +234,7 @@
               </button>
             </a>
           }
+          </div>
         }
       }
 
@@ -261,8 +263,9 @@
             <span class="profile__col-table-band">Genre</span>
             <span class="profile__col-table-type">Country</span>
           </div>
+          <div cdkDropList (cdkDropListDropped)="dropFavoriteBand($event)">
           @for (band of favoriteBands(); track band.id; let i = $index) {
-            <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/bands', band.slug]">
+            <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/bands', band.slug]" cdkDrag cdkDragLockAxis="y">
               <span class="profile__col-row-num">{{ i + 1 }}</span>
               <div class="profile__col-row-thumb profile__col-row-thumb--band">
                 @if (band.logoUrl) { <img [src]="band.logoUrl" [alt]="band.name" /> }
@@ -276,6 +279,7 @@
               </button>
             </a>
           }
+          </div>
         }
       }
 
@@ -339,8 +343,12 @@
               <span class="profile__col-table-band">{{ selectedCollection()!.collectionType === 'album' ? 'Band' : 'Genre' }}</span>
               <span class="profile__col-table-type">{{ selectedCollection()!.collectionType === 'album' ? 'Type' : 'Country' }}</span>
             </div>
+            <div cdkDropList (cdkDropListDropped)="dropCollectionAlbum($event)">
             @for (album of selectedCollection()!.albums; track album.id; let i = $index) {
-              <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/albums', album.slug]">
+              <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/albums', album.slug]" cdkDrag cdkDragLockAxis="y">
+                <span class="profile__col-row-drag" cdkDragHandle (click)="$event.preventDefault(); $event.stopPropagation()">
+                  <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+                </span>
                 <span class="profile__col-row-num">{{ i + 1 }}</span>
                 <div class="profile__col-row-thumb">
                   @if (album.coverUrl) { <img [src]="album.coverUrl" [alt]="album.title" /> }
@@ -354,8 +362,13 @@
                 </button>
               </a>
             }
+            </div>
+            <div cdkDropList (cdkDropListDropped)="dropCollectionBand($event)">
             @for (band of selectedCollection()!.bands; track band.id; let i = $index) {
-              <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/bands', band.slug]">
+              <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/bands', band.slug]" cdkDrag cdkDragLockAxis="y">
+                <span class="profile__col-row-drag" cdkDragHandle (click)="$event.preventDefault(); $event.stopPropagation()">
+                  <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+                </span>
                 <span class="profile__col-row-num">{{ selectedCollection()!.albums.length + i + 1 }}</span>
                 <div class="profile__col-row-thumb profile__col-row-thumb--band">
                   @if (band.logoUrl) { <img [src]="band.logoUrl" [alt]="band.name" /> }
@@ -369,6 +382,7 @@
                 </button>
               </a>
             }
+            </div>
           }
         } @else {
           <div class="profile__panel-empty"><p>Select a collection to view its contents.</p></div>

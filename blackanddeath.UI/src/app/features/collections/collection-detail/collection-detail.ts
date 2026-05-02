@@ -5,10 +5,13 @@ import { CollectionService, CollectionDetail } from '../../services/collection.s
 import { ToastService } from '../../../shared/services/toast.service';
 import { AlbumCard } from '../../albums/card/album-card';
 import { BandCard } from '../../bands/band-card/band-card';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Album } from '../../../shared/models/album';
+import { Band } from '../../../shared/models/band';
 
 @Component({
   selector: 'app-collection-detail',
-  imports: [RouterLink, AlbumCard, BandCard],
+  imports: [RouterLink, AlbumCard, BandCard, DragDropModule],
   templateUrl: './collection-detail.html',
   styleUrl: './collection-detail.scss',
 })
@@ -29,6 +32,24 @@ export class CollectionDetailPage implements OnInit {
       next: col => { this.collection.set(col); this.loaded.set(true); this.titleService.setTitle(`${col.name} — Black And Death`); },
       error: () => { this.notFound.set(true); this.loaded.set(true); },
     });
+  }
+
+  dropAlbum(event: CdkDragDrop<Album[]>): void {
+    const col = this.collection();
+    if (!col || event.previousIndex === event.currentIndex) return;
+    const albums = [...col.albums];
+    moveItemInArray(albums, event.previousIndex, event.currentIndex);
+    this.collection.set({ ...col, albums });
+    this.collectionService.reorderAlbums(col.id, albums.map(a => a.id)).subscribe();
+  }
+
+  dropBand(event: CdkDragDrop<Band[]>): void {
+    const col = this.collection();
+    if (!col || event.previousIndex === event.currentIndex) return;
+    const bands = [...col.bands];
+    moveItemInArray(bands, event.previousIndex, event.currentIndex);
+    this.collection.set({ ...col, bands });
+    this.collectionService.reorderBands(col.id, bands.map(b => b.id)).subscribe();
   }
 
   removeAlbum(albumId: string): void {

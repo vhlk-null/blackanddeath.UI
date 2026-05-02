@@ -116,6 +116,14 @@ export class CollectionService {
       )));
   }
 
+  reorderAlbums(collectionId: string, orderedIds: string[]): Observable<void> {
+    return this.http.put<void>(CollectionEndpoints.REORDER_ALBUMS(collectionId), { orderedIds });
+  }
+
+  reorderBands(collectionId: string, orderedIds: string[]): Observable<void> {
+    return this.http.put<void>(CollectionEndpoints.REORDER_BANDS(collectionId), { orderedIds });
+  }
+
   // Local signal helpers used by picker to track checked state
   collectionsContainingAlbum(albumId: string, checked: Set<string>): string[] {
     return this._collections().filter(c => checked.has(c.id)).map(c => c.id);

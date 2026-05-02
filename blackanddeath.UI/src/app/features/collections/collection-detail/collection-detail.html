@@ -33,9 +33,19 @@
     @if (collection()!.albums.length > 0) {
       <div class="col-detail__section">
         <h2 class="col-detail__section-title">Albums</h2>
-        <div class="col-detail__grid">
+        <div class="col-detail__grid" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropAlbum($event)">
           @for (album of collection()!.albums; track album.id) {
-            <div class="col-detail__item">
+            <div class="col-detail__item" cdkDrag>
+              <div class="col-detail__drag-handle" cdkDragHandle>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="9" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="15" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="12" r="1.5" fill="currentColor"/>
+                  <circle cx="15" cy="12" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="18" r="1.5" fill="currentColor"/>
+                  <circle cx="15" cy="18" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
               <app-album-card [albumCard]="album" />
               <button class="col-detail__remove-btn" title="Remove from collection" (click)="removeAlbum(album.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,9 +61,19 @@
     @if (collection()!.bands.length > 0) {
       <div class="col-detail__section">
         <h2 class="col-detail__section-title">Bands</h2>
-        <div class="col-detail__grid">
+        <div class="col-detail__grid" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropBand($event)">
           @for (band of collection()!.bands; track band.id) {
-            <div class="col-detail__item">
+            <div class="col-detail__item" cdkDrag>
+              <div class="col-detail__drag-handle" cdkDragHandle>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="9" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="15" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="12" r="1.5" fill="currentColor"/>
+                  <circle cx="15" cy="12" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="18" r="1.5" fill="currentColor"/>
+                  <circle cx="15" cy="18" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
               <app-band-card [bandCard]="band" />
               <button class="col-detail__remove-btn" title="Remove from collection" (click)="removeBand(band.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
