@@ -74,6 +74,8 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
       case 'country': this.activeCountryNames.set([value as string]); break;
       case 'year': this.activeYearFrom.set(String(value)); this.activeYearTo.set(String(value)); break;
     }
+    this.syncDraftsFromActive();
+    this.filtersOpen.set(true);
     this.updateUrl();
     this.load();
   }

@@ -277,10 +277,12 @@
   right: 0;
   width: 16rem;
   background: var(--color-drawer-bg);
+  backdrop-filter: var(--color-drawer-backdrop, none);
+  -webkit-backdrop-filter: var(--color-drawer-backdrop, none);
   border: none;
   border-radius: 0 0 0 14px;
   box-shadow: -4px 4px 24px rgba(0, 0, 0, 0.35);
-  z-index: 101;
+  z-index: 103;
   overflow: hidden;
   animation: nav-drop 0.2s ease;
 
@@ -452,7 +454,7 @@
   right: 0;
   bottom: 0;
   background: var(--color-overlay);
-  z-index: 100;
+  z-index: 102;
   animation: fade-in 0.2s ease;
 }
 
@@ -462,10 +464,12 @@
   left: 0;
   width: 14rem;
   background: var(--color-drawer-bg);
+  backdrop-filter: var(--color-drawer-backdrop, none);
+  -webkit-backdrop-filter: var(--color-drawer-backdrop, none);
   border: none;
   border-radius: 0 0 14px 0;
   box-shadow: 4px 4px 24px rgba(0, 0, 0, 0.35);
-  z-index: 101;
+  z-index: 103;
   overflow: hidden;
   animation: nav-drop 0.2s ease;
 

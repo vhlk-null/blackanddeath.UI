@@ -46,8 +46,8 @@
     align-items: center;
     gap: 0.35rem;
     flex-shrink: 0;
-    background: none;
-    border: 1px solid var(--color-border-input);
+    background: color-mix(in srgb, var(--color-input-bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-border-input) 60%, transparent);
     border-radius: 6px;
     cursor: pointer;
     color: var(--color-text-muted);
@@ -75,16 +75,19 @@
     flex: 1;
     min-width: 0;
     padding: 0.4rem 0.75rem;
-    background: var(--color-input-bg);
-    border: 1px solid var(--color-border-input);
+    background: color-mix(in srgb, var(--color-input-bg) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-border-input) 60%, transparent);
     border-radius: var(--radius-md);
     color: var(--color-text);
     font-family: var(--font-family-body);
     font-size: 0.875rem;
     outline: none;
-    transition: border-color 0.15s;
+    transition: background 0.2s, border-color 0.15s;
 
-    &:focus { border-color: var(--color-border-input-focus); }
+    &:focus {
+      background: var(--color-input-bg);
+      border-color: var(--color-border-input-focus);
+    }
     &::placeholder { color: var(--color-text-placeholder); }
   }
 
@@ -129,7 +132,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-border);
+    background: color-mix(in srgb, var(--color-border) 60%, transparent);
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -232,7 +235,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-border);
+    background: color-mix(in srgb, var(--color-border) 60%, transparent);
     border: none;
     border-radius: 50%;
     cursor: pointer;
