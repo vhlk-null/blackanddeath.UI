@@ -5,7 +5,7 @@ export const authConfig: AuthConfig = {
   issuer: environment.issuer,
   redirectUri: `${window.location.origin}/auth/callback`,
   postLogoutRedirectUri: window.location.origin,
-  clientId: 'angular',
+  clientId: 'blackened-death',
   responseType: 'code',
   scope: 'openid profile email roles blackeneddeath.api offline_access',
   useSilentRefresh: false,

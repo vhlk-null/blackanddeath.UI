@@ -1,0 +1,53 @@
+<div class="admin-users">
+
+  <div class="admin-users__toolbar">
+    <span class="admin-users__count">{{ totalCount() }} users</span>
+  </div>
+
+  <div class="admin-users__table-wrap" [class.admin-users__table-wrap--loading]="loading()">
+    <table class="admin-users__table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Registered</th>
+          <th class="admin-users__th--num" title="Favourite Albums">Fav. Albums</th>
+          <th class="admin-users__th--num" title="Favourite Bands">Fav. Bands</th>
+          <th class="admin-users__th--num" title="Album Reviews">Album Rev.</th>
+          <th class="admin-users__th--num" title="Band Reviews">Band Rev.</th>
+          <th class="admin-users__th--num">Collections</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.userId) {
+          <tr>
+            <td class="admin-users__td--name">{{ user.username }}</td>
+            <td class="admin-users__td--email">{{ user.email }}</td>
+            <td class="admin-users__td--date">{{ user.registeredDate | date:'d MMM y' }}</td>
+            <td class="admin-users__td--num">{{ user.favoriteAlbumsCount }}</td>
+            <td class="admin-users__td--num">{{ user.favoriteBandsCount }}</td>
+            <td class="admin-users__td--num">{{ user.albumReviewsCount }}</td>
+            <td class="admin-users__td--num">{{ user.bandReviewsCount }}</td>
+            <td class="admin-users__td--num">{{ user.collectionsCount }}</td>
+          </tr>
+        }
+        @if (!loading() && users().length === 0) {
+          <tr><td colspan="8" class="admin-users__empty">No users found.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPages() > 1) {
+    <div class="admin-users__pagination">
+      <button class="admin-users__page-btn" [disabled]="pageIndex() === 1" (click)="goToPage(pageIndex() - 1)">
+        <svg viewBox="0 0 24 24" fill="none"><polyline points="15 18 9 12 15 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="admin-users__page-info">{{ pageIndex() }} / {{ totalPages() }}</span>
+      <button class="admin-users__page-btn" [disabled]="pageIndex() === totalPages()" (click)="goToPage(pageIndex() + 1)">
+        <svg viewBox="0 0 24 24" fill="none"><polyline points="9 18 15 12 9 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  }
+
+</div>

@@ -13,10 +13,39 @@
     }
   }
 
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
   &__count {
     font-size: 0.8rem;
     color: var(--color-text-muted);
-    margin: 0 0 1rem;
+    margin: 0;
+  }
+
+  &__bulk-delete {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    background: rgba(192, 57, 43, 0.15);
+    color: #c0392b;
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover { background: rgba(192, 57, 43, 0.25); }
+  }
+
+  &__col-check {
+    width: 2rem;
+    text-align: center;
+  }
+
+  &__row--selected td {
+    background: rgba(255, 255, 255, 0.04);
   }
 
   &__empty {

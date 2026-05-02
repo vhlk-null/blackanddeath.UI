@@ -4,11 +4,18 @@
   </div>
 
   @if (!loading()) {
-    @if (activeTab() === 'Albums') {
-      <p class="approve-data__count">{{ totalAlbumCount }} item{{ totalAlbumCount !== 1 ? 's' : '' }} pending</p>
-    } @else {
-      <p class="approve-data__count">{{ items().length }} item{{ items().length !== 1 ? 's' : '' }} pending</p>
-    }
+    <div class="approve-data__toolbar">
+      @if (activeTab() === 'Albums') {
+        <p class="approve-data__count">{{ totalAlbumCount }} item{{ totalAlbumCount !== 1 ? 's' : '' }} pending</p>
+      } @else {
+        <p class="approve-data__count">{{ items().length }} item{{ items().length !== 1 ? 's' : '' }} pending</p>
+      }
+      @if (someSelected()) {
+        <button class="approve-data__bulk-delete" type="button" (click)="deleteSelected()">
+          Delete selected ({{ selectedIds().size }})
+        </button>
+      }
+    </div>
   }
 
   <div class="approve-data__content" [class.approve-data__content--loading]="loading()">
@@ -29,6 +36,9 @@
             <table class="approve-data__table" [class.approve-data__table--hidden]="isCollapsed(group.bandId)">
               <thead>
                 <tr>
+                  <th class="approve-data__col-check">
+                    <input type="checkbox" [checked]="allSelected()" (change)="toggleSelectAll()" />
+                  </th>
                   <th>ID</th>
                   <th>Name</th>
                   <th>Slug</th>
@@ -40,7 +50,10 @@
               </thead>
               <tbody>
                 @for (item of group.albums; track item.id) {
-                  <tr>
+                  <tr [class.approve-data__row--selected]="isSelected(item.id)">
+                    <td class="approve-data__col-check" (click)="$event.stopPropagation()">
+                      <input type="checkbox" [checked]="isSelected(item.id)" (change)="toggleSelect(item.id)" />
+                    </td>
                     <td class="approve-data__id">{{ item.id }}</td>
                     <td><a class="approve-data__link" [href]="editUrl(item)" target="_blank">{{ item.name }}</a></td>
                     <td class="approve-data__slug">{{ item.slug ?? '—' }}</td>
@@ -73,6 +86,9 @@
         <table class="approve-data__table">
           <thead>
             <tr>
+              <th class="approve-data__col-check">
+                <input type="checkbox" [checked]="allSelected()" (change)="toggleSelectAll()" />
+              </th>
               <th>ID</th>
               <th>Name</th>
               @if (activeTab() !== 'Videos') {
@@ -88,7 +104,10 @@
           </thead>
           <tbody>
             @for (item of items(); track item.id) {
-              <tr>
+              <tr [class.approve-data__row--selected]="isSelected(item.id)">
+                <td class="approve-data__col-check" (click)="$event.stopPropagation()">
+                  <input type="checkbox" [checked]="isSelected(item.id)" (change)="toggleSelect(item.id)" />
+                </td>
                 <td class="approve-data__id">{{ item.id }}</td>
                 <td>
                   @if (editUrl(item)) {

@@ -288,10 +288,10 @@
           @for (tab of tracklistTabs(); track tab; let i = $index) {
           <button [class.active]="tracklistTabIndex() === i" (click)="tracklistTabIndex.set(i)">{{ tab }}</button>
           }
-          @if (totalDuration()) {
-          <span class="album-info__total-duration">{{ totalDuration() }} total</span>
-          }
         </div>
+        @if (totalDuration()) {
+          <span class="album-info__total-duration">{{ totalDuration() }}</span>
+        }
       </div>
       <div class="album-info__tab-content">
         @if (!tracklistTabs().length) {

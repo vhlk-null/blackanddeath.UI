@@ -1,0 +1,114 @@
+.admin-users {
+  padding-top: 1.5rem;
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__count {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: opacity 0.2s;
+
+    &--loading { opacity: 0.4; pointer-events: none; }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      border-bottom: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover td { background: color-mix(in srgb, var(--color-border) 40%, transparent); }
+  }
+
+  &__th--num,
+  &__td--num {
+    text-align: center;
+  }
+
+  &__td--name {
+    font-weight: 500;
+    color: var(--color-text-heading);
+    white-space: nowrap;
+  }
+
+  &__td--email {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+
+  &__td--date {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+
+  &__empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 2rem !important;
+    font-size: 0.875rem;
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  &__page-btn {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--color-border-input);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: color 0.15s, border-color 0.15s;
+    svg { width: 1rem; height: 1rem; }
+
+    &:hover:not(:disabled) { color: var(--color-text-heading); border-color: var(--color-text-heading); }
+    &:disabled { opacity: 0.3; cursor: default; }
+  }
+
+  &__page-info {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+}

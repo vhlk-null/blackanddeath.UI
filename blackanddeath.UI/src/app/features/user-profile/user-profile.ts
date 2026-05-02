@@ -6,9 +6,15 @@ import { Title } from '@angular/platform-browser';
 import { NgTemplateOutlet } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService, CollectionDetail } from '../services/collection.service';
+import { FavoriteService } from '../services/favorite.service';
 import { UserProfileService, UserProfileDto, mapProfileAlbum, mapProfileBand, mapProfileCollection } from '../services/user-profile.service';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
+
+type SidebarEntry =
+  | { kind: 'fav-albums' }
+  | { kind: 'fav-bands' }
+  | { kind: 'collection'; id: string };
 
 @Component({
   selector: 'app-user-profile',
@@ -24,19 +30,14 @@ export class UserProfile implements OnInit {
   onDocClick(e: MouseEvent): void {
     if (!this.showSortMenu()) return;
     const wrap = this.el.nativeElement.querySelector('.profile__collections-sort-wrap');
-    if (wrap && !wrap.contains(e.target as Node)) {
-      this.showSortMenu.set(false);
-    }
+    if (wrap && !wrap.contains(e.target as Node)) this.showSortMenu.set(false);
   }
+
   private profileService = inject(UserProfileService);
   private titleService = inject(Title);
   readonly collectionService = inject(CollectionService);
+  private favoriteService = inject(FavoriteService);
 
-  readonly mainTabs = ['Overview', 'Collections', 'Favorites'];
-  readonly activeMainTab = signal(0);
-  readonly activeFavTab = signal<'albums' | 'bands'>('albums');
-
-  readonly isOnline = signal(true);
   readonly profileDto = signal<UserProfileDto | null>(null);
 
   readonly username = computed(() =>
@@ -76,9 +77,8 @@ export class UserProfile implements OnInit {
     this.profileDto()?.favoriteBands.map(mapProfileBand) ?? []
   );
 
-  readonly selectedDefaultCollection = signal<'fav-albums' | 'fav-bands' | null>('fav-albums');
+  readonly selected = signal<SidebarEntry>({ kind: 'fav-albums' });
 
-  // Collections
   readonly creatingCollection = signal(false);
   readonly newCollectionName = signal('');
   readonly newCollectionType = signal<'album' | 'band'>('album');
@@ -90,6 +90,23 @@ export class UserProfile implements OnInit {
   readonly editingCollectionCoverPreview = signal<string | null>(null);
   readonly selectedCollection = signal<CollectionDetail | null>(null);
   readonly collectionDetailLoading = signal(false);
+
+  readonly selectedKind = computed(() => this.selected().kind);
+
+  readonly confirmDialog = signal<{ message: string; action: () => void } | null>(null);
+
+  confirm(message: string, action: () => void): void {
+    this.confirmDialog.set({ message, action });
+  }
+
+  confirmYes(): void {
+    this.confirmDialog()?.action();
+    this.confirmDialog.set(null);
+  }
+
+  confirmNo(): void {
+    this.confirmDialog.set(null);
+  }
 
   ngOnInit(): void {
     const userId = this.auth.userId();
@@ -103,21 +120,20 @@ export class UserProfile implements OnInit {
     });
   }
 
+  selectFav(kind: 'fav-albums' | 'fav-bands'): void {
+    this.selected.set({ kind });
+    this.selectedCollection.set(null);
+  }
+
   selectCollection(id: string): void {
-    if (this.selectedCollection()?.id === id) return;
-    this.selectedDefaultCollection.set(null);
+    if (this.selected().kind === 'collection' && (this.selected() as any).id === id) return;
+    this.selected.set({ kind: 'collection', id });
     this.collectionDetailLoading.set(true);
     this.collectionService.getDetail(id).subscribe(detail => {
       this.selectedCollection.set(detail);
       this.collectionDetailLoading.set(false);
     });
   }
-
-  selectDefaultCollection(key: 'fav-albums' | 'fav-bands'): void {
-    this.selectedCollection.set(null);
-    this.selectedDefaultCollection.set(key);
-  }
-
 
   onNewCoverChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -140,13 +156,6 @@ export class UserProfile implements OnInit {
     if (this.editingCollectionId() !== col.id) {
       this.startEditingCollection(col.id, col.name, col.coverUrl);
     }
-    this.editingCollectionCoverFile.set(file);
-    this.editingCollectionCoverPreview.set(URL.createObjectURL(file));
-  }
-
-  onEditCoverChange(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
     this.editingCollectionCoverFile.set(file);
     this.editingCollectionCoverPreview.set(URL.createObjectURL(file));
   }
@@ -192,7 +201,7 @@ export class UserProfile implements OnInit {
     const userId = this.auth.userId();
     const name = this.editingCollectionName().trim();
     if (!id || !userId || !name) return;
-    this.collectionService.updateCollection(id, userId, name, undefined, this.editingCollectionCoverFile()).subscribe(updated => {
+    this.collectionService.updateCollection(id, userId, name, undefined, this.editingCollectionCoverFile()).subscribe(() => {
       this.editingCollectionId.set(null);
       this.editingCollectionName.set('');
       this.editingCollectionCoverFile.set(null);
@@ -211,38 +220,59 @@ export class UserProfile implements OnInit {
     this.editingCollectionCoverPreview.set(null);
   }
 
-  removeFromCollection(type: 'album' | 'band', itemId: string): void {
-    const col = this.selectedCollection();
-    if (!col) return;
-    const obs = type === 'album'
-      ? this.collectionService.removeAlbum(col.id, itemId)
-      : this.collectionService.removeBand(col.id, itemId);
-    obs.subscribe(() => {
-      this.selectedCollection.update(c => c ? {
-        ...c,
-        albums: type === 'album' ? c.albums.filter(a => a.id !== itemId) : c.albums,
-        bands: type === 'band' ? c.bands.filter(b => b.id !== itemId) : c.bands,
-      } : c);
+  removeFavoriteAlbum(albumId: string, title: string): void {
+    this.confirm(`Remove "${title}" from favourites?`, () => {
+      const userId = this.auth.userId();
+      if (!userId) return;
+      this.favoriteService.removeFavoriteAlbum(albumId, userId).subscribe(() => {
+        this.profileDto.update(dto => dto ? {
+          ...dto,
+          favoriteAlbums: dto.favoriteAlbums.filter(a => a.albumId !== albumId),
+          favoriteAlbumsCount: dto.favoriteAlbumsCount - 1,
+        } : dto);
+      });
     });
   }
 
-  deleteCollection(id: string): void {
-    this.collectionService.deleteCollection(id).subscribe(() => {
-      if (this.selectedCollection()?.id === id) {
-        this.selectedCollection.set(null);
-      }
+  removeFavoriteBand(bandId: string, name: string): void {
+    this.confirm(`Remove "${name}" from favourites?`, () => {
+      const userId = this.auth.userId();
+      if (!userId) return;
+      this.favoriteService.removeFavoriteBand(bandId, userId).subscribe(() => {
+        this.profileDto.update(dto => dto ? {
+          ...dto,
+          favoriteBands: dto.favoriteBands.filter(b => b.bandId !== bandId),
+          favoriteBandsCount: dto.favoriteBandsCount - 1,
+        } : dto);
+      });
     });
   }
 
-  placeholders(n: number): number[] {
-    return Array.from({ length: n }, (_, i) => i);
+  removeFromCollection(type: 'album' | 'band', itemId: string, name: string): void {
+    this.confirm(`Remove "${name}" from collection?`, () => {
+      const col = this.selectedCollection();
+      if (!col) return;
+      const obs = type === 'album'
+        ? this.collectionService.removeAlbum(col.id, itemId)
+        : this.collectionService.removeBand(col.id, itemId);
+      obs.subscribe(() => {
+        this.selectedCollection.update(c => c ? {
+          ...c,
+          albums: type === 'album' ? c.albums.filter(a => a.id !== itemId) : c.albums,
+          bands: type === 'band' ? c.bands.filter(b => b.id !== itemId) : c.bands,
+        } : c);
+      });
+    });
   }
 
-  readonly activities = [
-    { user: 'JabeGreen', action: 'commented band', target: 'Shamhamforash', time: '2 hours ago' },
-    { user: 'JabeGreen', action: 'rated album', target: 'Aether (2015)', time: '2 hours ago' },
-    { user: 'JabeGreen', action: 'added album', target: 'The Grand Arc Of Madness (2024) to favourites', time: '3 hours ago' },
-    { user: 'JabeGreen', action: 'commented band', target: 'Shaarimoth', time: '3 hours ago' },
-    { user: 'JabeGreen', action: 'added to playlist', target: 'De Mysteriis Dom Sathanas → Rituals', time: '5 hours ago' },
-  ];
+  deleteCollection(id: string, name: string): void {
+    this.confirm(`Delete collection "${name}"?`, () => {
+      this.collectionService.deleteCollection(id).subscribe(() => {
+        if (this.selectedCollection()?.id === id) {
+          this.selectedCollection.set(null);
+          this.selected.set({ kind: 'fav-albums' });
+        }
+      });
+    });
+  }
 }

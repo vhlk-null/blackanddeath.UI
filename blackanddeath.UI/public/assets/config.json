@@ -1,5 +1,5 @@
 {
   "apiUrl": "http://localhost:6050",
-  "usercontentUrl": "http://localhost:6010/usercontent",
+  "usercontentUrl": "http://localhost:6050/usercontent",
   "issuer": "https://localhost:6021"
 }

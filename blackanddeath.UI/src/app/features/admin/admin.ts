@@ -8,10 +8,11 @@ import { AddMetadataForm } from '../create-new-item/add-metadata-form/add-metada
 import { Tabs } from '../../shared/components/tabs/tabs';
 import { ApproveData } from './approve-data/approve-data';
 import { ImportBand } from './import-band/import-band';
+import { AdminUsers } from './users/admin-users';
 
 @Component({
   selector: 'app-admin',
-  imports: [GenreCardEditor, AddMetadataForm, Tabs, ApproveData, ImportBand],
+  imports: [GenreCardEditor, AddMetadataForm, Tabs, ApproveData, ImportBand, AdminUsers],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
@@ -21,7 +22,7 @@ export class Admin implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  readonly tabs = ['Add Metadata', 'Genres to Explore', 'Approve Data', 'Import Band'];
+  readonly tabs = ['Add Metadata', 'Genres to Explore', 'Approve Data', 'Import Band', 'Users'];
   readonly activeTab = signal(0);
 
   readonly genreCards = signal<GenreCardData[]>([]);

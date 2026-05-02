@@ -1,3 +1,4 @@
+// auth.service.ts — виправлена версія
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { filter } from 'rxjs';
@@ -40,7 +41,7 @@ export class AuthService {
       issuer: this.appConfig.issuer,
       redirectUri: `${window.location.origin}/auth/callback`,
       postLogoutRedirectUri: window.location.origin,
-      clientId: 'angular',
+      clientId: 'blackened-death', // ← відповідає ClientId в appsettings.json
       responseType: 'code',
       scope: 'openid profile email roles blackeneddeath.api offline_access',
       useSilentRefresh: false,
@@ -50,12 +51,13 @@ export class AuthService {
       timeoutFactor: 0.75,
       oidc: true,
     });
-    this.oauth.strictDiscoveryDocumentValidation = false;
+
+    // localStorage — прийнятно якщо є CSP, альтернатива sessionStorage
+    // якщо хочеш щоб токен жив між вкладками/перезавантаженнями
     this.oauth.setStorage(localStorage);
 
     try {
       await this.oauth.loadDiscoveryDocumentAndTryLogin();
-
       this._isAuthenticated.set(this.oauth.hasValidAccessToken());
 
       if (this._isAuthenticated()) {
@@ -72,7 +74,8 @@ export class AuthService {
         });
 
     } catch (err) {
-     
+      // Логуємо помилку — не проковтуємо мовчки
+      console.error('[AuthService] Initialization failed:', err);
     }
   }
 
@@ -80,24 +83,34 @@ export class AuthService {
 
   private scheduleTokenRefresh(): void {
     if (this._refreshTimer) clearTimeout(this._refreshTimer);
+
     const expiresAt = this.oauth.getAccessTokenExpiration();
     if (!expiresAt) return;
+
+    // Оновлюємо за 30 секунд до закінчення
     const delay = expiresAt - Date.now() - 30_000;
-    if (delay <= 0) { this.doRefresh(); return; }
+
+    if (delay <= 0) {
+      this.doRefresh();
+      return;
+    }
+
     this._refreshTimer = setTimeout(() => this.doRefresh(), delay);
   }
 
   private doRefresh(): void {
     this.oauth.refreshToken()
-      .then(() => {
+      .then(async () => {
         this._isAuthenticated.set(true);
-        const claims = this.oauth.getIdentityClaims() as UserProfile;
-        if (claims) this._profile.set(claims);
+        await this.loadProfile();
         this.scheduleTokenRefresh();
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn('[AuthService] Token refresh failed, redirecting to login:', err);
         this._isAuthenticated.set(false);
         this._profile.set(null);
+        // Після невдалого refresh — перелогінити, а не залишати без токена
+        this.login();
       });
   }
 
@@ -114,6 +127,7 @@ export class AuthService {
       const userInfo = response?.info ?? (response as unknown as UserProfile);
       this._profile.set({ ...claims, ...userInfo });
     } catch {
+      // Фолбек на claims з ID token якщо userinfo endpoint недоступний
       this._profile.set(claims);
     } finally {
       this._loadingProfile = false;
