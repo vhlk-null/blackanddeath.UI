@@ -7,18 +7,18 @@
 
   @switch (activeTab()) {
     @case (0) {
+      <app-approve-data />
+    }
+    @case (1) {
+      <app-import-band />
+    }
+    @case (3) {
+      <app-admin-users />
+    }
+    @case (4) {
       <app-add-metadata-form />
     }
     @case (2) {
-      <app-approve-data />
-    }
-    @case (3) {
-      <app-import-band />
-    }
-    @case (4) {
-      <app-admin-users />
-    }
-    @case (1) {
       <section class="admin__section">
         <div class="admin__section-header">
           <h2 class="admin__section-title">Add tags and genres to categories</h2>

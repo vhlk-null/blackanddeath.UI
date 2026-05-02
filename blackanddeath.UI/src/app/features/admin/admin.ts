@@ -22,7 +22,7 @@ export class Admin implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  readonly tabs = ['Add Metadata', 'Genres to Explore', 'Approve Data', 'Import Band', 'Users'];
+  readonly tabs = ['Approve Data', 'Import Band', 'Genres to Explore', 'Users', 'Add Metadata'];
   readonly activeTab = signal(0);
 
   readonly genreCards = signal<GenreCardData[]>([]);
@@ -47,7 +47,7 @@ export class Admin implements OnInit {
         replaceUrl: true,
       });
     }
-    if (index === 1) {
+    if (index === 2) {
       this.genreService.getCardsDetails().subscribe({
         next: (cards) => this.genreCards.set(cards),
         error: () => {},
