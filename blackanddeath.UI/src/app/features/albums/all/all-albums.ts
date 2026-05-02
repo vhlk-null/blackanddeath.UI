@@ -276,6 +276,7 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       videos: [],
       averageRating: doc.averageRating,
       ratingsCount: doc.ratingsCount,
+      isExplicit: doc.isExplicit,
     };
   }
 }
