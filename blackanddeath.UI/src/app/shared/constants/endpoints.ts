@@ -78,7 +78,7 @@ export class AdminEndpoints {
   static get IMPORT_BAND_PREVIEW() { return `${base()}/library/admin/import/band/preview`; }
   static get IMPORT_BAND_STREAM() { return `${base()}/library/admin/import/band/stream`; }
   static get IMPORT_BAND_STATUS() { return `${base()}/library/admin/import/band/status`; }
-  static GET_ALL_USERS = (pageIndex: number, pageSize: number) => `${base()}/library/admin/users?pageIndex=${pageIndex}&pageSize=${pageSize}`;
+  static GET_ALL_USERS = (pageIndex: number, pageSize: number) => `${uc()}/admin/users?pageIndex=${pageIndex}&pageSize=${pageSize}`;
 }
 
 export class FavoriteEndpoints {

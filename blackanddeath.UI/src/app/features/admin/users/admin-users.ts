@@ -16,8 +16,8 @@ export interface AdminUserDto {
 }
 
 interface PagedResult {
-  items: AdminUserDto[];
-  totalCount: number;
+  data: AdminUserDto[];
+  count: number;
   pageIndex: number;
   pageSize: number;
 }
@@ -47,8 +47,8 @@ export class AdminUsers implements OnInit {
     this.loading.set(true);
     this.http.get<PagedResult>(AdminEndpoints.GET_ALL_USERS(this.pageIndex(), this.pageSize)).subscribe({
       next: res => {
-        this.users.set(res.items);
-        this.totalCount.set(res.totalCount);
+        this.users.set(res.data);
+        this.totalCount.set(res.count);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
