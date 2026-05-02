@@ -60,13 +60,24 @@ html.scroll-locked body {
 }
 
 .profile__col-row.cdk-drag-placeholder {
-  opacity: 0;
-  border-top: 2px solid var(--color-tab-active);
-  opacity: 1 !important;
-  background: transparent !important;
   pointer-events: none;
+  position: relative;
+  background: transparent !important;
+  border: none !important;
+  opacity: 1;
 
   * { visibility: hidden; }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-tab-active);
+    border-radius: 1px;
+  }
 }
 
 .cdk-drag-preview {
