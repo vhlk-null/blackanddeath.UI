@@ -10,6 +10,7 @@ import { ApproveData } from './approve-data/approve-data';
 import { ImportBand } from './import-band/import-band';
 import { AdminUsers } from './users/admin-users';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin',
@@ -20,6 +21,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 export class Admin implements OnInit {
   private genreService = inject(GenreService);
   private tagService = inject(TagService);
+  private toastService = inject(ToastService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -81,7 +83,10 @@ export class Admin implements OnInit {
     const cards = [...this.genreCards()];
     moveItemInArray(cards, event.previousIndex, event.currentIndex);
     this.genreCards.set(cards);
-    this.genreService.reorderCards(cards.map(c => c.id)).subscribe();
+    this.genreService.reorderCards(cards.map(c => c.id)).subscribe({
+      next: () => this.toastService.success('Order saved'),
+      error: () => this.toastService.error('Failed to save order'),
+    });
   }
 
   onCreate(): void {
