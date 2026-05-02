@@ -371,6 +371,14 @@
   @if (lightboxSrc()) {
   <app-image-lightbox [src]="lightboxSrc()!" (close)="lightboxSrc.set(null)" />
   }
+
+  <div class="album-info__fab" [class.album-info__fab--hidden]="!fabVisible()">
+    <button class="album-info__fab-btn" title="Comments" (click)="scrollToComments()">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {{ commentsTotalServer() > 0 ? commentsTotalServer() + ' comments' : 'Comments' }}
+    </button>
+  </div>
+
   } <!-- end @if (!notFound()) -->
 </div>
 
@@ -464,7 +472,7 @@
 }
 
 @if (!notFound()) {
-<div class="comments-section">
+<div id="album-comments" class="comments-section">
   <div class="comments-section__header">
     <h2 class="comments-section__title">Comments</h2>
     <span class="comments-section__count">{{ commentsTotalServer() }}</span>

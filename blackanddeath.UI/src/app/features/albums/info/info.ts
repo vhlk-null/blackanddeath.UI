@@ -481,6 +481,7 @@ export class Info implements OnInit {
         this.titleService.setTitle(album.title ? `${album.title} — Black And Death` : 'Black And Death');
         this.loaded.set(true);
         this.loadComments();
+        setTimeout(() => this.initFabObserver());
         this.playingVideoId.set(null);
         this.discographyExpanded.set(false);
         this.userRating.set(null);
@@ -736,6 +737,24 @@ export class Info implements OnInit {
       },
       error: () => { this.editCommentSubmitting.set(false); this.toastService.error('Failed to update comment.'); },
     });
+  }
+
+  readonly fabVisible = signal(true);
+  private _fabObserver: IntersectionObserver | null = null;
+
+  scrollToComments(): void {
+    document.getElementById('album-comments')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private initFabObserver(): void {
+    this._fabObserver?.disconnect();
+    const el = document.getElementById('album-comments');
+    if (!el) return;
+    this._fabObserver = new IntersectionObserver(
+      ([entry]) => this.fabVisible.set(!entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    this._fabObserver.observe(el);
   }
 
   deleteComment(commentId: string, parentId: string | null): void {

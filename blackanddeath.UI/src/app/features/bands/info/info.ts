@@ -301,6 +301,7 @@ export class BandInfo implements OnInit {
         this.bandData.set(band);
         this.titleService.setTitle(band.name ? `${band.name} — Black And Death` : 'Black And Death');
         this.loadComments();
+        setTimeout(() => this.initFabObserver());
         this.discographyExpanded.set(false);
         this.similarAlbums.set((band.similarAlbums ?? []) as any);
         this.similarBands.set((band.similarBands ?? []) as any);
@@ -530,6 +531,24 @@ export class BandInfo implements OnInit {
       },
       error: () => { this.editCommentSubmitting.set(false); this.toastService.error('Failed to update comment.'); },
     });
+  }
+
+  readonly fabVisible = signal(true);
+  private _fabObserver: IntersectionObserver | null = null;
+
+  scrollToComments(): void {
+    document.getElementById('band-comments')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  private initFabObserver(): void {
+    this._fabObserver?.disconnect();
+    const el = document.getElementById('band-comments');
+    if (!el) return;
+    this._fabObserver = new IntersectionObserver(
+      ([entry]) => this.fabVisible.set(!entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    this._fabObserver.observe(el);
   }
 
   deleteComment(commentId: string, parentId: string | null): void {
