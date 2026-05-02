@@ -65,7 +65,11 @@
   &__center {
     display: flex;
     justify-content: center;
-    width: clamp(12rem, 28vw, 25rem); // 400px at 1440px
+    width: clamp(12rem, 28vw, 25rem);
+
+    @media (max-width: 40rem) {
+      display: none;
+    }
   }
 
   &__search-trigger {
@@ -201,6 +205,10 @@
     width: 2.25rem;
     transition: border-color 0.2s ease;
 
+    @media (max-width: 40rem) {
+      display: none;
+    }
+
     &:hover {
       border-color: var(--color-border-input-focus);
     }
@@ -225,6 +233,10 @@
     border-radius: var(--radius-full);
     height: 2.25rem;
     transition: border-color 0.2s ease;
+
+    @media (max-width: 40rem) {
+      display: none;
+    }
 
     &:hover {
       border-color: var(--color-border-input-focus);
@@ -481,8 +493,8 @@
       }
 
       @media (max-width: 40rem) {
-        padding: 1rem 1.5rem;
-        font-size: 1.0625rem;
+        padding: 0.625rem 1.5rem;
+        font-size: 0.9375rem;
       }
     }
   }
@@ -496,6 +508,66 @@
 @keyframes nav-drop {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+.bottom-nav {
+  display: none;
+
+  @media (max-width: 40rem) {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    background: var(--color-header-bg);
+    border-top: 1px solid var(--color-border);
+    height: 3.5rem;
+    align-items: stretch;
+  }
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-family: var(--font-family-body);
+    font-size: 0.625rem;
+    letter-spacing: 0.03em;
+    padding: 0.375rem 0;
+    transition: color 0.15s;
+
+    svg {
+      width: 1.375rem;
+      height: 1.375rem;
+      flex-shrink: 0;
+    }
+
+    &:hover, &--active {
+      color: var(--color-text-heading);
+    }
+  }
+
+  &__avatar {
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-tab-active) 14%, var(--color-card-bg));
+    border: 1.5px solid color-mix(in srgb, var(--color-tab-active) 35%, transparent);
+    color: var(--color-tab-active);
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 

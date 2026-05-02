@@ -54,7 +54,11 @@ html.scroll-locked body {
   width: 100%;
   margin: 0 auto;
   overflow-x: hidden;
-  padding: calc(4rem + 4.125rem) clamp(1rem, 4.86vw, 4.375rem) 6rem; // 4rem — висота хедера // 66px top, 70px sides at 1440px, 96px bottom
+  padding: calc(4rem + 4.125rem) clamp(1rem, 4.86vw, 4.375rem) 6rem;
+
+  @media (max-width: 40rem) {
+    padding-bottom: calc(3.5rem + 2rem); // bottom nav height + spacing
+  }
 
   // TODO: remove debug styles
   // outline: 2px dashed red;
