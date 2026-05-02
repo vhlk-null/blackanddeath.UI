@@ -148,5 +148,23 @@
     @media (max-width: 60rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .cdk-drag {
+      cursor: grab;
+
+      &:active { cursor: grabbing; }
+    }
+
+    .cdk-drag-placeholder {
+      opacity: 0;
+    }
+
+    .cdk-drag-animating {
+      transition: transform 250ms ease;
+    }
+
+    &.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+      transition: transform 250ms ease;
+    }
   }
 }

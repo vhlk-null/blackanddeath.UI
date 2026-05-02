@@ -9,10 +9,11 @@ import { Tabs } from '../../shared/components/tabs/tabs';
 import { ApproveData } from './approve-data/approve-data';
 import { ImportBand } from './import-band/import-band';
 import { AdminUsers } from './users/admin-users';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-admin',
-  imports: [GenreCardEditor, AddMetadataForm, Tabs, ApproveData, ImportBand, AdminUsers],
+  imports: [GenreCardEditor, AddMetadataForm, Tabs, ApproveData, ImportBand, AdminUsers, DragDropModule],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
@@ -73,6 +74,14 @@ export class Admin implements OnInit {
     this.genreCards.update(cards => cards.map(c =>
       c.id === event.tempId ? { ...c, id: event.realId, isNew: false } : c
     ));
+  }
+
+  dropCard(event: CdkDragDrop<GenreCardData[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+    const cards = [...this.genreCards()];
+    moveItemInArray(cards, event.previousIndex, event.currentIndex);
+    this.genreCards.set(cards);
+    this.genreService.reorderCards(cards.map(c => c.id)).subscribe();
   }
 
   onCreate(): void {

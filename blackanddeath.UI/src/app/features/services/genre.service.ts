@@ -86,6 +86,10 @@ export class GenreService {
     return this.http.put<Genre>(GenreEndpoints.UPDATE(id), payload);
   }
 
+  reorderCards(orderedIds: string[]) {
+    return this.http.put<void>(GenreEndpoints.REORDER_CARDS, { orderedIds });
+  }
+
   delete(id: string) {
     return this.http.delete<void>(GenreEndpoints.DELETE(id));
   }

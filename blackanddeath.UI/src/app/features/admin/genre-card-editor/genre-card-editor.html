@@ -21,7 +21,6 @@
       } @else {
         <p class="card-editor__name" (click)="editingName.set(true)" title="Click to edit">{{ nameValue() }}</p>
       }
-      <input class="card-editor__order-input" type="number" [ngModel]="orderValue()" (ngModelChange)="orderValue.set($event)" placeholder="#" min="1" />
     </div>
   </div>
 

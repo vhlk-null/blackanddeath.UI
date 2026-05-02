@@ -26,9 +26,10 @@
         </div>
 
 
-        <div class="admin__grid">
+        <div class="admin__grid" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="dropCard($event)">
           @for (card of genreCards(); track card.id) {
             <app-genre-card-editor
+              cdkDrag
               [card]="card"
               [genreOptions]="genreOptions()"
               [tagOptions]="tagOptions()"

@@ -62,6 +62,7 @@ export class GenreEndpoints {
   static REMOVE_GENRE_FROM_CARD = (id: string, genreId: string) => `${base()}/library/genre-cards/${id}/genres/${genreId}`;
   static ADD_TAG_TO_CARD = (id: string, tagId: string) => `${base()}/library/genre-cards/${id}/tags/${tagId}`;
   static REMOVE_TAG_FROM_CARD = (id: string, tagId: string) => `${base()}/library/genre-cards/${id}/tags/${tagId}`;
+  static get REORDER_CARDS() { return `${base()}/library/genre-cards/reorder`; }
   static get CREATE() { return `${base()}/library/genres`; }
   static UPDATE = (id: string) => `${base()}/library/genres/${id}`;
   static DELETE = (id: string) => `${base()}/library/genres/${id}`;
