@@ -346,9 +346,6 @@
             <div cdkDropList (cdkDropListDropped)="dropCollectionAlbum($event)">
             @for (album of selectedCollection()!.albums; track album.id; let i = $index) {
               <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/albums', album.slug]" cdkDrag cdkDragLockAxis="y">
-                <span class="profile__col-row-drag" cdkDragHandle (click)="$event.preventDefault(); $event.stopPropagation()">
-                  <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
-                </span>
                 <span class="profile__col-row-num">{{ i + 1 }}</span>
                 <div class="profile__col-row-thumb">
                   @if (album.coverUrl) { <img [src]="album.coverUrl" [alt]="album.title" /> }
@@ -366,9 +363,6 @@
             <div cdkDropList (cdkDropListDropped)="dropCollectionBand($event)">
             @for (band of selectedCollection()!.bands; track band.id; let i = $index) {
               <a class="profile__col-row profile__col-row--with-remove" [routerLink]="['/bands', band.slug]" cdkDrag cdkDragLockAxis="y">
-                <span class="profile__col-row-drag" cdkDragHandle (click)="$event.preventDefault(); $event.stopPropagation()">
-                  <svg viewBox="0 0 24 24" fill="none" width="14" height="14"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
-                </span>
                 <span class="profile__col-row-num">{{ selectedCollection()!.albums.length + i + 1 }}</span>
                 <div class="profile__col-row-thumb profile__col-row-thumb--band">
                   @if (band.logoUrl) { <img [src]="band.logoUrl" [alt]="band.name" /> }
