@@ -48,6 +48,7 @@ export class AuthService {
       sessionChecksEnabled: false,
       showDebugInformation: false,
       strictDiscoveryDocumentValidation: false,
+      requireHttps: false,
       timeoutFactor: 0.75,
       oidc: true,
     });
