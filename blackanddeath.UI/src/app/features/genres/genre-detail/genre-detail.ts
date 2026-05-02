@@ -25,19 +25,27 @@ export class GenreDetail implements OnInit {
   readonly albums = signal<Album[]>([]);
   readonly total = signal(0);
   readonly currentPage = signal(1);
+  readonly loadedPage = signal(1);
 
   private cardId = '';
 
   ngOnInit(): void {
     this.cardId = this.route.snapshot.paramMap.get('id')!;
     this.route.queryParams.subscribe(params => {
-      this.currentPage.set(Number(params['page']) || 1);
-      this.load();
+      const page = Number(params['page']) || 1;
+      this.currentPage.set(page);
+      this.loadedPage.set(page);
+      this.loadPage(page, false);
+    });
+
+    this.genreService.getCardById(this.cardId).subscribe({
+      next: (card) => { this.cardName.set(card.name); this.titleService.setTitle(`${card.name} — Black And Death`); },
     });
   }
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
+    this.loadedPage.set(page);
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page },
@@ -46,16 +54,19 @@ export class GenreDetail implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  private load(): void {
-    this.genreService.getCardById(this.cardId).subscribe({
-      next: (card) => { this.cardName.set(card.name); this.titleService.setTitle(`${card.name} — Black And Death`); },
-    });
+  onLoadMore(): void {
+    const next = this.loadedPage() + 1;
+    this.loadedPage.set(next);
+    this.loadPage(next, true);
+  }
+
+  private loadPage(page: number, append: boolean): void {
     this.genreService.getCardAlbums(this.cardId, {
-      pageIndex: this.currentPage() - 1,
+      pageIndex: page - 1,
       pageSize: this.pageSize,
     }).subscribe({
       next: (result) => {
-        this.albums.set(result.data);
+        this.albums.update(existing => append ? [...existing, ...result.data] : result.data);
         this.total.set(result.count);
       },
     });

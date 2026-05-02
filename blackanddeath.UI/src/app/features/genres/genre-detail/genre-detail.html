@@ -15,7 +15,9 @@
       [total]="total()"
       [pageSize]="pageSize"
       [currentPage]="currentPage()"
+      [loadedPage]="loadedPage()"
       (pageChange)="onPageChange($event)"
+      (loadMore)="onLoadMore()"
     />
   }
 
