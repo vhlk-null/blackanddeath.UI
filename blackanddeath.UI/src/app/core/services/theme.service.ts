@@ -1,7 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-export type Theme = 'dark' | 'light' | 'pink';
-const THEMES: Theme[] = ['dark', 'light', 'pink'];
+export type Theme = 'dark' | 'light' | 'pink' | 'dark-gradient' | 'light-gradient' | 'pink-gradient';
+const THEMES: Theme[] = ['dark', 'dark-gradient', 'light', 'light-gradient', 'pink', 'pink-gradient'];
 const STORAGE_KEY = 'theme';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,7 @@ export class ThemeService {
 
   private loadTheme(): Theme {
     const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    const theme: Theme = THEMES.includes(saved as Theme) ? (saved as Theme) : 'dark';
+    const theme: Theme = THEMES.includes(saved as Theme) ? (saved as Theme) : 'dark-gradient';
     document.documentElement.setAttribute('data-theme', theme);
     return theme;
   }
