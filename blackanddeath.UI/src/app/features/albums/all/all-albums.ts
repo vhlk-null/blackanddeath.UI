@@ -108,6 +108,8 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       case 'type': this.activeTypes.set([value as string]); break;
       case 'year': this.activeYearFrom.set(String(value)); this.activeYearTo.set(String(value)); break;
     }
+    this.syncDraftsFromActive();
+    this.filtersOpen.set(true);
     this.updateUrl();
     this.load();
   }
