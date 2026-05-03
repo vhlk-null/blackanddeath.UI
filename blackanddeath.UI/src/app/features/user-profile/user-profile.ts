@@ -121,19 +121,27 @@ export class UserProfile implements OnInit {
     });
   }
 
+  readonly mobilePanelOpen = signal(false);
+
   selectFav(kind: 'fav-albums' | 'fav-bands'): void {
     this.selected.set({ kind });
     this.selectedCollection.set(null);
+    this.mobilePanelOpen.set(true);
   }
 
   selectCollection(id: string): void {
     if (this.selected().kind === 'collection' && (this.selected() as any).id === id) return;
     this.selected.set({ kind: 'collection', id });
     this.collectionDetailLoading.set(true);
+    this.mobilePanelOpen.set(true);
     this.collectionService.getDetail(id).subscribe(detail => {
       this.selectedCollection.set(detail);
       this.collectionDetailLoading.set(false);
     });
+  }
+
+  mobileBack(): void {
+    this.mobilePanelOpen.set(false);
   }
 
   onNewCoverChange(event: Event): void {
