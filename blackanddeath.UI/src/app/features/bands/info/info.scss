@@ -1459,6 +1459,10 @@ app-comment-node {
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
+
+  @media (max-width: 56rem) {
+    bottom: calc(3.5rem + 0.75rem);
+  }
   display: flex;
   align-items: center;
   gap: 0.375rem;
