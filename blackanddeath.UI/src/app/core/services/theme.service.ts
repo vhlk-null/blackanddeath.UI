@@ -1,7 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-export type Theme = 'dark' | 'light' | 'pink' | 'dark-gradient' | 'light-gradient' | 'pink-gradient';
-const THEMES: Theme[] = ['dark', 'dark-gradient', 'light', 'light-gradient', 'pink', 'pink-gradient'];
+export type Theme = 'dark' | 'dark-gradient' | 'dark-red' | 'light' | 'light-gradient' | 'pink' | 'pink-gradient';
+const THEMES: Theme[] = ['dark', 'dark-gradient', 'dark-red', 'light', 'light-gradient', 'pink', 'pink-gradient'];
 const STORAGE_KEY = 'theme';
 
 @Injectable({ providedIn: 'root' })

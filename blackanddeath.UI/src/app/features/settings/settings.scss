@@ -101,6 +101,12 @@
       border: 1px solid #3d1525;
     }
 
+    // Dark red preview
+    [data-theme-preview="dark-red"] & {
+      background: linear-gradient(to bottom, #1a0808 0%, #060708 60%);
+      border: 1px solid #3a1010;
+    }
+
     // Dark gradient preview
     [data-theme-preview="dark-gradient"] & {
       background: linear-gradient(to bottom, #0e0916 0%, #060708 60%);
@@ -128,6 +134,7 @@
 
     [data-theme-preview="dark"] & { background: #E3EAFF; }
     [data-theme-preview="dark-gradient"] & { background: #C8D0FF; }
+    [data-theme-preview="dark-red"] & { background: #FF9090; }
     [data-theme-preview="light"] & { background: #1A1A2E; }
     [data-theme-preview="light-gradient"] & { background: #1A1A2E; }
     [data-theme-preview="pink"] & { background: #f4a7c0; }
@@ -142,6 +149,7 @@
 
     [data-theme-preview="dark"] & { background: #161616; }
     [data-theme-preview="dark-gradient"] & { background: rgba(255,255,255,0.06); }
+    [data-theme-preview="dark-red"] & { background: rgba(255,100,100,0.08); }
     [data-theme-preview="light"] & { background: #F1F1FF; }
     [data-theme-preview="light-gradient"] & { background: rgba(255,255,255,0.6); }
     [data-theme-preview="pink"] & { background: #2d1020; }
@@ -152,6 +160,7 @@
 
       [data-theme-preview="dark"] & { background: #0f0f0f; }
       [data-theme-preview="dark-gradient"] & { background: rgba(255,255,255,0.04); }
+      [data-theme-preview="dark-red"] & { background: rgba(255,80,80,0.05); }
       [data-theme-preview="light"] & { background: #e8e8f5; }
       [data-theme-preview="light-gradient"] & { background: rgba(255,255,255,0.4); }
       [data-theme-preview="pink"] & { background: #3d1525; }

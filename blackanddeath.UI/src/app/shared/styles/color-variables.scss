@@ -183,6 +183,52 @@ $color-bg-light: #E6E6F2;
     --color-footer-glow: none;
 }
 
+:root[data-theme="dark-red"] {
+    --color-header-backdrop: blur(16px) saturate(1.4);
+    --color-header-bg-actual: rgba(10, 10, 12, 0.72);
+    --color-drawer-bg: rgba(16, 16, 16, 0.6);
+    --color-drawer-backdrop: blur(24px) saturate(1.6);
+    --color-overlay: rgba(0, 0, 0, 0.6);
+    --color-drawer-border: rgba(255, 255, 255, 0.07);
+    --color-drawer-link: rgba(255, 255, 255, 0.55);
+    --color-drawer-link-hover-bg: rgba(255, 255, 255, 0.06);
+    --color-drawer-link-hover: rgba(255, 255, 255, 0.9);
+    --color-drawer-link-active-bg: rgba(255, 255, 255, 0.08);
+    --color-drawer-link-active: #FFE3E3;
+    --color-drawer-close: rgba(255, 255, 255, 0.45);
+    --color-drawer-close-hover: rgba(255, 255, 255, 0.9);
+    --color-text-heading: #FFE3E3;
+    --color-tab-active: #FF9090;
+    --color-separator: #888888;
+    --color-text-muted: #B2B2B2;
+    --color-bg: #{$color-bg-dark};
+    --bg-gradient: linear-gradient(to bottom, #1a0808 0%, #060708 40%);
+    --color-input-bg: #{$color-bg-dark};
+    --color-dropdown-bg: #1C1C1E;
+    --color-header-bg: #161616;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-input: #2A2A2A;
+    --color-border-input-focus: #444444;
+    --color-text: rgba(255, 255, 255, 0.7);
+    --color-text-placeholder: #555555;
+    --color-card-bg: #060708;
+    --color-card-hover-bg: #1e1f22;
+    --color-card-border: #222222;
+    --color-card-title: #FFE3E3;
+    --color-card-band: #E8E8E8;
+    --color-card-meta: #8C8C8C;
+    --color-card-separator: #393A3C;
+    --color-card-hover-glow: rgba(255, 255, 255, 0.55);
+    --color-star: #F8F9FA;
+    --color-genre-card-bg: #17181A;
+    --color-genre-card-border: #222222;
+    --color-genre-card-cover-bg: #212224;
+    --color-genre-card-name: #FFE3E3;
+    --color-card-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 32px rgba(255,255,255,0.02), 0 2px 8px rgba(0,0,0,0.4);
+    --color-footer-bg: linear-gradient(to bottom, #060708 60%, #1a0808 100%);
+    --color-footer-glow: none;
+}
+
 :root[data-theme="light-gradient"] {
     --color-header-backdrop: blur(16px) saturate(1.4);
     --color-header-bg-actual: rgba(230, 230, 242, 0.72);
