@@ -134,7 +134,7 @@
         <td class="label">Country:</td>
         <td>
           @for (country of bandData()?.countries; track $index; let last = $last) {
-            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ countryId: country.id }">{{ country.name }}</a>@if (!last) {, }
+            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ countryName: country.name }">{{ country.name }}</a>@if (!last) {, }
           }
         </td>
       </tr>
@@ -148,13 +148,13 @@
         <td class="label">Genre:</td>
         <td>
           @for (genre of bandData()?.genres; track $index; let last = $last) {
-            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreId: genre.id }">{{ genre.name }}</a>@if (!last) {, }
+            <a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ genreName: genre.name }">{{ genre.name }}</a>@if (!last) {, }
           }
         </td>
       </tr>
       <tr>
         <td class="label">Formed in:</td>
-        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ formedYear: bandData()?.formedYear }">{{ bandData()?.formedYear }}</a></td>
+        <td><a class="band-info__meta-link" [routerLink]="['/bands']" [queryParams]="{ yearFrom: bandData()?.formedYear, yearTo: bandData()?.formedYear }">{{ bandData()?.formedYear }}</a></td>
       </tr>
     </table>
 

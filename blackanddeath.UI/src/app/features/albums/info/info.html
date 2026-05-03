@@ -241,7 +241,7 @@
           <td class="label">Release:</td>
           <td>
             <a class="album-info__meta-link" [routerLink]="['/albums']"
-              [queryParams]="{ year: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a>
+              [queryParams]="{ yearFrom: albumData()?.releaseDate, yearTo: albumData()?.releaseDate }">{{ albumData()?.releaseDate }}</a>
             @if (releaseCountdown()) {
               <span class="album-info__countdown"> ({{ releaseCountdown() }})</span>
             }
@@ -251,7 +251,7 @@
           <td class="label">Country:</td>
           <td>
             @for (country of albumData()?.countries; track $index; let last = $last) {
-            <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ countryId: country.id }">{{
+            <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ countryName: country.name }">{{
               country.name }}</a>@if (!last) {, }
             }
           </td>
@@ -260,7 +260,7 @@
           <td class="label">Genre:</td>
           <td>
             @for (genre of albumData()?.genres; track $index; let last = $last) {
-            <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ genreId: genre.id }">{{
+            <a class="album-info__meta-link" [routerLink]="['/albums']" [queryParams]="{ genreName: genre.name }">{{
               genre.name }}</a>@if (!last) {, }
             }
           </td>

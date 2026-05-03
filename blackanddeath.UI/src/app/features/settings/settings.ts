@@ -13,9 +13,12 @@ export class Settings {
   readonly ageGate = inject(AgeGateService);
 
   readonly themes: { value: Theme; label: string; description: string }[] = [
-    { value: 'dark', label: 'Dark', description: 'Dark background, easy on the eyes' },
-    { value: 'light', label: 'Light', description: 'Light background for bright environments' },
-    { value: 'pink', label: 'Pink', description: 'A touch of color in the darkness' },
+    { value: 'dark',           label: 'Dark',            description: 'Pure dark background, easy on the eyes' },
+    { value: 'dark-gradient',  label: 'Dark Gradient',   description: 'Dark with a subtle purple tint at the top' },
+    { value: 'light',          label: 'Light',           description: 'Light background for bright environments' },
+    { value: 'light-gradient', label: 'Light Gradient',  description: 'Light with a soft blue-grey gradient' },
+    { value: 'pink',           label: 'Pink',            description: 'A touch of pink in the darkness' },
+    { value: 'pink-gradient',  label: 'Pink Gradient',   description: 'Pink with a dreamy gradient wash' },
   ];
 
   setTheme(t: Theme): void {

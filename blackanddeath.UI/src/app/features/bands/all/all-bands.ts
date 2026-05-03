@@ -63,6 +63,9 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
       this.syncDraftsFromActive();
       this.appendPage = this.currentPage();
       this.loadedPage.set(this.currentPage());
+      const hasFilters = this.activeGenreNames().length || this.activeCountryNames().length ||
+        this.activeStatuses().length || this.activeYearFrom() || this.activeYearTo();
+      if (hasFilters) this.filtersOpen.set(true);
       this.load();
     });
   }

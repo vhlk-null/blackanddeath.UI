@@ -100,6 +100,24 @@
       background: #1a0a10;
       border: 1px solid #3d1525;
     }
+
+    // Dark gradient preview
+    [data-theme-preview="dark-gradient"] & {
+      background: linear-gradient(to bottom, #0e0916 0%, #060708 60%);
+      border: 1px solid #2a1a3a;
+    }
+
+    // Light gradient preview
+    [data-theme-preview="light-gradient"] & {
+      background: linear-gradient(to bottom, #d0d0e8 0%, #E6E6F2 60%);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    // Pink gradient preview
+    [data-theme-preview="pink-gradient"] & {
+      background: linear-gradient(to bottom, #f7b8d8 0%, #FFE2EF 60%);
+      border: 1px solid rgba(180,40,100,0.2);
+    }
   }
 
   &__theme-preview-bar {
@@ -109,8 +127,11 @@
     width: 60%;
 
     [data-theme-preview="dark"] & { background: #E3EAFF; }
+    [data-theme-preview="dark-gradient"] & { background: #C8D0FF; }
     [data-theme-preview="light"] & { background: #1A1A2E; }
+    [data-theme-preview="light-gradient"] & { background: #1A1A2E; }
     [data-theme-preview="pink"] & { background: #f4a7c0; }
+    [data-theme-preview="pink-gradient"] & { background: #A0305A; }
   }
 
   &__theme-preview-card {
@@ -120,15 +141,21 @@
     width: 100%;
 
     [data-theme-preview="dark"] & { background: #161616; }
+    [data-theme-preview="dark-gradient"] & { background: rgba(255,255,255,0.06); }
     [data-theme-preview="light"] & { background: #F1F1FF; }
+    [data-theme-preview="light-gradient"] & { background: rgba(255,255,255,0.6); }
     [data-theme-preview="pink"] & { background: #2d1020; }
+    [data-theme-preview="pink-gradient"] & { background: rgba(255,200,230,0.5); }
 
     &--sm {
       width: 70%;
 
       [data-theme-preview="dark"] & { background: #0f0f0f; }
+      [data-theme-preview="dark-gradient"] & { background: rgba(255,255,255,0.04); }
       [data-theme-preview="light"] & { background: #e8e8f5; }
+      [data-theme-preview="light-gradient"] & { background: rgba(255,255,255,0.4); }
       [data-theme-preview="pink"] & { background: #3d1525; }
+      [data-theme-preview="pink-gradient"] & { background: rgba(255,180,215,0.4); }
     }
   }
 

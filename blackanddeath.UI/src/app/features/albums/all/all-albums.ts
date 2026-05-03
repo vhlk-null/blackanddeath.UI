@@ -96,6 +96,10 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       this.syncDraftsFromActive();
       this.appendPage = this.currentPage();
       this.loadedPage.set(this.currentPage());
+      const hasFilters = this.activeGenreNames().length || this.activeCountryNames().length ||
+        this.activeTypes().length || this.activeYearFrom() || this.activeYearTo() ||
+        this.activeLabelNames().length || this.activeUpcoming();
+      if (hasFilters) this.filtersOpen.set(true);
       this.load();
     });
   }
