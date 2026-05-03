@@ -22,6 +22,21 @@
     </div>
 
     <div class="header__center">
+      <nav class="header__nav">
+        <a class="header__nav-link" routerLink="/" routerLinkActive="header__nav-link--active" [routerLinkActiveOptions]="{exact:true}">Home</a>
+        <a class="header__nav-link" routerLink="/albums" routerLinkActive="header__nav-link--active" [routerLinkActiveOptions]="{exact:true}">Albums</a>
+        <a class="header__nav-link" routerLink="/bands" routerLinkActive="header__nav-link--active" [routerLinkActiveOptions]="{exact:true}">Bands</a>
+        <a class="header__nav-link" routerLink="/videos" routerLinkActive="header__nav-link--active">Videos</a>
+        <a class="header__nav-link" routerLink="/genres" routerLinkActive="header__nav-link--active">Genres</a>
+        <a class="header__nav-link" routerLink="/create" routerLinkActive="header__nav-link--active">Create</a>
+        @if (auth.isAdmin()) {
+          <a class="header__nav-link" routerLink="/admin" routerLinkActive="header__nav-link--active">Admin</a>
+        }
+      </nav>
+    </div>
+
+    <div class="header__right">
+
       <button class="header__search-trigger" (click)="searchOpen.set(true)" aria-label="Open search">
         <svg class="header__search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8" />
@@ -29,10 +44,7 @@
         </svg>
         <span class="header__search-placeholder">Search albums, bands…</span>
       </button>
-    </div>
 
-    <div class="header__right">
-      
       <button class="header__theme-btn" (click)="theme.cycle()" [attr.aria-label]="'Theme: ' + theme.theme()">
         @switch (theme.theme()) {
           @case ('dark') {
@@ -78,7 +90,7 @@
           }
         }
       </button>
-     
+
       <button class="header__user-btn" (click)="onUserBtnClick()" aria-label="User menu">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
           stroke-linecap="round" stroke-linejoin="round">
