@@ -67,6 +67,9 @@
   }
 
   &__nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     font-family: var(--font-family-body);
     font-size: 0.875rem;
     color: var(--color-text-muted);
@@ -75,6 +78,12 @@
     border-radius: var(--radius-md);
     transition: color 0.15s, background 0.15s;
     white-space: nowrap;
+
+    svg {
+      width: 0.95rem;
+      height: 0.95rem;
+      flex-shrink: 0;
+    }
 
     &:hover {
       color: var(--color-text-heading);

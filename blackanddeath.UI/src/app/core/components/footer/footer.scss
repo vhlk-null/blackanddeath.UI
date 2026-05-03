@@ -1,6 +1,7 @@
 .footer {
-  background-color: var(--color-header-bg);
+  background: var(--color-footer-bg, var(--color-header-bg));
   border-top: 1px solid var(--color-border);
+  box-shadow: var(--color-footer-glow, none);
 
   &__inner {
     max-width: 71.25rem;
