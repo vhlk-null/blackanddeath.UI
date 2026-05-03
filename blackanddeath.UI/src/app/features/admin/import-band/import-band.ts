@@ -31,8 +31,13 @@ export class ImportBand implements OnInit {
 
   private mbIdFromUrl(mbUrl: string | null): string | null {
     if (!mbUrl) return null;
-    const match = mbUrl.match(/release-group\/([a-f0-9-]+)/);
-    return match ? match[1] : null;
+    // MusicBrainz: /release-group/<uuid>
+    const mbMatch = mbUrl.match(/release-group\/([a-f0-9-]+)/);
+    if (mbMatch) return mbMatch[1];
+    // Discogs: /master/<id> or /release/<id>
+    const discogsMatch = mbUrl.match(/\/(master|release)\/(\d+)/);
+    if (discogsMatch) return `${discogsMatch[1]}-${discogsMatch[2]}`;
+    return null;
   }
 
   isSelected(mbUrl: string | null): boolean {

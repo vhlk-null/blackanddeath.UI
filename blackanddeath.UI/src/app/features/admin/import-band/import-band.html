@@ -1,5 +1,5 @@
 <section class="import-band">
-  <h2 class="import-band__title">Import Band from MusicBrainz</h2>
+  <h2 class="import-band__title">Import Band from External Sources</h2>
 
   <div class="import-band__form">
     <input
@@ -37,12 +37,19 @@
       </p>
       @for (c of list; track c.mbId) {
         <button class="import-band__candidate" type="button" (click)="selectCandidate(c)">
-          <span class="import-band__candidate-name">{{ c.name }}</span>
-          <span class="import-band__candidate-meta">
-            @if (c.disambiguation) { <em>{{ c.disambiguation }}</em> · }
-            @if (c.country) { {{ c.country }} · }
-            @if (c.formedYear) { {{ c.formedYear }} }
+          <span class="import-band__candidate-info">
+            <span class="import-band__candidate-name">{{ c.name }}</span>
+            <span class="import-band__candidate-meta">
+              @if (c.disambiguation) { <em>{{ c.disambiguation }}</em> · }
+              @if (c.country) { {{ c.country }} · }
+              @if (c.formedYear) { {{ c.formedYear }} }
+            </span>
           </span>
+          @if (c.profileUrl) {
+            <a class="import-band__candidate-link" [href]="c.profileUrl" target="_blank" rel="noopener" (click)="$event.stopPropagation()" title="View on Discogs">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          }
         </button>
       }
     </div>

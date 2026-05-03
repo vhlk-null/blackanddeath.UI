@@ -90,10 +90,11 @@
     }
 
     &.active {
-      background: var(--color-text-heading);
-      border-color: var(--color-text-heading);
-      color: var(--color-bg);
+      background: color-mix(in srgb, var(--color-tab-active) 12%, transparent);
+      border-color: var(--color-tab-active);
+      color: var(--color-tab-active);
       font-family: 'Cinzel', serif;
+      font-weight: 600;
       cursor: default;
     }
 

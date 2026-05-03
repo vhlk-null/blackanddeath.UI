@@ -9,6 +9,7 @@ export interface BandCandidate {
   disambiguation: string | null;
   country: string | null;
   formedYear: number | null;
+  profileUrl: string | null;
 }
 
 export interface BandPreviewAlbum {
