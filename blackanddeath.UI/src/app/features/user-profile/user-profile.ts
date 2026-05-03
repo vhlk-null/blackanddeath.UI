@@ -27,6 +27,8 @@ export class UserProfile implements OnInit {
   readonly auth = inject(AuthService);
   private el = inject(ElementRef);
 
+  readonly isMobile = () => window.innerWidth <= 768;
+
   @HostListener('document:mousedown', ['$event'])
   onDocClick(e: MouseEvent): void {
     if (!this.showSortMenu()) return;
