@@ -89,6 +89,7 @@ export class BandInfo implements OnInit {
   readonly loaded = signal(false);
   readonly playingVideoId = signal<string | null>(null);
   readonly isFavorite = signal(false);
+  readonly isSubscribed = signal(false);
   readonly showCollectionPicker = signal(false);
   readonly collectionItem = computed<CollectionItem | null>(() => {
     const id = this.bandData()?.id;
@@ -243,6 +244,13 @@ export class BandInfo implements OnInit {
       this.favoriteService.addFavoriteBand(bandId, userId)
         .subscribe(() => this.isFavorite.set(true));
     }
+  }
+
+  toggleSubscribe(): void {
+    if (!this.auth.isAuthenticated()) { this.auth.login(); return; }
+    this.isSubscribed.update(v => !v);
+    const state = this.isSubscribed() ? 'Subscribed' : 'Unsubscribed';
+    this.toastService.show(`${state} to ${this.bandData()?.name ?? 'band'} updates`);
   }
 
   onDelete(): void {

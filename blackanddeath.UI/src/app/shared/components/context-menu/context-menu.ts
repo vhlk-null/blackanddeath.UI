@@ -4,7 +4,7 @@ import {
 
 export interface ContextMenuItem {
   label: string;
-  icon?: 'star' | 'bookmark' | 'band' | 'link' | 'trash';
+  icon?: 'star' | 'bookmark' | 'band' | 'link' | 'trash' | 'bell';
   action: () => void;
   danger?: boolean;
 }

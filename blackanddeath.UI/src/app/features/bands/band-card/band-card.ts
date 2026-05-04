@@ -64,6 +64,14 @@ export class BandCard {
         icon: 'bookmark',
         action: () => this.showCollectionPicker.set(true),
       });
+
+      items.push({
+        label: 'Subscribe to Updates',
+        icon: 'bell',
+        action: () => {
+          this.toast.success(`Subscribed to ${band.name} updates`);
+        },
+      });
     }
 
     items.push({
