@@ -98,6 +98,7 @@ export class AuthService {
 
     this._refreshTimer = setTimeout(() => this.doRefresh(), delay);
   }
+  
 
   private doRefresh(): void {
     this.oauth.refreshToken()
