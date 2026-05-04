@@ -17,6 +17,7 @@ export interface AlbumSearchParams {
   releaseYearTo?: number;
   genre?: string[];
   country?: string[];
+  label?: string[];
   includeTracks?: boolean;
 }
 
@@ -48,6 +49,7 @@ export class SearchService {
     if (params.releaseYearTo !== undefined) p['releaseYearTo'] = params.releaseYearTo;
     if (params.genre?.length) p['genre'] = params.genre;
     if (params.country?.length) p['country'] = params.country;
+    if (params.label?.length) p['label'] = params.label;
     if (params.includeTracks) p['includeTracks'] = true;
 
     console.log('[SearchService] searchAlbums params:', p);

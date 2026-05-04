@@ -262,6 +262,7 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       releaseYearTo: this.activeYearTo() ? +this.activeYearTo()! : undefined,
       genre: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
       country: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
+      label: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
       includeTracks: this.includeTracksEnabled() ? true : undefined,
     };
   }
