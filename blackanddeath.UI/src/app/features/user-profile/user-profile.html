@@ -80,32 +80,46 @@
     </div>
   </div>
 
-  <!-- Create collection form -->
+  <!-- Create collection modal -->
   @if (creatingCollection()) {
-    <div class="profile__collections-create">
-      <label class="profile__collections-cover-pick" title="Add cover" appPasteImage (imagePasted)="onNewCoverPasted($event)">
-        @if (newCollectionCoverPreview()) {
-          <img [src]="newCollectionCoverPreview()!" alt="cover" />
-        } @else {
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        }
-        <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onNewCoverChange($event)" />
-      </label>
-      <div class="profile__collections-create-fields">
-        <input class="profile__collections-create-input" type="text" placeholder="Name…"
+    <div class="profile__modal-backdrop" (click)="cancelCreateCollection()">
+      <div class="profile__modal" (click)="$event.stopPropagation()">
+        <div class="profile__modal-header">
+          <span class="profile__modal-title">New Collection</span>
+          <button class="profile__modal-close" (click)="cancelCreateCollection()">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <label class="profile__modal-cover" title="Add cover" appPasteImage (imagePasted)="onNewCoverPasted($event)">
+          @if (newCollectionCoverPreview()) {
+            <img [src]="newCollectionCoverPreview()!" alt="cover" />
+            <div class="profile__modal-cover-overlay">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          } @else {
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Add cover</span>
+          }
+          <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onNewCoverChange($event)" />
+        </label>
+        <input class="profile__modal-input" type="text" placeholder="Collection name…"
           [ngModel]="newCollectionName()" (ngModelChange)="newCollectionName.set($event)"
           (keyup.enter)="confirmCreateCollection()" (keyup.escape)="cancelCreateCollection()" autofocus />
-        <div class="profile__collections-create-controls">
-          <div class="profile__collections-type-toggle">
-            <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'album'" (click)="newCollectionType.set('album')">Albums</button>
-            <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'band'" (click)="newCollectionType.set('band')">Bands</button>
-          </div>
-          <div class="profile__collections-create-actions">
-            <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmCreateCollection()">Create</button>
-            <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelCreateCollection()">Cancel</button>
-          </div>
+        <div class="profile__modal-type-toggle">
+          <button class="profile__modal-type-btn" [class.profile__modal-type-btn--active]="newCollectionType() === 'album'" (click)="newCollectionType.set('album')">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+            Albums
+          </button>
+          <button class="profile__modal-type-btn" [class.profile__modal-type-btn--active]="newCollectionType() === 'band'" (click)="newCollectionType.set('band')">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21C2 17.134 5.134 14 9 14h2M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Bands
+          </button>
+        </div>
+        <div class="profile__modal-actions">
+          <button class="profile__modal-btn profile__modal-btn--cancel" (click)="cancelCreateCollection()">Cancel</button>
+          <button class="profile__modal-btn profile__modal-btn--confirm" (click)="confirmCreateCollection()">Create Collection</button>
         </div>
       </div>
     </div>
