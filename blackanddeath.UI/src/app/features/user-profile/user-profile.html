@@ -94,16 +94,18 @@
         <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onNewCoverChange($event)" />
       </label>
       <div class="profile__collections-create-fields">
-        <input class="profile__collections-create-input" type="text" placeholder="Collection name…"
+        <input class="profile__collections-create-input" type="text" placeholder="Name…"
           [ngModel]="newCollectionName()" (ngModelChange)="newCollectionName.set($event)"
           (keyup.enter)="confirmCreateCollection()" (keyup.escape)="cancelCreateCollection()" autofocus />
-        <div class="profile__collections-type-toggle">
-          <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'album'" (click)="newCollectionType.set('album')">Albums</button>
-          <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'band'" (click)="newCollectionType.set('band')">Bands</button>
-        </div>
-        <div class="profile__collections-create-actions">
-          <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmCreateCollection()">Create</button>
-          <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelCreateCollection()">Cancel</button>
+        <div class="profile__collections-create-controls">
+          <div class="profile__collections-type-toggle">
+            <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'album'" (click)="newCollectionType.set('album')">Albums</button>
+            <button class="profile__collections-type-btn" [class.profile__collections-type-btn--active]="newCollectionType() === 'band'" (click)="newCollectionType.set('band')">Bands</button>
+          </div>
+          <div class="profile__collections-create-actions">
+            <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmCreateCollection()">Create</button>
+            <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelCreateCollection()">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
