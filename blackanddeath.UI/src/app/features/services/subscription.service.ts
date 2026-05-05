@@ -3,12 +3,19 @@ import { Observable } from 'rxjs';
 import { BaseHttpService } from './intrefaces/http';
 import { SubscriptionEndpoints } from '../../shared/constants/endpoints';
 
+export interface SubscriptionDto {
+  resourceType: string;
+  resourceId: string;
+  resourceName?: string;
+  resourceSlug?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SubscriptionService {
   private http = inject(BaseHttpService);
 
-  subscribe(resourceType: string, resourceId: string): Observable<void> {
-    return this.http.post<void>(SubscriptionEndpoints.SUBSCRIBE(resourceType, resourceId), {});
+  subscribe(resourceType: string, resourceId: string, resourceName?: string, resourceSlug?: string): Observable<void> {
+    return this.http.post<void>(SubscriptionEndpoints.SUBSCRIBE(resourceType, resourceId), { resourceName, resourceSlug });
   }
 
   unsubscribe(resourceType: string, resourceId: string): Observable<void> {
@@ -17,5 +24,9 @@ export class SubscriptionService {
 
   isSubscribed(resourceType: string, resourceId: string): Observable<boolean> {
     return this.http.get<boolean>(SubscriptionEndpoints.CHECK(resourceType, resourceId));
+  }
+
+  getAll(): Observable<SubscriptionDto[]> {
+    return this.http.get<SubscriptionDto[]>(SubscriptionEndpoints.GET_ALL);
   }
 }

@@ -8,6 +8,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService, CollectionDetail } from '../services/collection.service';
 import { FavoriteService } from '../services/favorite.service';
 import { UserProfileService, UserProfileDto, mapProfileAlbum, mapProfileBand, mapProfileCollection } from '../services/user-profile.service';
+import { SubscriptionService, SubscriptionDto } from '../services/subscription.service';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -15,6 +16,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 type SidebarEntry =
   | { kind: 'fav-albums' }
   | { kind: 'fav-bands' }
+  | { kind: 'subscriptions' }
   | { kind: 'collection'; id: string };
 
 @Component({
@@ -40,8 +42,10 @@ export class UserProfile implements OnInit {
   private titleService = inject(Title);
   readonly collectionService = inject(CollectionService);
   private favoriteService = inject(FavoriteService);
+  private subscriptionService = inject(SubscriptionService);
 
   readonly profileDto = signal<UserProfileDto | null>(null);
+  readonly subscribedBands = signal<SubscriptionDto[]>([]);
 
   readonly username = computed(() =>
     this.auth.userName() ?? this.profileDto()?.username ?? 'User'
@@ -120,6 +124,10 @@ export class UserProfile implements OnInit {
       this.titleService.setTitle(`${dto.username} — Black And Death`);
       const cols = dto.collections.map(mapProfileCollection);
       this.collectionService.setCollections(cols);
+    });
+
+    this.subscriptionService.getAll().subscribe(subs => {
+      this.subscribedBands.set(subs.filter(s => s.resourceType === 'band'));
     });
   }
 

@@ -259,7 +259,7 @@ export class BandInfo implements OnInit {
         this.toastService.show(`Unsubscribed from ${this.bandData()?.name ?? 'band'}`);
       });
     } else {
-      this.subscriptionService.subscribe('band', bandId).subscribe(() => {
+      this.subscriptionService.subscribe('band', bandId, this.bandData()?.name, this.bandData()?.slug).subscribe(() => {
         this.isSubscribed.set(true);
         this.toastService.show(`Subscribed to ${this.bandData()?.name ?? 'band'} updates`);
       });
