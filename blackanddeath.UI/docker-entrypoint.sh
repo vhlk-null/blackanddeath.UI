@@ -7,6 +7,7 @@ cat > /usr/share/nginx/html/assets/config.json <<EOF
 {
   "apiUrl": "${API_URL:-https://api.blackened-death.com}",
   "usercontentUrl": "${USERCONTENT_URL:-https://api.blackened-death.com/usercontent}",
+  "notificationsUrl": "${NOTIFICATIONS_URL:-https://api.blackened-death.com/notifications}",
   "issuer": "${ISSUER_URL:-https://auth.blackened-death.com}"
 }
 EOF
