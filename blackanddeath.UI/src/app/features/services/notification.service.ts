@@ -6,14 +6,14 @@ import { NotificationEndpoints } from '../../shared/constants/endpoints';
 import { streamSse } from '../../shared/utils/sse';
 
 export interface AppNotification {
-  Id: string;
-  UserId: string;
-  Title: string;
-  Message: string;
-  Type: string;
-  ResourceId: string;
-  IsRead: boolean;
-  CreatedAt: string;
+  id: string;
+  userId: string;
+  title: string;
+  message: string;
+  type: string;
+  resourceId: string;
+  isRead: boolean;
+  createdAt: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -31,7 +31,7 @@ export class NotificationService implements OnDestroy {
     const existing = await firstValueFrom(this.http.get<AppNotification[]>(NotificationEndpoints.GET_ALL));
     if (existing) {
       this.notifications.set(existing);
-      this.unreadCount.set(existing.filter((n: AppNotification) => !n.IsRead).length);
+      this.unreadCount.set(existing.filter((n: AppNotification) => !n.isRead).length);
     }
     this.connectStream();
   }
@@ -67,7 +67,7 @@ export class NotificationService implements OnDestroy {
           const fresh = await firstValueFrom(this.http.get<AppNotification[]>(NotificationEndpoints.GET_ALL)).catch(() => null);
           if (fresh) this.zone.run(() => {
             this.notifications.set(fresh);
-            this.unreadCount.set(fresh.filter((n: AppNotification) => !n.IsRead).length);
+            this.unreadCount.set(fresh.filter((n: AppNotification) => !n.isRead).length);
           });
         }
       }
@@ -80,7 +80,7 @@ export class NotificationService implements OnDestroy {
       this.http.patch<void>(NotificationEndpoints.MARK_READ(id), {}).subscribe({
         next: () => {
           this.notifications.update(list =>
-            list.map(n => n.Id === id ? { ...n, IsRead: true } : n)
+            list.map(n => n.id === id ? { ...n, isRead: true } : n)
           );
           this.unreadCount.update(c => Math.max(0, c - 1));
           observer.next();
