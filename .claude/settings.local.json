@@ -52,7 +52,8 @@
       "Bash(grep -E \"\\\\\\\\.cs|sln|csproj\")",
       "Read(//d/Projects/**)",
       "Bash(mkdir -p \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets\")",
-      "Bash(cp \"d:/Projects/blackenddeath.UI/blackanddeath.UI/src/assets/config.json\" \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets/config.json\")"
+      "Bash(cp \"d:/Projects/blackenddeath.UI/blackanddeath.UI/src/assets/config.json\" \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets/config.json\")",
+      "Bash(Select-Object FullName)"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover",

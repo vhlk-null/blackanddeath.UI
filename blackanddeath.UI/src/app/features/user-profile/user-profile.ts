@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { PasteImageDirective } from '../../shared/directives/paste-image.directive';
 import { RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { NgTemplateOutlet } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService, CollectionDetail } from '../services/collection.service';
 import { FavoriteService } from '../services/favorite.service';
@@ -12,16 +11,18 @@ import { SubscriptionService, SubscriptionDto } from '../services/subscription.s
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { TitleCaseAllPipe } from '../../shared/pipes/title-case.pipe';
 
 type SidebarEntry =
+  | { kind: 'library' }
+  | { kind: 'subscriptions' }
   | { kind: 'fav-albums' }
   | { kind: 'fav-bands' }
-  | { kind: 'subscriptions' }
   | { kind: 'collection'; id: string };
 
 @Component({
   selector: 'app-user-profile',
-  imports: [FormsModule, RouterLink, NgTemplateOutlet, PasteImageDirective, DragDropModule],
+  imports: [FormsModule, RouterLink, PasteImageDirective, DragDropModule, TitleCaseAllPipe],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
@@ -47,9 +48,7 @@ export class UserProfile implements OnInit {
   readonly profileDto = signal<UserProfileDto | null>(null);
   readonly subscribedBands = signal<SubscriptionDto[]>([]);
 
-  readonly username = computed(() =>
-    this.auth.userName() ?? this.profileDto()?.username ?? 'User'
-  );
+  readonly username = computed(() => this.profileDto()?.username ?? null);
 
   readonly stats = computed(() => [
     { label: 'Joined', value: this.profileDto()?.registeredDate ? new Date(this.profileDto()!.registeredDate).getFullYear().toString() : '—' },
@@ -64,10 +63,8 @@ export class UserProfile implements OnInit {
 
   private filteredSorted(type: 'album' | 'band') {
     return computed(() => {
-      const q = this.collectionSearch().toLowerCase().trim();
       const sort = this.collectionSort();
       let cols = this.collectionService.all().filter(c => c.collectionType === type);
-      if (q) cols = cols.filter(c => c.name.toLowerCase().includes(q));
       if (sort === 'alpha') cols = [...cols].sort((a, b) => a.name.localeCompare(b.name));
       else if (sort === 'added') cols = [...cols].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       return cols;
@@ -84,7 +81,67 @@ export class UserProfile implements OnInit {
     this.profileDto()?.favoriteBands.map(mapProfileBand) ?? []
   );
 
-  readonly selected = signal<SidebarEntry>({ kind: 'fav-albums' });
+  readonly filteredFavoriteAlbums = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    return q ? this.favoriteAlbums().filter(a => a.title.toLowerCase().includes(q) || a.bands?.some(b => b.name.toLowerCase().includes(q))) : this.favoriteAlbums();
+  });
+
+  readonly filteredFavoriteBands = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    return q ? this.favoriteBands().filter(b => b.name.toLowerCase().includes(q) || b.primaryGenre?.name.toLowerCase().includes(q)) : this.favoriteBands();
+  });
+
+  readonly filteredCollectionAlbums = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    const albums = this.selectedCollection()?.albums ?? [];
+    return q ? albums.filter(a => a.title.toLowerCase().includes(q) || a.bands?.some(b => b.name.toLowerCase().includes(q))) : albums;
+  });
+
+  readonly filteredCollectionBands = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    const bands = this.selectedCollection()?.bands ?? [];
+    return q ? bands.filter(b => b.name.toLowerCase().includes(q) || b.primaryGenre?.name.toLowerCase().includes(q)) : bands;
+  });
+
+  readonly filteredSubscriptions = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    return q ? this.subscribedBands().filter(s => (s.resourceName ?? '').toLowerCase().includes(q)) : this.subscribedBands();
+  });
+
+  readonly allCollections = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    const cols = this.collectionService.all();
+    return q ? cols.filter(c => c.name.toLowerCase().includes(q)) : cols;
+  });
+
+  collectionMosaicCovers(col: import('./../../features/services/collection.service').CollectionSummary): string[] {
+    const detail = this.selectedCollection();
+    if (col.coverUrl) return [];
+    if (detail?.id === col.id) {
+      const urls = detail.collectionType === 'album'
+        ? detail.albums.map((a: Album) => a.coverUrl)
+        : detail.bands.map((b: Band) => b.logoUrl);
+      return urls.filter((u: string | null): u is string => !!u).slice(0, 4);
+    }
+    return [];
+  }
+
+  readonly favAlbumCovers = computed(() =>
+    this.favoriteAlbums().map(a => a.coverUrl).filter((u): u is string => !!u).slice(0, 4)
+  );
+  readonly favBandCovers = computed(() =>
+    this.favoriteBands().map(b => b.logoUrl).filter((u): u is string => !!u).slice(0, 4)
+  );
+  readonly collectionCovers = computed(() => {
+    const col = this.selectedCollection();
+    if (!col) return [];
+    const urls = col.collectionType === 'album'
+      ? col.albums.map(a => a.coverUrl)
+      : col.bands.map(b => b.logoUrl);
+    return urls.filter((u): u is string => !!u).slice(0, 4);
+  });
+
+  readonly selected = signal<SidebarEntry>({ kind: 'library' });
 
   readonly creatingCollection = signal(false);
   readonly newCollectionName = signal('');
@@ -121,7 +178,8 @@ export class UserProfile implements OnInit {
 
     this.profileService.getProfile(userId).subscribe(dto => {
       this.profileDto.set(dto);
-      this.titleService.setTitle(`${dto.username} — Black And Death`);
+      const pipe = new TitleCaseAllPipe();
+      this.titleService.setTitle(`${pipe.transform(dto.username)} — Black And Death`);
       const cols = dto.collections.map(mapProfileCollection);
       this.collectionService.setCollections(cols);
     });
@@ -133,15 +191,17 @@ export class UserProfile implements OnInit {
 
   readonly mobilePanelOpen = signal(false);
 
-  selectFav(kind: 'fav-albums' | 'fav-bands'): void {
+  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'library'): void {
     this.selected.set({ kind });
     this.selectedCollection.set(null);
+    this.collectionSearch.set('');
     this.mobilePanelOpen.set(true);
   }
 
   selectCollection(id: string): void {
     if (this.selected().kind === 'collection' && (this.selected() as any).id === id) return;
     this.selected.set({ kind: 'collection', id });
+    this.collectionSearch.set('');
     this.collectionDetailLoading.set(true);
     this.mobilePanelOpen.set(true);
     this.collectionService.getDetail(id).subscribe(detail => {

@@ -225,7 +225,7 @@
           [rating]="userRating() ?? 0"
           (ratingChange)="setAlbumRating($event)" />
       }
-      <table class="album-info__meta">
+      <table class="album-info__meta" [style.margin-top]="releaseCountdown() ? '1.5rem' : null">
         <tr>
           <td class="label">Rating:</td>
           <td>
