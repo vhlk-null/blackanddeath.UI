@@ -518,6 +518,19 @@
         }
       }
     }
+
+    &--mosaic-rows {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr;
+
+      img {
+        &:first-child:nth-last-child(2),
+        &:first-child:nth-last-child(2) ~ img {
+          grid-row: unset;
+          grid-column: 1 / -1;
+        }
+      }
+    }
   }
 
   &__panel-hero-meta {
@@ -746,6 +759,19 @@
         &:first-child:nth-last-child(2),
         &:first-child:nth-last-child(2) ~ img { grid-row: 1 / -1; }
         &:first-child:nth-last-child(3) { grid-column: 1 / -1; }
+      }
+    }
+
+    &--mosaic-rows {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr;
+
+      img {
+        &:first-child:nth-last-child(2),
+        &:first-child:nth-last-child(2) ~ img {
+          grid-row: unset;
+          grid-column: 1 / -1;
+        }
       }
     }
   }

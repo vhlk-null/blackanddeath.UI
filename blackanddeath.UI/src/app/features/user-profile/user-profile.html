@@ -148,7 +148,7 @@
         </button>
         <!-- Favourite Bands card -->
         <button class="profile__col-card profile__col-card--pinned" (click)="selected.set({ kind: 'fav-bands' }); collectionSearch.set('')">
-          <div class="profile__col-card-cover" [class.profile__col-card-cover--mosaic]="favBandCovers().length > 0">
+          <div class="profile__col-card-cover" [class.profile__col-card-cover--mosaic]="favBandCovers().length > 0" [class.profile__col-card-cover--mosaic-rows]="favBandCovers().length > 0">
             @if (favBandCovers().length > 0) {
               @for (url of favBandCovers(); track url) { <img [src]="url" alt="" /> }
             } @else {
@@ -241,7 +241,7 @@
         Library
       </button>
       <div class="profile__panel-hero profile__panel-hero--fav">
-        <div class="profile__panel-hero-icon" [class.profile__panel-hero-icon--mosaic]="favBandCovers().length > 0">
+        <div class="profile__panel-hero-icon" [class.profile__panel-hero-icon--mosaic]="favBandCovers().length > 0" [class.profile__panel-hero-icon--mosaic-rows]="favBandCovers().length > 0">
           @if (favBandCovers().length > 0) {
             @for (url of favBandCovers(); track url) {
               <img [src]="url" alt="" />
