@@ -130,7 +130,7 @@ export class UserProfile implements OnInit {
     this.favoriteAlbums().map(a => a.coverUrl).filter((u): u is string => !!u).slice(0, 4)
   );
   readonly favBandCovers = computed(() =>
-    this.favoriteBands().map(b => b.logoUrl).filter((u): u is string => !!u).slice(0, 4)
+    this.favoriteBands().map(b => b.logoUrl).filter((u): u is string => !!u).slice(0, 2)
   );
   readonly collectionCovers = computed(() => {
     const col = this.selectedCollection();
