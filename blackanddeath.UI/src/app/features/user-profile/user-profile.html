@@ -45,7 +45,7 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       Library
     </button>
-    <button class="profile__tab" [class.profile__tab--active]="selectedKind() === 'subscriptions'" (click)="selectFav('subscriptions')">
+    <button class="profile__tab" [class.profile__tab--active]="selectedKind() === 'subscriptions' || selectedKind() === 'sub-bands'" (click)="selectFav('subscriptions')">
       <svg viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Subscriptions
     </button>
@@ -110,7 +110,7 @@
   }
 
   <!-- Search bar — only inside drill-in views -->
-  @if (selectedKind() === 'fav-albums' || selectedKind() === 'fav-bands' || selectedKind() === 'collection' || selectedKind() === 'subscriptions') {
+  @if (selectedKind() === 'fav-albums' || selectedKind() === 'fav-bands' || selectedKind() === 'collection' || selectedKind() === 'sub-bands') {
     <div class="profile__collections-search">
       <svg class="profile__collections-search-icon" viewBox="0 0 24 24" fill="none">
         <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
@@ -289,25 +289,46 @@
       }
     }
 
-    <!-- Subscriptions -->
+    <!-- Subscriptions folder grid -->
     @if (selectedKind() === 'subscriptions') {
+      <div class="profile__col-grid">
+        <button class="profile__col-card profile__col-card--pinned" (click)="selectFav('sub-bands')">
+          <div class="profile__col-card-cover">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="profile__col-card-info">
+            <span class="profile__col-card-name">Bands</span>
+            <span class="profile__col-card-meta">{{ subscribedBands().length }} bands</span>
+          </div>
+        </button>
+      </div>
+    }
+
+    <!-- Subscriptions → Bands drill-in -->
+    @if (selectedKind() === 'sub-bands') {
+      <button class="profile__col-back" (click)="selectFav('subscriptions')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Subscriptions
+      </button>
       <div class="profile__panel-hero profile__panel-hero--fav">
         <div class="profile__panel-hero-icon">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </div>
-
         <div class="profile__panel-hero-meta">
-          <span class="profile__col-hero-label">Notifications</span>
-          <h2 class="profile__col-hero-name">Subscriptions</h2>
-          <p class="profile__col-hero-count">{{ subscribedBands().length }} bands</p>
+          <span class="profile__col-hero-label">Subscriptions</span>
+          <h2 class="profile__col-hero-name">Bands</h2>
+          <p class="profile__col-hero-count">{{ filteredSubscriptions().length }} bands</p>
         </div>
       </div>
 
       @if (subscribedBands().length === 0) {
-        <p class="profile__panel-hint">No subscriptions yet. Subscribe to a band to get notified about updates.</p>
+        <p class="profile__panel-hint">No band subscriptions yet. Subscribe to a band to get notified about updates.</p>
+      } @else if (filteredSubscriptions().length === 0) {
+        <p class="profile__panel-hint">No results.</p>
       } @else {
         <div class="profile__col-table-header">
           <span class="profile__col-table-num">#</span>
@@ -318,7 +339,7 @@
           <a class="profile__col-row" [routerLink]="sub.resourceSlug ? ['/bands', sub.resourceSlug] : null">
             <span class="profile__col-row-num">{{ i + 1 }}</span>
             <div class="profile__col-row-thumb profile__col-row-thumb--band">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21C2 17.134 5.134 14 9 14C12.866 14 16 17.134 16 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M19 8V14M16 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </div>
             <span class="profile__col-row-name">{{ sub.resourceName ?? sub.resourceId }}</span>
           </a>

@@ -16,6 +16,7 @@ import { TitleCaseAllPipe } from '../../shared/pipes/title-case.pipe';
 type SidebarEntry =
   | { kind: 'library' }
   | { kind: 'subscriptions' }
+  | { kind: 'sub-bands' }
   | { kind: 'fav-albums' }
   | { kind: 'fav-bands' }
   | { kind: 'collection'; id: string };
@@ -191,7 +192,7 @@ export class UserProfile implements OnInit {
 
   readonly mobilePanelOpen = signal(false);
 
-  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'library'): void {
+  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'sub-bands' | 'library'): void {
     this.selected.set({ kind });
     this.selectedCollection.set(null);
     this.collectionSearch.set('');
