@@ -108,7 +108,7 @@
 
   @if (infoTabIndex() === 1) {
   <div class="album-info__reviews">
-    @if (auth.isAuthenticated() && !hasUserReview()) {
+    @if (auth.isAuthenticated() && !hasUserReview() && !releaseCountdown()) {
     <div class="review-form">
       <h3 class="review-form__title">Write a Review</h3>
       <input class="review-form__input" type="text" placeholder="Review title" [value]="reviewTitle()" (input)="reviewTitle.set($any($event.target).value)" maxlength="120" />
@@ -220,9 +220,11 @@
         </svg>
         }
       </div>
-      <app-star-rating class="album-info__rating"
-        [rating]="userRating() ?? 0"
-        (ratingChange)="setAlbumRating($event)" />
+      @if (!releaseCountdown()) {
+        <app-star-rating class="album-info__rating"
+          [rating]="userRating() ?? 0"
+          (ratingChange)="setAlbumRating($event)" />
+      }
       <table class="album-info__meta">
         <tr>
           <td class="label">Rating:</td>

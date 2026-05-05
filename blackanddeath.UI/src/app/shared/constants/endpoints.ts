@@ -8,6 +8,7 @@ export function initEndpoints(config: AppConfigService): void {
 
 function base(): string { return _configService.apiUrl; }
 function uc(): string { return _configService.usercontentUrl; }
+function notif(): string { return _configService.notificationsUrl; }
 
 export class AlbumEndpoints {
   static get GET_ALL() { return `${base()}/library/albums`; }
@@ -166,6 +167,20 @@ export class TagEndpoints {
   static get CREATE() { return `${base()}/library/tags`; }
   static UPDATE = (id: string) => `${base()}/library/tags/${id}`;
   static DELETE = (id: string) => `${base()}/library/tags/${id}`;
+}
+
+export class SubscriptionEndpoints {
+  static get GET_ALL() { return `${notif()}/subscriptions`; }
+  static SUBSCRIBE = (resourceType: string, resourceId: string) => `${notif()}/subscriptions/${resourceType}/${resourceId}`;
+  static UNSUBSCRIBE = (resourceType: string, resourceId: string) => `${notif()}/subscriptions/${resourceType}/${resourceId}`;
+  static CHECK = (resourceType: string, resourceId: string) => `${notif()}/subscriptions/${resourceType}/${resourceId}`;
+}
+
+export class NotificationEndpoints {
+  static get GET_ALL() { return `${notif()}`; }
+  static MARK_READ = (id: string) => `${notif()}/${id}/read`;
+  static get MARK_ALL_READ() { return `${notif()}/read-all`; }
+  static get STREAM() { return `${notif()}/stream`; }
 }
 
 export class LabelEndpoints {

@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 interface AppConfig {
   apiUrl: string;
   usercontentUrl: string;
+  notificationsUrl: string;
   issuer: string;
 }
 
@@ -25,5 +26,6 @@ export class AppConfigService {
 
   get apiUrl(): string { return this.config.apiUrl; }
   get usercontentUrl(): string { return this.config.usercontentUrl; }
+  get notificationsUrl(): string { return this.config.notificationsUrl; }
   get issuer(): string { return this.config.issuer; }
 }

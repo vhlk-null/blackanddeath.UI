@@ -2,23 +2,10 @@
   <div class="header__inner">
 
     <div class="header__left">
-      <button class="header__menu-btn" (click)="menuOpen.set(!menuOpen())" aria-label="Toggle menu">
-        @if (menuOpen()) {
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        } @else {
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="0" y1="1" x2="18" y2="1" />
-            <line x1="0" y1="7" x2="18" y2="7" />
-            <line x1="0" y1="13" x2="18" y2="13" />
-          </svg>
-        }
-      </button>
-      <a class="header__logo" routerLink="/">Blackened Death Metal</a>
+      <a class="header__logo" routerLink="/">
+        <span class="header__logo-full">Blackened Death Metal</span>
+        <span class="header__logo-short">BDM</span>
+      </a>
     </div>
 
     <div class="header__center">
@@ -63,68 +50,22 @@
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
-        <span class="header__search-placeholder">Search albums, bands…</span>
+        <span class="header__search-placeholder">Search...</span>
       </button>
 
-      <button class="header__theme-btn" (click)="theme.cycle()" [attr.aria-label]="'Theme: ' + theme.theme()">
-        @switch (theme.theme()) {
-          @case ('dark') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-          }
-          @case ('dark-gradient') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" fill-opacity="0.25"/>
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-          }
-          @case ('dark-red') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" fill-opacity="0.5"/>
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-          }
-          @case ('light') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          }
-          @case ('light-gradient') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5" fill="currentColor" fill-opacity="0.25"/>
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          }
-          @case ('pink') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          }
-          @case ('pink-gradient') {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor" fill-opacity="0.35"/>
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          }
-        }
-      </button>
 
       @if (auth.isAuthenticated()) {
-        <button class="header__notif-btn" routerLink="/notifications" aria-label="Notifications">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-          </svg>
-        </button>
+        <div class="header__notif-wrap">
+          <button class="header__notif-btn" (click)="notifOpen.set(!notifOpen())" aria-label="Notifications">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </button>
+          @if (notifications.unreadCount() > 0) {
+            <span class="header__notif-badge">{{ notifications.unreadCount() > 99 ? '99+' : notifications.unreadCount() }}</span>
+          }
+        </div>
       }
 
       <button class="header__user-btn" (click)="onUserBtnClick()" aria-label="User menu">
@@ -138,22 +79,6 @@
 
   </div>
 
-  @if (menuOpen()) {
-  <div class="nav-overlay" (click)="menuOpen.set(false)"></div>
-  <nav class="nav-drawer">
-    <ul class="nav-drawer__links">
-      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen.set(false)">Home</a></li>
-      <li><a routerLink="/albums" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen.set(false)">Albums</a></li>
-      <li><a routerLink="/bands" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen.set(false)">Bands</a></li>
-      <li><a routerLink="/videos" routerLinkActive="active" (click)="menuOpen.set(false)">Videos</a></li>
-      <li><a routerLink="/genres" routerLinkActive="active" (click)="menuOpen.set(false)">Genres</a></li>
-      <li><a routerLink="/create" routerLinkActive="active" (click)="menuOpen.set(false)">Create</a></li>
-      @if (auth.isAdmin()) {
-      <li><a routerLink="/admin" routerLinkActive="active" (click)="menuOpen.set(false)">Admin</a></li>
-      }
-    </ul>
-  </nav>
-  }
 
 </header>
 
@@ -162,10 +87,22 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
     <span>Home</span>
   </a>
-  <button class="bottom-nav__item" (click)="searchOpen.set(true)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <span>Search</span>
-  </button>
+  <a class="bottom-nav__item" routerLink="/albums" routerLinkActive="bottom-nav__item--active" [routerLinkActiveOptions]="{exact:true}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/></svg>
+    <span>Albums</span>
+  </a>
+  <a class="bottom-nav__item" routerLink="/bands" routerLinkActive="bottom-nav__item--active" [routerLinkActiveOptions]="{exact:true}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="8" r="2.5"/><path d="M21 20c0-2.8-1.8-5-4-5.5"/></svg>
+    <span>Bands</span>
+  </a>
+  <a class="bottom-nav__item" routerLink="/videos" routerLinkActive="bottom-nav__item--active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="M17 9l5-3v12l-5-3"/></svg>
+    <span>Videos</span>
+  </a>
+  <a class="bottom-nav__item" routerLink="/genres" routerLinkActive="bottom-nav__item--active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    <span>Genres</span>
+  </a>
   <a class="bottom-nav__item" routerLink="/create" routerLinkActive="bottom-nav__item--active">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
     <span>Create</span>
@@ -180,12 +117,33 @@
   </button>
 </nav>
 
-@if (filterOpen()) {
-<app-search-filter-panel (closed)="filterOpen.set(false)" />
-}
 
 @if (searchOpen()) {
 <app-global-search (closed)="searchOpen.set(false)" />
+}
+
+@if (notifOpen()) {
+<div class="nav-overlay" (click)="notifOpen.set(false)"></div>
+<div class="notif-drawer">
+  <div class="notif-drawer__header">
+    <span class="notif-drawer__title">Notifications</span>
+    @if (notifications.unreadCount() > 0) {
+      <button class="notif-drawer__mark-all" (click)="notifications.markAllRead().subscribe()">Mark all read</button>
+    }
+  </div>
+  <div class="notif-drawer__list">
+    @if (notifications.notifications().length === 0) {
+      <p class="notif-drawer__empty">No notifications yet</p>
+    }
+    @for (n of notifications.notifications(); track n.Id) {
+      <div class="notif-drawer__item" [class.notif-drawer__item--unread]="!n.IsRead" (click)="notifications.markRead(n.Id).subscribe()">
+        <div class="notif-drawer__item-title">{{ n.Title }}</div>
+        <div class="notif-drawer__item-msg">{{ n.Message }}</div>
+        <div class="notif-drawer__item-time">{{ n.CreatedAt | date:'MMM d, h:mm a' }}</div>
+      </div>
+    }
+  </div>
+</div>
 }
 
 @if (userMenuOpen()) {

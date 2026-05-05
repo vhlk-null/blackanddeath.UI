@@ -1,24 +1,23 @@
 import { Component, inject, signal, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { ThemeService } from '../../../core/services/theme.service';
-import { SearchFilterPanel } from '../../../shared/components/search-filter-panel/search-filter-panel';
+import { DatePipe } from '@angular/common';
 import { GlobalSearch } from '../../../shared/components/global-search/global-search';
 import { AuthService } from '../../auth/auth.service';
+import { NotificationService } from '../../../features/services/notification.service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, SearchFilterPanel, GlobalSearch],
+  imports: [RouterLink, RouterLinkActive, GlobalSearch, DatePipe],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header {
-  readonly theme = inject(ThemeService);
   readonly auth = inject(AuthService);
+  readonly notifications = inject(NotificationService);
   private router = inject(Router);
 
-  readonly menuOpen = signal(false);
-  readonly filterOpen = signal(false);
   readonly userMenuOpen = signal(false);
+  readonly notifOpen = signal(false);
   readonly hidden = signal(false);
   readonly searchOpen = signal(false);
   readonly scrolled = signal(false);

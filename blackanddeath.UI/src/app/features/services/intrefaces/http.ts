@@ -31,6 +31,10 @@ export class BaseHttpService {
     return this.http.put<T>(url, payload);
   }
 
+  patch<T>(url: string, payload: unknown): Observable<T> {
+    return this.http.patch<T>(url, payload);
+  }
+
   delete<T>(url: string): Observable<T> {
     return this.http.delete<T>(url);
   }

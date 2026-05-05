@@ -21,6 +21,7 @@ import { CommentNodeContext } from '../../../shared/components/comment-node/comm
 import { RichEditor } from '../../../shared/components/rich-editor/rich-editor';
 import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
 import { CollectionItem, CollectionService } from '../../services/collection.service';
+import { SubscriptionService } from '../../services/subscription.service';
 import { Band } from '../../../shared/models/band';
 import { BandCard } from '../band-card/band-card';
 import { Album } from '../../../shared/models/album';
@@ -59,6 +60,7 @@ export class BandInfo implements OnInit {
   private commentNodeCtx = inject(CommentNodeContext);
   private destroyRef = inject(DestroyRef);
   private collectionService = inject(CollectionService);
+  private subscriptionService = inject(SubscriptionService);
 
   readonly tabs = { info: BAND_INFORMATION };
   readonly titles = {
@@ -248,9 +250,20 @@ export class BandInfo implements OnInit {
 
   toggleSubscribe(): void {
     if (!this.auth.isAuthenticated()) { this.auth.login(); return; }
-    this.isSubscribed.update(v => !v);
-    const state = this.isSubscribed() ? 'Subscribed' : 'Unsubscribed';
-    this.toastService.show(`${state} to ${this.bandData()?.name ?? 'band'} updates`);
+    const bandId = this.bandData()?.id;
+    if (!bandId) return;
+
+    if (this.isSubscribed()) {
+      this.subscriptionService.unsubscribe('band', bandId).subscribe(() => {
+        this.isSubscribed.set(false);
+        this.toastService.show(`Unsubscribed from ${this.bandData()?.name ?? 'band'}`);
+      });
+    } else {
+      this.subscriptionService.subscribe('band', bandId).subscribe(() => {
+        this.isSubscribed.set(true);
+        this.toastService.show(`Subscribed to ${this.bandData()?.name ?? 'band'} updates`);
+      });
+    }
   }
 
   onDelete(): void {
@@ -324,12 +337,14 @@ export class BandInfo implements OnInit {
             collections: this.collectionService.loadForUser(userId),
             rating: this.ratingService.getUserBandRating(band.id, userId),
             favorite: this.favoriteService.checkFavoriteBand(band.id, userId),
-          }).subscribe(({ rating, favorite }) => {
+            subscribed: this.subscriptionService.isSubscribed('band', band.id),
+          }).subscribe(({ rating, favorite, subscribed }) => {
             if (rating) {
               this.userRating.set(rating.userRating);
               this.bandData.update(b => b ? { ...b, averageRating: rating.averageRating, ratingsCount: rating.ratingsCount } : b);
             }
             this.isFavorite.set(favorite);
+            this.isSubscribed.set(subscribed);
           });
         } else {
           this.ratingService.getBandAverage(band.id).subscribe(r => {
