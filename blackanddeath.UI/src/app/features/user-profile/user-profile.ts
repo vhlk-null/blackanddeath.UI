@@ -50,13 +50,15 @@ export class UserProfile implements OnInit {
   readonly profileDto = signal<UserProfileDto | null>(null);
   readonly subscribedBands = signal<SubscriptionDto[]>([]);
 
-  readonly username = computed(() => this.profileDto()?.username ?? null);
+  readonly username = computed(() => this.auth.userName());
 
   readonly stats = computed(() => [
     { label: 'Joined', value: this.profileDto()?.registeredDate ? new Date(this.profileDto()!.registeredDate).getFullYear().toString() : '—' },
     { label: 'Albums', value: String(this.profileDto()?.favoriteAlbumsCount ?? 0) },
     { label: 'Bands', value: String(this.profileDto()?.favoriteBandsCount ?? 0) },
+    { label: 'Collections', value: String(this.profileDto()?.collections?.length ?? 0) },
     { label: 'Reviews', value: String(this.profileDto()?.reviewsCount ?? 0) },
+    { label: 'Subscriptions', value: String(this.subscribedBands().length) },
   ]);
 
   readonly collectionSearch = signal('');
@@ -186,6 +188,23 @@ export class UserProfile implements OnInit {
 
   readonly selectedKind = computed(() => this.selected().kind);
 
+  readonly avatarPreview = signal<string | null>(null);
+  readonly bannerPreview = signal<string | null>(null);
+
+  onAvatarChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.avatarPreview.set(URL.createObjectURL(file));
+  }
+
+  onBannerChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.bannerPreview.set(URL.createObjectURL(file));
+  }
+
+  onBannerPasted(file: File): void {
+    this.bannerPreview.set(URL.createObjectURL(file));
+  }
+
   readonly confirmDialog = signal<{ message: string; action: () => void } | null>(null);
 
   confirm(message: string, action: () => void): void {
@@ -207,8 +226,7 @@ export class UserProfile implements OnInit {
 
     this.profileService.getProfile(userId).subscribe(dto => {
       this.profileDto.set(dto);
-      const pipe = new TitleCaseAllPipe();
-      this.titleService.setTitle(`${pipe.transform(dto.username)} — Black And Death`);
+      this.titleService.setTitle('Black And Death — Profile');
       const cols = dto.collections.map(mapProfileCollection);
       this.collectionService.setCollections(cols);
     });

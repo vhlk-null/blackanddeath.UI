@@ -6,57 +6,113 @@
 
   &__hero {
     position: relative;
-    margin-bottom: 2rem;
-    padding: 2.5rem 2rem 2rem;
-    border-radius: 14px;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
     background: var(--color-card-bg);
     border: 1px solid var(--color-border);
-    box-shadow: var(--color-card-shadow);
     overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg,
-        color-mix(in srgb, var(--color-text-heading) 6%, transparent) 0%,
-        transparent 60%);
-      pointer-events: none;
-    }
   }
 
-  &__hero-inner {
+  &__hero-banner {
+    display: block;
     position: relative;
+    width: 100%;
+    height: 16rem;
+    background: color-mix(in srgb, var(--color-text-heading) 5%, var(--color-bg));
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover &-overlay { opacity: 1; }
+  }
+
+  &__hero-banner-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__hero-banner-overlay {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.45);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.2s;
+    svg { width: 1rem; height: 1rem; }
+  }
+
+  &__hero-content {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.25rem;
+    padding: 0 1.75rem 1.25rem;
+    margin-top: -2.5rem;
+    position: relative;
   }
 
   &__avatar {
     flex-shrink: 0;
-    width: 6rem;
-    height: 6rem;
+    position: relative;
+    width: 5rem;
+    height: 5rem;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--color-text-heading) 10%, var(--color-bg));
-    border: 2px solid color-mix(in srgb, var(--color-text-heading) 25%, var(--color-border));
+    background: color-mix(in srgb, var(--color-text-heading) 8%, var(--color-bg));
+    border: 3px solid var(--color-card-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--color-text-muted);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+
+    &:hover &-overlay { opacity: 1; }
+  }
+
+  &__avatar-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   &__avatar-icon {
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    opacity: 0.5;
   }
+
+  &__avatar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: #fff;
+    svg { width: 1.25rem; height: 1.25rem; }
+  }
+
+  &__avatar-input { display: none; }
 
   &__hero-info {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 0.6rem;
+    padding-bottom: 0.25rem;
   }
 
   &__username {
@@ -1058,18 +1114,22 @@
       padding: 1.5rem 1.25rem 1.25rem;
     }
 
-    &__hero-inner {
-      gap: 1.25rem;
+    &__hero-banner { height: 8rem; }
+
+    &__hero-content {
+      gap: 1rem;
+      padding: 0 1.25rem 1.25rem;
+      margin-top: -1.75rem;
     }
 
     &__avatar {
-      width: 4.5rem;
-      height: 4.5rem;
+      width: 3.75rem;
+      height: 3.75rem;
     }
 
     &__avatar-icon {
-      width: 2rem;
-      height: 2rem;
+      width: 1.75rem;
+      height: 1.75rem;
     }
 
     &__username {
