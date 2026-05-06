@@ -769,6 +769,7 @@
     cursor: pointer;
     text-align: left;
     padding: 0;
+    min-width: 0;
 
     &:hover &-cover { box-shadow: 0 8px 28px rgba(0,0,0,0.5); transform: translateY(-2px); }
     &:hover &-name { color: var(--color-tab-active); }
