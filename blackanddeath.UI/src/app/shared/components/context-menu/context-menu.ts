@@ -26,9 +26,6 @@ export class ContextMenu implements OnInit {
   readonly adjustedY = signal(0);
 
   ngOnInit(): void {
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
     setTimeout(() => {
       const el = this.el.nativeElement.querySelector('.ctx-menu') as HTMLElement;
       if (!el) return;
@@ -45,8 +42,6 @@ export class ContextMenu implements OnInit {
   }
 
   private close(): void {
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
     this.closed.emit();
   }
 
