@@ -41,9 +41,13 @@
 
   <!-- Tab nav -->
   <div class="profile__tabs">
-    <button class="profile__tab" [class.profile__tab--active]="selectedKind() === 'library' || selectedKind() === 'fav-albums' || selectedKind() === 'fav-bands' || selectedKind() === 'collection'" (click)="selectFav('library')">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Library
+    <button class="profile__tab" [class.profile__tab--active]="selectedKind() === 'library-albums' || selectedKind() === 'fav-albums' || (selectedKind() === 'collection' && selectedCollection()?.collectionType === 'album')" (click)="selectFav('library-albums')">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+      Albums
+    </button>
+    <button class="profile__tab" [class.profile__tab--active]="selectedKind() === 'library-bands' || selectedKind() === 'fav-bands' || (selectedKind() === 'collection' && selectedCollection()?.collectionType === 'band')" (click)="selectFav('library-bands')">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 21C2 17.134 5.134 14 9 14h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Bands
     </button>
     <button class="profile__tab" [class.profile__tab--active]="selectedKind() === 'subscriptions' || selectedKind() === 'sub-bands'" (click)="selectFav('subscriptions')">
       <svg viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -51,7 +55,7 @@
     </button>
 
     <div class="profile__tabs-actions">
-      @if (selectedKind() === 'library') {
+      @if (selectedKind() === 'library-albums' || selectedKind() === 'library-bands') {
         <div class="profile__collections-sort-wrap">
           <button class="profile__collections-sort-btn" [class.profile__collections-sort-btn--active]="showSortMenu()" title="Sort" (click)="showSortMenu.set(!showSortMenu())">
             <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M6 12H18M9 18H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -145,10 +149,9 @@
   <!-- Content panel -->
   <div class="profile__panel">
 
-    <!-- Library grid -->
-    @if (selectedKind() === 'library') {
+    <!-- Library Albums grid -->
+    @if (selectedKind() === 'library-albums') {
       <div class="profile__col-grid">
-        <!-- Favourite Albums card -->
         <button class="profile__col-card profile__col-card--pinned" (click)="selected.set({ kind: 'fav-albums' }); collectionSearch.set('')">
           <div class="profile__col-card-cover" [class.profile__col-card-cover--mosaic]="favAlbumCovers().length > 0">
             @if (favAlbumCovers().length > 0) {
@@ -162,7 +165,27 @@
             <span class="profile__col-card-meta">{{ favoriteAlbums().length }} albums</span>
           </div>
         </button>
-        <!-- Favourite Bands card -->
+        @for (col of albumCollections(); track col.id) {
+          <button class="profile__col-card" (click)="selectCollection(col.id)">
+            <div class="profile__col-card-cover" [class.profile__col-card-cover--mosaic]="!col.coverUrl">
+              @if (col.coverUrl) {
+                <img [src]="col.coverUrl" [alt]="col.name" />
+              } @else {
+                <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/></svg>
+              }
+            </div>
+            <div class="profile__col-card-info">
+              <span class="profile__col-card-name">{{ col.name | titleCaseAll }}</span>
+              <span class="profile__col-card-meta">{{ col.albumCount }} albums</span>
+            </div>
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Library Bands grid -->
+    @if (selectedKind() === 'library-bands') {
+      <div class="profile__col-grid">
         <button class="profile__col-card profile__col-card--pinned" (click)="selected.set({ kind: 'fav-bands' }); collectionSearch.set('')">
           <div class="profile__col-card-cover" [class.profile__col-card-cover--mosaic]="favBandCovers().length > 0" [class.profile__col-card-cover--mosaic-rows]="favBandCovers().length > 0">
             @if (favBandCovers().length > 0) {
@@ -176,8 +199,7 @@
             <span class="profile__col-card-meta">{{ favoriteBands().length }} bands</span>
           </div>
         </button>
-        <!-- User collections -->
-        @for (col of allCollections(); track col.id) {
+        @for (col of bandCollections(); track col.id) {
           <button class="profile__col-card" (click)="selectCollection(col.id)">
             <div class="profile__col-card-cover" [class.profile__col-card-cover--mosaic]="!col.coverUrl">
               @if (col.coverUrl) {
@@ -188,7 +210,7 @@
             </div>
             <div class="profile__col-card-info">
               <span class="profile__col-card-name">{{ col.name | titleCaseAll }}</span>
-              <span class="profile__col-card-meta">{{ col.collectionType === 'album' ? col.albumCount : col.bandCount }} items</span>
+              <span class="profile__col-card-meta">{{ col.bandCount }} bands</span>
             </div>
           </button>
         }
@@ -197,7 +219,7 @@
 
     <!-- Favourite Albums -->
     @if (selectedKind() === 'fav-albums') {
-      <button class="profile__col-back" (click)="selectFav('library')">
+      <button class="profile__col-back" (click)="selectFav('library-albums')">
         <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Library
       </button>
@@ -217,8 +239,43 @@
           <span class="profile__col-hero-label">Favourites</span>
           <h2 class="profile__col-hero-name">Favourite Albums</h2>
           <p class="profile__col-hero-count">{{ filteredFavoriteAlbums().length }} albums</p>
+          <div class="profile__col-hero-actions">
+            <button class="profile__col-hero-action-btn" (click)="startEditingFav('fav-albums')">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Edit
+            </button>
+          </div>
         </div>
       </div>
+
+      @if (editingFavKind() === 'fav-albums') {
+        <div class="profile__modal-backdrop" (click)="cancelEditingFav()">
+          <div class="profile__modal" (click)="$event.stopPropagation()">
+            <div class="profile__modal-header">
+              <span class="profile__modal-title">Favourite Albums</span>
+              <button class="profile__modal-close" (click)="cancelEditingFav()">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <label class="profile__modal-cover" title="Change cover" appPasteImage (imagePasted)="onFavCoverPasted($event)">
+              @if (editingFavCoverPreview()) {
+                <img [src]="editingFavCoverPreview()!" alt="cover" />
+                <div class="profile__modal-cover-overlay">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              } @else {
+                <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Change cover</span>
+              }
+              <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onFavCoverChange($event)" />
+            </label>
+            <div class="profile__modal-actions">
+              <button class="profile__modal-btn profile__modal-btn--cancel" (click)="cancelEditingFav()">Cancel</button>
+              <button class="profile__modal-btn profile__modal-btn--confirm" (click)="cancelEditingFav()">Save</button>
+            </div>
+          </div>
+        </div>
+      }
 
       @if (filteredFavoriteAlbums().length === 0) {
         <p class="profile__panel-hint">{{ favoriteAlbums().length === 0 ? 'No favourite albums yet.' : 'No results.' }}</p>
@@ -252,7 +309,7 @@
 
     <!-- Favourite Bands -->
     @if (selectedKind() === 'fav-bands') {
-      <button class="profile__col-back" (click)="selectFav('library')">
+      <button class="profile__col-back" (click)="selectFav('library-bands')">
         <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Library
       </button>
@@ -272,8 +329,43 @@
           <span class="profile__col-hero-label">Favourites</span>
           <h2 class="profile__col-hero-name">Favourite Bands</h2>
           <p class="profile__col-hero-count">{{ filteredFavoriteBands().length }} bands</p>
+          <div class="profile__col-hero-actions">
+            <button class="profile__col-hero-action-btn" (click)="startEditingFav('fav-bands')">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Edit
+            </button>
+          </div>
         </div>
       </div>
+
+      @if (editingFavKind() === 'fav-bands') {
+        <div class="profile__modal-backdrop" (click)="cancelEditingFav()">
+          <div class="profile__modal" (click)="$event.stopPropagation()">
+            <div class="profile__modal-header">
+              <span class="profile__modal-title">Favourite Bands</span>
+              <button class="profile__modal-close" (click)="cancelEditingFav()">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <label class="profile__modal-cover" title="Change cover" appPasteImage (imagePasted)="onFavCoverPasted($event)">
+              @if (editingFavCoverPreview()) {
+                <img [src]="editingFavCoverPreview()!" alt="cover" />
+                <div class="profile__modal-cover-overlay">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              } @else {
+                <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Change cover</span>
+              }
+              <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onFavCoverChange($event)" />
+            </label>
+            <div class="profile__modal-actions">
+              <button class="profile__modal-btn profile__modal-btn--cancel" (click)="cancelEditingFav()">Cancel</button>
+              <button class="profile__modal-btn profile__modal-btn--confirm" (click)="cancelEditingFav()">Save</button>
+            </div>
+          </div>
+        </div>
+      }
 
       @if (filteredFavoriteBands().length === 0) {
         <p class="profile__panel-hint">{{ favoriteBands().length === 0 ? 'No favourite bands yet.' : 'No results.' }}</p>
@@ -365,7 +457,7 @@
 
     <!-- User Collection detail -->
     @if (selectedKind() === 'collection') {
-      <button class="profile__col-back" (click)="selectFav('library')">
+      <button class="profile__col-back" (click)="selectFav(selectedCollection()?.collectionType === 'band' ? 'library-bands' : 'library-albums')">
         <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Library
       </button>
@@ -373,11 +465,8 @@
         <div class="profile__panel-empty"><p>Loading…</p></div>
       } @else if (selectedCollection()) {
         <div class="profile__col-hero">
-          <label class="profile__col-hero-cover" title="Change cover" appPasteImage (imagePasted)="onHeroCoverPasted($event)"
-            [class.profile__col-hero-cover--mosaic]="!editingCollectionCoverPreview() && !selectedCollection()!.coverUrl && collectionCovers().length > 0">
-            @if (editingCollectionId() === selectedCollection()!.id && editingCollectionCoverPreview()) {
-              <img [src]="editingCollectionCoverPreview()!" alt="cover" />
-            } @else if (selectedCollection()!.coverUrl) {
+          <div class="profile__col-hero-cover" [class.profile__col-hero-cover--mosaic]="!selectedCollection()!.coverUrl && collectionCovers().length > 0">
+            @if (selectedCollection()!.coverUrl) {
               <img [src]="selectedCollection()!.coverUrl" alt="cover" />
             } @else if (collectionCovers().length > 0) {
               @for (url of collectionCovers(); track url) {
@@ -389,38 +478,58 @@
                 <path d="M3 9H21M9 9V21" stroke="currentColor" stroke-width="1.5"/>
               </svg>
             }
-            <div class="profile__col-hero-cover-overlay">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onHeroCoverChange($event)" />
-          </label>
+          </div>
           <div class="profile__col-hero-meta">
             <span class="profile__col-hero-label">Collection</span>
-            @if (editingCollectionId() === selectedCollection()!.id) {
-              <input class="profile__col-hero-name-input" type="text"
-                [ngModel]="editingCollectionName()" (ngModelChange)="editingCollectionName.set($event)"
-                (keyup.enter)="confirmEditCollection()" (keyup.escape)="cancelEditCollection()"
-                (click)="$event.stopPropagation()" autofocus />
-              <div class="profile__col-hero-actions">
-                <button class="profile__collections-create-btn profile__collections-create-btn--confirm" (click)="confirmEditCollection()">Save</button>
-                <button class="profile__collections-create-btn profile__collections-create-btn--cancel" (click)="cancelEditCollection()">Cancel</button>
-              </div>
-            } @else {
-              <h2 class="profile__col-hero-name" (dblclick)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)" title="Double-click to rename">{{ selectedCollection()!.name }}</h2>
-              <p class="profile__col-hero-count">{{ (selectedCollection()!.collectionType === 'album' ? filteredCollectionAlbums().length : filteredCollectionBands().length) }} items</p>
-              <div class="profile__col-hero-actions">
-                <button class="profile__collections-item-btn" title="Rename" (click)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button class="profile__collections-item-btn profile__collections-item-btn--danger" title="Delete" (click)="deleteCollection(selectedCollection()!.id, selectedCollection()!.name)">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-              </div>
-            }
+            <h2 class="profile__col-hero-name">{{ selectedCollection()!.name }}</h2>
+            <p class="profile__col-hero-count">{{ (selectedCollection()!.collectionType === 'album' ? filteredCollectionAlbums().length : filteredCollectionBands().length) }} items</p>
+            <div class="profile__col-hero-actions">
+              <button class="profile__col-hero-action-btn" (click)="startEditingCollection(selectedCollection()!.id, selectedCollection()!.name, selectedCollection()!.coverUrl)">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Edit
+              </button>
+              <button class="profile__col-hero-action-btn profile__col-hero-action-btn--danger" (click)="deleteCollection(selectedCollection()!.id, selectedCollection()!.name)">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 6H21M8 6V4H16V6M19 6L18 20H6L5 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Delete
+              </button>
+            </div>
           </div>
         </div>
+
+        <!-- Edit collection modal -->
+        @if (editingCollectionModalOpen() && editingCollectionId() === selectedCollection()!.id) {
+          <div class="profile__modal-backdrop" (click)="cancelEditCollection()">
+            <div class="profile__modal" (click)="$event.stopPropagation()">
+              <div class="profile__modal-header">
+                <span class="profile__modal-title">Edit Collection</span>
+                <button class="profile__modal-close" (click)="cancelEditCollection()">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+              <label class="profile__modal-cover" title="Change cover" appPasteImage (imagePasted)="onHeroCoverPasted($event)">
+                @if (editingCollectionCoverPreview()) {
+                  <img [src]="editingCollectionCoverPreview()!" alt="cover" />
+                  <div class="profile__modal-cover-overlay">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                } @else {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Change cover</span>
+                }
+                <input type="file" accept="image/*" class="profile__collections-file-input" (change)="onHeroCoverChange($event)" />
+              </label>
+              <input class="profile__modal-input" type="text" placeholder="Collection name…"
+                [ngModel]="editingCollectionName()" (ngModelChange)="editingCollectionName.set($event)"
+                (keyup.enter)="confirmEditCollection()" (keyup.escape)="cancelEditCollection()" autofocus />
+              <div class="profile__modal-actions">
+                <button class="profile__modal-btn profile__modal-btn--cancel" (click)="cancelEditCollection()">Cancel</button>
+                <button class="profile__modal-btn profile__modal-btn--confirm" (click)="confirmEditCollection()">Save</button>
+              </div>
+            </div>
+          </div>
+        }
 
         @if (selectedCollection()!.albums.length === 0 && selectedCollection()!.bands.length === 0) {
           <p class="profile__panel-hint">No items yet. Use the bookmark icon on album or band pages to add them here.</p>

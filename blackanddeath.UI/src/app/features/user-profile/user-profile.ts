@@ -14,7 +14,8 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { TitleCaseAllPipe } from '../../shared/pipes/title-case.pipe';
 
 type SidebarEntry =
-  | { kind: 'library' }
+  | { kind: 'library-albums' }
+  | { kind: 'library-bands' }
   | { kind: 'subscriptions' }
   | { kind: 'sub-bands' }
   | { kind: 'fav-albums' }
@@ -142,7 +143,33 @@ export class UserProfile implements OnInit {
     return urls.filter((u): u is string => !!u).slice(0, 4);
   });
 
-  readonly selected = signal<SidebarEntry>({ kind: 'library' });
+  readonly selected = signal<SidebarEntry>({ kind: 'library-albums' });
+
+  readonly editingFavKind = signal<'fav-albums' | 'fav-bands' | null>(null);
+  readonly editingFavCoverFile = signal<File | null>(null);
+  readonly editingFavCoverPreview = signal<string | null>(null);
+
+  startEditingFav(kind: 'fav-albums' | 'fav-bands'): void {
+    this.editingFavKind.set(kind);
+    this.editingFavCoverFile.set(null);
+    this.editingFavCoverPreview.set(null);
+  }
+
+  cancelEditingFav(): void {
+    this.editingFavKind.set(null);
+    this.editingFavCoverFile.set(null);
+    this.editingFavCoverPreview.set(null);
+  }
+
+  onFavCoverChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.onFavCoverPasted(file);
+  }
+
+  onFavCoverPasted(file: File): void {
+    this.editingFavCoverFile.set(file);
+    this.editingFavCoverPreview.set(URL.createObjectURL(file));
+  }
 
   readonly creatingCollection = signal(false);
   readonly newCollectionName = signal('');
@@ -153,6 +180,7 @@ export class UserProfile implements OnInit {
   readonly editingCollectionName = signal('');
   readonly editingCollectionCoverFile = signal<File | null>(null);
   readonly editingCollectionCoverPreview = signal<string | null>(null);
+  readonly editingCollectionModalOpen = signal(false);
   readonly selectedCollection = signal<CollectionDetail | null>(null);
   readonly collectionDetailLoading = signal(false);
 
@@ -192,7 +220,7 @@ export class UserProfile implements OnInit {
 
   readonly mobilePanelOpen = signal(false);
 
-  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'sub-bands' | 'library'): void {
+  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'sub-bands' | 'library-albums' | 'library-bands'): void {
     this.selected.set({ kind });
     this.selectedCollection.set(null);
     this.collectionSearch.set('');
@@ -274,6 +302,7 @@ export class UserProfile implements OnInit {
     this.editingCollectionName.set(currentName);
     this.editingCollectionCoverFile.set(null);
     this.editingCollectionCoverPreview.set(currentCoverUrl ?? null);
+    this.editingCollectionModalOpen.set(true);
   }
 
   confirmEditCollection(): void {
@@ -286,6 +315,7 @@ export class UserProfile implements OnInit {
       this.editingCollectionName.set('');
       this.editingCollectionCoverFile.set(null);
       this.editingCollectionCoverPreview.set(null);
+      this.editingCollectionModalOpen.set(false);
       if (this.selectedCollection()?.id === id) {
         this.selectedCollection.set(null);
         this.collectionService.getDetail(id).subscribe(detail => this.selectedCollection.set(detail));
@@ -298,6 +328,7 @@ export class UserProfile implements OnInit {
     this.editingCollectionName.set('');
     this.editingCollectionCoverFile.set(null);
     this.editingCollectionCoverPreview.set(null);
+    this.editingCollectionModalOpen.set(false);
   }
 
   dropFavoriteAlbum(event: CdkDragDrop<Album[]>): void {
@@ -385,10 +416,11 @@ export class UserProfile implements OnInit {
 
   deleteCollection(id: string, name: string): void {
     this.confirm(`Delete collection "${name}"?`, () => {
+      const type = this.selectedCollection()?.collectionType;
       this.collectionService.deleteCollection(id).subscribe(() => {
         if (this.selectedCollection()?.id === id) {
           this.selectedCollection.set(null);
-          this.selected.set({ kind: 'fav-albums' });
+          this.selected.set({ kind: type === 'band' ? 'library-bands' : 'library-albums' });
         }
       });
     });
