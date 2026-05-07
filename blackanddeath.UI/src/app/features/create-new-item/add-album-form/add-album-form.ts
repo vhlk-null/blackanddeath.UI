@@ -209,7 +209,12 @@ export class AddAlbumForm implements OnInit {
       amazonMusic: getLink(StreamingPlatform.AmazonMusic),
       bandcamp: getLink(StreamingPlatform.Bandcamp),
       isExplicit: album.isExplicit ?? false,
-      isUpcoming: album.releaseDate > Date.now(),
+      isUpcoming: (() => {
+        if (!album.releaseMonth && !album.releaseDay) return false;
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const release = new Date(album.releaseDate, (album.releaseMonth ?? 1) - 1, album.releaseDay ?? 1);
+        return release > today;
+      })(),
       releaseMonth: album.releaseMonth ?? null,
       releaseDay: album.releaseDay ?? null,
     });

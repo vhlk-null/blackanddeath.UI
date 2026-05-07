@@ -1,0 +1,27 @@
+@if (!isUnlocked()) {
+  <div class="preview-gate">
+    <div class="preview-gate__box">
+      <h1 class="preview-gate__title">Blackened Death Metal</h1>
+      <p class="preview-gate__subtitle">Private Preview</p>
+      <div class="preview-gate__divider"></div>
+      <form class="preview-gate__form" (ngSubmit)="submit()">
+        <input
+          class="preview-gate__input"
+          [class.preview-gate__input--error]="error()"
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="input"
+          name="password"
+          autocomplete="current-password"
+          autofocus />
+        <button class="preview-gate__btn" type="submit">Enter</button>
+      </form>
+      @if (error()) {
+        <p class="preview-gate__error">Incorrect password</p>
+      }
+    </div>
+  </div>
+}
+@if (isUnlocked()) {
+  <ng-content />
+}

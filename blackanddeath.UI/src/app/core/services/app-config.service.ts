@@ -7,6 +7,7 @@ interface AppConfig {
   usercontentUrl: string;
   notificationsUrl: string;
   issuer: string;
+  previewPassword?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -28,4 +29,5 @@ export class AppConfigService {
   get usercontentUrl(): string { return this.config.usercontentUrl; }
   get notificationsUrl(): string { return this.config.notificationsUrl; }
   get issuer(): string { return this.config.issuer; }
+  get previewPassword(): string { return this.config.previewPassword ?? ''; }
 }
