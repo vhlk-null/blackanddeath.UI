@@ -18,6 +18,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { AgeGateService } from '../../../core/services/age-gate.service';
 import { RatingService } from '../../services/rating.service';
 import { FavoriteService } from '../../services/favorite.service';
+import { SubscriptionService } from '../../services/subscription.service';
 import { ReviewService, Review } from '../../services/review.service';
 import { CommentService, Comment } from '../../services/comment.service';
 import { CommentNode } from '../../../shared/components/comment-node/comment-node';
@@ -54,6 +55,7 @@ export class Info implements OnInit {
   private ratingService = inject(RatingService);
   private toastService = inject(ToastService);
   private favoriteService = inject(FavoriteService);
+  private subscriptionService = inject(SubscriptionService);
   private reviewService = inject(ReviewService);
   private commentService = inject(CommentService);
   private collectionService = inject(CollectionService);
@@ -122,6 +124,7 @@ export class Info implements OnInit {
   });
 
   readonly albumData = signal<Album | null>(null);
+  readonly isSubscribed = signal(false);
 
   readonly releaseCountdown = computed(() => {
     const album = this.albumData();
@@ -196,6 +199,7 @@ export class Info implements OnInit {
   readonly comments = signal<Comment[]>([]);
   readonly commentsLoaded = signal(false);
   readonly commentSort = signal<'newest' | 'oldest' | 'top'>('newest');
+  readonly showCommentSortMenu = signal(false);
   readonly commentsTotalServer = signal(0);
   readonly commentsPageIndex = signal(1);
   readonly commentsLoadingMore = signal(false);
@@ -431,6 +435,24 @@ export class Info implements OnInit {
     }
   }
 
+  toggleSubscribe(): void {
+    const albumId = this.albumData()?.id;
+    const title = this.albumData()?.title;
+    const slug = this.albumData()?.slug;
+    if (!albumId) return;
+    if (this.isSubscribed()) {
+      this.subscriptionService.unsubscribe('album', albumId).subscribe(() => {
+        this.isSubscribed.set(false);
+        this.toastService.show(`Unsubscribed from ${title ?? 'album'}`);
+      });
+    } else {
+      this.subscriptionService.subscribe('album', albumId, title, slug).subscribe(() => {
+        this.isSubscribed.set(true);
+        this.toastService.show(`Subscribed to ${title ?? 'album'}`);
+      });
+    }
+  }
+
   onDelete(): void {
     const id = this.albumData()?.id;
     if (!id || !confirm('Delete this album?')) return;
@@ -513,7 +535,8 @@ export class Info implements OnInit {
             rating: this.ratingService.getUserAlbumRating(album.id, userId),
             reviews: this.reviewService.getAlbumReviews(album.id, { pageIndex: 1, pageSize: Info.COMMENTS_PAGE_SIZE }),
             favorite: this.favoriteService.checkFavoriteAlbum(album.id, userId),
-          }).subscribe(({ rating, reviews, favorite }) => {
+            subscribed: this.subscriptionService.isSubscribed('album', album.id),
+          }).subscribe(({ rating, reviews, favorite, subscribed }) => {
             if (rating) {
               this.userRating.set(rating.userRating);
               this.albumData.update(a => a ? { ...a, averageRating: rating.averageRating, ratingsCount: rating.ratingsCount } : a);
@@ -521,6 +544,7 @@ export class Info implements OnInit {
             const mine = reviews.data.find(x => x.userId === userId);
             if (mine) this.userReviewId.set(mine.id);
             this.isFavorite.set(favorite);
+            this.isSubscribed.set(subscribed);
           });
         } else {
           this.ratingService.getAlbumAverage(album.id).subscribe(r => {

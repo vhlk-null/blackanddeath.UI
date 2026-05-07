@@ -116,6 +116,7 @@ export class BandInfo implements OnInit {
   // Comments
   readonly comments = signal<Comment[]>([]);
   readonly commentSort = signal<'newest' | 'oldest' | 'top'>('newest');
+  readonly showCommentSortMenu = signal(false);
   readonly commentsTotalServer = signal(0);
   readonly commentsPageIndex = signal(1);
   readonly commentsLoadingMore = signal(false);
