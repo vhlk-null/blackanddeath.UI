@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppConfigService } from '../../../core/services/app-config.service';
+import { environment } from '../../../../environments/environment';
 
 const STORAGE_KEY = 'bd_preview_unlocked';
 
@@ -11,22 +11,19 @@ const STORAGE_KEY = 'bd_preview_unlocked';
   styleUrl: './preview-gate.scss',
 })
 export class PreviewGate {
-  private appConfig = inject(AppConfigService);
+  private readonly password = environment.previewPassword;
 
-  get required(): boolean { return !!this.appConfig.previewPassword; }
+  readonly required = !!this.password;
+  readonly unlocked = signal(localStorage.getItem(STORAGE_KEY) === '1');
 
-  readonly unlocked = signal(sessionStorage.getItem(STORAGE_KEY) === '1');
+  readonly isUnlocked = computed(() => !this.required || this.unlocked());
 
   input = '';
   error = signal(false);
 
-  isUnlocked(): boolean {
-    return !this.required || this.unlocked();
-  }
-
   submit(): void {
-    if (this.input === this.appConfig.previewPassword) {
-      sessionStorage.setItem(STORAGE_KEY, '1');
+    if (this.input === this.password) {
+      localStorage.setItem(STORAGE_KEY, '1');
       this.unlocked.set(true);
     } else {
       this.error.set(true);
