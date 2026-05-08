@@ -8,7 +8,7 @@
     width: calc(50% - 0.3125rem);
   }
 
-  @media (max-height: 31.25rem) and (orientation: landscape) {
+  @media (max-height: 31.25rem) and (orientation: landscape) and (max-width: 60rem) {
     width: calc(50% - 0.3125rem);
   }
 }
