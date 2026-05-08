@@ -1,5 +1,7 @@
 .footer {
-  background: var(--color-footer-bg, var(--color-header-bg));
+  background: var(--color-footer-bg-actual, var(--color-footer-bg, var(--color-header-bg)));
+  backdrop-filter: var(--color-footer-backdrop, none);
+  -webkit-backdrop-filter: var(--color-footer-backdrop, none);
   border-top: 1px solid var(--color-border);
   box-shadow: var(--color-footer-glow, none);
 
