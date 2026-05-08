@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, input, output, signal, computed, effect } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { Album } from '../../../shared/models/album';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
@@ -18,9 +18,8 @@ import { SubscriptionService } from '../../services/subscription.service';
   templateUrl: './album-card.html',
   styleUrl: './album-card.scss',
 })
-export class AlbumCard implements OnInit {
+export class AlbumCard {
   albumCard = input.required<Album>();
-  isUpcoming = input<boolean>(false);
   readonly filterByGenre = output<string>();
   readonly filterByCountry = output<string>();
   readonly filterByType = output<string>();
@@ -38,10 +37,19 @@ export class AlbumCard implements OnInit {
   readonly isSubscribed = signal(false);
   readonly subscribeLoading = signal(false);
 
-  ngOnInit(): void {
-    if (this.isUpcoming() && this.auth.userId()) {
-      this.subscriptionService.isSubscribed('album', this.albumCard().id).subscribe(v => this.isSubscribed.set(v));
-    }
+  readonly isUpcoming = computed(() => {
+    const a = this.albumCard();
+    if (a.isUpcoming) return true;
+    const releaseYear = a.releaseYear ?? a.releaseDate;
+    return !!releaseYear && releaseYear > new Date().getFullYear();
+  });
+
+  constructor() {
+    effect(() => {
+      if (this.isUpcoming() && this.auth.userId()) {
+        this.subscriptionService.isSubscribed('album', this.albumCard().id).subscribe(v => this.isSubscribed.set(v));
+      }
+    });
   }
 
   toggleSubscribe(e: MouseEvent): void {
