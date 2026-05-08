@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, computed } from '@angular/core';
+import { Component, inject, input, output, signal, computed, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { Album } from '../../../shared/models/album';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
@@ -10,6 +10,7 @@ import { CollectionService, CollectionItem } from '../../services/collection.ser
 import { ToastService } from '../../../shared/services/toast.service';
 import { ContextMenu, ContextMenuItem } from '../../../shared/components/context-menu/context-menu';
 import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
+import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
   selector: 'app-album-card',
@@ -17,8 +18,9 @@ import { CollectionPicker } from '../../../shared/components/collection-picker/c
   templateUrl: './album-card.html',
   styleUrl: './album-card.scss',
 })
-export class AlbumCard {
+export class AlbumCard implements OnInit {
   albumCard = input.required<Album>();
+  isUpcoming = input<boolean>(false);
   readonly filterByGenre = output<string>();
   readonly filterByCountry = output<string>();
   readonly filterByType = output<string>();
@@ -31,6 +33,36 @@ export class AlbumCard {
   readonly collectionService = inject(CollectionService);
   private toast = inject(ToastService);
   private router = inject(Router);
+  private subscriptionService = inject(SubscriptionService);
+
+  readonly isSubscribed = signal(false);
+  readonly subscribeLoading = signal(false);
+
+  ngOnInit(): void {
+    if (this.isUpcoming() && this.auth.userId()) {
+      this.subscriptionService.isSubscribed('album', this.albumCard().id).subscribe(v => this.isSubscribed.set(v));
+    }
+  }
+
+  toggleSubscribe(e: MouseEvent): void {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.auth.userId()) { this.toast.info('Sign in to subscribe.'); return; }
+    if (this.subscribeLoading()) return;
+    this.subscribeLoading.set(true);
+    const album = this.albumCard();
+    if (this.isSubscribed()) {
+      this.subscriptionService.unsubscribe('album', album.id).subscribe({
+        next: () => { this.isSubscribed.set(false); this.toast.show(`Unsubscribed from ${album.title}`); this.subscribeLoading.set(false); },
+        error: () => { this.subscribeLoading.set(false); },
+      });
+    } else {
+      this.subscriptionService.subscribe('album', album.id, album.title, album.slug).subscribe({
+        next: () => { this.isSubscribed.set(true); this.toast.show(`Subscribed to ${album.title}`); this.subscribeLoading.set(false); },
+        error: () => { this.subscribeLoading.set(false); },
+      });
+    }
+  }
 
   readonly ctxX = signal(0);
   readonly ctxY = signal(0);

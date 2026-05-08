@@ -67,6 +67,42 @@
     transform: scale(1.1);
   }
 
+  &__subscribe-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    opacity: 1;
+    transform: scale(1);
+    transition: background 0.2s ease, color 0.2s ease;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      pointer-events: none;
+    }
+
+    &--active {
+      color: #fff;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+  }
+
   &__explicit-badge {
     position: absolute;
     top: 50%;
