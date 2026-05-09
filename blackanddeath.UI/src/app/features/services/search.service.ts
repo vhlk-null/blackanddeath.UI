@@ -52,9 +52,8 @@ export class SearchService {
     if (params.label?.length) p['labelName'] = params.label;
     if (params.includeTracks) p['includeTracks'] = true;
 
-    console.log('[SearchService] searchAlbums params:', p);
     return this.http.get<{ albums: PaginatedResult<AlbumSearchDocument> }>(AlbumEndpoints.SEARCH, p, true)
-      .pipe(map(res => { console.log('[SearchService] searchAlbums response:', res.albums); return res.albums; }));
+      .pipe(map(res => res.albums));
   }
 
   searchBands(params: BandSearchParams): Observable<PaginatedResult<BandSearchDocument>> {
@@ -69,8 +68,7 @@ export class SearchService {
     if (params.genre?.length) p['genre'] = params.genre;
     if (params.country?.length) p['country'] = params.country;
 
-    console.log('[SearchService] searchBands params:', p);
     return this.http.get<{ bands: PaginatedResult<BandSearchDocument> }>(BandEndpoints.SEARCH, p, true)
-      .pipe(map(res => { console.log('[SearchService] searchBands response:', res.bands); return res.bands; }));
+      .pipe(map(res => res.bands));
   }
 }

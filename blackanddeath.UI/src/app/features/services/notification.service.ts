@@ -43,32 +43,28 @@ export class NotificationService implements OnDestroy {
 
     (async () => {
       console.log('[SSE] connecting...');
+      let delay = 3000;
       while (!signal.aborted) {
         try {
+          delay = 3000;
           for await (const notification of streamSse<AppNotification>(
             NotificationEndpoints.STREAM,
             this.auth.getAccessToken(),
             signal,
           )) {
-            console.log('[SSE] received:', notification);
-            await this.zone.run(async () => {
+            this.zone.run(() => {
               this.notifications.update(list => [notification, ...list]);
               this.unreadCount.update(c => c + 1);
             });
           }
-          console.log('[SSE] stream ended');
         } catch (err) {
           if (signal.aborted) break;
-          console.warn('[SSE] disconnected, reconnecting in 3s...', err);
+          console.warn(`[SSE] disconnected, reconnecting in ${delay / 1000}s...`, err);
         }
         if (!signal.aborted) {
-          await new Promise(r => setTimeout(r, 3000));
+          await new Promise(r => setTimeout(r, delay));
+          delay = Math.min(delay * 2, 60_000);
           console.log('[SSE] reconnecting...');
-          const fresh = await firstValueFrom(this.http.get<AppNotification[]>(NotificationEndpoints.GET_ALL)).catch(() => null);
-          if (fresh) this.zone.run(() => {
-            this.notifications.set(fresh);
-            this.unreadCount.set(fresh.filter((n: AppNotification) => !n.isRead).length);
-          });
         }
       }
       console.log('[SSE] connection closed');
