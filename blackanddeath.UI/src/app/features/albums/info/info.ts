@@ -494,7 +494,7 @@ export class Info implements OnInit {
         this.imageError.set(false);
         this.infoTabIndex.set(0);
         this.reviewsEverLoaded = false;
-        return this.albumService.getBySlug(params.get('slug')!, { similarPageSize: 20 });
+        return this.albumService.getBySlug(params.get('slug')!);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
@@ -511,8 +511,9 @@ export class Info implements OnInit {
 
         const discography = album.bands?.flatMap(b => b.discography ?? []) ?? [];
         this.discographyAlbums.set(discography);
-        this.similarAlbums.set(album.similarAlbums?.data ?? []);
         this.similarBands.set((album.similarBands ?? []) as any);
+        this.albumService.getSimilarAlbums(album.slug, { pageSize: 20 })
+          .subscribe(result => this.similarAlbums.set(result?.data ?? []));
         this.bandVideos.set(album.videos);
         this.reviews.set([]);
         this.reviewsLoaded.set(false);

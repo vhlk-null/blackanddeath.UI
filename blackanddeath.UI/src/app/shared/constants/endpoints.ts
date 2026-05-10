@@ -14,6 +14,7 @@ export class AlbumEndpoints {
   static get GET_ALL() { return `${base()}/library/albums`; }
   static GET_BY_ID = (id: string) => `${base()}/library/albums/${id}`;
   static GET_BY_SLUG = (slug: string) => `${base()}/library/albums/slug/${slug}`;
+  static GET_SIMILAR = (slug: string) => `${base()}/library/albums/slug/${slug}/similar`;
   static get GET_NAMES() { return `${base()}/library/albums/names`; }
   static GET_BY_BAND = (bandId: string) => `${base()}/library/albums/band/${bandId}`;
   static get CREATE() { return `${base()}/library/albums`; }

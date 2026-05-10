@@ -72,9 +72,15 @@ export class AlbumService {
     );
   }
 
-  getBySlug(slug: string, params?: { similarPageNumber?: number; similarPageSize?: number }) {
-    return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_SLUG(slug), params).pipe(
+  getBySlug(slug: string) {
+    return this.http.get<{ album: Album }>(AlbumEndpoints.GET_BY_SLUG(slug)).pipe(
       map(response => response.album)
+    );
+  }
+
+  getSimilarAlbums(slug: string, params?: { pageIndex?: number; pageSize?: number }) {
+    return this.http.get<{ similarAlbums: PaginatedResult<Album> }>(AlbumEndpoints.GET_SIMILAR(slug), params).pipe(
+      map(response => response.similarAlbums)
     );
   }
 

@@ -71,6 +71,18 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.docker.ts"
                 }
+              ],
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "ignore": ["assets/config.json"]
+                },
+                {
+                  "glob": "config.json",
+                  "input": "public/assets-docker",
+                  "output": "assets"
+                }
               ]
             }
           },

@@ -1,0 +1,6 @@
+{
+  "apiUrl": "https://localhost:6051",
+  "usercontentUrl": "https://localhost:6051/usercontent",
+  "notificationsUrl": "https://localhost:6051/notifications",
+  "issuer": "https://localhost:6021"
+}

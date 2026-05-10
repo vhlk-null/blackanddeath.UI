@@ -53,14 +53,19 @@
       "Read(//d/Projects/**)",
       "Bash(mkdir -p \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets\")",
       "Bash(cp \"d:/Projects/blackenddeath.UI/blackanddeath.UI/src/assets/config.json\" \"d:/Projects/blackenddeath.UI/blackanddeath.UI/public/assets/config.json\")",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(wmic process *)",
+      "Bash(mkdir \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets-docker\")",
+      "Bash(del \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets\\\\config.docker.json\")"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover",
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\assets",
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\bands\\info",
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\albums\\info",
-      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\core\\components\\header"
+      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\core\\components\\header",
+      "D:\\Projects\\blackenddeath.UI",
+      "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\public"
     ]
   }
 }
