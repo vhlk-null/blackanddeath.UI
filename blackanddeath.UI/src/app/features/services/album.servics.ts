@@ -101,7 +101,7 @@ export class AlbumService {
     const form = new FormData();
     form.append('album', JSON.stringify(dto));
     if (cover) form.append('coverImage', cover, cover.name);
-    return this.http.put<Album>(AlbumEndpoints.UPDATE(id), form);
+    return this.http.put<{ isSuccess: boolean; slug: string }>(AlbumEndpoints.UPDATE(id), form);
   }
 
   delete(id: string) {

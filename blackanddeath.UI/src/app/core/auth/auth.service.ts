@@ -46,7 +46,7 @@ export class AuthService {
       scope: 'openid profile email roles blackeneddeath.api offline_access',
       useSilentRefresh: false,
       sessionChecksEnabled: false,
-      showDebugInformation: false,
+      showDebugInformation: true,
       strictDiscoveryDocumentValidation: false,
       requireHttps: false,
       timeoutFactor: 0.75,

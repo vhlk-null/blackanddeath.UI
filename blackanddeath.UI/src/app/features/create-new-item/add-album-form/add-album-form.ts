@@ -322,29 +322,34 @@ export class AddAlbumForm implements OnInit {
 
     this.submitting.set(true);
 
-    const request$ = this.editMode
-      ? this.albumService.update(this.albumId!, dto, this.coverFile)
-      : this.albumService.create(dto, this.coverFile);
-
-    request$.subscribe({
-      next: (album) => {
-        if (this.editMode) {
+    if (this.editMode) {
+      this.albumService.update(this.albumId!, dto, this.coverFile).subscribe({
+        next: (result) => {
           this.toastService.success('Album updated successfully!');
-          this.router.navigate(['/albums', album?.slug ?? this.albumSlug]);
-        } else {
+          this.router.navigate(['/albums', result?.slug ?? this.albumSlug]);
+          this.submitting.set(false);
+        },
+        error: () => {
+          this.toastService.error('Failed to update album.');
+          this.submitting.set(false);
+        },
+      });
+    } else {
+      this.albumService.create(dto, this.coverFile).subscribe({
+        next: () => {
           this.toastService.success('Album published successfully!');
           this.albumForm.reset({ albumType: AlbumType.FullLength });
           this.formDirty.markClean();
           this.previewUrl = null;
           this.coverFile = null;
-        }
-        this.submitting.set(false);
-      },
-      error: () => {
-        this.toastService.error(this.editMode ? 'Failed to update album.' : 'Failed to publish album.');
-        this.submitting.set(false);
-      },
-    });
+          this.submitting.set(false);
+        },
+        error: () => {
+          this.toastService.error('Failed to publish album.');
+          this.submitting.set(false);
+        },
+      });
+    }
   }
 
   onDelete(): void {
