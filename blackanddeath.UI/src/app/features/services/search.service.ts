@@ -19,6 +19,8 @@ export interface AlbumSearchParams {
   country?: string[];
   label?: string[];
   includeTracks?: boolean;
+  ratingFrom?: number;
+  ratingTo?: number;
 }
 
 export interface BandSearchParams {
@@ -32,7 +34,10 @@ export interface BandSearchParams {
   formedYearTo?: number;
   genre?: string[];
   country?: string[];
+  ratingFrom?: number;
+  ratingTo?: number;
 }
+
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
@@ -51,6 +56,8 @@ export class SearchService {
     if (params.country?.length) p['country'] = params.country;
     if (params.label?.length) p['labelName'] = params.label;
     if (params.includeTracks) p['includeTracks'] = true;
+    if (params.ratingFrom !== undefined) p['ratingFrom'] = params.ratingFrom;
+    if (params.ratingTo !== undefined) p['ratingTo'] = params.ratingTo;
 
     return this.http.get<{ albums: PaginatedResult<AlbumSearchDocument> }>(AlbumEndpoints.SEARCH, p, true)
       .pipe(map(res => res.albums));
@@ -67,6 +74,8 @@ export class SearchService {
     if (params.formedYearTo !== undefined) p['formedYearTo'] = params.formedYearTo;
     if (params.genre?.length) p['genre'] = params.genre;
     if (params.country?.length) p['country'] = params.country;
+    if (params.ratingFrom !== undefined) p['ratingFrom'] = params.ratingFrom;
+    if (params.ratingTo !== undefined) p['ratingTo'] = params.ratingTo;
 
     return this.http.get<{ bands: PaginatedResult<BandSearchDocument> }>(BandEndpoints.SEARCH, p, true)
       .pipe(map(res => res.bands));

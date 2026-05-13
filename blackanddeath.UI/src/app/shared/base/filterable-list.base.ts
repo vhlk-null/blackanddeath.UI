@@ -139,24 +139,20 @@ export abstract class FilterableListBase<TSortOption extends string> {
     this.filterTimer = setTimeout(() => this.applyFilters(), FILTER_DEBOUNCE_MS);
   }
 
-  onDraftYearFrom(value: string): void {
-    const v = +value;
-    this.draftYearFrom.set(v >= this.draftYearTo() ? this.draftYearTo() - 1 : v);
+  onDraftYearFrom(v: number): void {
+    this.draftYearFrom.set(v);
   }
 
-  onDraftYearTo(value: string): void {
-    const v = +value;
-    this.draftYearTo.set(v <= this.draftYearFrom() ? this.draftYearFrom() + 1 : v);
+  onDraftYearTo(v: number): void {
+    this.draftYearTo.set(v);
   }
 
-  onDraftRatingFrom(value: string): void {
-    const v = +value;
-    this.draftRatingFrom.set(v >= this.draftRatingTo() ? this.draftRatingTo() - 1 : v);
+  onDraftRatingFrom(v: number): void {
+    this.draftRatingFrom.set(v);
   }
 
-  onDraftRatingTo(value: string): void {
-    const v = +value;
-    this.draftRatingTo.set(v <= this.draftRatingFrom() ? this.draftRatingFrom() + 1 : v);
+  onDraftRatingTo(v: number): void {
+    this.draftRatingTo.set(v);
   }
 
   protected syncDraftsFromActive(): void {
@@ -170,6 +166,6 @@ export abstract class FilterableListBase<TSortOption extends string> {
 
   protected abstract load(): void;
   protected abstract loadAppend(): void;
-  protected abstract applyFilters(): void;
+  abstract applyFilters(): void;
   protected abstract updateUrl(): void;
 }

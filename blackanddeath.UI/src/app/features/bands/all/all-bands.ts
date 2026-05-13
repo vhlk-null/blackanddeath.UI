@@ -8,6 +8,7 @@ import { BandCard } from '../band-card/band-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { MultiSelectNames } from '../../../shared/components/multi-select-names/multi-select-names';
 import { FilterableListBase, toArray } from '../../../shared/base/filterable-list.base';
+import { RangeSlider } from '../../../shared/components/range-slider/range-slider';
 
 const SORT_OPTIONS = [
   { value: 'CreatedAt', label: 'Recently Added' },
@@ -24,7 +25,7 @@ const BAND_STATUSES = ['Active', 'Split-up', 'On hold', 'Changed name', 'Unknown
   selector: 'app-all-bands',
   templateUrl: './all-bands.html',
   styleUrl: './all-bands.scss',
-  imports: [BandCard, Pagination, MultiSelectNames],
+  imports: [BandCard, Pagination, MultiSelectNames, RangeSlider],
 })
 export class AllBands extends FilterableListBase<SortOption> implements OnInit {
   protected override sortMenuClass = '.all-bands__sort-wrap';
@@ -131,7 +132,7 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
     this.draftStatuses.set([...this.activeStatuses()]);
   }
 
-  protected override applyFilters(): void {
+  override applyFilters(): void {
     this.activeGenreNames.set(this.draftGenres());
     this.activeCountryNames.set(this.draftCountries());
     this.activeStatuses.set(this.draftStatuses());
@@ -195,6 +196,8 @@ export class AllBands extends FilterableListBase<SortOption> implements OnInit {
       formedYearTo: this.activeYearTo() ? +this.activeYearTo()! : undefined,
       genre: this.activeGenreNames().length ? this.activeGenreNames() : undefined,
       country: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
+      ratingFrom: this.activeRatingFrom() ?? undefined,
+      ratingTo: this.activeRatingTo() ?? undefined,
     };
   }
 

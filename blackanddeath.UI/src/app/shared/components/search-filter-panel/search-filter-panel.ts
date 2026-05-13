@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RangeSlider } from '../range-slider/range-slider';
 import { Router } from '@angular/router';
 import { GenreService } from '../../../features/services/genre.service';
 import { CountryService } from '../../../features/services/country.service';
@@ -20,7 +21,7 @@ type FilterTab = 'albums' | 'bands';
 
 @Component({
   selector: 'app-search-filter-panel',
-  imports: [FormsModule, MultiSelectInput, CustomSelect],
+  imports: [FormsModule, MultiSelectInput, CustomSelect, RangeSlider],
   templateUrl: './search-filter-panel.html',
   styleUrl: './search-filter-panel.scss',
 })
@@ -87,15 +88,11 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
   readonly yearMin = 1980;
   readonly yearMax = new Date().getFullYear();
 
-  readonly yearFrom = signal<number | null>(null);
-  readonly yearTo = signal<number | null>(null);
+  readonly sliderA = signal<number | null>(null);
+  readonly sliderB = signal<number | null>(null);
 
-  readonly yearFromPct = computed(() =>
-    ((( this.yearFrom() ?? this.yearMin) - this.yearMin) / (this.yearMax - this.yearMin)) * 100
-  );
-  readonly yearToPct = computed(() =>
-    (((this.yearTo() ?? this.yearMax) - this.yearMin) / (this.yearMax - this.yearMin)) * 100
-  );
+  readonly yearFrom = computed(() => Math.min(this.sliderA() ?? this.yearMin, this.sliderB() ?? this.yearMax));
+  readonly yearTo = computed(() => Math.max(this.sliderA() ?? this.yearMin, this.sliderB() ?? this.yearMax));
   readonly selectedTagIds = signal<string[]>([]);
 
   // Band filters
@@ -164,8 +161,10 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     if (countryName) params['countryName'] = countryName;
     if (labelName) params['labelName'] = labelName;
     if (this.selectedType()) params['type'] = this.selectedType();
-    if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
-    if (this.yearTo()) params['yearTo'] = String(this.yearTo());
+    if (this.sliderA() !== null || this.sliderB() !== null) {
+      params['yearFrom'] = String(this.yearFrom());
+      params['yearTo'] = String(this.yearTo());
+    }
     if (this.selectedTagIds().length) params['tagIds'] = this.selectedTagIds().join(',');
     this.router.navigate(['/albums'], { queryParams: params });
     this.closed.emit();
@@ -177,24 +176,14 @@ export class SearchFilterPanel implements OnInit, OnDestroy {
     const countryName = this.countries().find(c => c.id === this.bandCountryId())?.name;
     if (genreName) params['genreName'] = genreName;
     if (countryName) params['countryName'] = countryName;
-    if (this.yearFrom()) params['yearFrom'] = String(this.yearFrom());
-    if (this.yearTo()) params['yearTo'] = String(this.yearTo());
+    if (this.sliderA() !== null || this.sliderB() !== null) {
+      params['yearFrom'] = String(this.yearFrom());
+      params['yearTo'] = String(this.yearTo());
+    }
     if (this.selectedBandTagIds().length) params['tagIds'] = this.selectedBandTagIds().join(',');
 
     this.router.navigate(['/bands'], { queryParams: params });
     this.closed.emit();
-  }
-
-  onYearFromInput(value: string): void {
-    const v = +value;
-    const to = this.yearTo() ?? this.yearMax;
-    this.yearFrom.set(v >= to ? to - 1 : v);
-  }
-
-  onYearToInput(value: string): void {
-    const v = +value;
-    const from = this.yearFrom() ?? this.yearMin;
-    this.yearTo.set(v <= from ? from + 1 : v);
   }
 
   onOverlayClick(event: MouseEvent): void {

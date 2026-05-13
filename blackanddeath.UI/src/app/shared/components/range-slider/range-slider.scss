@@ -1,0 +1,50 @@
+.rs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  user-select: none;
+  width: 100%;
+
+  &__track {
+    position: relative;
+    height: var(--rs-track-height, 2px);
+    background: var(--color-border-input);
+    border-radius: 99px;
+    margin: var(--rs-track-margin, 0.4rem 0);
+    cursor: pointer;
+  }
+
+  &__fill {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: var(--rs-fill-color, var(--color-text-heading));
+    border-radius: 99px;
+    pointer-events: none;
+  }
+
+  &__thumb {
+    position: absolute;
+    top: 50%;
+    width: var(--rs-thumb-size, 0.875rem);
+    height: var(--rs-thumb-size, 0.875rem);
+    border-radius: 50%;
+    background: var(--rs-fill-color, var(--color-text-heading));
+    border: 2px solid var(--color-bg);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    transition: transform 0.15s;
+    pointer-events: none;
+
+    &:active { cursor: grabbing; }
+  }
+
+  &__labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-family-body);
+    font-size: var(--rs-label-size, 0.75rem);
+    color: var(--color-text-muted);
+  }
+}

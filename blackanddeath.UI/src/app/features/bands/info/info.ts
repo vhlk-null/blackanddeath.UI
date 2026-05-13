@@ -40,7 +40,7 @@ export interface AlbumReview extends Review {
 
 @Component({
   selector: 'app-band-info',
-  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, SafeUrlPipe, DatePipe, CollectionPicker, CommentNode, RichEditor],
+  imports: [Section, AlbumCard, BandCard, StarRating, ImageLightbox, RouterLink, DatePipe, CollectionPicker, CommentNode, RichEditor],
   templateUrl: './info.html',
   styleUrl: './info.scss',
   providers: [CommentNodeContext],

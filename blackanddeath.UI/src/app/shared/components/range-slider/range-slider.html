@@ -1,0 +1,11 @@
+<div class="rs">
+  <div class="rs__track" #track (pointerdown)="onTrackPointerDown($event)">
+    <div class="rs__fill" [style.left.%]="fromPct" [style.width.%]="toPct - fromPct"></div>
+    <div class="rs__thumb" [style.left.%]="fromPct"></div>
+    <div class="rs__thumb" [style.left.%]="toPct"></div>
+  </div>
+  <div class="rs__labels">
+    <span>{{ from }}</span>
+    <span>{{ to }}</span>
+  </div>
+</div>

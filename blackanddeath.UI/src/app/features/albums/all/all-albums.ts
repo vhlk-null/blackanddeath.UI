@@ -15,6 +15,7 @@ import { AlbumCard } from '../card/album-card';
 import { Pagination } from '../../../shared/components/pagination/pagination';
 import { MultiSelectNames } from '../../../shared/components/multi-select-names/multi-select-names';
 import { FilterableListBase, toArray } from '../../../shared/base/filterable-list.base';
+import { RangeSlider } from '../../../shared/components/range-slider/range-slider';
 
 const SORT_OPTIONS = [
   { value: 'CreatedAt', label: 'Recently Added' },
@@ -44,7 +45,7 @@ const ALBUM_TYPES = Object.keys(ALBUM_TYPE_MAP);
   selector: 'app-all-albums',
   templateUrl: './all-albums.html',
   styleUrl: './all-albums.scss',
-  imports: [AlbumCard, Pagination, MultiSelectNames],
+  imports: [AlbumCard, Pagination, MultiSelectNames, RangeSlider],
 })
 export class AllAlbums extends FilterableListBase<SortOption> implements OnInit {
   protected override sortMenuClass = '.all-albums__sort-wrap';
@@ -186,7 +187,7 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
     this.draftUpcoming.set(this.activeUpcoming());
   }
 
-  protected override applyFilters(): void {
+  override applyFilters(): void {
     this.activeGenreNames.set(this.draftGenres());
     this.activeCountryNames.set(this.draftCountries());
     this.activeLabelNames.set(this.draftLabels());
@@ -264,6 +265,8 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       country: this.activeCountryNames().length ? this.activeCountryNames() : undefined,
       label: this.activeLabelNames().length ? this.activeLabelNames() : undefined,
       includeTracks: this.includeTracksEnabled() ? true : undefined,
+      ratingFrom: this.activeRatingFrom() ?? undefined,
+      ratingTo: this.activeRatingTo() ?? undefined,
     };
   }
 
