@@ -410,19 +410,10 @@ export class BandInfo implements OnInit {
     const bandId = this.bandData()?.id;
     if (!bandId) return;
 
-    this.ratingService.getUserBandRating(bandId, userId).subscribe(r => {
-      if (r) {
+    this.ratingService.rateBand(userId, bandId, rating).subscribe({
+      next: (r) => {
         this.userRating.set(r.userRating);
         this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
-      }
-    });
-
-    this.ratingService.rateBand(userId, bandId, rating).subscribe({
-      next: () => {
-        this.userRating.set(rating);
-        this.ratingService.getUserBandRating(bandId, userId).subscribe(r => {
-          if (r) this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
-        });
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });
