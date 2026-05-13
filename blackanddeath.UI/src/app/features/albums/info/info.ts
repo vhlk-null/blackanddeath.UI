@@ -375,6 +375,7 @@ export class Info implements OnInit {
       next: (r) => {
         this.userRating.set(r.userRating);
         this.albumData.update(a => a ? { ...a, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : a);
+        this.toastService.success(`You rated this album ${r.userRating}/10`);
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });

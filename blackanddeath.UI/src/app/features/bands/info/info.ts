@@ -414,6 +414,7 @@ export class BandInfo implements OnInit {
       next: (r) => {
         this.userRating.set(r.userRating);
         this.bandData.update(b => b ? { ...b, averageRating: r.averageRating, ratingsCount: r.ratingsCount } : b);
+        this.toastService.success(`You rated this band ${r.userRating}/10`);
       },
       error: () => this.toastService.error('Failed to save rating.'),
     });

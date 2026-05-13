@@ -53,6 +53,10 @@ export class Pagination implements AfterViewInit, OnDestroy {
     this.observer?.disconnect();
   }
 
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   goTo(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
     this.pageChange.emit(page);
