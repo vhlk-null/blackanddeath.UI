@@ -40,6 +40,7 @@ export class BandEndpoints {
   static get PENDING_APPROVAL() { return `${base()}/library/bands/pending-approval`; }
   static get SEARCH() { return `${base()}/library/bands/search`; }
   static get TOP_RATED() { return `${base()}/library/bands/top-rated`; }
+  static GET_SIMILAR = (slug: string) => `${base()}/library/bands/slug/${slug}/similar`;
 }
 
 export class VideoBandEndpoints {

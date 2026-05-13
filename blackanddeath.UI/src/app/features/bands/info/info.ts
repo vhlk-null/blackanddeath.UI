@@ -326,7 +326,9 @@ export class BandInfo implements OnInit {
         setTimeout(() => this.initFabObserver());
         this.discographyExpanded.set(false);
         this.similarAlbums.set((band.similarAlbums ?? []) as any);
-        this.similarBands.set((band.similarBands ?? []) as any);
+        this.similarBands.set([]);
+        this.bandService.getSimilarBands(band.slug, { pageSize: 4 })
+          .subscribe(result => this.similarBands.set(result?.data ?? []));
         this.playingVideoId.set(null);
         this.loaded.set(true);
         this.userRating.set(null);

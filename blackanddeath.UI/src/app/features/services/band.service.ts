@@ -4,6 +4,7 @@ import { BaseHttpService } from "./intrefaces/http";
 import { AdminEndpoints, BandEndpoints } from "../../shared/constants/endpoints";
 import { Band } from "../../shared/models/band";
 import { BandSummary } from "../../shared/models/band-summary";
+import { PaginatedResult } from "../../shared/models/paginated-result";
 import { PendingApprovalDto } from "./album.servics";
 
 export interface CreateBandDto {
@@ -89,6 +90,12 @@ export class BandService {
   adminGetById(id: string) {
     return this.http.get<{ band: Band }>(AdminEndpoints.GET_BAND_BY_ID(id)).pipe(
       map(response => response.band)
+    );
+  }
+
+  getSimilarBands(slug: string, params?: { pageIndex?: number; pageSize?: number }) {
+    return this.http.get<{ similarBands: PaginatedResult<Band> }>(BandEndpoints.GET_SIMILAR(slug), params).pipe(
+      map(response => response.similarBands)
     );
   }
 
