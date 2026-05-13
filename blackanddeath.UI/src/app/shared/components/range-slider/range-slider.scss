@@ -7,20 +7,34 @@
 
   &__track {
     position: relative;
-    height: var(--rs-track-height, 2px);
-    background: var(--color-border-input);
+    height: 1.5rem;
+    background: transparent;
     border-radius: 99px;
-    margin: var(--rs-track-margin, 0.4rem 0);
     cursor: pointer;
+
+    // visible track line centered vertically
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: var(--rs-track-height, 2px);
+      transform: translateY(-50%);
+      background: var(--color-border-input);
+      border-radius: 99px;
+    }
   }
 
   &__fill {
     position: absolute;
-    top: 0;
-    height: 100%;
+    top: 50%;
+    height: var(--rs-track-height, 2px);
+    transform: translateY(-50%);
     background: var(--rs-fill-color, var(--color-text-heading));
     border-radius: 99px;
     pointer-events: none;
+    z-index: 1;
   }
 
   &__thumb {
@@ -36,6 +50,7 @@
     cursor: grab;
     transition: transform 0.15s;
     pointer-events: none;
+    z-index: 2;
 
     &:active { cursor: grabbing; }
   }
