@@ -11,7 +11,10 @@ export interface AppNotification {
   title: string;
   message: string;
   type: string;
+  resourceType?: string;
   resourceId: string;
+  resourceSlug?: string | null;
+  resourceName?: string;
   isRead: boolean;
   createdAt: string;
 }
@@ -55,13 +58,18 @@ export class NotificationService implements OnDestroy {
             this.auth.getAccessToken(),
             signal,
           )) {
+            const type: string = raw.Type ?? raw.type ?? '';
+            const resourceType = raw.ResourceType ?? raw.resourceType ?? (type.startsWith('album') ? 'album' : type.startsWith('band') ? 'band' : '');
             const notification: AppNotification = {
               id: raw.Id ?? raw.id,
               userId: raw.UserId ?? raw.userId,
               title: raw.Title ?? raw.title,
               message: raw.Message ?? raw.message,
-              type: raw.Type ?? raw.type,
+              type,
+              resourceType,
               resourceId: raw.ResourceId ?? raw.resourceId,
+              resourceSlug: raw.ResourceSlug ?? raw.resourceSlug ?? null,
+              resourceName: raw.ResourceName ?? raw.resourceName,
               isRead: raw.IsRead ?? raw.isRead ?? false,
               createdAt: raw.CreatedAt ?? raw.createdAt,
             };

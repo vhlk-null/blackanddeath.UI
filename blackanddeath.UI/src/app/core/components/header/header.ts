@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { GlobalSearch } from '../../../shared/components/global-search/global-search';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from '../../../features/services/notification.service';
+import { SubscriptionService } from '../../../features/services/subscription.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,8 @@ import { NotificationService } from '../../../features/services/notification.ser
 export class Header {
   readonly auth = inject(AuthService);
   readonly notifications = inject(NotificationService);
-  private router = inject(Router);
+  private readonly subscriptions = inject(SubscriptionService);
+  readonly router = inject(Router);
 
   readonly userMenuOpen = signal(false);
   readonly notifOpen = signal(false);
@@ -23,6 +25,18 @@ export class Header {
   readonly scrolled = signal(false);
 
   readonly isMobile = () => window.innerWidth <= 896;
+
+  onNotifClick(n: import('../../../features/services/notification.service').AppNotification): void {
+    const resourceType = n.resourceType ?? (n.type.startsWith('album') ? 'album' : 'band');
+    const base = resourceType === 'album' ? '/albums' : '/bands';
+    const slug = n.resourceSlug
+      || this.subscriptions.all().find(s => s.resourceType === resourceType && s.resourceId === n.resourceId)?.resourceSlug
+      || null;
+    if (slug) {
+      this.router.navigate([base, slug]);
+      this.notifOpen.set(false);
+    }
+  }
 
   onUserBtnClick(): void {
     if (this.isMobile()) {

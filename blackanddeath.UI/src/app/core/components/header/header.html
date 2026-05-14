@@ -136,7 +136,8 @@
       <p class="notif-drawer__empty">No notifications yet</p>
     }
     @for (n of notifications.notifications(); track n.id) {
-      <div class="notif-drawer__item" [class.notif-drawer__item--unread]="!n.isRead" (click)="notifications.markRead(n.id).subscribe()">
+      <div class="notif-drawer__item" [class.notif-drawer__item--unread]="!n.isRead" [class.notif-drawer__item--clickable]="!!n.resourceId"
+        (click)="onNotifClick(n)">
         <div class="notif-drawer__item-title">{{ n.title }}</div>
         <div class="notif-drawer__item-msg">{{ n.message }}</div>
         <div class="notif-drawer__item-time">{{ n.createdAt | date:'MMM d, h:mm a' }}</div>
