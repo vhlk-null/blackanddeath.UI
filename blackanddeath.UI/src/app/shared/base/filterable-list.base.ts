@@ -122,6 +122,8 @@ export abstract class FilterableListBase<TSortOption extends string> {
 
   onPageChange(page: number): void {
     this.currentPage.set(page);
+    this.appendPage = page;
+    this.loadedPage.set(page);
     this.updateUrl();
     this.load();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -131,6 +133,7 @@ export abstract class FilterableListBase<TSortOption extends string> {
     this.appendPage += 1;
     this.loadedPage.set(this.appendPage);
     this.currentPage.set(this.appendPage);
+    this.updateUrl();
     this.loadAppend();
   }
 
