@@ -27,7 +27,7 @@
     "@tiptap/extension-bold": "^3.22.4",
     "@tiptap/extension-bullet-list": "^3.22.4",
     "@tiptap/extension-document": "^3.22.4",
-    "@tiptap/extension-heading": "^3.23.4",
+    "@tiptap/extension-heading": "^3.22.4",
     "@tiptap/extension-history": "^3.22.4",
     "@tiptap/extension-italic": "^3.22.4",
     "@tiptap/extension-link": "^3.22.4",
