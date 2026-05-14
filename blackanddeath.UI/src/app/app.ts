@@ -8,6 +8,7 @@ import { AgeGate } from './shared/components/age-gate/age-gate';
 import { PreviewGate } from './shared/components/preview-gate/preview-gate';
 import { AuthService } from './core/auth/auth.service';
 import { SubscriptionService } from './features/services/subscription.service';
+import { NotificationService } from './features/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -18,11 +19,13 @@ import { SubscriptionService } from './features/services/subscription.service';
 export class App {
   private auth = inject(AuthService);
   private subscriptionService = inject(SubscriptionService);
+  private notificationService = inject(NotificationService);
 
   constructor() {
     effect(() => {
       if (this.auth.userId()) {
         this.subscriptionService.preload().subscribe();
+        this.notificationService.init();
       }
     });
   }

@@ -26,8 +26,11 @@ export class NotificationService implements OnDestroy {
   readonly unreadCount = signal(0);
 
   private abortController: AbortController | null = null;
+  private initialized = false;
 
   async init(): Promise<void> {
+    if (this.initialized) return;
+    this.initialized = true;
     const existing = await firstValueFrom(this.http.get<AppNotification[]>(NotificationEndpoints.GET_ALL));
     if (existing) {
       this.notifications.set(existing);
@@ -47,11 +50,21 @@ export class NotificationService implements OnDestroy {
       while (!signal.aborted) {
         try {
           delay = 3000;
-          for await (const notification of streamSse<AppNotification>(
+          for await (const raw of streamSse<any>(
             NotificationEndpoints.STREAM,
             this.auth.getAccessToken(),
             signal,
           )) {
+            const notification: AppNotification = {
+              id: raw.Id ?? raw.id,
+              userId: raw.UserId ?? raw.userId,
+              title: raw.Title ?? raw.title,
+              message: raw.Message ?? raw.message,
+              type: raw.Type ?? raw.type,
+              resourceId: raw.ResourceId ?? raw.resourceId,
+              isRead: raw.IsRead ?? raw.isRead ?? false,
+              createdAt: raw.CreatedAt ?? raw.createdAt,
+            };
             this.zone.run(() => {
               this.notifications.update(list => [notification, ...list]);
               this.unreadCount.update(c => c + 1);

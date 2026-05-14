@@ -359,8 +359,16 @@
     color: var(--color-text-muted);
     white-space: nowrap;
     margin-left: auto;
-    width: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     text-align: right;
+
+    svg {
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+    }
     flex-shrink: 0;
     padding-bottom: 0.75rem;
     font-variant-numeric: tabular-nums;
