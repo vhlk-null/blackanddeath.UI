@@ -10,6 +10,8 @@ export interface AlbumSearchDocument {
   title: string;
   coverUrl: string | null;
   releaseYear: number;
+  releaseMonth?: number | null;
+  releaseDay?: number | null;
   type: string;
   format: string;
   bands: AlbumSearchBand[] | string[];

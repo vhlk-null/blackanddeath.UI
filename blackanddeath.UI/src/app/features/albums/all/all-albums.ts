@@ -282,6 +282,8 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       ratingsCount: doc.ratingsCount,
       isExplicit: doc.isExplicit,
       isUpcoming: forceUpcoming || doc.isUpcoming,
+      releaseMonth: doc.releaseMonth,
+      releaseDay: doc.releaseDay,
     };
   }
 }

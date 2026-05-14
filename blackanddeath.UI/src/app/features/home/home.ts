@@ -124,6 +124,8 @@ export class Home implements OnInit {
       videos: [],
       isExplicit: doc.isExplicit,
       isUpcoming: doc.isUpcoming,
+      releaseMonth: doc.releaseMonth,
+      releaseDay: doc.releaseDay,
     } as any;
   }
 

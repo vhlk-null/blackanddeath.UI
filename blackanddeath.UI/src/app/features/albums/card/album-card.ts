@@ -36,17 +36,24 @@ export class AlbumCard {
 
   readonly subscribeLoading = signal(false);
 
+  readonly isSubscribed = computed(() => {
+    if (!this.auth.userId()) return false;
+    const id = this.albumCard().id;
+    return this.subscriptionService.all().some(s => s.resourceType === 'album' && s.resourceId === id);
+  });
+
   readonly isUpcoming = computed(() => {
     const a = this.albumCard();
     if (a.isUpcoming) return true;
-    const releaseYear = a.releaseYear ?? a.releaseDate;
-    return !!releaseYear && releaseYear > new Date().getFullYear();
-  });
-
-  readonly isSubscribed = computed(() => {
-    if (!this.isUpcoming() || !this.auth.userId()) return false;
-    const id = this.albumCard().id;
-    return this.subscriptionService.all().some(s => s.resourceType === 'album' && s.resourceId === id);
+    if (this.isSubscribed()) return true;
+    const year = a.releaseYear ?? a.releaseDate;
+    if (!year) return false;
+    const now = new Date();
+    if (a.releaseMonth != null && a.releaseDay != null) {
+      const releaseDate = new Date(year, a.releaseMonth - 1, a.releaseDay);
+      return releaseDate > now;
+    }
+    return year > now.getFullYear();
   });
 
   toggleSubscribe(e: MouseEvent): void {
