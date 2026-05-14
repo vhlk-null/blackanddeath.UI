@@ -599,7 +599,22 @@
     ::ng-deep p:last-child { margin-bottom: 0; }
     ::ng-deep em { font-style: italic; }
     ::ng-deep strong { font-weight: 600; }
+    ::ng-deep s { opacity: 0.55; }
     ::ng-deep a { color: var(--color-tab-active); text-decoration: none; }
+    ::ng-deep h1 { font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 400; color: var(--color-text-heading); margin: 1rem 0 0.4rem; letter-spacing: 0.05em; }
+    ::ng-deep h2 { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 400; color: var(--color-text-heading); margin: 0.85rem 0 0.35rem; letter-spacing: 0.04em; }
+    ::ng-deep h3 { font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 400; color: var(--color-text-heading); margin: 0.75rem 0 0.3rem; letter-spacing: 0.03em; }
+    ::ng-deep ul, ::ng-deep ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+    ::ng-deep ul { list-style: disc; }
+    ::ng-deep ol { list-style: decimal; }
+    ::ng-deep li { margin: 0.2rem 0; }
+    ::ng-deep blockquote {
+      border-left: 3px solid color-mix(in srgb, var(--color-tab-active) 45%, transparent);
+      margin: 0.75rem 0;
+      padding: 0.25rem 0 0.25rem 1rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
 
     &--collapsed {
       display: -webkit-box;
@@ -1256,12 +1271,35 @@ app-section:nth-of-type(3) {
 
   &__wrap {
     flex: 1;
+    background: color-mix(in srgb, var(--color-tab-active) 3%, var(--color-card-bg));
+    border: 1px solid color-mix(in srgb, var(--color-tab-active) 20%, var(--color-separator));
+    border-radius: 0.5rem;
     overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  &__preview {
+    padding: 0.75rem 1rem;
+    cursor: text;
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    transition: background 0.15s;
+
+    &:hover { background: color-mix(in srgb, var(--color-tab-active) 5%, var(--color-card-bg)); }
+  }
+
+  &__preview-placeholder {
+    font-family: var(--font-family-body);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    opacity: 0.55;
+    pointer-events: none;
   }
 
   &__actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     padding: 0.25rem 0;
     gap: 0.5rem;

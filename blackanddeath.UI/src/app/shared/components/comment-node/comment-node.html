@@ -50,7 +50,7 @@
       <div class="comment-reply-form comment-reply-form--indent">
         <div class="comment-avatar comment-avatar--sm">{{ (ctx.auth.profile()?.preferred_username ?? ctx.auth.profile()?.name ?? 'U')[0].toUpperCase() }}</div>
         <div class="comment-composer__wrap">
-          <app-rich-editor #nodeReplyEditor placeholder="Write a reply…" [compact]="true" />
+          <app-rich-editor #nodeReplyEditor placeholder="Write a reply…" />
           <div class="comment-composer__actions">
             <button type="button" class="comment-composer__cancel" (click)="ctx.replyingToId.set(null); ctx.replyingToReply.set(null); nodeReplyEditor.clear()">Cancel</button>
             <button type="button" class="comment-composer__post" (click)="ctx.replyBody.set(nodeReplyEditor.getHTML()); ctx.submitReply(rootCommentId()); nodeReplyEditor.clear()" [disabled]="ctx.replySubmitting() || nodeReplyEditor.isEmpty()">{{ ctx.replySubmitting() ? 'Posting…' : 'Reply' }}</button>

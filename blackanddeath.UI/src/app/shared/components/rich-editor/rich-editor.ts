@@ -6,9 +6,14 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
+import Strike from '@tiptap/extension-strike';
 import Link from '@tiptap/extension-link';
 import History from '@tiptap/extension-history';
 import Placeholder from '@tiptap/extension-placeholder';
+import Blockquote from '@tiptap/extension-blockquote';
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import ListItem from '@tiptap/extension-list-item';
 
 @Component({
   selector: 'app-rich-editor',
@@ -36,6 +41,7 @@ export class RichEditor implements OnInit, OnDestroy, ControlValueAccessor {
       this.showToolbar = false;
     }
   }
+
   @ViewChild('editorEl', { static: true }) editorEl!: ElementRef<HTMLElement>;
 
   editor!: Editor;
@@ -53,6 +59,11 @@ export class RichEditor implements OnInit, OnDestroy, ControlValueAccessor {
         Text,
         Bold,
         Italic,
+        Strike,
+        Blockquote,
+        BulletList,
+        OrderedList,
+        ListItem,
         Link.configure({ openOnClick: false }),
         History,
         Placeholder.configure({ placeholder: this.placeholder }),
@@ -82,23 +93,23 @@ export class RichEditor implements OnInit, OnDestroy, ControlValueAccessor {
 
   toggleBold(): void { this.editor.chain().focus().toggleBold().run(); }
   toggleItalic(): void { this.editor.chain().focus().toggleItalic().run(); }
-  undo(): void { this.editor.chain().focus().undo().run(); }
-  redo(): void { this.editor.chain().focus().redo().run(); }
+  toggleStrike(): void { this.editor.chain().focus().toggleStrike().run(); }
+  toggleBlockquote(): void { this.editor.chain().focus().toggleBlockquote().run(); }
+  toggleBulletList(): void { (this.editor.chain().focus() as any).toggleBulletList().run(); }
+  toggleOrderedList(): void { (this.editor.chain().focus() as any).toggleOrderedList().run(); }
+  undo(): void { (this.editor.chain().focus() as any).undo().run(); }
+  redo(): void { (this.editor.chain().focus() as any).redo().run(); }
 
-  isEmpty(): boolean {
-    return this.editor?.isEmpty ?? true;
-  }
-
-  getHTML(): string {
-    return this.editor?.getHTML() ?? '';
-  }
-
-  clear(): void {
-    this.editor?.commands.clearContent();
-  }
+  isEmpty(): boolean { return this.editor?.isEmpty ?? true; }
+  getHTML(): string { return this.editor?.getHTML() ?? ''; }
+  clear(): void { this.editor?.commands.clearContent(); }
 
   isBold(): boolean { return this.editor?.isActive('bold') ?? false; }
   isItalic(): boolean { return this.editor?.isActive('italic') ?? false; }
-  canUndo(): boolean { return this.editor?.can().undo() ?? false; }
-  canRedo(): boolean { return this.editor?.can().redo() ?? false; }
+  isStrike(): boolean { return this.editor?.isActive('strike') ?? false; }
+  isBlockquote(): boolean { return this.editor?.isActive('blockquote') ?? false; }
+  isBulletList(): boolean { return this.editor?.isActive('bulletList') ?? false; }
+  isOrderedList(): boolean { return this.editor?.isActive('orderedList') ?? false; }
+  canUndo(): boolean { return (this.editor?.can() as any)?.undo() ?? false; }
+  canRedo(): boolean { return (this.editor?.can() as any)?.redo() ?? false; }
 }

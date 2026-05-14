@@ -7,7 +7,7 @@
   background-color: var(--color-header-bg-actual, var(--color-header-bg));
   backdrop-filter: var(--color-header-backdrop, none);
   -webkit-backdrop-filter: var(--color-header-backdrop, none);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
   transition: transform 0.3s ease;
 
   &--hidden {

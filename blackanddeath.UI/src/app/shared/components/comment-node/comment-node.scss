@@ -8,15 +8,15 @@
   justify-content: center;
   font-family: var(--font-family-body);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--color-tab-active);
-  background: color-mix(in srgb, var(--color-tab-active) 14%, var(--color-card-bg));
-  border: 2px solid color-mix(in srgb, var(--color-tab-active) 35%, transparent);
+  background: color-mix(in srgb, var(--color-tab-active) 12%, var(--color-card-bg));
+  border: 1.5px solid color-mix(in srgb, var(--color-tab-active) 30%, transparent);
   user-select: none;
 
   &--sm {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.875rem;
+    height: 1.875rem;
     font-size: 0.75rem;
   }
 }
@@ -30,7 +30,7 @@
   &:last-child { border-bottom: none; }
 
   &--reply {
-    padding: 0.625rem 0 0;
+    padding: 0.5rem 0 0;
     border-bottom: none;
   }
 
@@ -41,9 +41,9 @@
 
   &__meta {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
     flex-wrap: wrap;
   }
 
@@ -52,24 +52,28 @@
     font-size: 0.875rem;
     font-weight: 700;
     color: var(--color-text-heading);
+    letter-spacing: 0.01em;
   }
 
   &__date {
     font-family: var(--font-family-body);
-    font-size: 0.775rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
+    opacity: 0.8;
   }
 
   &__edited {
-    font-size: 0.725rem;
+    font-size: 0.7rem;
     color: var(--color-text-muted);
-    opacity: 0.65;
+    opacity: 0.5;
+    font-style: italic;
   }
 
   &__mod {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    margin-left: auto;
     opacity: 0;
     transition: opacity 0.15s;
   }
@@ -81,25 +85,39 @@
     font-size: 0.9375rem;
     color: var(--color-text);
     line-height: 1.65;
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.5rem;
     word-break: break-word;
 
     ::ng-deep p { margin: 0 0 0.4rem; }
     ::ng-deep p:last-child { margin-bottom: 0; }
+    ::ng-deep s { opacity: 0.55; }
+    ::ng-deep ul, ::ng-deep ol { margin: 0.25rem 0; padding-left: 1.4rem; }
+    ::ng-deep ul { list-style: disc; }
+    ::ng-deep ol { list-style: decimal; }
+    ::ng-deep li { margin: 0.1rem 0; }
+    ::ng-deep blockquote {
+      border-left: 2px solid color-mix(in srgb, var(--color-tab-active) 45%, transparent);
+      margin: 0.5rem 0;
+      padding: 0.15rem 0 0.15rem 0.75rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
   }
 
   &__mention {
     color: var(--color-tab-active);
     font-weight: 600;
     font-size: 0.875rem;
-    margin: 0 0 0.15rem;
+    margin: 0 0 0.25rem;
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: 0.1rem;
+    gap: 0;
     flex-wrap: wrap;
+    margin-top: 0.1rem;
+    margin-left: -0.4rem;
   }
 }
 
@@ -193,9 +211,10 @@
 
 .comment-replies {
   margin-top: 0.25rem;
-  padding-left: 0;
+  padding-left: 1rem;
   padding-top: 0;
   padding-bottom: 0.25rem;
+  border-left: 2px solid var(--color-separator);
 }
 
 .comment-reply-form {
@@ -211,28 +230,29 @@
 
   .comment-composer__wrap {
     flex: 1;
-    background: color-mix(in srgb, var(--color-tab-active) 4%, var(--color-card-bg));
-    border: none;
-    border-bottom: 1px solid var(--color-tab-active);
-    border-radius: 0;
+    background: color-mix(in srgb, var(--color-tab-active) 3%, var(--color-card-bg));
+    border: 1px solid color-mix(in srgb, var(--color-tab-active) 20%, var(--color-separator));
+    border-radius: 0.5rem;
     overflow: hidden;
-    box-shadow: none;
+
+    &--focused {
+      border-color: color-mix(in srgb, var(--color-tab-active) 55%, transparent);
+    }
   }
 }
 
 .comment-composer {
   &__wrap {
     flex: 1;
-    background: color-mix(in srgb, var(--color-tab-active) 4%, var(--color-card-bg));
-    border: none;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-tab-active) 35%, transparent);
-    border-radius: 0;
+    background: color-mix(in srgb, var(--color-tab-active) 3%, var(--color-card-bg));
+    border: 1px solid color-mix(in srgb, var(--color-tab-active) 20%, var(--color-separator));
+    border-radius: 0.5rem;
     overflow: hidden;
     transition: border-color 0.2s, background 0.2s;
 
     &--focused {
-      border-color: var(--color-tab-active);
-      background: color-mix(in srgb, var(--color-tab-active) 7%, var(--color-card-bg));
+      border-color: color-mix(in srgb, var(--color-tab-active) 55%, transparent);
+      background: color-mix(in srgb, var(--color-tab-active) 5%, var(--color-card-bg));
     }
   }
 
@@ -244,25 +264,26 @@
     color: var(--color-text);
     font-family: var(--font-family-body);
     font-size: 0.875rem;
-    padding: 0.625rem 0.75rem 0.375rem;
+    padding: 0.625rem 0.875rem 0.375rem;
     resize: none;
     min-height: 2.25rem;
     line-height: 1.6;
     box-sizing: border-box;
     letter-spacing: 0.01em;
     &::placeholder {
-      color: color-mix(in srgb, var(--color-tab-active) 40%, transparent);
+      color: var(--color-text-muted);
+      opacity: 0.6;
       font-style: italic;
     }
   }
 
   &__actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
-    padding: 0.25rem 0.5rem 0.4rem;
+    padding: 0.375rem 0.625rem 0.5rem;
     gap: 0.5rem;
-    border-top: 1px solid color-mix(in srgb, var(--color-tab-active) 10%, transparent);
+    background: transparent;
   }
 
   &__cancel {
@@ -272,27 +293,23 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     padding: 0.3rem 0.75rem;
-    border-radius: 0;
+    border-radius: 0.25rem;
     border: none;
-    border-bottom: 1px solid transparent;
     background: transparent;
     color: var(--color-text-muted);
     cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-    &:hover {
-      color: var(--color-text);
-      border-color: var(--color-text-muted);
-    }
+    transition: color 0.15s, background 0.15s;
+    &:hover { color: var(--color-text); background: var(--color-separator); }
   }
 
   &__post {
     font-family: var(--font-family-body);
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     padding: 0.3rem 1rem;
-    border-radius: 0;
+    border-radius: 0.25rem;
     border: 1px solid var(--color-tab-active);
     background: transparent;
     color: var(--color-tab-active);
