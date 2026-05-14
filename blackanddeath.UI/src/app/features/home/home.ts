@@ -18,7 +18,6 @@ import {
   RECENTLY_ADDED_TABS,
   UPCOMING_RELEASES_TABS,
 } from '../../shared/constants/constants';
-import { AlbumService } from '../services/album.servics';
 import { SearchService } from '../services/search.service';
 import { AlbumSearchDocument } from '../../shared/models/album-search-document';
 import { BandSearchDocument } from '../../shared/models/band-search-document';
@@ -60,7 +59,6 @@ export class Home implements OnInit {
   recentlyAddedTab = signal(0);
   mainUpcomingReleases = signal<Album[]>([]);
 
-  private albumService = inject(AlbumService);
   private searchService = inject(SearchService);
   private router = inject(Router);
   private titleService = inject(Title);
@@ -76,13 +74,13 @@ export class Home implements OnInit {
       topRatedBands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'averageRating', sortDir: 'Desc' }),
       albums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
       bands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
-      upcomingAlbums: this.albumService.getUpcoming({ pageSize: PAGE_SIZE }).pipe(catchError(() => of([]))),
+      upcomingAlbums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, upcoming: true }).pipe(catchError(() => of({ data: [], count: 0 }))),
     }).subscribe({
       next: ({ topRatedAlbums, topRatedBands, albums, bands, upcomingAlbums }) => {
         this.mainTopRatedAlbums.set(topRatedAlbums.data.map(this.mapToAlbum));
         this.mainPopularBands.set(topRatedBands.data.map(this.mapToBand));
         this.mainRecentAlbums.set(albums.data.map(this.mapToAlbum));
-        this.mainUpcomingReleases.set(upcomingAlbums);
+        this.mainUpcomingReleases.set(upcomingAlbums.data.map(doc => ({ ...this.mapToAlbum(doc), isUpcoming: true })));
         this.mainRecentBands.set(bands.data.map(this.mapToBand));
         this.totalAlbums.set(albums.count);
         this.totalBands.set(bands.count);
@@ -125,6 +123,7 @@ export class Home implements OnInit {
       tags: doc.tags.map(name => ({ id: null, name }) as any),
       videos: [],
       isExplicit: doc.isExplicit,
+      isUpcoming: doc.isUpcoming,
     } as any;
   }
 

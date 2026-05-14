@@ -21,6 +21,7 @@ export interface AlbumSearchParams {
   includeTracks?: boolean;
   ratingFrom?: number;
   ratingTo?: number;
+  upcoming?: boolean;
 }
 
 export interface BandSearchParams {
@@ -58,6 +59,7 @@ export class SearchService {
     if (params.includeTracks) p['includeTracks'] = true;
     if (params.ratingFrom !== undefined) p['ratingFrom'] = params.ratingFrom;
     if (params.ratingTo !== undefined) p['ratingTo'] = params.ratingTo;
+    if (params.upcoming) p['upcoming'] = true;
 
     return this.http.get<{ albums: PaginatedResult<AlbumSearchDocument> }>(AlbumEndpoints.SEARCH, p, true)
       .pipe(map(res => res.albums));

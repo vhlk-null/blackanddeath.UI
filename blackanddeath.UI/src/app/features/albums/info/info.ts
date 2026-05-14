@@ -532,8 +532,7 @@ export class Info implements OnInit {
             rating: this.ratingService.getUserAlbumRating(album.id, userId),
             reviews: this.reviewService.getAlbumReviews(album.id, { pageIndex: 1, pageSize: Info.COMMENTS_PAGE_SIZE }),
             favorite: this.favoriteService.checkFavoriteAlbum(album.id, userId),
-            subscribed: this.subscriptionService.isSubscribed('album', album.id),
-          }).subscribe(({ rating, reviews, favorite, subscribed }) => {
+          }).subscribe(({ rating, reviews, favorite }) => {
             if (rating) {
               this.userRating.set(rating.userRating);
               this.albumData.update(a => a ? { ...a, averageRating: rating.averageRating, ratingsCount: rating.ratingsCount } : a);
@@ -541,7 +540,7 @@ export class Info implements OnInit {
             const mine = reviews.data.find(x => x.userId === userId);
             if (mine) this.userReviewId.set(mine.id);
             this.isFavorite.set(favorite);
-            this.isSubscribed.set(subscribed);
+            this.isSubscribed.set(this.subscriptionService.isSubscribedSync('album', album.id));
           });
         } else {
           this.ratingService.getAlbumAverage(album.id).subscribe(r => {

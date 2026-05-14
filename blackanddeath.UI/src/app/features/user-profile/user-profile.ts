@@ -18,6 +18,7 @@ type SidebarEntry =
   | { kind: 'library-bands' }
   | { kind: 'subscriptions' }
   | { kind: 'sub-bands' }
+  | { kind: 'sub-albums' }
   | { kind: 'fav-albums' }
   | { kind: 'fav-bands' }
   | { kind: 'collection'; id: string };
@@ -48,7 +49,8 @@ export class UserProfile implements OnInit {
   private subscriptionService = inject(SubscriptionService);
 
   readonly profileDto = signal<UserProfileDto | null>(null);
-  readonly subscribedBands = signal<SubscriptionDto[]>([]);
+  readonly subscribedBands = computed(() => this.subscriptionService.all().filter(s => s.resourceType === 'band'));
+  readonly subscribedAlbums = computed(() => this.subscriptionService.all().filter(s => s.resourceType === 'album'));
 
   readonly username = computed(() => this.auth.userName());
 
@@ -58,7 +60,7 @@ export class UserProfile implements OnInit {
     { label: 'Bands', value: String(this.profileDto()?.favoriteBandsCount ?? 0) },
     { label: 'Collections', value: String(this.profileDto()?.collections?.length ?? 0) },
     { label: 'Reviews', value: String(this.profileDto()?.reviewsCount ?? 0) },
-    { label: 'Subscriptions', value: String(this.subscribedBands().length) },
+    { label: 'Subscriptions', value: String(this.subscribedBands().length + this.subscribedAlbums().length) },
   ]);
 
   readonly collectionSearch = signal('');
@@ -110,6 +112,11 @@ export class UserProfile implements OnInit {
   readonly filteredSubscriptions = computed(() => {
     const q = this.collectionSearch().toLowerCase().trim();
     return q ? this.subscribedBands().filter(s => (s.resourceName ?? '').toLowerCase().includes(q)) : this.subscribedBands();
+  });
+
+  readonly filteredAlbumSubscriptions = computed(() => {
+    const q = this.collectionSearch().toLowerCase().trim();
+    return q ? this.subscribedAlbums().filter(s => (s.resourceName ?? '').toLowerCase().includes(q)) : this.subscribedAlbums();
   });
 
   readonly allCollections = computed(() => {
@@ -231,14 +238,14 @@ export class UserProfile implements OnInit {
       this.collectionService.setCollections(cols);
     });
 
-    this.subscriptionService.getAll().subscribe(subs => {
-      this.subscribedBands.set(subs.filter(s => s.resourceType === 'band'));
-    });
+    if (!this.subscriptionService.isCacheLoaded()) {
+      this.subscriptionService.preload().subscribe();
+    }
   }
 
   readonly mobilePanelOpen = signal(false);
 
-  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'sub-bands' | 'library-albums' | 'library-bands'): void {
+  selectFav(kind: 'fav-albums' | 'fav-bands' | 'subscriptions' | 'sub-bands' | 'sub-albums' | 'library-albums' | 'library-bands'): void {
     this.selected.set({ kind });
     this.selectedCollection.set(null);
     this.collectionSearch.set('');

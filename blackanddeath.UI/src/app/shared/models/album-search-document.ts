@@ -20,4 +20,5 @@ export interface AlbumSearchDocument {
   averageRating?: number | null;
   ratingsCount?: number;
   isExplicit?: boolean;
+  isUpcoming?: boolean;
 }

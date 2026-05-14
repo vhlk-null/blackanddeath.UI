@@ -3,7 +3,6 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { take } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { AlbumService } from '../../services/album.servics';
 import { SearchService } from '../../services/search.service';
 import { AlbumSearchDocument } from '../../../shared/models/album-search-document';
 import { AlbumType } from '../../../shared/models/enums/album-type.enum';
@@ -50,7 +49,6 @@ const ALBUM_TYPES = Object.keys(ALBUM_TYPE_MAP);
 export class AllAlbums extends FilterableListBase<SortOption> implements OnInit {
   protected override sortMenuClass = '.all-albums__sort-wrap';
 
-  private albumService = inject(AlbumService);
   private searchService = inject(SearchService);
   private labelService = inject(LabelService);
   private route = inject(ActivatedRoute);
@@ -232,22 +230,17 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
   protected override load(): void {
     this.loading.set(true);
     const done = () => this.loading.set(false);
-    if (this.activeUpcoming()) {
-      this.albumService.getUpcoming().subscribe({
-        next: (data) => { this.albums.set(data); this.total.set(data.length); this.loaded.set(true); done(); },
-        error: done,
-      });
-      return;
-    }
+    const upcoming = this.activeUpcoming();
     this.searchService.searchAlbums(this.buildSearchParams()).subscribe({
-      next: (result) => { this.albums.set(result.data.map(this.mapToAlbum)); this.total.set(result.count); this.loaded.set(true); done(); },
+      next: (result) => { this.albums.set(result.data.map(doc => this.mapToAlbum(doc, upcoming))); this.total.set(result.count); this.loaded.set(true); done(); },
       error: done,
     });
   }
 
   protected override loadAppend(): void {
+    const upcoming = this.activeUpcoming();
     this.searchService.searchAlbums({ ...this.buildSearchParams(), pageIndex: this.appendPage - 1 }).subscribe({
-      next: (result) => { this.albums.update(prev => [...prev, ...result.data.map(this.mapToAlbum)]); this.total.set(result.count); },
+      next: (result) => { this.albums.update(prev => [...prev, ...result.data.map(doc => this.mapToAlbum(doc, upcoming))]); this.total.set(result.count); },
     });
   }
 
@@ -267,10 +260,11 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       includeTracks: this.includeTracksEnabled() ? true : undefined,
       ratingFrom: this.activeRatingFrom() ?? undefined,
       ratingTo: this.activeRatingTo() ?? undefined,
+      upcoming: this.activeUpcoming() || undefined,
     };
   }
 
-  private mapToAlbum(doc: AlbumSearchDocument): any {
+  private mapToAlbum(doc: AlbumSearchDocument, forceUpcoming = false): any {
     return {
       id: doc.id,
       slug: doc.slug,
@@ -287,6 +281,7 @@ export class AllAlbums extends FilterableListBase<SortOption> implements OnInit 
       averageRating: doc.averageRating,
       ratingsCount: doc.ratingsCount,
       isExplicit: doc.isExplicit,
+      isUpcoming: forceUpcoming || doc.isUpcoming,
     };
   }
 }

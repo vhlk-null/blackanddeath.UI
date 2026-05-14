@@ -359,14 +359,13 @@ export class BandInfo implements OnInit {
             collections: this.collectionService.loadForUser(userId),
             rating: this.ratingService.getUserBandRating(band.id, userId),
             favorite: this.favoriteService.checkFavoriteBand(band.id, userId),
-            subscribed: this.subscriptionService.isSubscribed('band', band.id),
-          }).subscribe(({ rating, favorite, subscribed }) => {
+          }).subscribe(({ rating, favorite }) => {
             if (rating) {
               this.userRating.set(rating.userRating);
               this.bandData.update(b => b ? { ...b, averageRating: rating.averageRating, ratingsCount: rating.ratingsCount } : b);
             }
             this.isFavorite.set(favorite);
-            this.isSubscribed.set(subscribed);
+            this.isSubscribed.set(this.subscriptionService.isSubscribedSync('band', band.id));
           });
         } else {
           this.ratingService.getBandAverage(band.id).subscribe(r => {

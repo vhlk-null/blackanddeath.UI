@@ -34,7 +34,6 @@ export class AlbumCard {
   private router = inject(Router);
   private subscriptionService = inject(SubscriptionService);
 
-  readonly isSubscribed = signal(false);
   readonly subscribeLoading = signal(false);
 
   readonly isUpcoming = computed(() => {
@@ -44,13 +43,11 @@ export class AlbumCard {
     return !!releaseYear && releaseYear > new Date().getFullYear();
   });
 
-  constructor() {
-    effect(() => {
-      if (this.isUpcoming() && this.auth.userId()) {
-        this.subscriptionService.isSubscribed('album', this.albumCard().id).subscribe(v => this.isSubscribed.set(v));
-      }
-    });
-  }
+  readonly isSubscribed = computed(() => {
+    if (!this.isUpcoming() || !this.auth.userId()) return false;
+    const id = this.albumCard().id;
+    return this.subscriptionService.all().some(s => s.resourceType === 'album' && s.resourceId === id);
+  });
 
   toggleSubscribe(e: MouseEvent): void {
     e.preventDefault();
@@ -61,12 +58,12 @@ export class AlbumCard {
     const album = this.albumCard();
     if (this.isSubscribed()) {
       this.subscriptionService.unsubscribe('album', album.id).subscribe({
-        next: () => { this.isSubscribed.set(false); this.toast.show(`Unsubscribed from ${album.title}`); this.subscribeLoading.set(false); },
+        next: () => { this.toast.show(`Unsubscribed from ${album.title}`); this.subscribeLoading.set(false); },
         error: () => { this.subscribeLoading.set(false); },
       });
     } else {
       this.subscriptionService.subscribe('album', album.id, album.title, album.slug).subscribe({
-        next: () => { this.isSubscribed.set(true); this.toast.show(`Subscribed to ${album.title}`); this.subscribeLoading.set(false); },
+        next: () => { this.toast.show(`Subscribed to ${album.title}`); this.subscribeLoading.set(false); },
         error: () => { this.subscribeLoading.set(false); },
       });
     }
