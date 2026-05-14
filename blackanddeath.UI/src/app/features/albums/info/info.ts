@@ -1,10 +1,10 @@
-import { Component, computed, effect, inject, OnInit, signal, DestroyRef, ViewChild } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, DestroyRef, ViewChild, HostListener } from '@angular/core';
 import { CollectionPicker } from '../../../shared/components/collection-picker/collection-picker';
 import { CollectionItem, CollectionService } from '../../services/collection.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { switchMap, filter, forkJoin, of } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../card/album-card';
@@ -48,6 +48,7 @@ export class Info implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
   private titleService = inject(Title);
   readonly auth = inject(AuthService);
   readonly ageGate = inject(AgeGateService);
@@ -179,6 +180,22 @@ export class Info implements OnInit {
   readonly reviewSubmitting = signal(false);
   readonly hasUserReview = computed(() => this.reviews().some(r => r.userId === this.auth.userId()));
   readonly reviewSort = signal<'newest' | 'oldest' | 'highest-rated' | 'lowest-rated'>('newest');
+  readonly showReviewSortMenu = signal(false);
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: MouseEvent): void {
+    if (!(e.target as HTMLElement).closest('.comments-sort-wrap')) {
+      this.showReviewSortMenu.set(false);
+      this.showCommentSortMenu.set(false);
+    }
+  }
+  readonly reviewSortOptions = [
+    { value: 'newest', label: 'Newest first' },
+    { value: 'oldest', label: 'Oldest first' },
+    { value: 'highest-rated', label: 'Highest rating' },
+    { value: 'lowest-rated', label: 'Lowest rating' },
+  ] as const;
+  readonly reviewSortLabel = computed(() => this.reviewSortOptions.find(o => o.value === this.reviewSort())?.label ?? 'Newest first');
 
   constructor() {
     effect(() => {
@@ -469,7 +486,8 @@ export class Info implements OnInit {
         this.loaded.set(false);
         this.notFound.set(false);
         this.imageError.set(false);
-        this.infoTabIndex.set(0);
+        const isReviews = this.router.url.endsWith('/reviews');
+        this.infoTabIndex.set(isReviews ? 1 : 0);
         this.reviewsEverLoaded = false;
         return this.albumService.getBySlug(params.get('slug')!);
       }),
@@ -494,6 +512,7 @@ export class Info implements OnInit {
         this.bandVideos.set(album.videos);
         this.reviews.set([]);
         this.reviewsLoaded.set(false);
+        if (this.infoTabIndex() === 1) this.loadReviews();
         this.reviewTitle.set('');
         this.reviewBody.set('');
         this.comments.set([]);
@@ -541,8 +560,12 @@ export class Info implements OnInit {
 
   selectTab(index: number): void {
     this.infoTabIndex.set(index);
-    if (index === 1 && !this.reviewsLoaded()) {
-      this.loadReviews();
+    const slug = this.route.snapshot.paramMap.get('slug')!;
+    if (index === 1) {
+      this.location.go(`/albums/${slug}/reviews`);
+      if (!this.reviewsLoaded()) this.loadReviews();
+    } else {
+      this.location.go(`/albums/${slug}`);
     }
   }
 

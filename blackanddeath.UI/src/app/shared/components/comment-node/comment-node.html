@@ -24,7 +24,7 @@
           }
         </div>
       </div>
-      <p class="comment-item__text">{{ comment().body }}</p>
+      <div class="comment-item__text" [innerHTML]="comment().body"></div>
       <div class="comment-item__actions">
         <button type="button" class="comment-reaction" [class.comment-reaction--on]="comment().userReaction === true" (click)="ctx.reactToComment(comment().id, true)">
           <svg viewBox="0 0 24 24" fill="none"><path d="M7 22V11M2 13v7a2 2 0 0 0 2 2h11.5a2 2 0 0 0 1.97-1.63l1.5-7A2 2 0 0 0 17 11H13V5a2 2 0 0 0-2-2h-1L7 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>

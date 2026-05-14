@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, signal, computed, DestroyRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef, HostListener } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { switchMap, filter, forkJoin } from 'rxjs';
 import { Section } from '../../../shared/components/section/section';
 import { AlbumCard } from '../../albums/card/album-card';
@@ -49,6 +49,7 @@ export class BandInfo implements OnInit {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
   private titleService = inject(Title);
   readonly auth = inject(AuthService);
   private bandService = inject(BandService);
@@ -167,6 +168,22 @@ export class BandInfo implements OnInit {
   readonly reviewsTotal = signal(0);
   readonly reviewsLoaded = signal(false);
   readonly reviewSort = signal<'newest' | 'oldest' | 'highest-rated' | 'lowest-rated'>('newest');
+  readonly showReviewSortMenu = signal(false);
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: MouseEvent): void {
+    if (!(e.target as HTMLElement).closest('.comments-sort-wrap')) {
+      this.showReviewSortMenu.set(false);
+      this.showCommentSortMenu.set(false);
+    }
+  }
+  readonly reviewSortOptions = [
+    { value: 'newest', label: 'Newest first' },
+    { value: 'oldest', label: 'Oldest first' },
+    { value: 'highest-rated', label: 'Highest rating' },
+    { value: 'lowest-rated', label: 'Lowest rating' },
+  ] as const;
+  readonly reviewSortLabel = computed(() => this.reviewSortOptions.find(o => o.value === this.reviewSort())?.label ?? 'Newest first');
   readonly expandedReviews = signal<Set<string>>(new Set());
 
   readonly sortedAlbumReviews = computed(() => {
@@ -304,7 +321,8 @@ export class BandInfo implements OnInit {
         this.loaded.set(false);
         this.notFound.set(false);
         this.imageError.set(false);
-        this.infoTabIndex.set(0);
+        const isReviews = this.router.url.endsWith('/reviews');
+        this.infoTabIndex.set(isReviews ? 2 : 0);
         this.albumReviews.set([]);
         this.reviewsLoaded.set(false);
         this.reviewsTotal.set(0);
@@ -322,6 +340,7 @@ export class BandInfo implements OnInit {
       next: (band) => {
         this.bandData.set(band);
         this.titleService.setTitle(band.name ? `${band.name} — Black And Death` : 'Black And Death');
+        if (this.infoTabIndex() === 2) this.loadAlbumReviews();
         this.loadComments();
         setTimeout(() => this.initFabObserver());
         this.discographyExpanded.set(false);
@@ -366,8 +385,12 @@ export class BandInfo implements OnInit {
 
   selectTab(index: number): void {
     this.infoTabIndex.set(index);
-    if (index === 2 && !this.reviewsLoaded()) {
-      this.loadAlbumReviews();
+    const slug = this.route.snapshot.paramMap.get('slug')!;
+    if (index === 2) {
+      this.location.go(`/bands/${slug}/reviews`);
+      if (!this.reviewsLoaded()) this.loadAlbumReviews();
+    } else {
+      this.location.go(`/bands/${slug}`);
     }
   }
 

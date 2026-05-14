@@ -68,7 +68,7 @@
     align-items: flex-end;
     justify-content: space-between;
     border-bottom: 1px solid var(--color-separator);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 
     @media (max-width: 40rem) {
       flex-wrap: wrap;
@@ -310,7 +310,7 @@
     font-family: var(--font-family-body);
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
-    margin: 0 0 1.25rem;
+    margin: 0 0 0.75rem;
   }
 
   &__reviews-signin {
@@ -393,7 +393,7 @@
 .reviews-controls {
   display: flex;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.5rem;
 
   &__sort {
     background: var(--color-input-bg, var(--color-card-bg));
@@ -594,7 +594,12 @@
     color: var(--color-text);
     line-height: 1.7;
     margin: 0 0 0.5rem;
-    white-space: pre-line;
+
+    ::ng-deep p { margin: 0 0 0.75em; }
+    ::ng-deep p:last-child { margin-bottom: 0; }
+    ::ng-deep em { font-style: italic; }
+    ::ng-deep strong { font-weight: 600; }
+    ::ng-deep a { color: var(--color-tab-active); text-decoration: none; }
 
     &--collapsed {
       display: -webkit-box;
@@ -1100,9 +1105,18 @@ app-section:nth-of-type(3) {
   }
 
   &__count {
-    font-family: var(--font-family-body);
-    font-size: 0.8125rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.3rem;
+    border-radius: 0.625rem;
+    background: var(--color-separator);
+    font-size: 0.7rem;
     color: var(--color-text-muted);
+    font-family: var(--font-family-body);
+    vertical-align: middle;
   }
 
   &__empty {
