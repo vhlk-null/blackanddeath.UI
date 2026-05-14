@@ -56,7 +56,9 @@
       "Bash(Select-Object FullName)",
       "Bash(wmic process *)",
       "Bash(mkdir \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets-docker\")",
-      "Bash(del \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets\\\\config.docker.json\")"
+      "Bash(del \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets\\\\config.docker.json\")",
+      "Bash(npm view *)",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\); const v=JSON.parse\\(d\\); console.log\\(v.filter\\(x=>x.startsWith\\('3.'\\)\\).slice\\(-10\\).join\\('\\\\n'\\)\\)\")"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover",
