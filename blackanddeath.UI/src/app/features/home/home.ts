@@ -57,6 +57,8 @@ export class Home implements OnInit {
   popularBandsLoading = signal(false);
   topRatedLoaded = signal(false);
   popularBandsLoaded = signal(false);
+  upcomingLoaded = signal(false);
+  upcomingLoading = signal(false);
 
   mainTopRatedAlbums = signal<Album[]>([]);
   mainPopularBands = signal<Band[]>([]);
@@ -80,7 +82,7 @@ export class Home implements OnInit {
       topRatedBands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'ratingsCount', sortDir: 'Desc' }),
       albums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
       bands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
-      upcomingAlbums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, upcoming: true }).pipe(catchError(() => of({ data: [], count: 0 }))),
+      upcomingAlbums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, upcoming: true, sortBy: 'createdAt', sortDir: 'Asc', type: 'FullLength' }).pipe(catchError(() => of({ data: [], count: 0 }))),
     }).subscribe({
       next: ({ topRatedAlbums, topRatedBands, albums, bands, upcomingAlbums }) => {
         this.mainTopRatedAlbums.set(topRatedAlbums.data.map(this.mapToAlbum));
@@ -89,6 +91,7 @@ export class Home implements OnInit {
         this.popularBandsLoaded.set(true);
         this.mainRecentAlbums.set(albums.data.map(this.mapToAlbum));
         this.mainUpcomingReleases.set(upcomingAlbums.data.map(doc => ({ ...this.mapToAlbum(doc), isUpcoming: true })));
+        this.upcomingLoaded.set(true);
         this.mainRecentBands.set(bands.data.map(this.mapToBand));
         this.totalAlbums.set(albums.count);
         this.totalBands.set(bands.count);
@@ -122,7 +125,24 @@ export class Home implements OnInit {
     this.recentlyAddedTab.set(index);
   }
 
-  onUpcomingReleasesTabChange(_index: number): void {}
+  onUpcomingReleasesTabChange(index: number): void {
+    const params: Parameters<typeof this.searchService.searchAlbums>[0] = {
+      q: '', pageIndex: 0, pageSize: PAGE_SIZE, upcoming: true, sortBy: 'createdAt', sortDir: 'Asc',
+    };
+    if (index === 0) params.type = 'FullLength';
+    else if (index === 1) params.type = 'EP';
+    else params.excludeType = ['FullLength', 'EP'];
+
+    this.upcomingLoading.set(true);
+    this.searchService.searchAlbums(params).pipe(catchError(() => of({ data: [], count: 0 }))).subscribe({
+      next: res => {
+        this.mainUpcomingReleases.set(res.data.map(doc => ({ ...this.mapToAlbum(doc), isUpcoming: true })));
+        this.upcomingLoading.set(false);
+        this.upcomingLoaded.set(true);
+      },
+      error: () => this.upcomingLoading.set(false),
+    });
+  }
 
   goToAlbums(key: string, value: string | number): void {
     this.router.navigate(['/albums'], { queryParams: { [key]: value } });

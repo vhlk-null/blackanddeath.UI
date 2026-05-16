@@ -50,8 +50,8 @@
 }
 
 
-@if (mainUpcomingReleases().length) {
-<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{upcoming: 'true'}" (tabChange)="onUpcomingReleasesTabChange($event)">
+@if (upcomingLoaded()) {
+<app-section [sectionTitle]="titles.upcomingReleases" [tabs]="tabs.upcomingReleases" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{upcoming: 'true'}" (tabChange)="onUpcomingReleasesTabChange($event)" [isEmpty]="!mainUpcomingReleases().length">
   @for (album of mainUpcomingReleases(); track album.id) {
     <app-album-card [albumCard]="album" />
   }

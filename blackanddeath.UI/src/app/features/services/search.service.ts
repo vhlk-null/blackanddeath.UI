@@ -24,6 +24,7 @@ export interface AlbumSearchParams {
   ratingFrom?: number;
   ratingTo?: number;
   upcoming?: boolean;
+  excludeType?: string[];
   period?: SearchPeriod;
 }
 
@@ -64,6 +65,7 @@ export class SearchService {
     if (params.ratingFrom !== undefined) p['ratingFrom'] = params.ratingFrom;
     if (params.ratingTo !== undefined) p['ratingTo'] = params.ratingTo;
     if (params.upcoming) p['upcoming'] = true;
+    if (params.excludeType?.length) p['excludeType'] = params.excludeType;
     if (params.period && params.period !== 'AllTime') p['period'] = params.period;
 
     return this.http.get<{ albums: PaginatedResult<AlbumSearchDocument> }>(AlbumEndpoints.SEARCH, p, true)
