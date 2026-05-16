@@ -19,6 +19,7 @@ export class Section implements AfterViewInit {
   mobileColumns = input<number>(2);
   arrows = input<boolean>(true);
   scroll = input<boolean>(true);
+  isEmpty = input<boolean>(false);
   tabChange = output<number>();
   loadMore = output<void>();
 

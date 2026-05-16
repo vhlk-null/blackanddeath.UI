@@ -6,6 +6,8 @@ import { BandSearchDocument } from "../../shared/models/band-search-document";
 import { AlbumEndpoints, BandEndpoints } from "../../shared/constants/endpoints";
 import { PaginatedResult } from "../../shared/models/paginated-result";
 
+export type SearchPeriod = 'AllTime' | 'ThisYear' | 'ThisMonth';
+
 export interface AlbumSearchParams {
   q: string;
   pageIndex?: number;
@@ -22,13 +24,14 @@ export interface AlbumSearchParams {
   ratingFrom?: number;
   ratingTo?: number;
   upcoming?: boolean;
+  period?: SearchPeriod;
 }
 
 export interface BandSearchParams {
   q: string;
   pageIndex?: number;
   pageSize?: number;
-  sortBy?: 'createdAt' | 'name' | 'formedYear' | 'averageRating';
+  sortBy?: 'createdAt' | 'name' | 'formedYear' | 'averageRating' | 'ratingsCount';
   sortDir?: 'Asc' | 'Desc';
   status?: string;
   formedYearFrom?: number;
@@ -37,6 +40,7 @@ export interface BandSearchParams {
   country?: string[];
   ratingFrom?: number;
   ratingTo?: number;
+  period?: SearchPeriod;
 }
 
 
@@ -60,6 +64,7 @@ export class SearchService {
     if (params.ratingFrom !== undefined) p['ratingFrom'] = params.ratingFrom;
     if (params.ratingTo !== undefined) p['ratingTo'] = params.ratingTo;
     if (params.upcoming) p['upcoming'] = true;
+    if (params.period && params.period !== 'AllTime') p['period'] = params.period;
 
     return this.http.get<{ albums: PaginatedResult<AlbumSearchDocument> }>(AlbumEndpoints.SEARCH, p, true)
       .pipe(map(res => res.albums));
@@ -78,6 +83,7 @@ export class SearchService {
     if (params.country?.length) p['country'] = params.country;
     if (params.ratingFrom !== undefined) p['ratingFrom'] = params.ratingFrom;
     if (params.ratingTo !== undefined) p['ratingTo'] = params.ratingTo;
+    if (params.period && params.period !== 'AllTime') p['period'] = params.period;
 
     return this.http.get<{ bands: PaginatedResult<BandSearchDocument> }>(BandEndpoints.SEARCH, p, true)
       .pipe(map(res => res.bands));

@@ -18,7 +18,7 @@ import {
   RECENTLY_ADDED_TABS,
   UPCOMING_RELEASES_TABS,
 } from '../../shared/constants/constants';
-import { SearchService } from '../services/search.service';
+import { SearchService, SearchPeriod } from '../services/search.service';
 import { AlbumSearchDocument } from '../../shared/models/album-search-document';
 import { BandSearchDocument } from '../../shared/models/band-search-document';
 import { AlbumType } from '../../shared/models/enums/album-type.enum';
@@ -50,7 +50,13 @@ export class Home implements OnInit {
     upcomingReleases: UPCOMING_RELEASES_TABS,
   };
 
+  private readonly PERIODS: SearchPeriod[] = ['AllTime', 'ThisYear', 'ThisMonth'];
+
   loading = signal(true);
+  topRatedLoading = signal(false);
+  popularBandsLoading = signal(false);
+  topRatedLoaded = signal(false);
+  popularBandsLoaded = signal(false);
 
   mainTopRatedAlbums = signal<Album[]>([]);
   mainPopularBands = signal<Band[]>([]);
@@ -71,14 +77,16 @@ export class Home implements OnInit {
 
     forkJoin({
       topRatedAlbums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'averageRating', sortDir: 'Desc' }),
-      topRatedBands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'averageRating', sortDir: 'Desc' }),
+      topRatedBands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'ratingsCount', sortDir: 'Desc' }),
       albums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
       bands: this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'createdAt', sortDir: 'Desc' }),
       upcomingAlbums: this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, upcoming: true }).pipe(catchError(() => of({ data: [], count: 0 }))),
     }).subscribe({
       next: ({ topRatedAlbums, topRatedBands, albums, bands, upcomingAlbums }) => {
         this.mainTopRatedAlbums.set(topRatedAlbums.data.map(this.mapToAlbum));
+        this.topRatedLoaded.set(true);
         this.mainPopularBands.set(topRatedBands.data.map(this.mapToBand));
+        this.popularBandsLoaded.set(true);
         this.mainRecentAlbums.set(albums.data.map(this.mapToAlbum));
         this.mainUpcomingReleases.set(upcomingAlbums.data.map(doc => ({ ...this.mapToAlbum(doc), isUpcoming: true })));
         this.mainRecentBands.set(bands.data.map(this.mapToBand));
@@ -90,9 +98,25 @@ export class Home implements OnInit {
     });
   }
 
-  onTopRatedTabChange(_index: number): void {}
+  onTopRatedTabChange(index: number): void {
+    const period = this.PERIODS[index] ?? 'AllTime';
+    this.topRatedLoading.set(true);
+    this.searchService.searchAlbums({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'averageRating', sortDir: 'Desc', period })
+      .subscribe({
+        next: res => { this.mainTopRatedAlbums.set(res.data.map(this.mapToAlbum)); this.topRatedLoading.set(false); this.topRatedLoaded.set(true); },
+        error: () => { this.topRatedLoading.set(false); this.topRatedLoaded.set(true); },
+      });
+  }
 
-  onPopularBandsTabChange(_index: number): void {}
+  onPopularBandsTabChange(index: number): void {
+    const period = this.PERIODS[index] ?? 'AllTime';
+    this.popularBandsLoading.set(true);
+    this.searchService.searchBands({ q: '', pageIndex: 0, pageSize: PAGE_SIZE, sortBy: 'ratingsCount', sortDir: 'Desc', period })
+      .subscribe({
+        next: res => { this.mainPopularBands.set(res.data.map(this.mapToBand)); this.popularBandsLoading.set(false); this.popularBandsLoaded.set(true); },
+        error: () => { this.popularBandsLoading.set(false); this.popularBandsLoaded.set(true); },
+      });
+  }
 
   onRecentlyAddedTabChange(index: number): void {
     this.recentlyAddedTab.set(index);

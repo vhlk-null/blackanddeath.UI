@@ -5,8 +5,8 @@
 </section>
 
 <div class="home__sections" [class.home__sections--loading]="loading()">
-@if (mainTopRatedAlbums().length) {
-<app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onTopRatedTabChange($event)">
+@if (topRatedLoaded()) {
+<app-section #secTopRated [sectionTitle]="titles.topRated" [tabs]="tabs.topRated" [mobileColumns]="2" titleLink="/albums" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onTopRatedTabChange($event)" [isEmpty]="!mainTopRatedAlbums().length">
   @for (album of mainTopRatedAlbums(); track album.id) {
     <app-album-card [albumCard]="album"
       (filterByGenre)="goToAlbums('genreName', $event)"
@@ -17,8 +17,8 @@
 </app-section>
 }
 
-@if (mainPopularBands().length) {
-<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" [mobileColumns]="1" titleLink="/bands" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onPopularBandsTabChange($event)">
+@if (popularBandsLoaded()) {
+<app-section [sectionTitle]="titles.popularBands" [tabs]="tabs.popularBands" [mobileColumns]="1" titleLink="/bands" [titleQueryParams]="{sortBy: 'Rating'}" (tabChange)="onPopularBandsTabChange($event)" [isEmpty]="!mainPopularBands().length">
   @for (band of mainPopularBands(); track band.id) {
     <app-band-card [bandCard]="band"
       (filterByGenre)="goToBands('genreName', $event)"

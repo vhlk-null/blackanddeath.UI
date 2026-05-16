@@ -168,6 +168,14 @@
   }
 }
 
+.section-empty {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem 0;
+}
+
 .section-dots {
   display: flex;
   justify-content: center;

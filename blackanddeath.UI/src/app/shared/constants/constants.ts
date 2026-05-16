@@ -9,7 +9,7 @@ export const UPCOMING_RELEASES_TITLE = 'Upcoming Releases';
 
 
 export const TOP_RATED_TABS = ['All Time', 'This Year', 'This Month'];
-export const POPULAR_BANDS_TABS = ['All Time', 'This Year'];
+export const POPULAR_BANDS_TABS = ['All Time', 'This Year', 'This Month'];
 export const RECENTLY_ADDED_TABS = ['Albums', 'Bands'];
 export const METAL_VIDEOS_TABS = ['Clips', 'Live', 'Playthroughs'];
 export const UPCOMING_RELEASES_TABS = ['Full Length', 'Extended Play', 'Other'];

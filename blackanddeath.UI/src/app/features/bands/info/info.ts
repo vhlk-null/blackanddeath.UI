@@ -9,7 +9,6 @@ import { AlbumCard } from '../../albums/card/album-card';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
 import { ImageLightbox } from '../../../shared/components/image-lightbox/image-lightbox';
 import { BandService } from '../../services/band.service';
-import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { ToastService } from '../../../shared/services/toast.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { RatingService } from '../../services/rating.service';
