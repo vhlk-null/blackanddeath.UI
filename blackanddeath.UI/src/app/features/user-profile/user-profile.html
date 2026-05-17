@@ -17,49 +17,94 @@
   <div class="profile__hero">
 
     <!-- Banner -->
-    <label class="profile__hero-banner" title="Click, paste or drop to set background" appPasteImage (imagePasted)="onBannerPasted($event)">
-      @if (bannerPreview()) {
-        <img class="profile__hero-banner-img" [src]="bannerPreview()!" alt="" />
-      }
-      <div class="profile__hero-banner-overlay">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Click, paste or drop</span>
-      </div>
-      <input type="file" accept="image/*" class="profile__avatar-input" (change)="onBannerChange($event)" />
-    </label>
-
-    <!-- Avatar + name + stats -->
-    <div class="profile__hero-content">
-      <label class="profile__avatar" title="Upload avatar">
-        @if (avatarPreview()) {
-          <img class="profile__avatar-img" [src]="avatarPreview()!" alt="avatar" />
-          <div class="profile__avatar-overlay">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-        } @else {
-          <svg class="profile__avatar-icon" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <div class="profile__avatar-overlay">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+    @if (editProfileOpen()) {
+      <label class="profile__hero-banner profile__hero-banner--editable" appPasteImage (imagePasted)="onBannerPasted($event)">
+        @if (bannerPreview()) {
+          <img class="profile__hero-banner-img" [src]="bannerPreview()!" alt="" />
         }
-        <input type="file" accept="image/*" class="profile__avatar-input" (change)="onAvatarChange($event)" />
+        <div class="profile__hero-banner-overlay">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Click, paste or drop to change banner</span>
+        </div>
+        <input type="file" accept="image/*" class="profile__avatar-input" (change)="onBannerChange($event)" />
       </label>
-      <div class="profile__hero-info">
-        @if (username()) {
-          <h1 class="profile__username">{{ username() | titleCaseAll }}</h1>
+    } @else {
+      <div class="profile__hero-banner">
+        @if (bannerPreview()) {
+          <img class="profile__hero-banner-img" [src]="bannerPreview()!" alt="" />
         }
-        <div class="profile__stats">
-          @for (stat of stats(); track stat.label) {
-            <div class="profile__stat">
-              <span class="profile__stat-value">{{ stat.value }}</span>
-              <span class="profile__stat-label">{{ stat.label }}</span>
-            </div>
+        <button class="profile__hero-banner-edit-btn" (click)="openEditProfile()">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Edit Profile
+        </button>
+      </div>
+    }
+
+    <!-- Content row -->
+    <div class="profile__hero-content">
+
+      <!-- Avatar -->
+      @if (editProfileOpen()) {
+        <label class="profile__avatar profile__avatar--editable" title="Change avatar">
+          @if (avatarPreview()) {
+            <img class="profile__avatar-img" [src]="avatarPreview()!" alt="avatar" />
+          } @else {
+            <svg class="profile__avatar-icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          }
+          <div class="profile__avatar-overlay">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <input type="file" accept="image/*" class="profile__avatar-input" (change)="onAvatarChange($event)" />
+        </label>
+      } @else {
+        <div class="profile__avatar">
+          @if (avatarPreview()) {
+            <img class="profile__avatar-img" [src]="avatarPreview()!" alt="avatar" />
+          } @else {
+            <svg class="profile__avatar-icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
           }
         </div>
+      }
+
+      <!-- Info / Edit fields -->
+      <div class="profile__hero-info">
+        @if (editProfileOpen()) {
+          <input class="profile__edit-username-input" type="text" [value]="editProfileUsername()" (input)="editProfileUsername.set($any($event.target).value)" placeholder="Username" />
+          <textarea class="profile__edit-bio-input" [value]="editProfileBio()" (input)="editProfileBio.set($any($event.target).value)" placeholder="Tell something about yourself…" rows="3"></textarea>
+        } @else {
+          @if (username()) {
+            <h1 class="profile__username">{{ username() | titleCaseAll }}</h1>
+          }
+          @if (profileDto()?.bio) {
+            <p class="profile__bio">{{ profileDto()!.bio }}</p>
+          }
+          <div class="profile__stats">
+            @for (stat of stats(); track stat.label) {
+              <div class="profile__stat">
+                <span class="profile__stat-value">{{ stat.value }}</span>
+                <span class="profile__stat-label">{{ stat.label }}</span>
+              </div>
+            }
+          </div>
+        }
       </div>
+
+      <!-- Edit / Save+Cancel buttons -->
+      <div class="profile__hero-btns">
+        @if (editProfileOpen()) {
+          <button class="profile__edit-btn profile__edit-btn--save" (click)="saveEditProfile()" [disabled]="editProfileSaving()">
+            {{ editProfileSaving() ? 'Saving…' : 'Save' }}
+          </button>
+          <button class="profile__edit-btn" (click)="closeEditProfile()">Cancel</button>
+        }
+      </div>
+
     </div>
 
   </div>

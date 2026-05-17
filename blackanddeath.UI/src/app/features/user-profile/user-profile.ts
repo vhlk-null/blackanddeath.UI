@@ -6,7 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService, CollectionDetail } from '../services/collection.service';
 import { FavoriteService } from '../services/favorite.service';
-import { UserProfileService, UserProfileDto, mapProfileAlbum, mapProfileBand, mapProfileCollection } from '../services/user-profile.service';
+import { UserProfileService, UserProfileDto, UpdateProfileFields, mapProfileAlbum, mapProfileBand, mapProfileCollection } from '../services/user-profile.service';
 import { SubscriptionService, SubscriptionDto } from '../services/subscription.service';
 import { Album } from '../../shared/models/album';
 import { Band } from '../../shared/models/band';
@@ -197,19 +197,59 @@ export class UserProfile implements OnInit {
 
   readonly avatarPreview = signal<string | null>(null);
   readonly bannerPreview = signal<string | null>(null);
+  private avatarFile = signal<File | null>(null);
+  private bannerFile = signal<File | null>(null);
 
   onAvatarChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) this.avatarPreview.set(URL.createObjectURL(file));
+    if (file) { this.avatarFile.set(file); this.avatarPreview.set(URL.createObjectURL(file)); }
   }
 
   onBannerChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) this.bannerPreview.set(URL.createObjectURL(file));
+    if (file) { this.bannerFile.set(file); this.bannerPreview.set(URL.createObjectURL(file)); }
   }
 
   onBannerPasted(file: File): void {
+    this.bannerFile.set(file);
     this.bannerPreview.set(URL.createObjectURL(file));
+  }
+
+  readonly editProfileOpen = signal(false);
+  readonly editProfileUsername = signal('');
+  readonly editProfileBio = signal('');
+  readonly editProfileSaving = signal(false);
+
+  openEditProfile(): void {
+    this.editProfileUsername.set(this.username() ?? '');
+    this.editProfileBio.set(this.profileDto()?.bio ?? '');
+    this.editProfileOpen.set(true);
+  }
+
+  closeEditProfile(): void {
+    this.editProfileOpen.set(false);
+  }
+
+  saveEditProfile(): void {
+    const userId = this.auth.userId();
+    if (!userId || this.editProfileSaving()) return;
+    const fields: UpdateProfileFields = {
+      username: this.editProfileUsername().trim() || undefined,
+      bio: this.editProfileBio().trim() || null,
+      avatar: this.avatarFile(),
+      banner: this.bannerFile(),
+    };
+    this.editProfileSaving.set(true);
+    this.profileService.patchProfile(userId, fields).subscribe({
+      next: updated => {
+        this.profileDto.set(updated);
+        this.avatarFile.set(null);
+        this.bannerFile.set(null);
+        this.editProfileOpen.set(false);
+        this.editProfileSaving.set(false);
+      },
+      error: () => this.editProfileSaving.set(false),
+    });
   }
 
   readonly confirmDialog = signal<{ message: string; action: () => void } | null>(null);

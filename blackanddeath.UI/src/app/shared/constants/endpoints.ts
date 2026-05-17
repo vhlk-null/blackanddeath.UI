@@ -132,6 +132,7 @@ export class CommentEndpoints {
 
 export class UserProfileEndpoints {
   static GET_PROFILE = (userId: string) => `${uc()}/profile/${userId}`;
+  static UPDATE_PROFILE = (userId: string) => `${uc()}/profile/${userId}`;
 }
 
 export class CollectionEndpoints {

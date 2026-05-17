@@ -105,11 +105,27 @@ export function mapProfileCollection(dto: UserProfileCollectionDto): CollectionS
   };
 }
 
+export interface UpdateProfileFields {
+  username?: string;
+  bio?: string | null;
+  avatar?: File | null;
+  banner?: File | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserProfileService {
   private http = inject(BaseHttpService);
 
   getProfile(userId: string): Observable<UserProfileDto> {
     return this.http.get<UserProfileDto>(UserProfileEndpoints.GET_PROFILE(userId));
+  }
+
+  patchProfile(userId: string, fields: UpdateProfileFields): Observable<UserProfileDto> {
+    const form = new FormData();
+    if (fields.username != null) form.append('username', fields.username);
+    if (fields.bio != null) form.append('bio', fields.bio);
+    if (fields.avatar) form.append('avatar', fields.avatar);
+    if (fields.banner) form.append('banner', fields.banner);
+    return this.http.patch<UserProfileDto>(UserProfileEndpoints.UPDATE_PROFILE(userId), form);
   }
 }
