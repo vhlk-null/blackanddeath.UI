@@ -394,9 +394,7 @@
       font-size: 0.9375rem;
       color: var(--color-text-muted);
       padding: 0 0 0.75rem;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: color 0.15s ease, border-color 0.15s ease;
+      transition: color 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -413,7 +411,6 @@
 
       &.active {
         color: var(--color-tab-active);
-        border-bottom-color: var(--color-tab-active);
       }
     }
   }
