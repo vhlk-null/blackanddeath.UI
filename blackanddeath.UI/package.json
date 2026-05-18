@@ -43,6 +43,7 @@
     "angular-oauth2-oidc": "^20.0.2",
     "qs": "^6.15.0",
     "rxjs": "~7.8.0",
+    "simple-icons": "^16.20.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

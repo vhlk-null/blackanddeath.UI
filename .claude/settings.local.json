@@ -58,7 +58,16 @@
       "Bash(mkdir \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets-docker\")",
       "Bash(del \"d:\\\\Projects\\\\blackenddeath.UI\\\\blackanddeath.UI\\\\public\\\\assets\\\\config.docker.json\")",
       "Bash(npm view *)",
-      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\); const v=JSON.parse\\(d\\); console.log\\(v.filter\\(x=>x.startsWith\\('3.'\\)\\).slice\\(-10\\).join\\('\\\\n'\\)\\)\")"
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\); const v=JSON.parse\\(d\\); console.log\\(v.filter\\(x=>x.startsWith\\('3.'\\)\\).slice\\(-10\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); ['siYoutube','siSpotify','siApplemusic','siDeezer','siBandcamp'].forEach\\(k => { const icon = si[k]; console.log\\(k, ':', icon ? icon.path.substring\\(0,80\\) : 'NOT FOUND'\\) }\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); ['siYoutube','siSpotify','siApplemusic','siDeezer','siBandcamp'].forEach\\(k => { const icon = si[k]; console.log\\(k + '|||' + icon.path\\) }\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); const icon = si['siDeezer']; console.log\\(icon.path\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); const icon = si['siAmazonmusic']; console.log\\(icon ? icon.path : 'NOT FOUND'\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); const keys = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\('amazon'\\)\\); console.log\\(keys\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); console.log\\(Object.keys\\(si\\).length, Object.keys\\(si\\).slice\\(0,5\\)\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); const keys = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\('music'\\)\\); console.log\\(keys\\)\")",
+      "Bash(node -e \"const icons = require\\('simple-icons/icons'\\); const keys = Object.keys\\(icons\\).filter\\(k => k.toLowerCase\\(\\).includes\\('amazon'\\)\\); console.log\\(keys\\)\")",
+      "Bash(node -e \"const si = require\\('simple-icons'\\); const keys = Object.keys\\(si\\).filter\\(k => k.toLowerCase\\(\\).includes\\('amazon'\\)\\); console.log\\(keys\\); if\\(si.siAmazon\\) console.log\\('amazon:', si.siAmazon.path.substring\\(0,60\\)\\)\")"
     ],
     "additionalDirectories": [
       "d:\\Projects\\blackenddeath.UI\\blackanddeath.UI\\src\\app\\features\\discover",
